@@ -95,7 +95,7 @@ for (var f = 0; f < 10000; f++) {
 }
 for (var ro = 0; ro < 100; ro++) {
     for (var co = 0; co < 100; co++) {
-        if (co % 2 == 0) {
+        if (co % 2 == 0 && ro % 2 == 0) {
             let indexOfArray = (ro * 100) + co;
             let xValue = (ro * floorClass.w / 100) - (floorClass.w / 2) + ((floorClass.w / 100) / 2);
             let zValue = (co * floorClass.h / 100) - (floorClass.w / 2) + ((floorClass.h / 100) / 2);
@@ -129,7 +129,7 @@ scene.add(lightHem);
 
 //camera starting position
 camera.position.z = 25;
-camera.position.y = 10;
+camera.position.y = 100;
 camera.position.x = 5;
 
 //the booleans for moving

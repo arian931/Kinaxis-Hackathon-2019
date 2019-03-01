@@ -6,14 +6,15 @@ class insideWallsMaze {
         this.z = z;
         this.scene = scene;
         this.color = new THREE.Color("rgb(0, 0, 0)");
+        this.heightOfWall = 50;
     }
     addToScene() {
-        var geometryFor = new THREE.BoxGeometry(this.w, 10, this.w);
+        var geometryFor = new THREE.BoxGeometry(this.w, this.heightOfWall, this.w);
         var materialFor = new THREE.MeshLambertMaterial({ color: this.color });
         var cubeFor = new THREE.Mesh(geometryFor, materialFor);
         this.scene.add(cubeFor);
         cubeFor.position.x = this.x;
-        cubeFor.position.y = 5;
+        cubeFor.position.y = this.heightOfWall / 2;
         cubeFor.position.z = this.z;
     }
 } 
