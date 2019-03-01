@@ -1,4 +1,5 @@
 var white = new THREE.Color("rgb(255, 255, 255)");
+var black = new THREE.Color("rgb(0, 0, 0)");
 var yellow = new THREE.Color("rgb(233, 255, 0)");
 var green = new THREE.Color("rgb(0,255,0)");
 var blue = new THREE.Color("rgb(0,100,255)");
@@ -85,6 +86,27 @@ for (var x = 0; x < walls.length; x++) {
 }
 //-------------------------
 
+//wall genertion
+var InsideWallsNumberArray = [];
+var InsideWalls = [];
+
+for (var f = 0; f < 10000; f++) {
+    InsideWallsNumberArray[f] = 0;
+}
+for (var ro = 0; ro < 100; ro++) {
+    for (var co = 0; co < 100; co++) {
+        if (co % 2 == 0) {
+            let indexOfArray = (ro * 100) + co;
+            let xValue = (ro * floorClass.w / 100) - (floorClass.w / 2) + ((floorClass.w / 100) / 2);
+            let zValue = (co * floorClass.h / 100) - (floorClass.w / 2) + ((floorClass.h / 100) / 2);
+            InsideWalls[indexOfArray] = new insideWallsMaze(xValue, zValue, floorClass.w / 100, scene);
+            InsideWalls[indexOfArray].addToScene();
+        }
+    }
+}
+
+
+
 // way to make a basic cube with a 1,1,1 size and the color 0x00ff00, but I made some colors on the top like green or white
 /*
 var geometry = new THREE.BoxGeometry(1, 1, 1);
@@ -122,6 +144,7 @@ var prevTime = performance.now();
 var velocity = new THREE.Vector3();
 
 var jumping = false;
+var goingDown = false;
 
 
 
@@ -137,10 +160,10 @@ var animate = function () {
         velocity.x -= velocity.x * 10.0 * delta;
         velocity.z -= velocity.z * 10.0 * delta;
         velocity.y -= 9.8 * 100.0 * delta; // 100.0 = mass
-        if (moveForward) velocity.z -= 800.0 * delta;
-        if (moveBackward) velocity.z += 800.0 * delta;
-        if (moveLeft) velocity.x -= 800.0 * delta;
-        if (moveRight) velocity.x += 800.0 * delta;
+        if (moveForward) velocity.z -= 1200.0 * delta;
+        if (moveBackward) velocity.z += 1200.0 * delta;
+        if (moveLeft) velocity.x -= 1200.0 * delta;
+        if (moveRight) velocity.x += 1200.0 * delta;
 
         controls.getObject().translateX(velocity.x * delta);
         controls.getObject().translateY(velocity.y * delta);
@@ -152,10 +175,9 @@ var animate = function () {
         }
         if (jumping) {
             camera.position.y += 2;
-        } else {
-            if (camera.position.y >= 5) {
-                camera.position.y -= 2;
-            }
+        }
+        if (goingDown) {
+            camera.position.y -= 2;
         }
         prevTime = time;
     }
@@ -185,6 +207,9 @@ document.addEventListener("keydown", event => {
         case 32:
             jumping = true;
             break;
+        case 40:
+            goingDown = true;
+            break;
     }
 });
 document.addEventListener("keyup", event => {
@@ -204,6 +229,9 @@ document.addEventListener("keyup", event => {
             break;
         case 32:
             jumping = false;
+            break;
+        case 40:
+            goingDown = false;
             break;
     }
 });
