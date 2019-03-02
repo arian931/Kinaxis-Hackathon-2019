@@ -87,12 +87,16 @@ for (var x = 0; x < walls.length; x++) {
 //-------------------------
 
 //wall genertion
-var InsideWallsNumberArray = [];
+var InsideWallsNumberArray;
 var InsideWalls = [];
+for (var x = 0; x < 100; x++) {
+    for (var y = 0; y < 100; y++) {
+        InsideWalls[x] = [];
+    }
+}
 
 var mapAlgo = new map();
 mapAlgo.drawMap();
-
 InsideWallsNumberArray = mapAlgo.array;
 // for (var f = 0; f < 10000; f++) {
 //     if (f % 2 == 0) {
@@ -103,12 +107,11 @@ InsideWallsNumberArray = mapAlgo.array;
 // }
 for (var ro = 0; ro < 100; ro++) {
     for (var co = 0; co < 100; co++) {
-        let indexOfArray = (ro * 100) + co;
-        if (InsideWallsNumberArray[indexOfArray] == 1) {
+        if (InsideWallsNumberArray[ro][co] == 1) {
             let xValue = (ro * floorClass.w / 100) - (floorClass.w / 2) + ((floorClass.w / 100) / 2);
             let zValue = (co * floorClass.h / 100) - (floorClass.w / 2) + ((floorClass.h / 100) / 2);
-            InsideWalls[indexOfArray] = new insideWallsMaze(xValue, zValue, floorClass.w / 100, scene);
-            InsideWalls[indexOfArray].addToScene();
+            InsideWalls[ro][co] = new insideWallsMaze(xValue, zValue, floorClass.w / 100, scene);
+            InsideWalls[ro][co].addToScene();
         }
     }
 }
