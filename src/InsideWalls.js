@@ -10,7 +10,14 @@ class insideWallsMaze {
     }
     addToScene() {
         var geometryFor = new THREE.BoxGeometry(this.w, this.heightOfWall, this.w);
-        var materialFor = new THREE.MeshLambertMaterial({ color: this.color });
+        var texture = new THREE.TextureLoader().load("/src/05muronero.jpg");
+        texture.wrapS = THREE.RepeatWrapping;
+        texture.wrapT = THREE.RepeatWrapping;
+        texture.repeat.set(1, 1);
+        var materialFor = new THREE.MeshBasicMaterial({
+            map: texture
+        });
+        // var materialFor = new THREE.MeshLambertMaterial({ color: this.color });
         var cubeFor = new THREE.Mesh(geometryFor, materialFor);
         this.scene.add(cubeFor);
         cubeFor.position.x = this.x;

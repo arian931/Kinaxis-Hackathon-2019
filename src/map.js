@@ -55,7 +55,7 @@ class map {
     // }
 
     checkDirection() {
-        console.log("Check Direction");
+        //console.log("Check Direction");
         let x = this.startingLocationX;
         let y = this.startingLocationY;
         this.array[x][y] = 0;
@@ -90,7 +90,7 @@ class map {
         }
     }
     kill() {
-        console.log("kill");
+        //console.log("kill");
         let choice = Math.floor(Math.random() * this.PossibleDirections.length);
         //console.log(choice);
         let indexForAsigning;
@@ -123,7 +123,7 @@ class map {
         }
     }
     hunt() {
-        console.log("hunt");
+        //console.log("hunt");
         var canKill = false;
         var foundIT = true;
         for (var x = 0; x < 100; x++) {

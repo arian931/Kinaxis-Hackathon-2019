@@ -12,7 +12,16 @@ class wallGenerator {
     }
     addToScene() {
         var geometryFor = new THREE.BoxGeometry(this.w, this.h, this.d);
-        var materialFor = new THREE.MeshLambertMaterial({ color: this.color });
+
+        var texture = new THREE.TextureLoader().load("/src/zo-mur.png");
+        texture.wrapS = THREE.RepeatWrapping;
+        texture.wrapT = THREE.RepeatWrapping;
+        texture.repeat.set(10, 10);
+        var materialFor = new THREE.MeshBasicMaterial({
+            map: texture
+        });
+
+        // var materialFor = new THREE.MeshFaceMaterial({ texture });
         var cubeFor = new THREE.Mesh(geometryFor, materialFor);
         this.scene.add(cubeFor);
         cubeFor.position.x = this.x;

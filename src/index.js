@@ -63,7 +63,7 @@ if (havePointerLock) {
 //------------------------------------------------------------------------------------------
 
 var scene = new THREE.Scene();
-var camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 3000);
+var camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
 
 controls = new THREE.PointerLockControls(camera);
 scene.add(controls.getObject());
@@ -72,7 +72,7 @@ var renderer = new THREE.WebGLRenderer();
 renderer.setSize(window.innerWidth, window.innerHeight);
 document.body.appendChild(renderer.domElement);
 
-let floorClass = new floor(2000, 2000, scene);
+let floorClass = new floor(4000, 4000, scene);
 floorClass.addToScene();
 
 //outer wall generation
