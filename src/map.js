@@ -5,8 +5,8 @@ class map {
         this.back = false;
         this.right = false;
         this.left = false;
-        this.startingLocationX = 0;
-        this.startingLocationY = 0;
+        this.startingLocationX = 1;
+        this.startingLocationY = 1;
         this.currentX;
         this.currentY;
         this.PossibleDirections = [];
@@ -16,21 +16,20 @@ class map {
         this.howManyInDirectionD = 0;
         this.howManyInDirectionR = 0;
         this.howManyInDirectionL = 0;
+        this.testBool = false;
+        this.MazeSize = 50;
     }
 
     drawMap() {
         var counter = 0;
-        for (var x = 0; x < 100; x++) {
-            for (var y = 0; y < 100; y++) {
-                this.array[x] = [];
-            }
+        for (var x = 0; x < this.MazeSize; x++) {
+            this.array[x] = [];
         }
-        for (var x = 0; x < 100; x++) {
-            for (var y = 0; y < 100; y++) {
+        for (var x = 0; x < this.MazeSize; x++) {
+            for (var y = 0; y < this.MazeSize; y++) {
                 this.array[x][y] = 1;
             }
         }
-        this.array[0][0] = 0;
         while (true) {
             if (this.checkDirection()) {
                 this.kill();
@@ -38,24 +37,36 @@ class map {
                 console.log("check Direction = false;");
                 if (!this.hunt()) {
                     console.log("HUNT FAILED FOR SHO");
+                    this.array[this.MazeSize - 1][this.MazeSize - 3] = 3;
+                    this.array[this.MazeSize - 2][this.MazeSize - 3] = 3;
+                    this.array[this.MazeSize - 3][this.MazeSize - 3] = 0;
+                    this.array[this.MazeSize - 1][this.MazeSize - 4] = 3;
+                    this.array[this.MazeSize - 2][this.MazeSize - 4] = 3;
+                    this.array[this.MazeSize - 3][this.MazeSize - 4] = 0;
                     break;
                 }
             }
         }
     }
-    // test() {
-    //     if (this.checkDirection()) {
-    //         this.kill();
-    //     } else {
-    //         console.log("check Direction = false;");
-    //         if (!this.hunt()) {
-    //             console.log("HUNT FAILED FOR SHO");
-    //         }
-    //     }
-    // }
+    test() {
+        if (!this.testBool) {
+            while (true) {
+                if (this.checkDirection()) {
+                    this.kill();
+                } else {
+
+                    break;
+                }
+            }
+            this.testBool = true;
+        } else {
+            this.hunt();
+            this.testBool = false;
+        }
+    }
 
     checkDirection() {
-        //console.log("Check Direction");
+        console.log("Check Direction");
         let x = this.startingLocationX;
         let y = this.startingLocationY;
         this.array[x][y] = 0;
@@ -63,22 +74,22 @@ class map {
         //console.log("y " + y);
         let canGo = false;
         this.PossibleDirections = [];
-        if (x + 2 < 99 && this.array[x + 2][y] == 1 && this.array[x + 1][y] == 1) {
+        if (x + 2 < this.MazeSize - 2 && this.array[x + 2][y] == 1 && this.array[x + 1][y] == 1) {
             //console.log("R");
             this.PossibleDirections.push("R");
             canGo = true;
         }
-        if (x - 2 > 0 && this.array[x - 2][y] == 1 && this.array[x - 1][y] == 1) {
+        if (x - 2 > 1 && this.array[x - 2][y] == 1 && this.array[x - 1][y] == 1) {
             //console.log("L");
             this.PossibleDirections.push("L");
             canGo = true;
         }
-        if (y + 2 < 99 && this.array[x][y + 2] == 1 && this.array[x][y + 1] == 1) {
+        if (y + 2 < this.MazeSize - 2 && this.array[x][y + 2] == 1 && this.array[x][y + 1] == 1) {
             //console.log("D");
             this.PossibleDirections.push("D");
             canGo = true;
         }
-        if (y - 2 > 0 && this.array[x][y - 2] == 1 && this.array[x][y - 1] == 1) {
+        if (y - 2 > 1 && this.array[x][y - 2] == 1 && this.array[x][y - 1] == 1) {
             //console.log("U");
             this.PossibleDirections.push("U");
             canGo = true;
@@ -90,7 +101,7 @@ class map {
         }
     }
     kill() {
-        //console.log("kill");
+        console.log("kill");
         let choice = Math.floor(Math.random() * this.PossibleDirections.length);
         //console.log(choice);
         let indexForAsigning;
@@ -123,18 +134,20 @@ class map {
         }
     }
     hunt() {
-        //console.log("hunt");
+        console.log("hunt");
         var canKill = false;
         var foundIT = true;
-        for (var x = 0; x < 100; x++) {
+        for (var x = this.MazeSize - 2; x >= 1; x--) {
             if (foundIT) {
-                for (var y = 0; y < 100; y++) {
+                for (var y = 1; y <= this.MazeSize - 2; y++) {
                     if (foundIT) {
-                        if (x <= 97 && y != 0 && y != 99) {
-                            if (this.array[x][y] == 1 && this.array[x + 1][y] == 1 && this.array[x + 2][y] == 0 && this.array[x][y + 1] == 1 && this.array[x][y - 1] == 1) {
+                        if (x <= this.MazeSize - 4 && y > 1 && y < this.MazeSize - 2) {
+                            if (this.array[x][y] == 1 && this.array[x + 1][y] == 1 && this.array[x + 2][y] == 0
+                                && this.array[x][y + 1] == 1 && this.array[x][y - 1] == 1
+                            ) {
                                 //console.log("+x");
                                 this.array[x][y] = 0;
-                                this.array[x + 1][y] = 0;
+                                //this.array[x + 1][y] = 0;
                                 this.startingLocationX = x + 1;
                                 this.startingLocationY = y;
                                 foundIT = false;
@@ -143,11 +156,13 @@ class map {
                         }
                     }
                     if (foundIT) {
-                        if (x >= 2 && y != 0 && y != 99) {
-                            if (this.array[x][y] == 1 && this.array[x - 1][y] == 1 && this.array[x - 2][y] == 0 && this.array[x][y + 1] == 1 && this.array[x][y - 1] == 1) {
+                        if (x >= 3 && y > 1 && y < this.MazeSize - 2) {
+                            if (this.array[x][y] == 1 && this.array[x - 1][y] == 1 && this.array[x - 2][y] == 0
+                                && this.array[x][y + 1] == 1 && this.array[x][y - 1] == 1
+                            ) {
                                 //console.log("-x");
                                 this.array[x][y] = 0;
-                                this.array[x - 1][y] = 0;
+                                //this.array[x - 1][y] = 0;
                                 this.startingLocationX = x - 1;
                                 this.startingLocationY = y;
                                 foundIT = false;
@@ -156,11 +171,13 @@ class map {
                         }
                     }
                     if (foundIT) {
-                        if (y <= 97 && x != 0 && x != 99) {
-                            if (this.array[x][y] == 1 && this.array[x][y + 1] == 1 && this.array[x][y + 2] == 0 && this.array[x + 1][y] == 1 && this.array[x - 1][y] == 1) {
+                        if (y <= 96 && x > 1 && x < this.MazeSize - 2) {
+                            if (this.array[x][y] == 1 && this.array[x][y + 1] == 1 && this.array[x][y + 2] == 0
+                                && this.array[x + 1][y] == 1 && this.array[x - 1][y] == 1
+                            ) {
                                 //console.log("+x");
                                 this.array[x][y] = 0;
-                                this.array[x][y + 1] = 0;
+                                //this.array[x][y + 1] = 0;
                                 this.startingLocationX = x;
                                 this.startingLocationY = y + 1;
                                 foundIT = false;
@@ -169,11 +186,13 @@ class map {
                         }
                     }
                     if (foundIT) {
-                        if (y >= 2 && x != 0 && x != 99) {
-                            if (this.array[x][y] == 1 && this.array[x][y - 1] == 1 && this.array[x][y - 2] == 0 && this.array[x + 1][y] == 1 && this.array[x - 1][y] == 1) {
+                        if (y >= 3 && x > 1 && x < this.MazeSize - 2) {
+                            if (this.array[x][y] == 1 && this.array[x][y - 1] == 1 && this.array[x][y - 2] == 0
+                                && this.array[x + 1][y] == 1 && this.array[x - 1][y] == 1
+                            ) {
                                 //console.log("+x");
                                 this.array[x][y] = 0;
-                                this.array[x][y - 2] = 0;
+                                //this.array[x][y - 1] = 0;
                                 this.startingLocationX = x;
                                 this.startingLocationY = y - 1;
                                 foundIT = false;

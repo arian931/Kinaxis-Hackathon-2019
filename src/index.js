@@ -5,6 +5,8 @@ var green = new THREE.Color("rgb(0,255,0)");
 var blue = new THREE.Color("rgb(0,100,255)");
 var red = new THREE.Color("rgb(255,0,0)");
 
+let startScreenBool = true;
+
 //controls button and explanation
 var blocker = document.getElementById('blocker');
 var instructions = document.getElementById('instructions');
@@ -18,7 +20,9 @@ if (havePointerLock) {
         if (document.pointerLockElement === element || document.mozPointerLockElement === element || document.webkitPointerLockElement === element) {
             controlsEnabled = true;
             controls.enabled = true;
+            startScreenBool = false;
             blocker.style.display = 'none';
+            startScreen();
         } else {
             controls.enabled = false;
             blocker.style.display = '-webkit-box';
@@ -62,17 +66,22 @@ if (havePointerLock) {
 }
 //------------------------------------------------------------------------------------------
 
+
+
 var scene = new THREE.Scene();
-var camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+scene.background = new THREE.Color(0xffffff);
+scene.fog = new THREE.Fog(0xffffff, 0, 750);
+var camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 800);
 
 controls = new THREE.PointerLockControls(camera);
 scene.add(controls.getObject());
 
 var renderer = new THREE.WebGLRenderer();
+renderer.setPixelRatio(window.devicePixelRatio / 2);
 renderer.setSize(window.innerWidth, window.innerHeight);
 document.body.appendChild(renderer.domElement);
 
-let floorClass = new floor(4000, 4000, scene);
+let floorClass = new floor(1000, 1000, scene);
 floorClass.addToScene();
 
 //outer wall generation
@@ -89,28 +98,38 @@ for (var x = 0; x < walls.length; x++) {
 //wall genertion
 var InsideWallsNumberArray;
 var InsideWalls = [];
-for (var x = 0; x < 100; x++) {
-    for (var y = 0; y < 100; y++) {
+
+var huntAndKill = true;
+if (huntAndKill) {
+    var mapAlgo = new map();
+    mapAlgo.drawMap();
+    InsideWallsNumberArray = mapAlgo.array;
+} else {
+    var mapAlgo = new recursiveMaze();
+    mapAlgo.drawMap();
+    InsideWallsNumberArray = mapAlgo.array;
+    console.log(InsideWallsNumberArray);
+}
+for (var x = 0; x < mapAlgo.MazeSize; x++) {
+    for (var y = 0; y < mapAlgo.MazeSize; y++) {
         InsideWalls[x] = [];
     }
 }
 
-var mapAlgo = new map();
-mapAlgo.drawMap();
-InsideWallsNumberArray = mapAlgo.array;
-// for (var f = 0; f < 10000; f++) {
-//     if (f % 2 == 0) {
-//         InsideWallsNumberArray[f] = 0;
-//     } else {
-//         InsideWallsNumberArray[f] = 1;
-//     }
-// }
-for (var ro = 0; ro < 100; ro++) {
-    for (var co = 0; co < 100; co++) {
+for (var ro = 0; ro < mapAlgo.MazeSize; ro++) {
+    for (var co = 0; co < mapAlgo.MazeSize; co++) {
         if (InsideWallsNumberArray[ro][co] == 1) {
-            let xValue = (ro * floorClass.w / 100) - (floorClass.w / 2) + ((floorClass.w / 100) / 2);
-            let zValue = (co * floorClass.h / 100) - (floorClass.w / 2) + ((floorClass.h / 100) / 2);
-            InsideWalls[ro][co] = new insideWallsMaze(xValue, zValue, floorClass.w / 100, scene);
+            console.log("1");
+            let xValue = (ro * floorClass.w / mapAlgo.MazeSize) - (floorClass.w / 2) + ((floorClass.w / mapAlgo.MazeSize) / 2);
+            let zValue = (co * floorClass.h / mapAlgo.MazeSize) - (floorClass.w / 2) + ((floorClass.h / mapAlgo.MazeSize) / 2);
+            InsideWalls[ro][co] = new insideWallsMaze(xValue, zValue, (floorClass.w / mapAlgo.MazeSize), false, scene);
+            InsideWalls[ro][co].addToScene();
+        }
+        if (InsideWallsNumberArray[ro][co] == 3) {
+            console.log("3");
+            let xValue = (ro * floorClass.w / mapAlgo.MazeSize) - (floorClass.w / 2) + ((floorClass.w / mapAlgo.MazeSize) / 2);
+            let zValue = (co * floorClass.h / mapAlgo.MazeSize) - (floorClass.w / 2) + ((floorClass.h / mapAlgo.MazeSize) / 2);
+            InsideWalls[ro][co] = new insideWallsMaze(xValue, zValue, (floorClass.w / mapAlgo.MazeSize), true, scene);
             InsideWalls[ro][co].addToScene();
         }
     }
@@ -130,9 +149,9 @@ cube.position.y = 10;
 scene.background = blue;
 
 //lighting
-var lightDir = new THREE.DirectionalLight(0xffffff, 0.3);
-lightDir.position.set(500, 500, 500).normalize();
-scene.add(lightDir);
+// var lightDir = new THREE.DirectionalLight(0xffffff, 0.3);
+// lightDir.position.set(500, 500, 500).normalize();
+// scene.add(lightDir);
 
 var lightHem = new THREE.HemisphereLight(0xffffbb, 0x080820, 1);
 scene.add(lightHem);
@@ -142,6 +161,8 @@ scene.add(lightHem);
 camera.position.z = 25;
 camera.position.y = 100;
 camera.position.x = 5;
+
+
 
 //the booleans for moving
 var moveForward = false;
@@ -157,24 +178,40 @@ var velocity = new THREE.Vector3();
 var jumping = false;
 var goingDown = false;
 
-
-
 var controlsEnabled;
+
+var geometryPlayer = new THREE.BoxGeometry(10, 40, 10);
+var materialPlayer = new THREE.MeshLambertMaterial({ color: new THREE.Color("rgb(255, 255, 255)") });
+var Player = new THREE.Mesh(geometryPlayer, materialPlayer);
+this.scene.add(Player);
+Player.position.x = 0;
+Player.position.y = 100;
+Player.position.z = 0;
+
+var ray = new THREE.Ray();
 
 //animate is like gameloop we could probably use setInverval if we wanted to E.X setInterval(animate, 33);
 var animate = function () {
     requestAnimationFrame(animate);
-
     if (controlsEnabled) {
         var time = performance.now();
         var delta = (time - prevTime) / 1000;
         velocity.x -= velocity.x * 10.0 * delta;
         velocity.z -= velocity.z * 10.0 * delta;
         velocity.y -= 9.8 * 100.0 * delta; // 100.0 = mass
-        if (moveForward) velocity.z -= 1200.0 * delta;
-        if (moveBackward) velocity.z += 1200.0 * delta;
-        if (moveLeft) velocity.x -= 1200.0 * delta;
-        if (moveRight) velocity.x += 1200.0 * delta;
+        if (moveForward) {
+            velocity.z -= 1200.0 * delta;
+        };
+        if (moveBackward) {
+            velocity.z += 1200.0 * delta;
+        };
+        if (moveLeft) {
+            velocity.x -= 1200.0 * delta;
+
+        };
+        if (moveRight) {
+            velocity.x += 1200.0 * delta;
+        };
 
         controls.getObject().translateX(velocity.x * delta);
         controls.getObject().translateY(velocity.y * delta);
@@ -191,11 +228,38 @@ var animate = function () {
             camera.position.y -= 2;
         }
         prevTime = time;
-    }
+        // for (var vertexIndex = 0; vertexIndex < Player.geometry.vertices.length; vertexIndex++) {
+        //     var localVertex = Player.geometry.vertices[vertexIndex].clone();
+        //     var globalVertex = Player.matrix.multiplyVector3(localVertex);
+        //     var directionVector = globalVertex.sub(Player.position);
 
+        //     var ray = new THREE.Ray(Player.position, directionVector.clone().normalize());
+        //     var collisionResults = ray.intersectObjects(scene.children);
+        //     if (collisionResults.length > 0 && collisionResults[0].distance < directionVector.length()) {
+        //         console.log("Collided");
+        //     }
+        // }
+    }
     renderer.render(scene, camera);
 };
-animate(); //to start loop
+
+let counterForStart = 0;
+camera.rotation.y = 0;
+function startScreen() {
+    if (counterForStart != 1000) {
+        counterForStart++;
+        requestAnimationFrame(startScreen);
+        counterForStart
+        camera.rotation.y += ((Math.PI * 2) / 1000);
+        renderer.render(scene, camera);
+    } else {
+
+        this.animate();
+    }
+}
+blocker.style.display = 'none';
+startScreen();
+//animate(); //to start loop
 
 document.addEventListener("keydown", event => {
     //if we use arrow keys this will prevent them froming scroling the page down
@@ -218,7 +282,7 @@ document.addEventListener("keydown", event => {
         case 32:
             jumping = true;
             break;
-        case 40:
+        case 16:
             goingDown = true;
             break;
     }
@@ -241,8 +305,20 @@ document.addEventListener("keyup", event => {
         case 32:
             jumping = false;
             break;
-        case 40:
+        case 16:
             goingDown = false;
             break;
     }
 });
+
+// var canvas = document.getElementById("myCanvas");
+// canvas.addEventListener("webglcontextlost", function (event) {
+//     event.preventDefault();
+//     var error = gl.getError();
+//     if (error != gl.NO_ERROR && error != gl.CONTEXT_LOST_WEBGL) {
+//         alert("fail");
+//     }
+// }, false);
+
+// canvas.addEventListener(
+//     "webglcontextrestored", setupWebGLStateAndResources, false);
