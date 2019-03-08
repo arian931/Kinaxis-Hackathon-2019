@@ -19,9 +19,13 @@
   },
   "homepage": "https://github.com/xXAligatorXx/WHAAC#readme",
   "dependencies": {
-    "three": "^0.102.1"
+    "three": "^0.102.1",
+    "three-gltf-loader": "^1.102.0"
   },
   "devDependencies": {
-    "babel-loader": "^8.0.5"
+    "babel-loader": "^8.0.5",
+    "eslint": "^5.15.1",
+    "eslint-config-airbnb-base": "^13.1.0",
+    "eslint-plugin-import": "^2.16.0"
   }
 }
