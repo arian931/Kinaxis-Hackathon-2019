@@ -1,3 +1,6 @@
+/* eslint-disable linebreak-style */
+/* eslint-disable no-undef */
+
 module.exports = class Map {
   constructor() {
     this.array = [];
@@ -21,12 +24,12 @@ module.exports = class Map {
   }
 
   drawMap() {
-    var counter = 0;
-    for (var x = 0; x < this.MazeSize; x++) {
+    let counter = 0;
+    for (let x = 0; x < this.MazeSize; x++) {
       this.array[x] = [];
     }
-    for (var x = 0; x < this.MazeSize; x++) {
-      for (var y = 0; y < this.MazeSize; y++) {
+    for (let x = 0; x < this.MazeSize; x++) {
+      for (let y = 0; y < this.MazeSize; y++) {
         this.array[x][y] = 1;
       }
     }
@@ -34,9 +37,9 @@ module.exports = class Map {
       if (this.checkDirection()) {
         this.kill();
       } else {
-        console.log("check Direction = false;");
+        //console.log("check Direction = false;");
         if (!this.hunt()) {
-          console.log("HUNT FAILED FOR SHO");
+          //console.log("HUNT FAILED FOR SHO");
           this.array[this.MazeSize - 1][this.MazeSize - 3] = 3;
           this.array[this.MazeSize - 2][this.MazeSize - 3] = 3;
           this.array[this.MazeSize - 3][this.MazeSize - 3] = 0;
@@ -66,7 +69,7 @@ module.exports = class Map {
   }
 
   checkDirection() {
-    console.log("Check Direction");
+    //console.log("Check Direction");
     let x = this.startingLocationX;
     let y = this.startingLocationY;
     this.array[x][y] = 0;
@@ -100,26 +103,27 @@ module.exports = class Map {
       return false;
     }
   }
+
   kill() {
-    console.log("kill");
+    //  console.log("kill");
     let choice = Math.floor(Math.random() * this.PossibleDirections.length);
-    //console.log(choice);
-    let indexForAsigning;
-    //console.log(this.PossibleDirections);
+    //  console.log(choice);
+    // let indexForAsigning;
+    //  console.log(this.PossibleDirections);
     switch (this.PossibleDirections[choice]) {
-      case "D":
-        //console.log("Traveling D");
+      case 'D':
+        // console.log("Traveling D");
         this.array[this.startingLocationX][this.startingLocationY + 1] = 0;
         this.array[this.startingLocationX][this.startingLocationY + 2] = 0;
         this.startingLocationY += 2;
         break;
-      case "U":
-        //console.log("Traveling U");
+      case 'U':
+        // console.log("Traveling U");
         this.array[this.startingLocationX][this.startingLocationY - 1] = 0;
         this.array[this.startingLocationX][this.startingLocationY - 2] = 0;
         this.startingLocationY -= 2;
         break;
-      case "R":
+      case 'R':
         //console.log("Traveling R");
         this.array[this.startingLocationX + 1][this.startingLocationY] = 0;
         this.array[this.startingLocationX + 2][this.startingLocationY] = 0;
@@ -131,11 +135,13 @@ module.exports = class Map {
         this.array[this.startingLocationX - 2][this.startingLocationY] = 0;
         this.startingLocationX -= 2;
         break;
+      default:
     }
   }
+
   hunt() {
-    console.log("hunt");
-    var canKill = false;
+    //console.log("hunt");
+    let canKill = false;
     var foundIT = true;
     for (var x = this.MazeSize - 2; x >= 1; x--) {
       if (foundIT) {

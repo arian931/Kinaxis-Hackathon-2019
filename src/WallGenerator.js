@@ -1,3 +1,6 @@
+/* eslint-disable linebreak-style */
+/* eslint-disable no-undef */
+
 module.exports = class WallGenerator {
   constructor(x, y, z, w, h, d, color, scene, rotation) {
     this.x = x;
@@ -10,19 +13,22 @@ module.exports = class WallGenerator {
     this.color = color;
     this.scene = scene;
   }
-  addToScene() {
-    var geometryFor = new THREE.BoxGeometry(this.w, this.h, this.d);
 
-    // var texture = new THREE.TextureLoader().load("/src/zo-mur.png");
+  addToScene() {
+    const geometryFor = new THREE.BoxGeometry(this.w, this.h, this.d);
+
+    // let texture = new THREE.TextureLoader().load("/src/zo-mur.png");
     // texture.wrapS = THREE.RepeatWrapping;
     // texture.wrapT = THREE.RepeatWrapping;
     // texture.repeat.set(1, 1);
-    // var materialFor = new THREE.MeshBasicMaterial({
+    // let materialFor = new THREE.MeshBasicMaterial({
     //     map: texture
     // });
 
-    var materialFor = new THREE.MeshLambertMaterial({ color: new THREE.Color("rgb(255, 255, 255)") });
-    var cubeFor = new THREE.Mesh(geometryFor, materialFor);
+    const materialFor = new THREE.MeshLambertMaterial({
+      color: new THREE.Color('rgb(255, 255, 255)'),
+    });
+    const cubeFor = new THREE.Mesh(geometryFor, materialFor);
     this.scene.add(cubeFor);
     cubeFor.position.x = this.x;
     cubeFor.position.y = this.y;
@@ -30,4 +36,4 @@ module.exports = class WallGenerator {
 
     cubeFor.rotation.y = this.rotation;
   }
-}
+};

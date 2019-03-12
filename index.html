@@ -2,7 +2,7 @@
 <html>
 
 <head>
-  <title>🌑🌑🌑🌑🌑🌑🌑🌑🌑</title>
+  <title>🌑WHACC🌑</title>
   <style>
     body {
       margin: 0;
@@ -13,37 +13,58 @@
       height: 100%;
     }
 
-    #blocker {
+    .hello {
       position: absolute;
-      right: 50%;
+      /* right: 50%;
       left: 40%;
       bottom: 50%;
-      top: 50%;
-      width: 40%;
+      top: 50%; */
+      width: 100%;
     }
   </style>
 </head>
 
 <body>
+  <canvas style="display: none" class="hundredPercent" id="backgroundCanvas"></canvas>
+  <script>
+    let canvas = document.getElementById("backgroundCanvas");
+    let ctx = canvas.getContext("2d");
+
+    let number = 0;
+    ctx.fillStyle = "red";
+    // ctx.fillRect(0, 0, 100, 100);
+
+    var image = new Image();
+    image.id = "pic"
+
+    setInterval(gameLoop, 10);
+
+    function gameLoop() {
+      ctx.clearRect(0, 0, 10000, 10000);
+      ctx.fillRect(number, 0, 10, 10);
+      number += 1;
+      console.log("hi");
+      // document.body.style.background = "url(" + canvas.toDataURL() + ")";
+      image.src = canvas.toDataURL();
+      document.getElementById('he').appendChild(image);
+    }
+  </script>
+
   <div id="blocker">
     <div id="instructions">
       <span style="font-size:40px">Click to play</span>
       <br />
       (W, A, S, D = Move, SPACE = Jump, MOUSE = Look around)
     </div>
+  </div>
 
+  <div id="he" class="hello">
+    <h1>h</h1>
+    <!-- <img src="smiley.gif" alt="Smiley face" width="42" height="42"> -->
+    <img id="2d">
   </div>
 
   <script src="bundle.js"></script>
-  <div style="position: relative;">
-    <canvas class="CanvasOne" id="myCanvas"></canvas>
-    <canvas class="CanvasTwo" id="UICanvas"></canvas>
-  </div>
-  <script>
-        // var canvas = document.getElementById("UICanvas");
-        // var ctx = canvas.getContext("2d");
-        // ctx.fillRect(20, 20, 20, 20);
-  </script>
 </body>
 
 </html>

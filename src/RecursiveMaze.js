@@ -1,3 +1,8 @@
+/* eslint-disable eqeqeq */
+/* eslint-disable linebreak-style */
+/* eslint-disable no-undef */
+/* eslint-disable no-plusplus */
+
 module.exports = class RecursiveMaze {
   constructor() {
     this.array = [];
@@ -25,14 +30,15 @@ module.exports = class RecursiveMaze {
     this.testBool = false;
     this.MazeSize = 50;
   }
+
   drawMap() {
-    var counter = 0;
-    for (var x = 0; x < this.MazeSize; x++) {
+    // let counter = 0;
+    for (let x = 0; x < this.MazeSize; x++) {
       //console.log("howMany");
       this.array[x] = [];
     }
-    for (var x = 0; x < this.MazeSize; x++) {
-      for (var y = 0; y < this.MazeSize; y++) {
+    for (let x = 0; x < this.MazeSize; x++) {
+      for (let y = 0; y < this.MazeSize; y++) {
         //console.log("HowManyY" + y);
         this.array[x][y] = 1;
       }
@@ -42,10 +48,10 @@ module.exports = class RecursiveMaze {
       if (this.checkDirection()) {
         this.kill();
       } else {
-        console.log("check Direction = false;");
+        console.log('check Direction = false;');
         if (!this.finalTest()) {
-          //console.log("HUNT FAILED FOR SHO");
-          //this.MazeSize[this.MazeSize - 1][this.MazeSize - 2] == 0;
+          // console.log("HUNT FAILED FOR SHO");
+          // this.MazeSize[this.MazeSize - 1][this.MazeSize - 2] == 0;
           this.array[this.MazeSize - 1][this.MazeSize - 3] = 3;
           this.array[this.MazeSize - 2][this.MazeSize - 3] = 3;
           this.array[this.MazeSize - 3][this.MazeSize - 3] = 0;
@@ -56,12 +62,12 @@ module.exports = class RecursiveMaze {
         }
       }
     }
-
   }
+
   finalTest() {
     this.whichMove--;
     if (this.whichMove != 0) {
-      //console.log("going back");
+      // console.log("going back");
       // this.solidfiedX[this.solidfiedCounter] = this.visitedPlacesX[this.whichMove];
       // this.solidfiedY[this.solidfiedCounter] = this.visitedPlacesY[this.whichMove];
       this.startingLocationX = this.visitedPlacesX[this.whichMove];
@@ -72,46 +78,46 @@ module.exports = class RecursiveMaze {
       return false;
     }
   }
+
   test() {
-    //console.log("run");
+    // console.log("run");
     if (this.checkDirection()) {
       this.kill();
-    } else {
-      //console.log("check Direction = false;");
-      if (!this.finalTest()) {
-        //console.log("HUNT FAILED FOR SHO");
-      }
+    } else if (!this.finalTest()) {
+      // console.log("check Direction = false;");
+      // console.log("HUNT FAILED FOR SHO");
     }
   }
+
   checkDirection() {
-    //console.log("Check Direction");
+    // console.log("Check Direction");
     let x = this.startingLocationX;
     let y = this.startingLocationY;
-    //this.array[x][y] = 0;
+    // this.array[x][y] = 0;
     let canGo = false;
     this.PossibleDirections = [];
     if (x + 2 < this.MazeSize - 1 && this.array[x + 2][y] == 1 && this.array[x + 1][y] == 1) {
-      //right
-      //console.log("R");
-      this.PossibleDirections.push("R");
+      // right
+      // console.log("R");
+      this.PossibleDirections.push('R');
       canGo = true;
     }
     if (x - 2 > 0 && this.array[x - 2][y] == 1 && this.array[x - 1][y] == 1) {
-      //left
-      //console.log("L");
-      this.PossibleDirections.push("L");
+      // left
+      // console.log("L");
+      this.PossibleDirections.push('L');
       canGo = true;
     }
     if (y + 2 < this.MazeSize - 1 && this.array[x][y + 2] == 1 && this.array[x][y + 1] == 1) {
-      //bottom
-      //console.log("D");
-      this.PossibleDirections.push("D");
+      // bottom
+      // console.log("D");
+      this.PossibleDirections.push('D');
       canGo = true;
     }
     if (y - 2 > 0 && this.array[x][y - 2] == 1 && this.array[x][y - 1] == 1) {
-      //up
-      //console.log("U");
-      this.PossibleDirections.push("U");
+      // up
+      // console.log("U");
+      this.PossibleDirections.push('U');
       canGo = true;
     }
     if (canGo) {
@@ -120,35 +126,38 @@ module.exports = class RecursiveMaze {
       return false;
     }
   }
+
   kill() {
-    //console.log("kill");
+    // console.log("kill");
     let choice = Math.floor(Math.random() * this.PossibleDirections.length);
     this.visitedPlacesX[this.whichMove] = this.startingLocationX;
     this.visitedPlacesY[this.whichMove] = this.startingLocationY;
     switch (this.PossibleDirections[choice]) {
-      case "D":
-        //console.log("Traveling D");
+      case 'D':
+        // console.log("Traveling D");
         this.array[this.startingLocationX][this.startingLocationY + 1] = 0;
         this.array[this.startingLocationX][this.startingLocationY + 2] = 0;
         this.startingLocationY += 2;
         break;
-      case "U":
-        //console.log("Traveling U");
+      case 'U':
+        // console.log("Traveling U");
         this.array[this.startingLocationX][this.startingLocationY - 1] = 0;
         this.array[this.startingLocationX][this.startingLocationY - 2] = 0;
         this.startingLocationY -= 2;
         break;
-      case "R":
-        //console.log("Traveling R");
+      case 'R':
+        // console.log("Traveling R");
         this.array[this.startingLocationX + 1][this.startingLocationY] = 0;
         this.array[this.startingLocationX + 2][this.startingLocationY] = 0;
         this.startingLocationX += 2;
         break;
-      case "L":
-        //console.log("Traveling L");
+      case 'L':
+        // console.log("Traveling L");
         this.array[this.startingLocationX - 1][this.startingLocationY] = 0;
         this.array[this.startingLocationX - 2][this.startingLocationY] = 0;
         this.startingLocationX -= 2;
+        break;
+      default:
         break;
     }
     this.whichMove++;
