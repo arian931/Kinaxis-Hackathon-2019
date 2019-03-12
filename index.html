@@ -15,20 +15,28 @@
 
     .hello {
       position: absolute;
-      /* right: 50%;
-      left: 40%;
-      bottom: 50%;
-      top: 50%; */
-      width: 100%;
+      display: inline;
+    }
+
+    #he {
+      position: relative;
+      display: block;
     }
   </style>
 </head>
 
 <body>
   <canvas style="display: none" class="hundredPercent" id="backgroundCanvas"></canvas>
+  <div id="he" class="hello">
+  </div>
   <script>
     let canvas = document.getElementById("backgroundCanvas");
     let ctx = canvas.getContext("2d");
+
+    let blocker = document.getElementById('he');
+
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
 
     let number = 0;
     ctx.fillStyle = "red";
@@ -40,13 +48,21 @@
     setInterval(gameLoop, 10);
 
     function gameLoop() {
-      ctx.clearRect(0, 0, 10000, 10000);
-      ctx.fillRect(number, 0, 10, 10);
-      number += 1;
-      console.log("hi");
-      // document.body.style.background = "url(" + canvas.toDataURL() + ")";
-      image.src = canvas.toDataURL();
-      document.getElementById('he').appendChild(image);
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      if (number <= 200) {
+        ctx.clearRect(0, 0, 10000, 10000);
+        ctx.fillStyle = "black";
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        ctx.fillStyle = "red";
+        ctx.fillRect(number, 0, 10, 10);
+        number += 1;
+        console.log("hi");
+        image.src = canvas.toDataURL();
+        document.getElementById('he').appendChild(image);
+      } else {
+        console.log("hello");
+        blocker.style.display = 'none';
+      }
     }
   </script>
 
@@ -58,11 +74,7 @@
     </div>
   </div>
 
-  <div id="he" class="hello">
-    <h1>h</h1>
-    <!-- <img src="smiley.gif" alt="Smiley face" width="42" height="42"> -->
-    <img id="2d">
-  </div>
+
 
   <script src="bundle.js"></script>
 </body>
