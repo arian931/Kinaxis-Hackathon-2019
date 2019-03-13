@@ -15,16 +15,17 @@ module.exports = class insideWallsMaze {
 
   addToScene() {
     let geometryFor = new THREE.BoxGeometry(this.w, this.heightOfWall, this.w);
+    let materialFor;
     if (!this.endBlock) {
       let texture = new THREE.TextureLoader().load("/src/05muronero.jpg");
       texture.wrapS = THREE.RepeatWrapping;
       texture.wrapT = THREE.RepeatWrapping;
       texture.repeat.set(0.25, 0.25);
-      let materialFor = new THREE.MeshLambertMaterial({
+      materialFor = new THREE.MeshLambertMaterial({
         map: texture
       });
     } else {
-      let materialFor = new THREE.MeshLambertMaterial({ color: this.color });
+      materialFor = new THREE.MeshLambertMaterial({ color: this.color });
     }
     let cubeFor = new THREE.Mesh(geometryFor, materialFor);
     this.scene.add(cubeFor);
