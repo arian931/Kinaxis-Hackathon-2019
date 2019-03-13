@@ -38,14 +38,10 @@
     // canvas.width = window.innerWidth;
     // canvas.height = window.innerHeight;
 
-
+    // let number = 0;
     // ctx.fillStyle = "red";
     // // ctx.fillRect(0, 0, 100, 100);
 
-    // let number = 0;
-    // let moveRate = 5;
-    // let rightBar = canvas.width;
-    // let leftBar = -canvas.width / 2;
     // var image = new Image();
     // image.id = "pic"
 
@@ -53,18 +49,14 @@
 
     // function gameLoop() {
     //   ctx.clearRect(0, 0, canvas.width, canvas.height);
-    //   if (leftBar <= canvas.width / 2) {
+    //   if (number <= 200) {
     //     ctx.clearRect(0, 0, 10000, 10000);
-    //     ctx.fillStyle = "white";
-    //     ctx.fillRect(0, 0, canvas.width, canvas.height);
     //     ctx.fillStyle = "black";
-    //     rightBar -= moveRate;
-    //     leftBar += moveRate;
-    //     ctx.fillRect(rightBar, 0, canvas.width / 2, canvas.height / 4);
-    //     ctx.fillRect(leftBar, canvas.height / 4, canvas.width / 2, canvas.height / 4);
-    //     ctx.fillRect(rightBar, canvas.height / 2, canvas.width / 2, canvas.height / 4);
-    //     ctx.fillRect(leftBar, canvas.height / 4 * 3, canvas.width / 2, canvas.height / 4);
-
+    //     ctx.fillRect(0, 0, canvas.width, canvas.height);
+    //     ctx.fillStyle = "red";
+    //     ctx.fillRect(number, 0, 10, 10);
+    //     number += 1;
+    //     console.log("hi");
     //     image.src = canvas.toDataURL();
     //     document.getElementById('he').appendChild(image);
     //   } else {
@@ -81,6 +73,8 @@
       (W, A, S, D = Move, SPACE = Jump, MOUSE = Look around)
     </div>
   </div>
+
+
 
   <script src="bundle.js"></script>
 </body>

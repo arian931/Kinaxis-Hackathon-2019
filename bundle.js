@@ -51767,8 +51767,37 @@ module.exports = _GLTFLoader;
 }));
 
 },{}],3:[function(require,module,exports){
-module.exports = class Door {
-  constructor(x, z, w, scene) {
+/* eslint-disable linebreak-style */
+/* eslint-disable no-undef */
+module.exports = class Floor {
+  constructor(w, h, scene) {
+    this.w = w;
+    this.h = h;
+    this.scene = scene;
+  }
+
+  addToScene() {
+    const geometryFloor = new THREE.PlaneBufferGeometry(this.w, this.h);
+    geometryFloor.rotateX(-Math.PI / 2);
+    const texture = new THREE.TextureLoader().load("/src/04muroverde.jpg");
+    texture.wrapS = THREE.RepeatWrapping;
+    texture.wrapT = THREE.RepeatWrapping;
+    texture.repeat.set(10, 10);
+    const material = new THREE.MeshBasicMaterial({
+      map: texture
+    });
+    // let material = new THREE.MeshLambertMaterial({ color: 0xffff00, side: THREE.DoubleSide });
+    let plane = new THREE.Mesh(geometryFloor, material);
+    this.scene.add(plane);
+  }
+};
+
+},{}],4:[function(require,module,exports){
+/* eslint-disable linebreak-style */
+/* eslint-disable no-undef */
+
+module.exports = class insideWallsMaze {
+  constructor(x, z, w, endBlock, scene) {
     this.x = x;
     this.y = z;
     this.w = w;
@@ -51778,86 +51807,32 @@ module.exports = class Door {
     this.heightOfWall = 50;
     this.endBlock = endBlock;
   }
+
   addToScene() {
-    var geometryFor = new THREE.BoxGeometry(this.w, this.heightOfWall, this.w);
-
-    // var texture = new THREE.TextureLoader().load("/src/05muronero.jpg");
-    // texture.wrapS = THREE.RepeatWrapping;
-    // texture.wrapT = THREE.RepeatWrapping;
-    // texture.repeat.set(0.25, 0.25);
-    // var materialFor = new THREE.MeshLambertMaterial({
-    //     map: texture
-    // });
-
-    let cubeMaterials = [
-      new THREE.MeshLambertMaterial({ map: new THREE.tex })
-    ]
-
-    var materialFor = new THREE.MeshLambertMaterial({ color: this.color });
-
-    var cubeFor = new THREE.Mesh(geometryFor, materialFor);
+    let geometryFor = new THREE.BoxGeometry(this.w, this.heightOfWall, this.w);
+    if (!this.endBlock) {
+      let texture = new THREE.TextureLoader().load("/src/05muronero.jpg");
+      texture.wrapS = THREE.RepeatWrapping;
+      texture.wrapT = THREE.RepeatWrapping;
+      texture.repeat.set(0.25, 0.25);
+      let materialFor = new THREE.MeshLambertMaterial({
+        map: texture
+      });
+    } else {
+      let materialFor = new THREE.MeshLambertMaterial({ color: this.color });
+    }
+    let cubeFor = new THREE.Mesh(geometryFor, materialFor);
     this.scene.add(cubeFor);
     cubeFor.position.x = this.x;
     cubeFor.position.y = this.heightOfWall / 2;
     cubeFor.position.z = this.z;
   }
-} 
-},{}],4:[function(require,module,exports){
-module.exports = class Floor {
-  constructor(w, h, scene) {
-    this.w = w;
-    this.h = h;
-    this.scene = scene;
-  }
-  addToScene() {
-    var geometryFloor = new THREE.PlaneBufferGeometry(this.w, this.h);
-    geometryFloor.rotateX((-Math.PI) / 2);
-    var texture = new THREE.TextureLoader().load("/src/04muroverde.jpg");
-    texture.wrapS = THREE.RepeatWrapping;
-    texture.wrapT = THREE.RepeatWrapping;
-    texture.repeat.set(10, 10);
-    var material = new THREE.MeshBasicMaterial({
-      map: texture
-    });
-    // var material = new THREE.MeshLambertMaterial({ color: 0xffff00, side: THREE.DoubleSide });
-    var plane = new THREE.Mesh(geometryFloor, material);
-    this.scene.add(plane);
-  }
-}
+};
 
 },{}],5:[function(require,module,exports){
-module.exports = class insideWallsMaze {
-    constructor(x, z, w, endBlock, scene) {
-        this.x = x;
-        this.y = z;
-        this.w = w;
-        this.z = z;
-        this.scene = scene;
-        this.color = new THREE.Color("rgb(0, 0, 0)");
-        this.heightOfWall = 50;
-        this.endBlock = endBlock;
-    }
-    addToScene() {
-        var geometryFor = new THREE.BoxGeometry(this.w, this.heightOfWall, this.w);
-        if (!this.endBlock) {
-            var texture = new THREE.TextureLoader().load("/src/05muronero.jpg");
-            texture.wrapS = THREE.RepeatWrapping;
-            texture.wrapT = THREE.RepeatWrapping;
-            texture.repeat.set(0.25, 0.25);
-            var materialFor = new THREE.MeshLambertMaterial({
-                map: texture
-            });
-        } else {
-            var materialFor = new THREE.MeshLambertMaterial({ color: this.color });
-        }
-        var cubeFor = new THREE.Mesh(geometryFor, materialFor);
-        this.scene.add(cubeFor);
-        cubeFor.position.x = this.x;
-        cubeFor.position.y = this.heightOfWall / 2;
-        cubeFor.position.z = this.z;
-    }
-} 
-},{}],6:[function(require,module,exports){
+/* eslint-disable linebreak-style */
+/* eslint-disable no-undef */
+
 module.exports = class Map {
   constructor() {
     this.array = [];
@@ -51881,12 +51856,12 @@ module.exports = class Map {
   }
 
   drawMap() {
-    var counter = 0;
-    for (var x = 0; x < this.MazeSize; x++) {
+    let counter = 0;
+    for (let x = 0; x < this.MazeSize; x++) {
       this.array[x] = [];
     }
-    for (var x = 0; x < this.MazeSize; x++) {
-      for (var y = 0; y < this.MazeSize; y++) {
+    for (let x = 0; x < this.MazeSize; x++) {
+      for (let y = 0; y < this.MazeSize; y++) {
         this.array[x][y] = 1;
       }
     }
@@ -51894,9 +51869,9 @@ module.exports = class Map {
       if (this.checkDirection()) {
         this.kill();
       } else {
-        console.log("check Direction = false;");
+        //console.log("check Direction = false;");
         if (!this.hunt()) {
-          console.log("HUNT FAILED FOR SHO");
+          //console.log("HUNT FAILED FOR SHO");
           this.array[this.MazeSize - 1][this.MazeSize - 3] = 3;
           this.array[this.MazeSize - 2][this.MazeSize - 3] = 3;
           this.array[this.MazeSize - 3][this.MazeSize - 3] = 0;
@@ -51926,7 +51901,7 @@ module.exports = class Map {
   }
 
   checkDirection() {
-    console.log("Check Direction");
+    //console.log("Check Direction");
     let x = this.startingLocationX;
     let y = this.startingLocationY;
     this.array[x][y] = 0;
@@ -51960,26 +51935,27 @@ module.exports = class Map {
       return false;
     }
   }
+
   kill() {
-    console.log("kill");
+    //  console.log("kill");
     let choice = Math.floor(Math.random() * this.PossibleDirections.length);
-    //console.log(choice);
-    let indexForAsigning;
-    //console.log(this.PossibleDirections);
+    //  console.log(choice);
+    // let indexForAsigning;
+    //  console.log(this.PossibleDirections);
     switch (this.PossibleDirections[choice]) {
-      case "D":
-        //console.log("Traveling D");
+      case 'D':
+        // console.log("Traveling D");
         this.array[this.startingLocationX][this.startingLocationY + 1] = 0;
         this.array[this.startingLocationX][this.startingLocationY + 2] = 0;
         this.startingLocationY += 2;
         break;
-      case "U":
-        //console.log("Traveling U");
+      case 'U':
+        // console.log("Traveling U");
         this.array[this.startingLocationX][this.startingLocationY - 1] = 0;
         this.array[this.startingLocationX][this.startingLocationY - 2] = 0;
         this.startingLocationY -= 2;
         break;
-      case "R":
+      case 'R':
         //console.log("Traveling R");
         this.array[this.startingLocationX + 1][this.startingLocationY] = 0;
         this.array[this.startingLocationX + 2][this.startingLocationY] = 0;
@@ -51991,11 +51967,13 @@ module.exports = class Map {
         this.array[this.startingLocationX - 2][this.startingLocationY] = 0;
         this.startingLocationX -= 2;
         break;
+      default:
     }
   }
+
   hunt() {
-    console.log("hunt");
-    var canKill = false;
+    //console.log("hunt");
+    let canKill = false;
     var foundIT = true;
     for (var x = this.MazeSize - 2; x >= 1; x--) {
       if (foundIT) {
@@ -52071,9 +52049,15 @@ module.exports = class Map {
     }
   }
 }
-},{}],7:[function(require,module,exports){
+},{}],6:[function(require,module,exports){
+/* eslint-disable eqeqeq */
+/* eslint-disable linebreak-style */
+/* eslint-disable no-undef */
+/* eslint-disable no-plusplus */
+
 module.exports = class RecursiveMaze {
   constructor() {
+    console.log("recursive");
     this.array = [];
     this.visitedPlacesX = [];
     this.visitedPlacesY = [];
@@ -52099,14 +52083,15 @@ module.exports = class RecursiveMaze {
     this.testBool = false;
     this.MazeSize = 50;
   }
+
   drawMap() {
-    var counter = 0;
-    for (var x = 0; x < this.MazeSize; x++) {
+    // let counter = 0;
+    for (let x = 0; x < this.MazeSize; x++) {
       //console.log("howMany");
       this.array[x] = [];
     }
-    for (var x = 0; x < this.MazeSize; x++) {
-      for (var y = 0; y < this.MazeSize; y++) {
+    for (let x = 0; x < this.MazeSize; x++) {
+      for (let y = 0; y < this.MazeSize; y++) {
         //console.log("HowManyY" + y);
         this.array[x][y] = 1;
       }
@@ -52116,10 +52101,10 @@ module.exports = class RecursiveMaze {
       if (this.checkDirection()) {
         this.kill();
       } else {
-        console.log("check Direction = false;");
+        console.log('check Direction = false;');
         if (!this.finalTest()) {
-          //console.log("HUNT FAILED FOR SHO");
-          //this.MazeSize[this.MazeSize - 1][this.MazeSize - 2] == 0;
+          // console.log("HUNT FAILED FOR SHO");
+          // this.MazeSize[this.MazeSize - 1][this.MazeSize - 2] == 0;
           this.array[this.MazeSize - 1][this.MazeSize - 3] = 3;
           this.array[this.MazeSize - 2][this.MazeSize - 3] = 3;
           this.array[this.MazeSize - 3][this.MazeSize - 3] = 0;
@@ -52130,12 +52115,12 @@ module.exports = class RecursiveMaze {
         }
       }
     }
-
   }
+
   finalTest() {
     this.whichMove--;
     if (this.whichMove != 0) {
-      //console.log("going back");
+      // console.log("going back");
       // this.solidfiedX[this.solidfiedCounter] = this.visitedPlacesX[this.whichMove];
       // this.solidfiedY[this.solidfiedCounter] = this.visitedPlacesY[this.whichMove];
       this.startingLocationX = this.visitedPlacesX[this.whichMove];
@@ -52146,46 +52131,46 @@ module.exports = class RecursiveMaze {
       return false;
     }
   }
+
   test() {
-    //console.log("run");
+    // console.log("run");
     if (this.checkDirection()) {
       this.kill();
-    } else {
-      //console.log("check Direction = false;");
-      if (!this.finalTest()) {
-        //console.log("HUNT FAILED FOR SHO");
-      }
+    } else if (!this.finalTest()) {
+      // console.log("check Direction = false;");
+      // console.log("HUNT FAILED FOR SHO");
     }
   }
+
   checkDirection() {
-    //console.log("Check Direction");
+    console.log("Check Direction");
     let x = this.startingLocationX;
     let y = this.startingLocationY;
-    //this.array[x][y] = 0;
+    // this.array[x][y] = 0;
     let canGo = false;
     this.PossibleDirections = [];
     if (x + 2 < this.MazeSize - 1 && this.array[x + 2][y] == 1 && this.array[x + 1][y] == 1) {
-      //right
-      //console.log("R");
-      this.PossibleDirections.push("R");
+      // right
+      // console.log("R");
+      this.PossibleDirections.push('R');
       canGo = true;
     }
     if (x - 2 > 0 && this.array[x - 2][y] == 1 && this.array[x - 1][y] == 1) {
-      //left
-      //console.log("L");
-      this.PossibleDirections.push("L");
+      // left
+      // console.log("L");
+      this.PossibleDirections.push('L');
       canGo = true;
     }
     if (y + 2 < this.MazeSize - 1 && this.array[x][y + 2] == 1 && this.array[x][y + 1] == 1) {
-      //bottom
-      //console.log("D");
-      this.PossibleDirections.push("D");
+      // bottom
+      // console.log("D");
+      this.PossibleDirections.push('D');
       canGo = true;
     }
     if (y - 2 > 0 && this.array[x][y - 2] == 1 && this.array[x][y - 1] == 1) {
-      //up
-      //console.log("U");
-      this.PossibleDirections.push("U");
+      // up
+      // console.log("U");
+      this.PossibleDirections.push('U');
       canGo = true;
     }
     if (canGo) {
@@ -52194,41 +52179,47 @@ module.exports = class RecursiveMaze {
       return false;
     }
   }
+
   kill() {
-    //console.log("kill");
+    console.log("kill");
     let choice = Math.floor(Math.random() * this.PossibleDirections.length);
     this.visitedPlacesX[this.whichMove] = this.startingLocationX;
     this.visitedPlacesY[this.whichMove] = this.startingLocationY;
     switch (this.PossibleDirections[choice]) {
-      case "D":
-        //console.log("Traveling D");
+      case 'D':
+        // console.log("Traveling D");
         this.array[this.startingLocationX][this.startingLocationY + 1] = 0;
         this.array[this.startingLocationX][this.startingLocationY + 2] = 0;
         this.startingLocationY += 2;
         break;
-      case "U":
-        //console.log("Traveling U");
+      case 'U':
+        // console.log("Traveling U");
         this.array[this.startingLocationX][this.startingLocationY - 1] = 0;
         this.array[this.startingLocationX][this.startingLocationY - 2] = 0;
         this.startingLocationY -= 2;
         break;
-      case "R":
-        //console.log("Traveling R");
+      case 'R':
+        // console.log("Traveling R");
         this.array[this.startingLocationX + 1][this.startingLocationY] = 0;
         this.array[this.startingLocationX + 2][this.startingLocationY] = 0;
         this.startingLocationX += 2;
         break;
-      case "L":
-        //console.log("Traveling L");
+      case 'L':
+        // console.log("Traveling L");
         this.array[this.startingLocationX - 1][this.startingLocationY] = 0;
         this.array[this.startingLocationX - 2][this.startingLocationY] = 0;
         this.startingLocationX -= 2;
+        break;
+      default:
         break;
     }
     this.whichMove++;
   }
 }
-},{}],8:[function(require,module,exports){
+},{}],7:[function(require,module,exports){
+/* eslint-disable linebreak-style */
+/* eslint-disable no-undef */
+
 module.exports = class WallGenerator {
   constructor(x, y, z, w, h, d, color, scene, rotation) {
     this.x = x;
@@ -52241,19 +52232,22 @@ module.exports = class WallGenerator {
     this.color = color;
     this.scene = scene;
   }
-  addToScene() {
-    var geometryFor = new THREE.BoxGeometry(this.w, this.h, this.d);
 
-    // var texture = new THREE.TextureLoader().load("/src/zo-mur.png");
+  addToScene() {
+    const geometryFor = new THREE.BoxGeometry(this.w, this.h, this.d);
+
+    // let texture = new THREE.TextureLoader().load("/src/zo-mur.png");
     // texture.wrapS = THREE.RepeatWrapping;
     // texture.wrapT = THREE.RepeatWrapping;
     // texture.repeat.set(1, 1);
-    // var materialFor = new THREE.MeshBasicMaterial({
+    // let materialFor = new THREE.MeshBasicMaterial({
     //     map: texture
     // });
 
-    var materialFor = new THREE.MeshLambertMaterial({ color: new THREE.Color("rgb(255, 255, 255)") });
-    var cubeFor = new THREE.Mesh(geometryFor, materialFor);
+    const materialFor = new THREE.MeshLambertMaterial({
+      color: new THREE.Color('rgb(255, 255, 255)'),
+    });
+    const cubeFor = new THREE.Mesh(geometryFor, materialFor);
     this.scene.add(cubeFor);
     cubeFor.position.x = this.x;
     cubeFor.position.y = this.y;
@@ -52261,225 +52255,271 @@ module.exports = class WallGenerator {
 
     cubeFor.rotation.y = this.rotation;
   }
-}
-},{}],9:[function(require,module,exports){
+};
+
+},{}],8:[function(require,module,exports){
 (function (global){
+/* eslint-disable linebreak-style */
+/* eslint-disable no-undef */
+
 global.THREE = require('three');
 global.GLTFLoader = require('three-gltf-loader');
 const Floor = require('./Floor.js');
 const InsideWallsMaze = require('./InsideWallsMaze.js');
 const Map = require('./Map.js');
 const WallGenerator = require('./WallGenerator.js');
-const Door = require('./Door.js');
+//  const Door = require('./Door.js');
 const RecursiveMaze = require('./RecursiveMaze');
-
 /**
  * @author mrdoob / http://mrdoob.com/
  * @author Mugen87 / https://github.com/Mugen87
  */
 
+const canvas = document.getElementById('backgroundCanvas');
+const ctx = canvas.getContext('2d');
+
+let TCanvas = document.getElementById('he');
+
+console.log("FUICKKKKKKKKKKKKKKKKKKKKKKKKK");
+
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
+
+
+ctx.fillStyle = "red";
+// ctx.fillRect(0, 0, 100, 100);
+
+let moveRate = 5;
+let rightBar = canvas.width;
+let leftBar = -canvas.width / 2;
+var image = new Image();
+image.id = "pic"
+
+setInterval(gameLoop, 10);
+
+function gameLoop() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    if (leftBar <= canvas.width / 2) {
+        ctx.clearRect(0, 0, 10000, 10000);
+        ctx.fillStyle = "white";
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        ctx.fillStyle = "black";
+        rightBar -= moveRate;
+        leftBar += moveRate;
+        ctx.fillRect(rightBar, 0, canvas.width / 2, canvas.height / 4);
+        ctx.fillRect(leftBar, canvas.height / 4, canvas.width / 2, canvas.height / 4);
+        ctx.fillRect(rightBar, canvas.height / 2, canvas.width / 2, canvas.height / 4);
+        ctx.fillRect(leftBar, canvas.height / 4 * 3, canvas.width / 2, canvas.height / 4);
+
+        image.src = canvas.toDataURL();
+        document.getElementById('he').appendChild(image);
+    } else {
+        console.log("hello");
+        TCanvas.style.display = 'none';
+    }
+}
 THREE.PointerLockControls = function (camera, domElement) {
 
-  var scope = this;
+    let scope = this;
 
-  this.domElement = domElement || document.body;
-  this.isLocked = false;
+    this.domElement = domElement || document.body;
+    this.isLocked = false;
 
-  camera.rotation.set(0, 0, 0);
+    camera.rotation.set(0, 0, 0);
 
-  var pitchObject = new THREE.Object3D();
-  pitchObject.add(camera);
+    let pitchObject = new THREE.Object3D();
+    pitchObject.add(camera);
 
-  var yawObject = new THREE.Object3D();
-  yawObject.position.y = 10;
-  yawObject.add(pitchObject);
+    let yawObject = new THREE.Object3D();
+    yawObject.position.y = 10;
+    yawObject.add(pitchObject);
 
-  var PI_2 = Math.PI / 2;
+    let PI_2 = Math.PI / 2;
 
-  function onMouseMove(event) {
+    function onMouseMove(event) {
 
-    if (scope.isLocked === false) return;
+        if (scope.isLocked === false) return;
 
-    var movementX = event.movementX || event.mozMovementX || event.webkitMovementX || 0;
-    var movementY = event.movementY || event.mozMovementY || event.webkitMovementY || 0;
+        let movementX = event.movementX || event.mozMovementX || event.webkitMovementX || 0;
+        let movementY = event.movementY || event.mozMovementY || event.webkitMovementY || 0;
 
-    yawObject.rotation.y -= movementX * 0.002;
-    pitchObject.rotation.x -= movementY * 0.002;
+        yawObject.rotation.y -= movementX * 0.002;
+        pitchObject.rotation.x -= movementY * 0.002;
 
-    pitchObject.rotation.x = Math.max(- PI_2, Math.min(PI_2, pitchObject.rotation.x));
-
-  }
-
-  function onPointerlockChange() {
-
-    if (document.pointerLockElement === scope.domElement) {
-
-      scope.dispatchEvent({ type: 'lock' });
-
-      scope.isLocked = true;
-
-    } else {
-
-      scope.dispatchEvent({ type: 'unlock' });
-
-      scope.isLocked = false;
+        pitchObject.rotation.x = Math.max(- PI_2, Math.min(PI_2, pitchObject.rotation.x));
 
     }
 
-  }
+    function onPointerlockChange() {
 
-  function onPointerlockError() {
+        if (document.pointerLockElement === scope.domElement) {
 
-    console.error('THREE.PointerLockControls: Unable to use Pointer Lock API');
+            scope.dispatchEvent({ type: 'lock' });
 
-  }
+            scope.isLocked = true;
 
-  this.connect = function () {
+        } else {
 
-    document.addEventListener('mousemove', onMouseMove, false);
-    document.addEventListener('pointerlockchange', onPointerlockChange, false);
-    document.addEventListener('pointerlockerror', onPointerlockError, false);
+            scope.dispatchEvent({ type: 'unlock' });
 
-  };
+            scope.isLocked = false;
 
-  this.disconnect = function () {
+        }
 
-    document.removeEventListener('mousemove', onMouseMove, false);
-    document.removeEventListener('pointerlockchange', onPointerlockChange, false);
-    document.removeEventListener('pointerlockerror', onPointerlockError, false);
+    }
 
-  };
+    function onPointerlockError() {
 
-  this.dispose = function () {
+        console.error('THREE.PointerLockControls: Unable to use Pointer Lock API');
 
-    this.disconnect();
+    }
 
-  };
+    this.connect = function () {
 
-  this.getObject = function () {
-
-    return yawObject;
-
-  };
-
-  this.getDirection = function () {
-
-    // assumes the camera itself is not rotated
-
-    var direction = new THREE.Vector3(0, 0, - 1);
-    var rotation = new THREE.Euler(0, 0, 0, 'YXZ');
-
-    return function (v) {
-
-      rotation.set(pitchObject.rotation.x, yawObject.rotation.y, 0);
-
-      v.copy(direction).applyEuler(rotation);
-
-      return v;
+        document.addEventListener('mousemove', onMouseMove, false);
+        document.addEventListener('pointerlockchange', onPointerlockChange, false);
+        document.addEventListener('pointerlockerror', onPointerlockError, false);
 
     };
 
-  }();
+    this.disconnect = function () {
 
-  this.lock = function () {
+        document.removeEventListener('mousemove', onMouseMove, false);
+        document.removeEventListener('pointerlockchange', onPointerlockChange, false);
+        document.removeEventListener('pointerlockerror', onPointerlockError, false);
 
-    this.domElement.requestPointerLock();
+    };
 
-  };
+    this.dispose = function () {
 
-  this.unlock = function () {
+        this.disconnect();
 
-    document.exitPointerLock();
+    };
 
-  };
+    this.getObject = function () {
 
-  this.connect();
+        return yawObject;
+
+    };
+
+    this.getDirection = function () {
+
+        // assumes the camera itself is not rotated
+
+        let direction = new THREE.Vector3(0, 0, - 1);
+        let rotation = new THREE.Euler(0, 0, 0, 'YXZ');
+
+        return function (v) {
+
+            rotation.set(pitchObject.rotation.x, yawObject.rotation.y, 0);
+
+            v.copy(direction).applyEuler(rotation);
+
+            return v;
+
+        };
+
+    }();
+
+    this.lock = function () {
+
+        this.domElement.requestPointerLock();
+
+    };
+
+    this.unlock = function () {
+
+        document.exitPointerLock();
+
+    };
+
+    this.connect();
 
 };
 
 THREE.PointerLockControls.prototype = Object.create(THREE.EventDispatcher.prototype);
 THREE.PointerLockControls.prototype.constructor = THREE.PointerLockControls;
 
-
-var white = new THREE.Color("rgb(255, 255, 255)");
-var black = new THREE.Color("rgb(0, 0, 0)");
-var yellow = new THREE.Color("rgb(233, 255, 0)");
-var green = new THREE.Color("rgb(0,255,0)");
-var blue = new THREE.Color("rgb(0,100,255)");
-var red = new THREE.Color("rgb(255,0,0)");
+let white = new THREE.Color("rgb(255, 255, 255)");
+let black = new THREE.Color("rgb(0, 0, 0)");
+let yellow = new THREE.Color("rgb(233, 255, 0)");
+let green = new THREE.Color("rgb(0,255,0)");
+let blue = new THREE.Color("rgb(0,100,255)");
+let red = new THREE.Color("rgb(255,0,0)");
 
 let startScreenBool = true;
 
 //controls button and explanation
-var blocker = document.getElementById('blocker');
-var instructions = document.getElementById('instructions');
+let blocker = document.getElementById('blocker');
+let instructions = document.getElementById('instructions');
+
 // https://www.html5rocks.com/en/tutorials/pointerlock/intro/
 
 //CONTROLS BOILER PLATE ---------------------------------------------------------------------
-var havePointerLock = 'pointerLockElement' in document || 'mozPointerLockElement' in document || 'webkitPointerLockElement' in document;
+let havePointerLock = 'pointerLockElement' in document || 'mozPointerLockElement' in document || 'webkitPointerLockElement' in document;
 if (havePointerLock) {
-  var element = document.body;
-  var pointerlockchange = function (event) {
-    if (document.pointerLockElement === element || document.mozPointerLockElement === element || document.webkitPointerLockElement === element) {
-      controlsEnabled = true;
-      controls.enabled = true;
-      startScreenBool = false;
-      blocker.style.display = 'none';
-      startScreen();
-    } else {
-      controls.enabled = false;
-      blocker.style.display = '-webkit-box';
-      blocker.style.display = '-moz-box';
-      blocker.style.display = 'box';
-      instructions.style.display = '';
-    }
-  };
-  var pointerlockerror = function (event) {
-    instructions.style.display = '';
-  };
-  // Hook pointer lock state change events
-  document.addEventListener('pointerlockchange', pointerlockchange, false);
-  document.addEventListener('mozpointerlockchange', pointerlockchange, false);
-  document.addEventListener('webkitpointerlockchange', pointerlockchange, false);
-  document.addEventListener('pointerlockerror', pointerlockerror, false);
-  document.addEventListener('mozpointerlockerror', pointerlockerror, false);
-  document.addEventListener('webkitpointerlockerror', pointerlockerror, false);
-  instructions.addEventListener('click', function (event) {
-    instructions.style.display = 'none';
-    // Ask the browser to lock the pointer
-    element.requestPointerLock = element.requestPointerLock || element.mozRequestPointerLock || element.webkitRequestPointerLock;
-    if (/Firefox/i.test(navigator.userAgent)) {
-      var fullscreenchange = function (event) {
-        if (document.fullscreenElement === element || document.mozFullscreenElement === element || document.mozFullScreenElement === element) {
-          document.removeEventListener('fullscreenchange', fullscreenchange);
-          document.removeEventListener('mozfullscreenchange', fullscreenchange);
-          element.requestPointerLock();
+    let element = document.body;
+    let pointerlockchange = function (event) {
+        if (document.pointerLockElement === element || document.mozPointerLockElement === element || document.webkitPointerLockElement === element) {
+            controlsEnabled = true;
+            controls.enabled = true;
+            startScreenBool = false;
+            blocker.style.display = 'none';
+            startScreen();
+        } else {
+            controls.enabled = false;
+            blocker.style.display = '-webkit-box';
+            blocker.style.display = '-moz-box';
+            blocker.style.display = 'box';
+            instructions.style.display = '';
         }
-      };
-      document.addEventListener('fullscreenchange', fullscreenchange, false);
-      document.addEventListener('mozfullscreenchange', fullscreenchange, false);
-      element.requestFullscreen = element.requestFullscreen || element.mozRequestFullscreen || element.mozRequestFullScreen || element.webkitRequestFullscreen;
-      element.requestFullscreen();
-    } else {
-      element.requestPointerLock();
-    }
-  }, false);
+    };
+    let pointerlockerror = function (event) {
+        instructions.style.display = '';
+    };
+    // Hook pointer lock state change events
+    document.addEventListener('pointerlockchange', pointerlockchange, false);
+    document.addEventListener('mozpointerlockchange', pointerlockchange, false);
+    document.addEventListener('webkitpointerlockchange', pointerlockchange, false);
+    document.addEventListener('pointerlockerror', pointerlockerror, false);
+    document.addEventListener('mozpointerlockerror', pointerlockerror, false);
+    document.addEventListener('webkitpointerlockerror', pointerlockerror, false);
+    instructions.addEventListener('click', function (event) {
+        instructions.style.display = 'none';
+        // Ask the browser to lock the pointer
+        element.requestPointerLock = element.requestPointerLock || element.mozRequestPointerLock || element.webkitRequestPointerLock;
+        if (/Firefox/i.test(navigator.userAgent)) {
+            let fullscreenchange = function (event) {
+                if (document.fullscreenElement === element || document.mozFullscreenElement === element || document.mozFullScreenElement === element) {
+                    document.removeEventListener('fullscreenchange', fullscreenchange);
+                    document.removeEventListener('mozfullscreenchange', fullscreenchange);
+                    element.requestPointerLock();
+                }
+            };
+            document.addEventListener('fullscreenchange', fullscreenchange, false);
+            document.addEventListener('mozfullscreenchange', fullscreenchange, false);
+            element.requestFullscreen = element.requestFullscreen || element.mozRequestFullscreen || element.mozRequestFullScreen || element.webkitRequestFullscreen;
+            element.requestFullscreen();
+        } else {
+            element.requestPointerLock();
+        }
+    }, false);
 } else {
-  instructions.innerHTML = 'Your browser doesn\'t seem to support Pointer Lock API';
+    instructions.innerHTML = 'Your browser doesn\'t seem to support Pointer Lock API';
 }
 //------------------------------------------------------------------------------------------
 
 
 
-var scene = new THREE.Scene();
+let scene = new THREE.Scene();
 scene.background = new THREE.Color(0xffffff);
 scene.fog = new THREE.Fog(0xffffff, 0, 750);
-var camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 800);
+let camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 800);
 
 controls = new THREE.PointerLockControls(camera);
 scene.add(controls.getObject());
 
-var renderer = new THREE.WebGLRenderer();
+let renderer = new THREE.WebGLRenderer();
 renderer.setPixelRatio(window.devicePixelRatio / 2);
 renderer.setSize(window.innerWidth, window.innerHeight);
 document.body.appendChild(renderer.domElement);
@@ -52488,63 +52528,74 @@ let floorClass = new Floor(1000, 1000, scene);
 floorClass.addToScene();
 
 //outer wall generation
-var walls = [];
+let walls = [];
 walls[0] = new WallGenerator(floorClass.w / 2, 50, 0, 1, 100, floorClass.w, white, scene, 0);
 walls[1] = new WallGenerator(-floorClass.w / 2, 50, 0, 1, 100, floorClass.w, white, scene, 0);
 walls[2] = new WallGenerator(0, 50, floorClass.h / 2, 1, 100, floorClass.h, white, scene, (-Math.PI / 2));
 walls[3] = new WallGenerator(0, 50, -floorClass.h / 2, 1, 100, floorClass.h, white, scene, (-Math.PI / 2));
-for (var x = 0; x < walls.length; x++) {
-  walls[x].addToScene();
+for (let x = 0; x < walls.length; x++) {
+    walls[x].addToScene();
 }
 //-------------------------
 
 //wall genertion
-var InsideWallsNumberArray;
-var InsideWalls = [];
+let InsideWallsNumberArray;
+let InsideWalls = [];
 
-var huntAndKill = true;
-if (huntAndKill) {
-  var mapAlgo = new Map();
-  mapAlgo.drawMap();
-  InsideWallsNumberArray = mapAlgo.array;
-} else {
-  var mapAlgo = new RecursiveMaze();
-  mapAlgo.drawMap();
-  InsideWallsNumberArray = mapAlgo.array;
-  console.log(InsideWallsNumberArray);
-}
-for (var x = 0; x < mapAlgo.MazeSize; x++) {
-  for (var y = 0; y < mapAlgo.MazeSize; y++) {
-    InsideWalls[x] = [];
-  }
+// let huntAndKill = false;
+// if (huntAndKill) {
+//     console.log("hunt And KIll true");
+//     let mapAlgo = new Map();
+//     mapAlgo.drawMap();
+//     InsideWallsNumberArray = mapAlgo.array;
+// } else {
+//     console.log("hunt And KIll true");
+//     let mapAlgo = new RecursiveMaze();
+//     mapAlgo.drawMap();
+//     InsideWallsNumberArray = mapAlgo.array;
+//     console.log("FUCKKKKKKKKKKKKWKKKKKKKKKKKKKKKK");
+//     console.log("FUCKKKKKKKKKKKKWKKKKKKKKKKKKKKKK");
+//     console.log("FUCKKKKKKKKKKKKWKKKKKKKKKKKKKKKK");
+//     console.log("FUCKKKKKKKKKKKKWKKKKKKKKKKKKKKKK");
+//     //console.log(InsideWallsNumberArray);
+// }
+
+let mapAlgo = new Map();
+mapAlgo.drawMap();
+InsideWallsNumberArray = mapAlgo.array;
+console.log("Before Error");
+for (let x = 0; x < mapAlgo.MazeSize; x++) {
+    for (let y = 0; y < mapAlgo.MazeSize; y++) {
+        InsideWalls[x] = [];
+    }
 }
 
-for (var ro = 0; ro < mapAlgo.MazeSize; ro++) {
-  for (var co = 0; co < mapAlgo.MazeSize; co++) {
-    if (InsideWallsNumberArray[ro][co] == 1) {
-      console.log("1");
-      let xValue = (ro * floorClass.w / mapAlgo.MazeSize) - (floorClass.w / 2) + ((floorClass.w / mapAlgo.MazeSize) / 2);
-      let zValue = (co * floorClass.h / mapAlgo.MazeSize) - (floorClass.w / 2) + ((floorClass.h / mapAlgo.MazeSize) / 2);
-      InsideWalls[ro][co] = new InsideWallsMaze(xValue, zValue, (floorClass.w / mapAlgo.MazeSize), false, scene);
-      InsideWalls[ro][co].addToScene();
+for (let ro = 0; ro < mapAlgo.MazeSize; ro++) {
+    for (let co = 0; co < mapAlgo.MazeSize; co++) {
+        if (InsideWallsNumberArray[ro][co] == 1) {
+            //console.log("1");
+            let xValue = (ro * floorClass.w / mapAlgo.MazeSize) - (floorClass.w / 2) + ((floorClass.w / mapAlgo.MazeSize) / 2);
+            let zValue = (co * floorClass.h / mapAlgo.MazeSize) - (floorClass.w / 2) + ((floorClass.h / mapAlgo.MazeSize) / 2);
+            InsideWalls[ro][co] = new InsideWallsMaze(xValue, zValue, (floorClass.w / mapAlgo.MazeSize), false, scene);
+            InsideWalls[ro][co].addToScene();
+        }
+        if (InsideWallsNumberArray[ro][co] == 3) {
+            //console.log("3");
+            let xValue = (ro * floorClass.w / mapAlgo.MazeSize) - (floorClass.w / 2) + ((floorClass.w / mapAlgo.MazeSize) / 2);
+            let zValue = (co * floorClass.h / mapAlgo.MazeSize) - (floorClass.w / 2) + ((floorClass.h / mapAlgo.MazeSize) / 2);
+            InsideWalls[ro][co] = new InsideWallsMaze(xValue, zValue, (floorClass.w / mapAlgo.MazeSize), true, scene);
+            InsideWalls[ro][co].addToScene();
+        }
     }
-    if (InsideWallsNumberArray[ro][co] == 3) {
-      console.log("3");
-      let xValue = (ro * floorClass.w / mapAlgo.MazeSize) - (floorClass.w / 2) + ((floorClass.w / mapAlgo.MazeSize) / 2);
-      let zValue = (co * floorClass.h / mapAlgo.MazeSize) - (floorClass.w / 2) + ((floorClass.h / mapAlgo.MazeSize) / 2);
-      InsideWalls[ro][co] = new InsideWallsMaze(xValue, zValue, (floorClass.w / mapAlgo.MazeSize), true, scene);
-      InsideWalls[ro][co].addToScene();
-    }
-  }
 }
 
 
 
 // way to make a basic cube with a 1,1,1 size and the color 0x00ff00, but I made some colors on the top like green or white
 /*
-var geometry = new THREE.BoxGeometry(1, 1, 1);
-var material = new THREE.MeshLambertMaterial({ color: 0x00ff00 });
-var cube = new THREE.Mesh(geometry, material);
+let geometry = new THREE.BoxGeometry(1, 1, 1);
+let material = new THREE.MeshLambertMaterial({ color: 0x00ff00 });
+let cube = new THREE.Mesh(geometry, material);
 scene.add(cube);
 cube.position.y = 10;
 */
@@ -52552,11 +52603,11 @@ cube.position.y = 10;
 scene.background = blue;
 
 //lighting
-// var lightDir = new THREE.DirectionalLight(0xffffff, 0.3);
+// let lightDir = new THREE.DirectionalLight(0xffffff, 0.3);
 // lightDir.position.set(500, 500, 500).normalize();
 // scene.add(lightDir);
 
-var lightHem = new THREE.HemisphereLight(0xffffbb, 0x080820, 1);
+let lightHem = new THREE.HemisphereLight(0xffffbb, 0x080820, 1);
 scene.add(lightHem);
 //---------
 
@@ -52568,156 +52619,162 @@ camera.position.x = 5;
 
 
 //the booleans for moving
-var moveForward = false;
-var moveBackward = false;
-var moveLeft = false;
-var moveRight = false;
+let moveForward = false;
+let moveBackward = false;
+let moveLeft = false;
+let moveRight = false;
 
-var time;
-var delta;
-var prevTime = performance.now();
-var velocity = new THREE.Vector3();
+let time;
+let delta;
+let prevTime = performance.now();
+let velocity = new THREE.Vector3();
 
-var jumping = false;
-var goingDown = false;
+let jumping = false;
+let goingDown = false;
 
-var controlsEnabled;
+let controlsEnabled;
 
-var geometryPlayer = new THREE.BoxGeometry(10, 40, 10);
-var materialPlayer = new THREE.MeshLambertMaterial({ color: new THREE.Color("rgb(255, 255, 255)") });
-var Player = new THREE.Mesh(geometryPlayer, materialPlayer);
+let geometryPlayer = new THREE.BoxGeometry(10, 40, 10);
+let materialPlayer = new THREE.MeshLambertMaterial({ color: new THREE.Color("rgb(255, 255, 255)") });
+let Player = new THREE.Mesh(geometryPlayer, materialPlayer);
 scene.add(Player);
 Player.position.x = 0;
 Player.position.y = 100;
 Player.position.z = 0;
 
-var ray = new THREE.Ray();
+let ray = new THREE.Ray();
 
 //animate is like gameloop we could probably use setInverval if we wanted to E.X setInterval(animate, 33);
-var animate = function () {
-  requestAnimationFrame(animate);
-  if (controlsEnabled) {
-    var time = performance.now();
-    var delta = (time - prevTime) / 1000;
-    velocity.x -= velocity.x * 10.0 * delta;
-    velocity.z -= velocity.z * 10.0 * delta;
-    velocity.y -= 9.8 * 100.0 * delta; // 100.0 = mass
-    if (moveForward) {
-      velocity.z -= 1200.0 * delta;
-    };
-    if (moveBackward) {
-      velocity.z += 1200.0 * delta;
-    };
-    if (moveLeft) {
-      velocity.x -= 1200.0 * delta;
+let animate = function () {
+    requestAnimationFrame(animate);
+    if (controlsEnabled) {
+        let time = performance.now();
+        let delta = (time - prevTime) / 1000;
+        velocity.x -= velocity.x * 10.0 * delta;
+        velocity.z -= velocity.z * 10.0 * delta;
+        velocity.y -= 9.8 * 100.0 * delta; // 100.0 = mass
+        if (moveForward) {
+            velocity.z -= 1200.0 * delta;
+        };
+        if (moveBackward) {
+            velocity.z += 1200.0 * delta;
+        };
+        if (moveLeft) {
+            velocity.x -= 1200.0 * delta;
 
-    };
-    if (moveRight) {
-      velocity.x += 1200.0 * delta;
-    };
+        };
+        if (moveRight) {
+            velocity.x += 1200.0 * delta;
+        };
 
-    controls.getObject().translateX(velocity.x * delta);
-    controls.getObject().translateY(velocity.y * delta);
-    controls.getObject().translateZ(velocity.z * delta);
-    if (controls.getObject().position.y < 10) {
-      velocity.y = 0;
-      controls.getObject().position.y = 10;
-      canJump = true;
-    }
-    if (jumping) {
-      camera.position.y += 2;
-    }
-    if (goingDown) {
-      camera.position.y -= 2;
-    }
-    prevTime = time;
-    // for (var vertexIndex = 0; vertexIndex < Player.geometry.vertices.length; vertexIndex++) {
-    //     var localVertex = Player.geometry.vertices[vertexIndex].clone();
-    //     var globalVertex = Player.matrix.multiplyVector3(localVertex);
-    //     var directionVector = globalVertex.sub(Player.position);
+        controls.getObject().translateX(velocity.x * delta);
+        controls.getObject().translateY(velocity.y * delta);
+        controls.getObject().translateZ(velocity.z * delta);
+        if (controls.getObject().position.y < 10) {
+            velocity.y = 0;
+            controls.getObject().position.y = 10;
+            canJump = true;
+        }
+        if (jumping) {
+            camera.position.y += 2;
+        }
+        if (goingDown) {
+            camera.position.y -= 2;
+        }
+        prevTime = time;
+        // for (let vertexIndex = 0; vertexIndex < Player.geometry.vertices.length; vertexIndex++) {
+        //     let localVertex = Player.geometry.vertices[vertexIndex].clone();
+        //     let globalVertex = Player.matrix.multiplyVector3(localVertex);
+        //     let directionVector = globalVertex.sub(Player.position);
 
-    //     var ray = new THREE.Ray(Player.position, directionVector.clone().normalize());
-    //     var collisionResults = ray.intersectObjects(scene.children);
-    //     if (collisionResults.length > 0 && collisionResults[0].distance < directionVector.length()) {
-    //         console.log("Collided");
-    //     }
-    // }
-  }
-  renderer.render(scene, camera);
+        //     let ray = new THREE.Ray(Player.position, directionVector.clone().normalize());
+        //     let collisionResults = ray.intersectObjects(scene.children);
+        //     if (collisionResults.length > 0 && collisionResults[0].distance < directionVector.length()) {
+        //         console.log("Collided");
+        //     }
+        // }
+    }
+    renderer.render(scene, camera);
 };
 
 let counterForStart = 0;
 camera.rotation.y = 0;
+blocker.style.display = '-webkit-box';
+blocker.style.display = '-moz-box';
+blocker.style.display = 'box';
+instructions.style.display = '';
 function startScreen() {
-  if (counterForStart != 1000) {
-    counterForStart++;
-    requestAnimationFrame(startScreen);
-    counterForStart
-    camera.rotation.y += ((Math.PI * 2) / 1000);
-    renderer.render(scene, camera);
-  } else {
+    console.log(blocker + "%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%5");
+    console.log(instructions + "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+    if (counterForStart != 1000) {
+        counterForStart++;
+        requestAnimationFrame(startScreen);
+        counterForStart
+        camera.rotation.y += ((Math.PI * 2) / 1000);
+        renderer.render(scene, camera);
+    } else {
 
-    animate();
-  }
+        animate();
+    }
 }
-blocker.style.display = 'none';
+
 startScreen();
 //animate(); //to start loop
 
 document.addEventListener("keydown", event => {
-  //if we use arrow keys this will prevent them froming scroling the page down
-  if ([32, 37, 38, 39, 40].indexOf(event.keyCode) > -1) {
-    event.preventDefault();
-  }
-  switch (event.keyCode) {
-    case 87:
-      moveForward = true;
-      break;
-    case 83:
-      moveBackward = true;
-      break;
-    case 65:
-      moveLeft = true;
-      break;
-    case 68:
-      moveRight = true;
-      break;
-    case 32:
-      jumping = true;
-      break;
-    case 16:
-      goingDown = true;
-      break;
-  }
+    //if we use arrow keys this will prevent them froming scroling the page down
+    if ([32, 37, 38, 39, 40].indexOf(event.keyCode) > -1) {
+        event.preventDefault();
+    }
+    switch (event.keyCode) {
+        case 87:
+            moveForward = true;
+            break;
+        case 83:
+            moveBackward = true;
+            break;
+        case 65:
+            moveLeft = true;
+            break;
+        case 68:
+            moveRight = true;
+            break;
+        case 32:
+            jumping = true;
+            break;
+        case 16:
+            goingDown = true;
+            break;
+    }
 });
 document.addEventListener("keyup", event => {
-  //alert(event.keyCode);
-  switch (event.keyCode) {
-    case 87:
-      moveForward = false;
-      break;
-    case 83:
-      moveBackward = false;
-      break;
-    case 65:
-      moveLeft = false;
-      break;
-    case 68:
-      moveRight = false;
-      break;
-    case 32:
-      jumping = false;
-      break;
-    case 16:
-      goingDown = false;
-      break;
-  }
+    //alert(event.keyCode);
+    switch (event.keyCode) {
+        case 87:
+            moveForward = false;
+            break;
+        case 83:
+            moveBackward = false;
+            break;
+        case 65:
+            moveLeft = false;
+            break;
+        case 68:
+            moveRight = false;
+            break;
+        case 32:
+            jumping = false;
+            break;
+        case 16:
+            goingDown = false;
+            break;
+    }
 });
 
-// var canvas = document.getElementById("myCanvas");
+// let canvas = document.getElementById("myCanvas");
 // canvas.addEventListener("webglcontextlost", function (event) {
 //     event.preventDefault();
-//     var error = gl.getError();
+//     let error = gl.getError();
 //     if (error != gl.NO_ERROR && error != gl.CONTEXT_LOST_WEBGL) {
 //         alert("fail");
 //     }
@@ -52727,4 +52784,4 @@ document.addEventListener("keyup", event => {
 //     "webglcontextrestored", setupWebGLStateAndResources, false);
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./Door.js":3,"./Floor.js":4,"./InsideWallsMaze.js":5,"./Map.js":6,"./RecursiveMaze":7,"./WallGenerator.js":8,"three":2,"three-gltf-loader":1}]},{},[9]);
+},{"./Floor.js":3,"./InsideWallsMaze.js":4,"./Map.js":5,"./RecursiveMaze":6,"./WallGenerator.js":7,"three":2,"three-gltf-loader":1}]},{},[8]);

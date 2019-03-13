@@ -5,6 +5,7 @@
 
 module.exports = class RecursiveMaze {
   constructor() {
+    console.log("recursive");
     this.array = [];
     this.visitedPlacesX = [];
     this.visitedPlacesY = [];
@@ -90,7 +91,7 @@ module.exports = class RecursiveMaze {
   }
 
   checkDirection() {
-    // console.log("Check Direction");
+    console.log("Check Direction");
     let x = this.startingLocationX;
     let y = this.startingLocationY;
     // this.array[x][y] = 0;
@@ -128,7 +129,7 @@ module.exports = class RecursiveMaze {
   }
 
   kill() {
-    // console.log("kill");
+    console.log("kill");
     let choice = Math.floor(Math.random() * this.PossibleDirections.length);
     this.visitedPlacesX[this.whichMove] = this.startingLocationX;
     this.visitedPlacesY[this.whichMove] = this.startingLocationY;
