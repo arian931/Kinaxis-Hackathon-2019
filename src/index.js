@@ -1,5 +1,5 @@
-/* eslint-disable linebreak-style */
-/* eslint-disable no-undef */
+
+
 
 global.THREE = require('three');
 global.GLTFLoader = require('three-gltf-loader');
@@ -37,142 +37,142 @@ image.id = "pic"
 setInterval(gameLoop, 10);
 
 function gameLoop() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    if (leftBar <= canvas.width / 2) {
-        ctx.clearRect(0, 0, 10000, 10000);
-        ctx.fillStyle = "white";
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
-        ctx.fillStyle = "black";
-        rightBar -= moveRate;
-        leftBar += moveRate;
-        ctx.fillRect(rightBar, 0, canvas.width / 2, canvas.height / 4);
-        ctx.fillRect(leftBar, canvas.height / 4, canvas.width / 2, canvas.height / 4);
-        ctx.fillRect(rightBar, canvas.height / 2, canvas.width / 2, canvas.height / 4);
-        ctx.fillRect(leftBar, canvas.height / 4 * 3, canvas.width / 2, canvas.height / 4);
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  if (leftBar <= canvas.width / 2) {
+    ctx.clearRect(0, 0, 10000, 10000);
+    ctx.fillStyle = "white";
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    ctx.fillStyle = "black";
+    rightBar -= moveRate;
+    leftBar += moveRate;
+    ctx.fillRect(rightBar, 0, canvas.width / 2, canvas.height / 4);
+    ctx.fillRect(leftBar, canvas.height / 4, canvas.width / 2, canvas.height / 4);
+    ctx.fillRect(rightBar, canvas.height / 2, canvas.width / 2, canvas.height / 4);
+    ctx.fillRect(leftBar, canvas.height / 4 * 3, canvas.width / 2, canvas.height / 4);
 
-        image.src = canvas.toDataURL();
-        document.getElementById('he').appendChild(image);
-    } else {
-        console.log("hello");
-        TCanvas.style.display = 'none';
-    }
+    image.src = canvas.toDataURL();
+    document.getElementById('he').appendChild(image);
+  } else {
+    console.log("hello");
+    TCanvas.style.display = 'none';
+  }
 }
 THREE.PointerLockControls = function (camera, domElement) {
 
-    let scope = this;
+  let scope = this;
 
-    this.domElement = domElement || document.body;
-    this.isLocked = false;
+  this.domElement = domElement || document.body;
+  this.isLocked = false;
 
-    camera.rotation.set(0, 0, 0);
+  camera.rotation.set(0, 0, 0);
 
-    let pitchObject = new THREE.Object3D();
-    pitchObject.add(camera);
+  let pitchObject = new THREE.Object3D();
+  pitchObject.add(camera);
 
-    let yawObject = new THREE.Object3D();
-    yawObject.position.y = 10;
-    yawObject.add(pitchObject);
+  let yawObject = new THREE.Object3D();
+  yawObject.position.y = 10;
+  yawObject.add(pitchObject);
 
-    let PI_2 = Math.PI / 2;
+  let PI_2 = Math.PI / 2;
 
-    function onMouseMove(event) {
+  function onMouseMove(event) {
 
-        if (scope.isLocked === false) return;
+    if (scope.isLocked === false) return;
 
-        let movementX = event.movementX || event.mozMovementX || event.webkitMovementX || 0;
-        let movementY = event.movementY || event.mozMovementY || event.webkitMovementY || 0;
+    let movementX = event.movementX || event.mozMovementX || event.webkitMovementX || 0;
+    let movementY = event.movementY || event.mozMovementY || event.webkitMovementY || 0;
 
-        yawObject.rotation.y -= movementX * 0.002;
-        pitchObject.rotation.x -= movementY * 0.002;
+    yawObject.rotation.y -= movementX * 0.002;
+    pitchObject.rotation.x -= movementY * 0.002;
 
-        pitchObject.rotation.x = Math.max(- PI_2, Math.min(PI_2, pitchObject.rotation.x));
+    pitchObject.rotation.x = Math.max(- PI_2, Math.min(PI_2, pitchObject.rotation.x));
 
-    }
+  }
 
-    function onPointerlockChange() {
+  function onPointerlockChange() {
 
-        if (document.pointerLockElement === scope.domElement) {
+    if (document.pointerLockElement === scope.domElement) {
 
-            scope.dispatchEvent({ type: 'lock' });
+      scope.dispatchEvent({ type: 'lock' });
 
-            scope.isLocked = true;
+      scope.isLocked = true;
 
-        } else {
+    } else {
 
-            scope.dispatchEvent({ type: 'unlock' });
+      scope.dispatchEvent({ type: 'unlock' });
 
-            scope.isLocked = false;
-
-        }
+      scope.isLocked = false;
 
     }
 
-    function onPointerlockError() {
+  }
 
-        console.error('THREE.PointerLockControls: Unable to use Pointer Lock API');
+  function onPointerlockError() {
 
-    }
+    console.error('THREE.PointerLockControls: Unable to use Pointer Lock API');
 
-    this.connect = function () {
+  }
 
-        document.addEventListener('mousemove', onMouseMove, false);
-        document.addEventListener('pointerlockchange', onPointerlockChange, false);
-        document.addEventListener('pointerlockerror', onPointerlockError, false);
+  this.connect = function () {
 
-    };
+    document.addEventListener('mousemove', onMouseMove, false);
+    document.addEventListener('pointerlockchange', onPointerlockChange, false);
+    document.addEventListener('pointerlockerror', onPointerlockError, false);
 
-    this.disconnect = function () {
+  };
 
-        document.removeEventListener('mousemove', onMouseMove, false);
-        document.removeEventListener('pointerlockchange', onPointerlockChange, false);
-        document.removeEventListener('pointerlockerror', onPointerlockError, false);
+  this.disconnect = function () {
 
-    };
+    document.removeEventListener('mousemove', onMouseMove, false);
+    document.removeEventListener('pointerlockchange', onPointerlockChange, false);
+    document.removeEventListener('pointerlockerror', onPointerlockError, false);
 
-    this.dispose = function () {
+  };
 
-        this.disconnect();
+  this.dispose = function () {
 
-    };
+    this.disconnect();
 
-    this.getObject = function () {
+  };
 
-        return yawObject;
+  this.getObject = function () {
 
-    };
+    return yawObject;
 
-    this.getDirection = function () {
+  };
 
-        // assumes the camera itself is not rotated
+  this.getDirection = function () {
 
-        let direction = new THREE.Vector3(0, 0, - 1);
-        let rotation = new THREE.Euler(0, 0, 0, 'YXZ');
+    // assumes the camera itself is not rotated
 
-        return function (v) {
+    let direction = new THREE.Vector3(0, 0, - 1);
+    let rotation = new THREE.Euler(0, 0, 0, 'YXZ');
 
-            rotation.set(pitchObject.rotation.x, yawObject.rotation.y, 0);
+    return function (v) {
 
-            v.copy(direction).applyEuler(rotation);
+      rotation.set(pitchObject.rotation.x, yawObject.rotation.y, 0);
 
-            return v;
+      v.copy(direction).applyEuler(rotation);
 
-        };
-
-    }();
-
-    this.lock = function () {
-
-        this.domElement.requestPointerLock();
+      return v;
 
     };
 
-    this.unlock = function () {
+  }();
 
-        document.exitPointerLock();
+  this.lock = function () {
 
-    };
+    this.domElement.requestPointerLock();
 
-    this.connect();
+  };
+
+  this.unlock = function () {
+
+    document.exitPointerLock();
+
+  };
+
+  this.connect();
 
 };
 
@@ -197,54 +197,54 @@ let instructions = document.getElementById('instructions');
 //CONTROLS BOILER PLATE ---------------------------------------------------------------------
 let havePointerLock = 'pointerLockElement' in document || 'mozPointerLockElement' in document || 'webkitPointerLockElement' in document;
 if (havePointerLock) {
-    let element = document.body;
-    let pointerlockchange = function (event) {
-        if (document.pointerLockElement === element || document.mozPointerLockElement === element || document.webkitPointerLockElement === element) {
-            controlsEnabled = true;
-            controls.enabled = true;
-            startScreenBool = false;
-            blocker.style.display = 'none';
-            startScreen();
-        } else {
-            controls.enabled = false;
-            blocker.style.display = '-webkit-box';
-            blocker.style.display = '-moz-box';
-            blocker.style.display = 'box';
-            instructions.style.display = '';
+  let element = document.body;
+  let pointerlockchange = function (event) {
+    if (document.pointerLockElement === element || document.mozPointerLockElement === element || document.webkitPointerLockElement === element) {
+      controlsEnabled = true;
+      controls.enabled = true;
+      startScreenBool = false;
+      blocker.style.display = 'none';
+      startScreen();
+    } else {
+      controls.enabled = false;
+      blocker.style.display = '-webkit-box';
+      blocker.style.display = '-moz-box';
+      blocker.style.display = 'box';
+      instructions.style.display = '';
+    }
+  };
+  let pointerlockerror = function (event) {
+    instructions.style.display = '';
+  };
+  // Hook pointer lock state change events
+  document.addEventListener('pointerlockchange', pointerlockchange, false);
+  document.addEventListener('mozpointerlockchange', pointerlockchange, false);
+  document.addEventListener('webkitpointerlockchange', pointerlockchange, false);
+  document.addEventListener('pointerlockerror', pointerlockerror, false);
+  document.addEventListener('mozpointerlockerror', pointerlockerror, false);
+  document.addEventListener('webkitpointerlockerror', pointerlockerror, false);
+  instructions.addEventListener('click', function (event) {
+    instructions.style.display = 'none';
+    // Ask the browser to lock the pointer
+    element.requestPointerLock = element.requestPointerLock || element.mozRequestPointerLock || element.webkitRequestPointerLock;
+    if (/Firefox/i.test(navigator.userAgent)) {
+      let fullscreenchange = function (event) {
+        if (document.fullscreenElement === element || document.mozFullscreenElement === element || document.mozFullScreenElement === element) {
+          document.removeEventListener('fullscreenchange', fullscreenchange);
+          document.removeEventListener('mozfullscreenchange', fullscreenchange);
+          element.requestPointerLock();
         }
-    };
-    let pointerlockerror = function (event) {
-        instructions.style.display = '';
-    };
-    // Hook pointer lock state change events
-    document.addEventListener('pointerlockchange', pointerlockchange, false);
-    document.addEventListener('mozpointerlockchange', pointerlockchange, false);
-    document.addEventListener('webkitpointerlockchange', pointerlockchange, false);
-    document.addEventListener('pointerlockerror', pointerlockerror, false);
-    document.addEventListener('mozpointerlockerror', pointerlockerror, false);
-    document.addEventListener('webkitpointerlockerror', pointerlockerror, false);
-    instructions.addEventListener('click', function (event) {
-        instructions.style.display = 'none';
-        // Ask the browser to lock the pointer
-        element.requestPointerLock = element.requestPointerLock || element.mozRequestPointerLock || element.webkitRequestPointerLock;
-        if (/Firefox/i.test(navigator.userAgent)) {
-            let fullscreenchange = function (event) {
-                if (document.fullscreenElement === element || document.mozFullscreenElement === element || document.mozFullScreenElement === element) {
-                    document.removeEventListener('fullscreenchange', fullscreenchange);
-                    document.removeEventListener('mozfullscreenchange', fullscreenchange);
-                    element.requestPointerLock();
-                }
-            };
-            document.addEventListener('fullscreenchange', fullscreenchange, false);
-            document.addEventListener('mozfullscreenchange', fullscreenchange, false);
-            element.requestFullscreen = element.requestFullscreen || element.mozRequestFullscreen || element.mozRequestFullScreen || element.webkitRequestFullscreen;
-            element.requestFullscreen();
-        } else {
-            element.requestPointerLock();
-        }
-    }, false);
+      };
+      document.addEventListener('fullscreenchange', fullscreenchange, false);
+      document.addEventListener('mozfullscreenchange', fullscreenchange, false);
+      element.requestFullscreen = element.requestFullscreen || element.mozRequestFullscreen || element.mozRequestFullScreen || element.webkitRequestFullscreen;
+      element.requestFullscreen();
+    } else {
+      element.requestPointerLock();
+    }
+  }, false);
 } else {
-    instructions.innerHTML = 'Your browser doesn\'t seem to support Pointer Lock API';
+  instructions.innerHTML = 'Your browser doesn\'t seem to support Pointer Lock API';
 }
 //------------------------------------------------------------------------------------------
 
@@ -273,7 +273,7 @@ walls[1] = new WallGenerator(-floorClass.w / 2, 50, 0, 1, 100, floorClass.w, whi
 walls[2] = new WallGenerator(0, 50, floorClass.h / 2, 1, 100, floorClass.h, white, scene, (-Math.PI / 2));
 walls[3] = new WallGenerator(0, 50, -floorClass.h / 2, 1, 100, floorClass.h, white, scene, (-Math.PI / 2));
 for (let x = 0; x < walls.length; x++) {
-    walls[x].addToScene();
+  walls[x].addToScene();
 }
 //-------------------------
 
@@ -304,28 +304,28 @@ mapAlgo.drawMap();
 InsideWallsNumberArray = mapAlgo.array;
 console.log("Before Error");
 for (let x = 0; x < mapAlgo.MazeSize; x++) {
-    for (let y = 0; y < mapAlgo.MazeSize; y++) {
-        InsideWalls[x] = [];
-    }
+  for (let y = 0; y < mapAlgo.MazeSize; y++) {
+    InsideWalls[x] = [];
+  }
 }
 
 for (let ro = 0; ro < mapAlgo.MazeSize; ro++) {
-    for (let co = 0; co < mapAlgo.MazeSize; co++) {
-        if (InsideWallsNumberArray[ro][co] == 1) {
-            //console.log("1");
-            let xValue = (ro * floorClass.w / mapAlgo.MazeSize) - (floorClass.w / 2) + ((floorClass.w / mapAlgo.MazeSize) / 2);
-            let zValue = (co * floorClass.h / mapAlgo.MazeSize) - (floorClass.w / 2) + ((floorClass.h / mapAlgo.MazeSize) / 2);
-            InsideWalls[ro][co] = new InsideWallsMaze(xValue, zValue, (floorClass.w / mapAlgo.MazeSize), false, scene);
-            InsideWalls[ro][co].addToScene();
-        }
-        if (InsideWallsNumberArray[ro][co] == 3) {
-            //console.log("3");
-            let xValue = (ro * floorClass.w / mapAlgo.MazeSize) - (floorClass.w / 2) + ((floorClass.w / mapAlgo.MazeSize) / 2);
-            let zValue = (co * floorClass.h / mapAlgo.MazeSize) - (floorClass.w / 2) + ((floorClass.h / mapAlgo.MazeSize) / 2);
-            InsideWalls[ro][co] = new InsideWallsMaze(xValue, zValue, (floorClass.w / mapAlgo.MazeSize), true, scene);
-            InsideWalls[ro][co].addToScene();
-        }
+  for (let co = 0; co < mapAlgo.MazeSize; co++) {
+    if (InsideWallsNumberArray[ro][co] == 1) {
+      //console.log("1");
+      let xValue = (ro * floorClass.w / mapAlgo.MazeSize) - (floorClass.w / 2) + ((floorClass.w / mapAlgo.MazeSize) / 2);
+      let zValue = (co * floorClass.h / mapAlgo.MazeSize) - (floorClass.w / 2) + ((floorClass.h / mapAlgo.MazeSize) / 2);
+      InsideWalls[ro][co] = new InsideWallsMaze(xValue, zValue, (floorClass.w / mapAlgo.MazeSize), false, scene);
+      InsideWalls[ro][co].addToScene();
     }
+    if (InsideWallsNumberArray[ro][co] == 3) {
+      //console.log("3");
+      let xValue = (ro * floorClass.w / mapAlgo.MazeSize) - (floorClass.w / 2) + ((floorClass.w / mapAlgo.MazeSize) / 2);
+      let zValue = (co * floorClass.h / mapAlgo.MazeSize) - (floorClass.w / 2) + ((floorClass.h / mapAlgo.MazeSize) / 2);
+      InsideWalls[ro][co] = new InsideWallsMaze(xValue, zValue, (floorClass.w / mapAlgo.MazeSize), true, scene);
+      InsideWalls[ro][co].addToScene();
+    }
+  }
 }
 
 
@@ -385,55 +385,55 @@ let ray = new THREE.Ray();
 
 //animate is like gameloop we could probably use setInverval if we wanted to E.X setInterval(animate, 33);
 let animate = function () {
-    requestAnimationFrame(animate);
-    if (controlsEnabled) {
-        let time = performance.now();
-        let delta = (time - prevTime) / 1000;
-        velocity.x -= velocity.x * 10.0 * delta;
-        velocity.z -= velocity.z * 10.0 * delta;
-        velocity.y -= 9.8 * 100.0 * delta; // 100.0 = mass
-        if (moveForward) {
-            velocity.z -= 1200.0 * delta;
-        };
-        if (moveBackward) {
-            velocity.z += 1200.0 * delta;
-        };
-        if (moveLeft) {
-            velocity.x -= 1200.0 * delta;
+  requestAnimationFrame(animate);
+  if (controlsEnabled) {
+    let time = performance.now();
+    let delta = (time - prevTime) / 1000;
+    velocity.x -= velocity.x * 10.0 * delta;
+    velocity.z -= velocity.z * 10.0 * delta;
+    velocity.y -= 9.8 * 100.0 * delta; // 100.0 = mass
+    if (moveForward) {
+      velocity.z -= 1200.0 * delta;
+    };
+    if (moveBackward) {
+      velocity.z += 1200.0 * delta;
+    };
+    if (moveLeft) {
+      velocity.x -= 1200.0 * delta;
 
-        };
-        if (moveRight) {
-            velocity.x += 1200.0 * delta;
-        };
+    };
+    if (moveRight) {
+      velocity.x += 1200.0 * delta;
+    };
 
-        controls.getObject().translateX(velocity.x * delta);
-        controls.getObject().translateY(velocity.y * delta);
-        controls.getObject().translateZ(velocity.z * delta);
-        if (controls.getObject().position.y < 10) {
-            velocity.y = 0;
-            controls.getObject().position.y = 10;
-            canJump = true;
-        }
-        if (jumping) {
-            camera.position.y += 2;
-        }
-        if (goingDown) {
-            camera.position.y -= 2;
-        }
-        prevTime = time;
-        // for (let vertexIndex = 0; vertexIndex < Player.geometry.vertices.length; vertexIndex++) {
-        //     let localVertex = Player.geometry.vertices[vertexIndex].clone();
-        //     let globalVertex = Player.matrix.multiplyVector3(localVertex);
-        //     let directionVector = globalVertex.sub(Player.position);
-
-        //     let ray = new THREE.Ray(Player.position, directionVector.clone().normalize());
-        //     let collisionResults = ray.intersectObjects(scene.children);
-        //     if (collisionResults.length > 0 && collisionResults[0].distance < directionVector.length()) {
-        //         console.log("Collided");
-        //     }
-        // }
+    controls.getObject().translateX(velocity.x * delta);
+    controls.getObject().translateY(velocity.y * delta);
+    controls.getObject().translateZ(velocity.z * delta);
+    if (controls.getObject().position.y < 10) {
+      velocity.y = 0;
+      controls.getObject().position.y = 10;
+      canJump = true;
     }
-    renderer.render(scene, camera);
+    if (jumping) {
+      camera.position.y += 2;
+    }
+    if (goingDown) {
+      camera.position.y -= 2;
+    }
+    prevTime = time;
+    // for (let vertexIndex = 0; vertexIndex < Player.geometry.vertices.length; vertexIndex++) {
+    //     let localVertex = Player.geometry.vertices[vertexIndex].clone();
+    //     let globalVertex = Player.matrix.multiplyVector3(localVertex);
+    //     let directionVector = globalVertex.sub(Player.position);
+
+    //     let ray = new THREE.Ray(Player.position, directionVector.clone().normalize());
+    //     let collisionResults = ray.intersectObjects(scene.children);
+    //     if (collisionResults.length > 0 && collisionResults[0].distance < directionVector.length()) {
+    //         console.log("Collided");
+    //     }
+    // }
+  }
+  renderer.render(scene, camera);
 };
 
 let counterForStart = 0;
@@ -443,71 +443,71 @@ blocker.style.display = '-moz-box';
 blocker.style.display = 'box';
 instructions.style.display = '';
 function startScreen() {
-    console.log(blocker + "%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%5");
-    console.log(instructions + "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-    if (counterForStart != 1000) {
-        counterForStart++;
-        requestAnimationFrame(startScreen);
-        counterForStart
-        camera.rotation.y += ((Math.PI * 2) / 1000);
-        renderer.render(scene, camera);
-    } else {
+  console.log(blocker + "%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%5");
+  console.log(instructions + "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+  if (counterForStart != 1000) {
+    counterForStart++;
+    requestAnimationFrame(startScreen);
+    counterForStart
+    camera.rotation.y += ((Math.PI * 2) / 1000);
+    renderer.render(scene, camera);
+  } else {
 
-        animate();
-    }
+    animate();
+  }
 }
 
 startScreen();
 //animate(); //to start loop
 
 document.addEventListener("keydown", event => {
-    //if we use arrow keys this will prevent them froming scroling the page down
-    if ([32, 37, 38, 39, 40].indexOf(event.keyCode) > -1) {
-        event.preventDefault();
-    }
-    switch (event.keyCode) {
-        case 87:
-            moveForward = true;
-            break;
-        case 83:
-            moveBackward = true;
-            break;
-        case 65:
-            moveLeft = true;
-            break;
-        case 68:
-            moveRight = true;
-            break;
-        case 32:
-            jumping = true;
-            break;
-        case 16:
-            goingDown = true;
-            break;
-    }
+  //if we use arrow keys this will prevent them froming scroling the page down
+  if ([32, 37, 38, 39, 40].indexOf(event.keyCode) > -1) {
+    event.preventDefault();
+  }
+  switch (event.keyCode) {
+    case 87:
+      moveForward = true;
+      break;
+    case 83:
+      moveBackward = true;
+      break;
+    case 65:
+      moveLeft = true;
+      break;
+    case 68:
+      moveRight = true;
+      break;
+    case 32:
+      jumping = true;
+      break;
+    case 16:
+      goingDown = true;
+      break;
+  }
 });
 document.addEventListener("keyup", event => {
-    //alert(event.keyCode);
-    switch (event.keyCode) {
-        case 87:
-            moveForward = false;
-            break;
-        case 83:
-            moveBackward = false;
-            break;
-        case 65:
-            moveLeft = false;
-            break;
-        case 68:
-            moveRight = false;
-            break;
-        case 32:
-            jumping = false;
-            break;
-        case 16:
-            goingDown = false;
-            break;
-    }
+  //alert(event.keyCode);
+  switch (event.keyCode) {
+    case 87:
+      moveForward = false;
+      break;
+    case 83:
+      moveBackward = false;
+      break;
+    case 65:
+      moveLeft = false;
+      break;
+    case 68:
+      moveRight = false;
+      break;
+    case 32:
+      jumping = false;
+      break;
+    case 16:
+      goingDown = false;
+      break;
+  }
 });
 
 // let canvas = document.getElementById("myCanvas");

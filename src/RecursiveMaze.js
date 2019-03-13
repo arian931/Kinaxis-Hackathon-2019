@@ -1,6 +1,6 @@
 /* eslint-disable eqeqeq */
-/* eslint-disable linebreak-style */
-/* eslint-disable no-undef */
+
+
 /* eslint-disable no-plusplus */
 
 module.exports = class RecursiveMaze {

@@ -1,5 +1,5 @@
-/* eslint-disable linebreak-style */
-/* eslint-disable no-undef */
+
+
 
 module.exports = class Map {
   constructor() {
