@@ -1,6 +1,5 @@
 /* eslint-disable linebreak-style */
 /* eslint-disable no-undef */
-
 global.THREE = require('three');
 global.GLTFLoader = require('three-gltf-loader');
 const Floor = require('./Floor.js');
@@ -9,14 +8,26 @@ const Map = require('./Map.js');
 const WallGenerator = require('./WallGenerator.js');
 //  const Door = require('./Door.js');
 const RecursiveMaze = require('./RecursiveMaze');
+
+let white = new THREE.Color("rgb(255, 255, 255)");
+let black = new THREE.Color("rgb(0, 0, 0)");
+let yellow = new THREE.Color("rgb(233, 255, 0)");
+let green = new THREE.Color("rgb(0,255,0)");
+let blue = new THREE.Color("rgb(0,100,255)");
+let red = new THREE.Color("rgb(255,0,0)");
+
 /**
  * @author mrdoob / http://mrdoob.com/
  * @author Mugen87 / https://github.com/Mugen87
  */
 
+
+
+
+//Controls -------------------------------------
 THREE.PointerLockControls = function (camera, domElement) {
 
-    let scope = this;
+    cosnt scope = this;
 
     this.domElement = domElement || document.body;
     this.isLocked = false;
@@ -136,22 +147,11 @@ THREE.PointerLockControls = function (camera, domElement) {
 THREE.PointerLockControls.prototype = Object.create(THREE.EventDispatcher.prototype);
 THREE.PointerLockControls.prototype.constructor = THREE.PointerLockControls;
 
-let white = new THREE.Color("rgb(255, 255, 255)");
-let black = new THREE.Color("rgb(0, 0, 0)");
-let yellow = new THREE.Color("rgb(233, 255, 0)");
-let green = new THREE.Color("rgb(0,255,0)");
-let blue = new THREE.Color("rgb(0,100,255)");
-let red = new THREE.Color("rgb(255,0,0)");
-
-let startScreenBool = true;
-
-//controls button and explanation
 let blocker = document.getElementById('blocker');
 let instructions = document.getElementById('instructions');
 
 // https://www.html5rocks.com/en/tutorials/pointerlock/intro/
 
-//CONTROLS BOILER PLATE ---------------------------------------------------------------------
 let havePointerLock = 'pointerLockElement' in document || 'mozPointerLockElement' in document || 'webkitPointerLockElement' in document;
 if (havePointerLock) {
     let element = document.body;
@@ -332,6 +332,7 @@ let ray = new THREE.Ray();
 //animate is like gameloop we could probably use setInverval if we wanted to E.X setInterval(animate, 33);
 let animate = function () {
     requestAnimationFrame(animate);
+    //Controls
     if (controlsEnabled) {
         let time = performance.now();
         let delta = (time - prevTime) / 1000;
@@ -367,30 +368,14 @@ let animate = function () {
             camera.position.y -= 2;
         }
         prevTime = time;
-        // for (let vertexIndex = 0; vertexIndex < Player.geometry.vertices.length; vertexIndex++) {
-        //     let localVertex = Player.geometry.vertices[vertexIndex].clone();
-        //     let globalVertex = Player.matrix.multiplyVector3(localVertex);
-        //     let directionVector = globalVertex.sub(Player.position);
-
-        //     let ray = new THREE.Ray(Player.position, directionVector.clone().normalize());
-        //     let collisionResults = ray.intersectObjects(scene.children);
-        //     if (collisionResults.length > 0 && collisionResults[0].distance < directionVector.length()) {
-        //         console.log("Collided");
-        //     }
-        // }
+        //Controls
     }
     renderer.render(scene, camera);
 };
 
 let counterForStart = 0;
 camera.rotation.y = 0;
-blocker.style.display = '-webkit-box';
-blocker.style.display = '-moz-box';
-blocker.style.display = 'box';
-instructions.style.display = '';
 function startScreen() {
-    console.log(blocker + "%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%5");
-    console.log(instructions + "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
     if (counterForStart != 1000) {
         counterForStart++;
         requestAnimationFrame(startScreen);
@@ -398,16 +383,13 @@ function startScreen() {
         camera.rotation.y += ((Math.PI * 2) / 1000);
         renderer.render(scene, camera);
     } else {
-
         animate();
     }
 }
 
 startScreen();
-//animate(); //to start loop
 
 document.addEventListener("keydown", event => {
-    //if we use arrow keys this will prevent them froming scroling the page down
     if ([32, 37, 38, 39, 40].indexOf(event.keyCode) > -1) {
         event.preventDefault();
     }
@@ -433,7 +415,6 @@ document.addEventListener("keydown", event => {
     }
 });
 document.addEventListener("keyup", event => {
-    //alert(event.keyCode);
     switch (event.keyCode) {
         case 87:
             moveForward = false;

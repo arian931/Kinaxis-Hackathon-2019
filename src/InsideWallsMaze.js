@@ -1,5 +1,6 @@
 /* eslint-disable linebreak-style */
 /* eslint-disable no-undef */
+/* eslint-disable no-unused-vars */
 
 module.exports = class insideWallsMaze {
   constructor(x, z, w, endBlock, scene) {
@@ -8,25 +9,25 @@ module.exports = class insideWallsMaze {
     this.w = w;
     this.z = z;
     this.scene = scene;
-    this.color = new THREE.Color("rgb(0, 0, 0)");
+    this.color = new THREE.Color('rgb(0, 0, 0)');
     this.heightOfWall = 50;
     this.endBlock = endBlock;
   }
 
   addToScene() {
-    let geometryFor = new THREE.BoxGeometry(this.w, this.heightOfWall, this.w);
+    const geometryFor = new THREE.BoxGeometry(this.w, this.heightOfWall, this.w);
     if (!this.endBlock) {
-      let texture = new THREE.TextureLoader().load("/src/05muronero.jpg");
+      const texture = new THREE.TextureLoader().load('/src/05muronero.jpg');
       texture.wrapS = THREE.RepeatWrapping;
       texture.wrapT = THREE.RepeatWrapping;
       texture.repeat.set(0.25, 0.25);
-      let materialFor = new THREE.MeshLambertMaterial({
-        map: texture
+      const materialFor = new THREE.MeshLambertMaterial({
+        map: texture,
       });
     } else {
-      let materialFor = new THREE.MeshLambertMaterial({ color: this.color });
+      const materialFor = new THREE.MeshLambertMaterial({ color: this.color });
     }
-    let cubeFor = new THREE.Mesh(geometryFor, materialFor);
+    const cubeFor = new THREE.Mesh(geometryFor, materialFor);
     this.scene.add(cubeFor);
     cubeFor.position.x = this.x;
     cubeFor.position.y = this.heightOfWall / 2;
