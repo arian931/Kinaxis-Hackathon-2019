@@ -10,6 +10,7 @@ const WallGenerator = require('./WallGenerator.js');
 //  const Door = require('./Door.js');
 const RecursiveMaze = require('./RecursiveMaze');
 const TwoDCanvas = require('./TwoDCanvas');
+const PointerLockControls = require('./PointerLockControls');
 /**
  * @author mrdoob / http://mrdoob.com/
  * @author Mugen87 / https://github.com/Mugen87
@@ -23,67 +24,7 @@ let red = new THREE.Color("rgb(255,0,0)");
 
 let startScreenBool = true;
 
-//controls button and explanation
-let blocker = document.getElementById('blocker');
-let instructions = document.getElementById('instructions');
-
 // https://www.html5rocks.com/en/tutorials/pointerlock/intro/
-
-//CONTROLS BOILER PLATE ---------------------------------------------------------------------
-let havePointerLock = 'pointerLockElement' in document || 'mozPointerLockElement' in document || 'webkitPointerLockElement' in document;
-if (havePointerLock) {
-  let element = document.body;
-  let pointerlockchange = function (event) {
-    if (document.pointerLockElement === element || document.mozPointerLockElement === element || document.webkitPointerLockElement === element) {
-      controlsEnabled = true;
-      controls.enabled = true;
-      startScreenBool = false;
-      blocker.style.display = 'none';
-      startScreen();
-    } else {
-      controls.enabled = false;
-      blocker.style.display = '-webkit-box';
-      blocker.style.display = '-moz-box';
-      blocker.style.display = 'box';
-      instructions.style.display = '';
-    }
-  };
-  let pointerlockerror = function (event) {
-    instructions.style.display = '';
-  };
-  // Hook pointer lock state change events
-  document.addEventListener('pointerlockchange', pointerlockchange, false);
-  document.addEventListener('mozpointerlockchange', pointerlockchange, false);
-  document.addEventListener('webkitpointerlockchange', pointerlockchange, false);
-  document.addEventListener('pointerlockerror', pointerlockerror, false);
-  document.addEventListener('mozpointerlockerror', pointerlockerror, false);
-  document.addEventListener('webkitpointerlockerror', pointerlockerror, false);
-  instructions.addEventListener('click', function (event) {
-    instructions.style.display = 'none';
-    // Ask the browser to lock the pointer
-    element.requestPointerLock = element.requestPointerLock || element.mozRequestPointerLock || element.webkitRequestPointerLock;
-    if (/Firefox/i.test(navigator.userAgent)) {
-      let fullscreenchange = function (event) {
-        if (document.fullscreenElement === element || document.mozFullscreenElement === element || document.mozFullScreenElement === element) {
-          document.removeEventListener('fullscreenchange', fullscreenchange);
-          document.removeEventListener('mozfullscreenchange', fullscreenchange);
-          element.requestPointerLock();
-        }
-      };
-      document.addEventListener('fullscreenchange', fullscreenchange, false);
-      document.addEventListener('mozfullscreenchange', fullscreenchange, false);
-      element.requestFullscreen = element.requestFullscreen || element.mozRequestFullscreen || element.mozRequestFullScreen || element.webkitRequestFullscreen;
-      element.requestFullscreen();
-    } else {
-      element.requestPointerLock();
-    }
-  }, false);
-} else {
-  instructions.innerHTML = 'Your browser doesn\'t seem to support Pointer Lock API';
-}
-//------------------------------------------------------------------------------------------
-
-
 
 let scene = new THREE.Scene();
 scene.background = new THREE.Color(0xffffff);
@@ -93,6 +34,22 @@ let renderer = new THREE.WebGLRenderer();
 renderer.setPixelRatio(window.devicePixelRatio / 2);
 renderer.setSize(window.innerWidth, window.innerHeight);
 document.body.appendChild(renderer.domElement);
+
+controls = new THREE.PointerLockControls(camera);
+var blocker = document.getElementById('blocker');
+var instructions = document.getElementById('instructions');
+instructions.addEventListener('click', function () {
+  controls.lock();
+}, false);
+controls.addEventListener('lock', function () {
+  instructions.style.display = 'none';
+  blocker.style.display = 'none';
+});
+controls.addEventListener('unlock', function () {
+  blocker.style.display = 'block';
+  instructions.style.display = '';
+});
+scene.add(controls.getObject());
 
 let floorClass = new Floor(1000, 1000, scene);
 floorClass.addToScene();
@@ -216,8 +173,10 @@ let ray = new THREE.Ray();
 
 //animate is like gameloop we could probably use setInverval if we wanted to E.X setInterval(animate, 33);
 let animate = function () {
+  //console.log("animate");
   requestAnimationFrame(animate);
-  if (controlsEnabled) {
+  if (controls.isLocked === true) {
+    //console.log("controlsEnabled");
     let time = performance.now();
     let delta = (time - prevTime) / 1000;
     velocity.x -= velocity.x * 10.0 * delta;
@@ -252,42 +211,28 @@ let animate = function () {
       camera.position.y -= 2;
     }
     prevTime = time;
-    // for (let vertexIndex = 0; vertexIndex < Player.geometry.vertices.length; vertexIndex++) {
-    //     let localVertex = Player.geometry.vertices[vertexIndex].clone();
-    //     let globalVertex = Player.matrix.multiplyVector3(localVertex);
-    //     let directionVector = globalVertex.sub(Player.position);
-
-    //     let ray = new THREE.Ray(Player.position, directionVector.clone().normalize());
-    //     let collisionResults = ray.intersectObjects(scene.children);
-    //     if (collisionResults.length > 0 && collisionResults[0].distance < directionVector.length()) {
-    //         console.log("Collided");
-    //     }
-    // }
   }
   renderer.render(scene, camera);
 };
 
 let counterForStart = 0;
 camera.rotation.y = 0;
-blocker.style.display = '-webkit-box';
-blocker.style.display = '-moz-box';
-blocker.style.display = 'box';
-instructions.style.display = '';
 function startScreen() {
-  if (counterForStart != 1000) {
-    counterForStart++;
-    requestAnimationFrame(startScreen);
-    counterForStart
-    camera.rotation.y += ((Math.PI * 2) / 1000);
-    renderer.render(scene, camera);
-  } else {
+  animate();
+  // if (counterForStart != 1000) {
+  //   counterForStart++;
+  //   requestAnimationFrame(startScreen);
+  //   counterForStart
+  //   camera.rotation.y += ((Math.PI * 2) / 1000);
+  //   renderer.render(scene, camera);
+  // } else {
 
-    animate();
-  }
+  //   animate();
+  // }
 }
 
-startScreen();
-//animate(); //to start loop
+// startScreen();
+animate(); //to start loop
 
 document.addEventListener("keydown", event => {
   //if we use arrow keys this will prevent them froming scroling the page down
@@ -338,15 +283,3 @@ document.addEventListener("keyup", event => {
       break;
   }
 });
-
-// let canvas = document.getElementById("myCanvas");
-// canvas.addEventListener("webglcontextlost", function (event) {
-//     event.preventDefault();
-//     let error = gl.getError();
-//     if (error != gl.NO_ERROR && error != gl.CONTEXT_LOST_WEBGL) {
-//         alert("fail");
-//     }
-// }, false);
-
-// canvas.addEventListener(
-//     "webglcontextrestored", setupWebGLStateAndResources, false);
