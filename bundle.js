@@ -48601,6 +48601,99 @@ module.exports = class insideWallsMaze {
 };
 
 },{}],6:[function(require,module,exports){
+const Floor = require('./Floor.js');
+const InsideWallsMaze = require('./InsideWallsMaze.js');
+const Map = require('./Map.js');
+const WallGenerator = require('./WallGenerator.js');
+const RecursiveMaze = require('./RecursiveMaze');
+const TwoDCanvas = require('./2DCanvas');
+const Platform = require('./Platform');
+const LevelOne = require('./LevelOne');
+
+module.exports = class LevelOne {
+  constructor(scene) {
+    this.scene = scene;
+  }
+
+  generateScene() {
+    let white = new THREE.Color("rgb(255, 255, 255)");
+    let black = new THREE.Color("rgb(0, 0, 0)");
+    let yellow = new THREE.Color("rgb(233, 255, 0)");
+    let green = new THREE.Color("rgb(0,255,0)");
+    let blue = new THREE.Color("rgb(0,100,255)");
+    let red = new THREE.Color("rgb(255,0,0)");
+
+    let floorClass = new Floor(1000, 1000, this.scene);
+    floorClass.addToScene();
+
+    //outer wall generation
+    let walls = [];
+    walls[0] = new WallGenerator(floorClass.w / 2, 50, 0, 1, 100, floorClass.w, white, this.scene, 0);
+    walls[1] = new WallGenerator(-floorClass.w / 2, 50, 0, 1, 100, floorClass.w, white, this.scene, 0);
+    walls[2] = new WallGenerator(0, 50, floorClass.h / 2, 1, 100, floorClass.h, white, this.scene, (-Math.PI / 2));
+    walls[3] = new WallGenerator(0, 50, -floorClass.h / 2, 1, 100, floorClass.h, white, this.scene, (-Math.PI / 2));
+    for (let x = 0; x < walls.length; x++) {
+      walls[x].addToScene();
+    }
+
+    let InsideWallsNumberArray;
+    let InsideWalls = [];
+    // console.log("hunt And KIll true");
+    // let mapAlgo = new Map();
+    // mapAlgo.drawMap();
+    // InsideWallsNumberArray = mapAlgo.array;
+
+    console.log("hunt And KIll true");
+
+    let platForm1 = new Platform(0, 100, 100, 50, red, this.scene);
+    platForm1.addToScene();
+    let platForm2 = new Platform(100, 0, 100, 50, black, this.scene);
+    platForm2.addToScene();
+    let platForm3 = new Platform(100, 100, 0, 50, white, this.scene);
+    platForm3.addToScene();
+    let platForm4 = new Platform(0, 0, 0, 50, green, this.scene);
+    platForm4.addToScene();
+
+
+
+
+
+
+
+
+
+    // let mapAlgo = new RecursiveMaze();
+    // mapAlgo.drawMap();
+    // InsideWallsNumberArray = mapAlgo.array;
+
+    // for (let x = 0; x < mapAlgo.MazeSize; x++) {
+    //     for (let y = 0; y < mapAlgo.MazeSize; y++) {
+    //         InsideWalls[x] = [];
+    //     }
+    // }
+    // for (let ro = 0; ro < mapAlgo.MazeSize; ro++) {
+    //     for (let co = 0; co < mapAlgo.MazeSize; co++) {
+    //         if (InsideWallsNumberArray[ro][co] == 1) {
+    //             //console.log("1");
+    //             let xValue = (ro * floorClass.w / mapAlgo.MazeSize) - (floorClass.w / 2) + ((floorClass.w / mapAlgo.MazeSize) / 2);
+    //             let zValue = (co * floorClass.h / mapAlgo.MazeSize) - (floorClass.w / 2) + ((floorClass.h / mapAlgo.MazeSize) / 2);
+    //             InsideWalls[ro][co] = new InsideWallsMaze(xValue, zValue, (floorClass.w / mapAlgo.MazeSize), false, this.scene);
+    //             InsideWalls[ro][co].addToScene();
+    //         }
+    //         if (InsideWallsNumberArray[ro][co] == 3) {
+    //             //console.log("3");
+    //             let xValue = (ro * floorClass.w / mapAlgo.MazeSize) - (floorClass.w / 2) + ((floorClass.w / mapAlgo.MazeSize) / 2);
+    //             let zValue = (co * floorClass.h / mapAlgo.MazeSize) - (floorClass.w / 2) + ((floorClass.h / mapAlgo.MazeSize) / 2);
+    //             InsideWalls[ro][co] = new InsideWallsMaze(xValue, zValue, (floorClass.w / mapAlgo.MazeSize), true, this.scene);
+    //             InsideWalls[ro][co].addToScene();
+    //         }
+    //     }
+    // }
+
+  }
+};
+
+},{"./2DCanvas":2,"./Floor.js":4,"./InsideWallsMaze.js":5,"./LevelOne":6,"./Map.js":7,"./Platform":8,"./RecursiveMaze":9,"./WallGenerator.js":10}],7:[function(require,module,exports){
 
 
 
@@ -48820,7 +48913,33 @@ module.exports = class Map {
     }
   }
 }
-},{}],7:[function(require,module,exports){
+},{}],8:[function(require,module,exports){
+module.exports = class Platform {
+    constructor(x, z, y, w, color, scene) {
+        this.x = x;
+        this.y = y;
+        this.z = z;
+        this.w = w;
+        this.scene = scene;
+        this.color = color;
+        this.heightOfPlatform = 10;
+
+    }
+
+    addToScene() {
+        let geometryFor = new THREE.BoxGeometry(this.w, this.heightOfPlatform, this.w);
+        let materialFor;
+        console.log('plat form');
+        materialFor = new THREE.MeshLambertMaterial({ color: this.color });
+        let cubeFor = new THREE.Mesh(geometryFor, materialFor);
+        this.scene.add(cubeFor);
+        cubeFor.position.x = this.x;
+        cubeFor.position.y = this.y;
+        cubeFor.position.z = this.z;
+    }
+};
+
+},{}],9:[function(require,module,exports){
 /* eslint-disable eqeqeq */
 
 
@@ -48987,7 +49106,7 @@ module.exports = class RecursiveMaze {
     this.whichMove++;
   }
 }
-},{}],8:[function(require,module,exports){
+},{}],10:[function(require,module,exports){
 
 
 
@@ -49028,22 +49147,23 @@ module.exports = class WallGenerator {
   }
 };
 
-},{}],9:[function(require,module,exports){
+},{}],11:[function(require,module,exports){
 (function (global){
 global.THREE = require('three');
 const Floor = require('./Floor.js');
-const InsideWallsMaze = require('./InsideWallsMaze.js');
-const Map = require('./Map.js');
-const WallGenerator = require('./WallGenerator.js');
-//  const Door = require('./Door.js');
+// const InsideWallsMaze = require('./InsideWallsMaze.js');
+// const Map = require('./Map.js');
+// const WallGenerator = require('./WallGenerator.js');
 require('./RecursiveMaze');
 require('./2DCanvas');
-require('./Controls.js');
+require('./Controls');
+// const Platform = require('./Platform');
+const LevelOne = require('./LevelOne');
 /**
  * @author mrdoob / http://mrdoob.com/
  * @author Mugen87 / https://github.com/Mugen87
  */
-const white = new THREE.Color('rgb(255, 255, 255)');
+// const white = new THREE.Color('rgb(255, 255, 255)');
 // const black = new THREE.Color("rgb(0, 0, 0)");
 // const yellow = new THREE.Color("rgb(233, 255, 0)");
 // const green = new THREE.Color("rgb(0,255,0)");
@@ -49054,58 +49174,12 @@ const scene = new THREE.Scene();
 scene.background = new THREE.Color(0xffffff);
 scene.fog = new THREE.Fog(0xffffff, 0, 750);
 const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 800);
-// camera starting position
-// camera.position.z = 25;
-// camera.position.y = 100;
-// camera.position.x = 5;
 const controls = new THREE.PointerLockControls(camera);
 const renderer = new THREE.WebGLRenderer();
 const floorClass = new Floor(1000, 1000, scene);
 renderer.setPixelRatio(window.devicePixelRatio / 2);
 renderer.setSize(window.innerWidth, window.innerHeight);
 document.body.appendChild(renderer.domElement);
-
-// outer wall generation
-let walls = [];
-walls[0] = new WallGenerator(floorClass.w / 2, 50, 0, 1, 100, floorClass.w, white, scene, 0);
-walls[1] = new WallGenerator(-floorClass.w / 2, 50, 0, 1, 100, floorClass.w, white, scene, 0);
-walls[2] = new WallGenerator(0, 50, floorClass.h / 2, 1, 100, floorClass.h, white, scene, (-Math.PI / 2));
-walls[3] = new WallGenerator(0, 50, -floorClass.h / 2, 1, 100, floorClass.h, white, scene, (-Math.PI / 2));
-for (let x = 0; x < walls.length; x++) {
-  walls[x].addToScene();
-}
-
-//wall genertion
-let InsideWallsNumberArray;
-let InsideWalls = [];
-
-let mapAlgo = new Map();
-mapAlgo.drawMap();
-InsideWallsNumberArray = mapAlgo.array;
-for (let x = 0; x < mapAlgo.MazeSize; x++) {
-  for (let y = 0; y < mapAlgo.MazeSize; y++) {
-    InsideWalls[x] = [];
-  }
-}
-
-for (let ro = 0; ro < mapAlgo.MazeSize; ro++) {
-  for (let co = 0; co < mapAlgo.MazeSize; co++) {
-    if (InsideWallsNumberArray[ro][co] == 1) {
-      //console.log("1");
-      let xValue = (ro * floorClass.w / mapAlgo.MazeSize) - (floorClass.w / 2) + ((floorClass.w / mapAlgo.MazeSize) / 2);
-      let zValue = (co * floorClass.h / mapAlgo.MazeSize) - (floorClass.w / 2) + ((floorClass.h / mapAlgo.MazeSize) / 2);
-      InsideWalls[ro][co] = new InsideWallsMaze(xValue, zValue, (floorClass.w / mapAlgo.MazeSize), false, scene);
-      InsideWalls[ro][co].addToScene();
-    }
-    if (InsideWallsNumberArray[ro][co] == 3) {
-      //console.log("3");
-      let xValue = (ro * floorClass.w / mapAlgo.MazeSize) - (floorClass.w / 2) + ((floorClass.w / mapAlgo.MazeSize) / 2);
-      let zValue = (co * floorClass.h / mapAlgo.MazeSize) - (floorClass.w / 2) + ((floorClass.h / mapAlgo.MazeSize) / 2);
-      InsideWalls[ro][co] = new InsideWallsMaze(xValue, zValue, (floorClass.w / mapAlgo.MazeSize), true, scene);
-      InsideWalls[ro][co].addToScene();
-    }
-  }
-}
 
 // the booleans for moving
 let moveForward = false;
@@ -49182,32 +49256,13 @@ document.addEventListener('keyup', onKeyUp, false);
 
 floorClass.addToScene();
 
-// way to make a basic cube with a 1,1,1 size and the color 0x00ff00, but I made some colors on the top like green or white
-/*
-let geometry = new THREE.BoxGeometry(1, 1, 1);
-let material = new THREE.MeshLambertMaterial({ color: 0x00ff00 });
-let cube = new THREE.Mesh(geometry, material);
-scene.add(cube);
-cube.position.y = 10;
-*/
+const levelOne = new LevelOne(scene);
+levelOne.generateScene();
 
 scene.background = blue;
 
-// lighting
-// let lightDir = new THREE.DirectionalLight(0xffffff, 0.3);
-// lightDir.position.set(500, 500, 500).normalize();
-// scene.add(lightDir);
-
 const lightHem = new THREE.HemisphereLight(0xffffbb, 0x080820, 1);
 scene.add(lightHem);
-
-// const geometryPlayer = new THREE.BoxGeometry(10, 40, 10);
-// const materialPlayer = new THREE.MeshLambertMaterial({ color: new THREE.Color('rgb(255, 255, 255)') });
-// const Player = new THREE.Mesh(geometryPlayer, materialPlayer);
-// scene.add(Player);
-// Player.position.x = 0;
-// Player.position.y = 100;
-// Player.position.z = 0;
 
 // animate is like gameloop we could probably use setInverval if we wanted to E.X setInterval(animate, 33);
 const animate = () => {
@@ -49232,4 +49287,4 @@ const animate = () => {
 animate(); // to start loop
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./2DCanvas":2,"./Controls.js":3,"./Floor.js":4,"./InsideWallsMaze.js":5,"./Map.js":6,"./RecursiveMaze":7,"./WallGenerator.js":8,"three":1}]},{},[9]);
+},{"./2DCanvas":2,"./Controls":3,"./Floor.js":4,"./LevelOne":6,"./RecursiveMaze":9,"three":1}]},{},[11]);
