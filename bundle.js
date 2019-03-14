@@ -51767,6 +51767,63 @@ module.exports = _GLTFLoader;
 }));
 
 },{}],3:[function(require,module,exports){
+const canvas = document.getElementById('backgroundCanvas');
+const ctx = canvas.getContext('2d');
+
+let blocker = document.getElementById('he');
+
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
+
+console.log("2D CANVAS");
+console.log("IS IT WORKING");
+ctx.fillStyle = "red";
+// ctx.fillRect(0, 0, 100, 100);
+
+let number = 0;
+let moveRate = 5;
+let rightBar = canvas.width;
+let leftBar = -canvas.width / 2;
+var image = new Image();
+image.id = "pic"
+
+setInterval(gameLoop, 10);
+
+function gameLoop() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    //console.log(rightBar + " canvas/2" + canvas.width / 2)
+    if (rightBar >= canvas.width / 2) {
+        console.log("running");
+        ctx.clearRect(0, 0, 10000, 10000);
+        ctx.fillStyle = "white";
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        ctx.fillStyle = "black";
+        rightBar -= moveRate;
+        leftBar += moveRate;
+        ctx.fillRect(rightBar, 0, canvas.width / 2, canvas.height / 4);
+        ctx.fillRect(leftBar, canvas.height / 4, canvas.width / 2, canvas.height / 4);
+        ctx.fillRect(rightBar, canvas.height / 2, canvas.width / 2, canvas.height / 4);
+        ctx.fillRect(leftBar, canvas.height / 4 * 3, canvas.width / 2, canvas.height / 4);
+        image.src = canvas.toDataURL();
+        document.getElementById('he').appendChild(image);
+    } else {
+        switchToThreeD();
+    }
+}
+
+function switchToThreeD() {
+    console.log("Switch To 3d");
+    blocker.style.display = 'none';
+};
+
+function switchBack() {
+    console.log("Switch To 2d");
+    blocker.style.display = '';
+};
+
+   
+
+},{}],4:[function(require,module,exports){
 
 
 module.exports = class Floor {
@@ -51792,10 +51849,7 @@ module.exports = class Floor {
   }
 };
 
-},{}],4:[function(require,module,exports){
-
-
-
+},{}],5:[function(require,module,exports){
 module.exports = class insideWallsMaze {
   constructor(x, z, w, endBlock, scene) {
     this.x = x;
@@ -51831,7 +51885,101 @@ module.exports = class insideWallsMaze {
   }
 };
 
-},{}],5:[function(require,module,exports){
+},{}],6:[function(require,module,exports){
+const Floor = require('./Floor.js');
+const InsideWallsMaze = require('./InsideWallsMaze.js');
+const Map = require('./Map.js');
+const WallGenerator = require('./WallGenerator.js');
+const RecursiveMaze = require('./RecursiveMaze');
+const TwoDCanvas = require('./2DCanvas');
+const PointerLockControls = require('./PointerLockControls');
+const Platform = require('./Platform');
+const LevelOne = require('./LevelOne');
+
+module.exports = class LevelOne {
+    constructor(scene) {
+        this.scene = scene;
+    }
+
+    generateScene() {
+        let white = new THREE.Color("rgb(255, 255, 255)");
+        let black = new THREE.Color("rgb(0, 0, 0)");
+        let yellow = new THREE.Color("rgb(233, 255, 0)");
+        let green = new THREE.Color("rgb(0,255,0)");
+        let blue = new THREE.Color("rgb(0,100,255)");
+        let red = new THREE.Color("rgb(255,0,0)");
+
+        let floorClass = new Floor(1000, 1000, this.scene);
+        floorClass.addToScene();
+
+        //outer wall generation
+        let walls = [];
+        walls[0] = new WallGenerator(floorClass.w / 2, 50, 0, 1, 100, floorClass.w, white, this.scene, 0);
+        walls[1] = new WallGenerator(-floorClass.w / 2, 50, 0, 1, 100, floorClass.w, white, this.scene, 0);
+        walls[2] = new WallGenerator(0, 50, floorClass.h / 2, 1, 100, floorClass.h, white, this.scene, (-Math.PI / 2));
+        walls[3] = new WallGenerator(0, 50, -floorClass.h / 2, 1, 100, floorClass.h, white, this.scene, (-Math.PI / 2));
+        for (let x = 0; x < walls.length; x++) {
+            walls[x].addToScene();
+        }
+
+        let InsideWallsNumberArray;
+        let InsideWalls = [];
+        // console.log("hunt And KIll true");
+        // let mapAlgo = new Map();
+        // mapAlgo.drawMap();
+        // InsideWallsNumberArray = mapAlgo.array;
+
+        console.log("hunt And KIll true");
+
+        let platForm1 = new Platform(0, 100, 100, 50, red, this.scene);
+        platForm1.addToScene();
+        let platForm2 = new Platform(100, 0, 100, 50, black, this.scene);
+        platForm2.addToScene();
+        let platForm3 = new Platform(100, 100, 0, 50, white, this.scene);
+        platForm3.addToScene();
+        let platForm4 = new Platform(0, 0, 0, 50, green, this.scene);
+        platForm4.addToScene();
+
+
+
+
+
+
+
+
+
+        // let mapAlgo = new RecursiveMaze();
+        // mapAlgo.drawMap();
+        // InsideWallsNumberArray = mapAlgo.array;
+
+        // for (let x = 0; x < mapAlgo.MazeSize; x++) {
+        //     for (let y = 0; y < mapAlgo.MazeSize; y++) {
+        //         InsideWalls[x] = [];
+        //     }
+        // }
+        // for (let ro = 0; ro < mapAlgo.MazeSize; ro++) {
+        //     for (let co = 0; co < mapAlgo.MazeSize; co++) {
+        //         if (InsideWallsNumberArray[ro][co] == 1) {
+        //             //console.log("1");
+        //             let xValue = (ro * floorClass.w / mapAlgo.MazeSize) - (floorClass.w / 2) + ((floorClass.w / mapAlgo.MazeSize) / 2);
+        //             let zValue = (co * floorClass.h / mapAlgo.MazeSize) - (floorClass.w / 2) + ((floorClass.h / mapAlgo.MazeSize) / 2);
+        //             InsideWalls[ro][co] = new InsideWallsMaze(xValue, zValue, (floorClass.w / mapAlgo.MazeSize), false, this.scene);
+        //             InsideWalls[ro][co].addToScene();
+        //         }
+        //         if (InsideWallsNumberArray[ro][co] == 3) {
+        //             //console.log("3");
+        //             let xValue = (ro * floorClass.w / mapAlgo.MazeSize) - (floorClass.w / 2) + ((floorClass.w / mapAlgo.MazeSize) / 2);
+        //             let zValue = (co * floorClass.h / mapAlgo.MazeSize) - (floorClass.w / 2) + ((floorClass.h / mapAlgo.MazeSize) / 2);
+        //             InsideWalls[ro][co] = new InsideWallsMaze(xValue, zValue, (floorClass.w / mapAlgo.MazeSize), true, this.scene);
+        //             InsideWalls[ro][co].addToScene();
+        //         }
+        //     }
+        // }
+
+    }
+};
+
+},{"./2DCanvas":3,"./Floor.js":4,"./InsideWallsMaze.js":5,"./LevelOne":6,"./Map.js":7,"./Platform":8,"./PointerLockControls":9,"./RecursiveMaze":10,"./WallGenerator.js":11}],7:[function(require,module,exports){
 
 
 
@@ -52051,7 +52199,33 @@ module.exports = class Map {
     }
   }
 }
-},{}],6:[function(require,module,exports){
+},{}],8:[function(require,module,exports){
+module.exports = class Platform {
+    constructor(x, z, y, w, color, scene) {
+        this.x = x;
+        this.y = y;
+        this.z = z;
+        this.w = w;
+        this.scene = scene;
+        this.color = color;
+        this.heightOfPlatform = 10;
+
+    }
+
+    addToScene() {
+        let geometryFor = new THREE.BoxGeometry(this.w, this.heightOfPlatform, this.w);
+        let materialFor;
+        console.log('plat form');
+        materialFor = new THREE.MeshLambertMaterial({ color: this.color });
+        let cubeFor = new THREE.Mesh(geometryFor, materialFor);
+        this.scene.add(cubeFor);
+        cubeFor.position.x = this.x;
+        cubeFor.position.y = this.y;
+        cubeFor.position.z = this.z;
+    }
+};
+
+},{}],9:[function(require,module,exports){
 
 
 /**
@@ -52181,7 +52355,7 @@ THREE.PointerLockControls = function (camera, domElement) {
 THREE.PointerLockControls.prototype = Object.create(THREE.EventDispatcher.prototype);
 THREE.PointerLockControls.prototype.constructor = THREE.PointerLockControls;
 
-},{}],7:[function(require,module,exports){
+},{}],10:[function(require,module,exports){
 /* eslint-disable eqeqeq */
 
 
@@ -52348,61 +52522,7 @@ module.exports = class RecursiveMaze {
     this.whichMove++;
   }
 }
-},{}],8:[function(require,module,exports){
-const canvas = document.getElementById('backgroundCanvas');
-const ctx = canvas.getContext('2d');
-
-let blocker = document.getElementById('he');
-
-canvas.width = window.innerWidth;
-canvas.height = window.innerHeight;
-
-console.log("2D CANVAS");
-console.log("IS IT WORKING");
-ctx.fillStyle = "red";
-// ctx.fillRect(0, 0, 100, 100);
-
-let number = 0;
-let moveRate = 5;
-let rightBar = canvas.width;
-let leftBar = -canvas.width / 2;
-var image = new Image();
-image.id = "pic"
-
-setInterval(gameLoop, 10);
-
-function gameLoop() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    //console.log(rightBar + " canvas/2" + canvas.width / 2)
-    if (rightBar >= canvas.width / 2) {
-        console.log("running");
-        ctx.clearRect(0, 0, 10000, 10000);
-        ctx.fillStyle = "white";
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
-        ctx.fillStyle = "black";
-        rightBar -= moveRate;
-        leftBar += moveRate;
-        ctx.fillRect(rightBar, 0, canvas.width / 2, canvas.height / 4);
-        ctx.fillRect(leftBar, canvas.height / 4, canvas.width / 2, canvas.height / 4);
-        ctx.fillRect(rightBar, canvas.height / 2, canvas.width / 2, canvas.height / 4);
-        ctx.fillRect(leftBar, canvas.height / 4 * 3, canvas.width / 2, canvas.height / 4);
-        image.src = canvas.toDataURL();
-        document.getElementById('he').appendChild(image);
-    } else {
-        switchToThreeD();
-    }
-}
-
-function switchToThreeD() {
-    console.log("Switch To 3d");
-    blocker.style.display = 'none';
-};
-
-function switchBack() {
-    console.log("Switch To 2d");
-    blocker.style.display = '';
-};
-},{}],9:[function(require,module,exports){
+},{}],11:[function(require,module,exports){
 
 
 
@@ -52443,7 +52563,7 @@ module.exports = class WallGenerator {
   }
 };
 
-},{}],10:[function(require,module,exports){
+},{}],12:[function(require,module,exports){
 (function (global){
 
 
@@ -52454,10 +52574,11 @@ const Floor = require('./Floor.js');
 const InsideWallsMaze = require('./InsideWallsMaze.js');
 const Map = require('./Map.js');
 const WallGenerator = require('./WallGenerator.js');
-//  const Door = require('./Door.js');
 const RecursiveMaze = require('./RecursiveMaze');
-const TwoDCanvas = require('./TwoDCanvas');
+const TwoDCanvas = require('./2DCanvas');
 const PointerLockControls = require('./PointerLockControls');
+const Platform = require('./Platform');
+const LevelOne = require('./LevelOne');
 /**
  * @author mrdoob / http://mrdoob.com/
  * @author Mugen87 / https://github.com/Mugen87
@@ -52498,73 +52619,9 @@ controls.addEventListener('unlock', function () {
 });
 scene.add(controls.getObject());
 
-let floorClass = new Floor(1000, 1000, scene);
-floorClass.addToScene();
 
-//outer wall generation
-let walls = [];
-walls[0] = new WallGenerator(floorClass.w / 2, 50, 0, 1, 100, floorClass.w, white, scene, 0);
-walls[1] = new WallGenerator(-floorClass.w / 2, 50, 0, 1, 100, floorClass.w, white, scene, 0);
-walls[2] = new WallGenerator(0, 50, floorClass.h / 2, 1, 100, floorClass.h, white, scene, (-Math.PI / 2));
-walls[3] = new WallGenerator(0, 50, -floorClass.h / 2, 1, 100, floorClass.h, white, scene, (-Math.PI / 2));
-for (let x = 0; x < walls.length; x++) {
-  walls[x].addToScene();
-}
-//-------------------------
-
-//wall genertion
-let InsideWallsNumberArray;
-let InsideWalls = [];
-
-// let huntAndKill = false;
-// if (huntAndKill) {
-//     console.log("hunt And KIll true");
-//     let mapAlgo = new Map();
-//     mapAlgo.drawMap();
-//     InsideWallsNumberArray = mapAlgo.array;
-// } else {
-//     console.log("hunt And KIll true");
-//     let mapAlgo = new RecursiveMaze();
-//     mapAlgo.drawMap();
-//     InsideWallsNumberArray = mapAlgo.array;
-//     console.log("FUCKKKKKKKKKKKKWKKKKKKKKKKKKKKKK");
-//     console.log("FUCKKKKKKKKKKKKWKKKKKKKKKKKKKKKK");
-//     console.log("FUCKKKKKKKKKKKKWKKKKKKKKKKKKKKKK");
-//     console.log("FUCKKKKKKKKKKKKWKKKKKKKKKKKKKKKK");
-//     //console.log(InsideWallsNumberArray);
-// }
-
-let mapAlgo = new Map();
-mapAlgo.drawMap();
-InsideWallsNumberArray = mapAlgo.array;
-console.log("Before Error");
-for (let x = 0; x < mapAlgo.MazeSize; x++) {
-  for (let y = 0; y < mapAlgo.MazeSize; y++) {
-    InsideWalls[x] = [];
-  }
-}
-
-for (let ro = 0; ro < mapAlgo.MazeSize; ro++) {
-  for (let co = 0; co < mapAlgo.MazeSize; co++) {
-    if (InsideWallsNumberArray[ro][co] == 1) {
-      //console.log("1");
-      let xValue = (ro * floorClass.w / mapAlgo.MazeSize) - (floorClass.w / 2) + ((floorClass.w / mapAlgo.MazeSize) / 2);
-      let zValue = (co * floorClass.h / mapAlgo.MazeSize) - (floorClass.w / 2) + ((floorClass.h / mapAlgo.MazeSize) / 2);
-      InsideWalls[ro][co] = new InsideWallsMaze(xValue, zValue, (floorClass.w / mapAlgo.MazeSize), false, scene);
-      InsideWalls[ro][co].addToScene();
-    }
-    if (InsideWallsNumberArray[ro][co] == 3) {
-      //console.log("3");
-      let xValue = (ro * floorClass.w / mapAlgo.MazeSize) - (floorClass.w / 2) + ((floorClass.w / mapAlgo.MazeSize) / 2);
-      let zValue = (co * floorClass.h / mapAlgo.MazeSize) - (floorClass.w / 2) + ((floorClass.h / mapAlgo.MazeSize) / 2);
-      InsideWalls[ro][co] = new InsideWallsMaze(xValue, zValue, (floorClass.w / mapAlgo.MazeSize), true, scene);
-      InsideWalls[ro][co].addToScene();
-    }
-  }
-}
-
-
-
+let levelOne = new LevelOne(scene);
+levelOne.generateScene();
 // way to make a basic cube with a 1,1,1 size and the color 0x00ff00, but I made some colors on the top like green or white
 /*
 let geometry = new THREE.BoxGeometry(1, 1, 1);
@@ -52620,10 +52677,9 @@ let ray = new THREE.Ray();
 
 //animate is like gameloop we could probably use setInverval if we wanted to E.X setInterval(animate, 33);
 let animate = function () {
-  console.log("animate");
+  //console.log("animate");
   requestAnimationFrame(animate);
   if (controls.isLocked === true) {
-    console.log("controlsEnabled");
     let time = performance.now();
     let delta = (time - prevTime) / 1000;
     velocity.x -= velocity.x * 10.0 * delta;
@@ -52664,21 +52720,27 @@ let animate = function () {
 
 let counterForStart = 0;
 camera.rotation.y = 0;
+let first = true;
 function startScreen() {
-  animate();
-  // if (counterForStart != 1000) {
-  //   counterForStart++;
-  //   requestAnimationFrame(startScreen);
-  //   counterForStart
-  //   camera.rotation.y += ((Math.PI * 2) / 1000);
-  //   renderer.render(scene, camera);
-  // } else {
-
-  //   animate();
-  // }
+  if (controls.isLocked == false) {
+    first = true;
+    counterForStart++;
+    requestAnimationFrame(startScreen);
+    camera.rotation.y += ((Math.PI * 2) / 1000);
+    camera.rotation.x = 0;
+    camera.rotation.z = 0;
+    renderer.render(scene, camera);
+  } else {
+    if (first) {
+      first = false;
+      camera.rotation.x = 0;
+      camera.rotation.y = 0;
+      camera.rotation.z = 0;
+    }
+  }
 }
 
-// startScreen();
+startScreen();
 animate(); //to start loop
 
 document.addEventListener("keydown", event => {
@@ -52732,4 +52794,4 @@ document.addEventListener("keyup", event => {
 });
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./Floor.js":3,"./InsideWallsMaze.js":4,"./Map.js":5,"./PointerLockControls":6,"./RecursiveMaze":7,"./TwoDCanvas":8,"./WallGenerator.js":9,"three":2,"three-gltf-loader":1}]},{},[10]);
+},{"./2DCanvas":3,"./Floor.js":4,"./InsideWallsMaze.js":5,"./LevelOne":6,"./Map.js":7,"./Platform":8,"./PointerLockControls":9,"./RecursiveMaze":10,"./WallGenerator.js":11,"three":2,"three-gltf-loader":1}]},{},[12]);

@@ -1,6 +1,3 @@
-
-
-
 module.exports = class insideWallsMaze {
   constructor(x, z, w, endBlock, scene) {
     this.x = x;

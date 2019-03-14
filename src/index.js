@@ -7,10 +7,11 @@ const Floor = require('./Floor.js');
 const InsideWallsMaze = require('./InsideWallsMaze.js');
 const Map = require('./Map.js');
 const WallGenerator = require('./WallGenerator.js');
-//  const Door = require('./Door.js');
 const RecursiveMaze = require('./RecursiveMaze');
-const TwoDCanvas = require('./TwoDCanvas');
+const TwoDCanvas = require('./2DCanvas');
 const PointerLockControls = require('./PointerLockControls');
+const Platform = require('./Platform');
+const LevelOne = require('./LevelOne');
 /**
  * @author mrdoob / http://mrdoob.com/
  * @author Mugen87 / https://github.com/Mugen87
@@ -51,73 +52,9 @@ controls.addEventListener('unlock', function () {
 });
 scene.add(controls.getObject());
 
-let floorClass = new Floor(1000, 1000, scene);
-floorClass.addToScene();
 
-//outer wall generation
-let walls = [];
-walls[0] = new WallGenerator(floorClass.w / 2, 50, 0, 1, 100, floorClass.w, white, scene, 0);
-walls[1] = new WallGenerator(-floorClass.w / 2, 50, 0, 1, 100, floorClass.w, white, scene, 0);
-walls[2] = new WallGenerator(0, 50, floorClass.h / 2, 1, 100, floorClass.h, white, scene, (-Math.PI / 2));
-walls[3] = new WallGenerator(0, 50, -floorClass.h / 2, 1, 100, floorClass.h, white, scene, (-Math.PI / 2));
-for (let x = 0; x < walls.length; x++) {
-  walls[x].addToScene();
-}
-//-------------------------
-
-//wall genertion
-let InsideWallsNumberArray;
-let InsideWalls = [];
-
-// let huntAndKill = false;
-// if (huntAndKill) {
-//     console.log("hunt And KIll true");
-//     let mapAlgo = new Map();
-//     mapAlgo.drawMap();
-//     InsideWallsNumberArray = mapAlgo.array;
-// } else {
-//     console.log("hunt And KIll true");
-//     let mapAlgo = new RecursiveMaze();
-//     mapAlgo.drawMap();
-//     InsideWallsNumberArray = mapAlgo.array;
-//     console.log("FUCKKKKKKKKKKKKWKKKKKKKKKKKKKKKK");
-//     console.log("FUCKKKKKKKKKKKKWKKKKKKKKKKKKKKKK");
-//     console.log("FUCKKKKKKKKKKKKWKKKKKKKKKKKKKKKK");
-//     console.log("FUCKKKKKKKKKKKKWKKKKKKKKKKKKKKKK");
-//     //console.log(InsideWallsNumberArray);
-// }
-
-let mapAlgo = new Map();
-mapAlgo.drawMap();
-InsideWallsNumberArray = mapAlgo.array;
-console.log("Before Error");
-for (let x = 0; x < mapAlgo.MazeSize; x++) {
-  for (let y = 0; y < mapAlgo.MazeSize; y++) {
-    InsideWalls[x] = [];
-  }
-}
-
-for (let ro = 0; ro < mapAlgo.MazeSize; ro++) {
-  for (let co = 0; co < mapAlgo.MazeSize; co++) {
-    if (InsideWallsNumberArray[ro][co] == 1) {
-      //console.log("1");
-      let xValue = (ro * floorClass.w / mapAlgo.MazeSize) - (floorClass.w / 2) + ((floorClass.w / mapAlgo.MazeSize) / 2);
-      let zValue = (co * floorClass.h / mapAlgo.MazeSize) - (floorClass.w / 2) + ((floorClass.h / mapAlgo.MazeSize) / 2);
-      InsideWalls[ro][co] = new InsideWallsMaze(xValue, zValue, (floorClass.w / mapAlgo.MazeSize), false, scene);
-      InsideWalls[ro][co].addToScene();
-    }
-    if (InsideWallsNumberArray[ro][co] == 3) {
-      //console.log("3");
-      let xValue = (ro * floorClass.w / mapAlgo.MazeSize) - (floorClass.w / 2) + ((floorClass.w / mapAlgo.MazeSize) / 2);
-      let zValue = (co * floorClass.h / mapAlgo.MazeSize) - (floorClass.w / 2) + ((floorClass.h / mapAlgo.MazeSize) / 2);
-      InsideWalls[ro][co] = new InsideWallsMaze(xValue, zValue, (floorClass.w / mapAlgo.MazeSize), true, scene);
-      InsideWalls[ro][co].addToScene();
-    }
-  }
-}
-
-
-
+let levelOne = new LevelOne(scene);
+levelOne.generateScene();
 // way to make a basic cube with a 1,1,1 size and the color 0x00ff00, but I made some colors on the top like green or white
 /*
 let geometry = new THREE.BoxGeometry(1, 1, 1);
@@ -176,7 +113,6 @@ let animate = function () {
   //console.log("animate");
   requestAnimationFrame(animate);
   if (controls.isLocked === true) {
-    //console.log("controlsEnabled");
     let time = performance.now();
     let delta = (time - prevTime) / 1000;
     velocity.x -= velocity.x * 10.0 * delta;
@@ -217,21 +153,27 @@ let animate = function () {
 
 let counterForStart = 0;
 camera.rotation.y = 0;
+let first = true;
 function startScreen() {
-  animate();
-  // if (counterForStart != 1000) {
-  //   counterForStart++;
-  //   requestAnimationFrame(startScreen);
-  //   counterForStart
-  //   camera.rotation.y += ((Math.PI * 2) / 1000);
-  //   renderer.render(scene, camera);
-  // } else {
-
-  //   animate();
-  // }
+  if (controls.isLocked == false) {
+    first = true;
+    counterForStart++;
+    requestAnimationFrame(startScreen);
+    camera.rotation.y += ((Math.PI * 2) / 1000);
+    camera.rotation.x = 0;
+    camera.rotation.z = 0;
+    renderer.render(scene, camera);
+  } else {
+    if (first) {
+      first = false;
+      camera.rotation.x = 0;
+      camera.rotation.y = 0;
+      camera.rotation.z = 0;
+    }
+  }
 }
 
-// startScreen();
+startScreen();
 animate(); //to start loop
 
 document.addEventListener("keydown", event => {
