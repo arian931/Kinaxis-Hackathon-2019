@@ -1,5 +1,5 @@
-/* eslint-disable linebreak-style */
-/* eslint-disable no-undef */
+
+
 
 module.exports = class WallGenerator {
   constructor(x, y, z, w, h, d, color, scene, rotation) {

@@ -1,5 +1,5 @@
-/* eslint-disable linebreak-style */
-/* eslint-disable no-undef */
+
+
 module.exports = class Floor {
   constructor(w, h, scene) {
     this.w = w;

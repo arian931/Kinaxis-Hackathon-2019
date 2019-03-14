@@ -1,5 +1,5 @@
-/* eslint-disable linebreak-style */
-/* eslint-disable no-undef */
+
+
 module.exports = class Door {
   constructor(x, z, w, scene) {
     this.x = x;

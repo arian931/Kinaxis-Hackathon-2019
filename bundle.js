@@ -51767,8 +51767,8 @@ module.exports = _GLTFLoader;
 }));
 
 },{}],3:[function(require,module,exports){
-/* eslint-disable linebreak-style */
-/* eslint-disable no-undef */
+
+
 module.exports = class Floor {
   constructor(w, h, scene) {
     this.w = w;
@@ -51793,8 +51793,8 @@ module.exports = class Floor {
 };
 
 },{}],4:[function(require,module,exports){
-/* eslint-disable linebreak-style */
-/* eslint-disable no-undef */
+
+
 
 module.exports = class insideWallsMaze {
   constructor(x, z, w, endBlock, scene) {
@@ -51832,8 +51832,8 @@ module.exports = class insideWallsMaze {
 };
 
 },{}],5:[function(require,module,exports){
-/* eslint-disable linebreak-style */
-/* eslint-disable no-undef */
+
+
 
 module.exports = class Map {
   constructor() {
@@ -52053,8 +52053,8 @@ module.exports = class Map {
 }
 },{}],6:[function(require,module,exports){
 /* eslint-disable eqeqeq */
-/* eslint-disable linebreak-style */
-/* eslint-disable no-undef */
+
+
 /* eslint-disable no-plusplus */
 
 module.exports = class RecursiveMaze {
@@ -52315,8 +52315,8 @@ module.exports = class WallGenerator {
 
 },{}],9:[function(require,module,exports){
 (function (global){
-/* eslint-disable linebreak-style */
-/* eslint-disable no-undef */
+
+
 
 global.THREE = require('three');
 global.GLTFLoader = require('three-gltf-loader');
@@ -52338,6 +52338,70 @@ let green = new THREE.Color("rgb(0,255,0)");
 let blue = new THREE.Color("rgb(0,100,255)");
 let red = new THREE.Color("rgb(255,0,0)");
 
+let startScreenBool = true;
+
+//controls button and explanation
+let blocker = document.getElementById('blocker');
+let instructions = document.getElementById('instructions');
+
+// https://www.html5rocks.com/en/tutorials/pointerlock/intro/
+
+//CONTROLS BOILER PLATE ---------------------------------------------------------------------
+let havePointerLock = 'pointerLockElement' in document || 'mozPointerLockElement' in document || 'webkitPointerLockElement' in document;
+if (havePointerLock) {
+  let element = document.body;
+  let pointerlockchange = function (event) {
+    if (document.pointerLockElement === element || document.mozPointerLockElement === element || document.webkitPointerLockElement === element) {
+      controlsEnabled = true;
+      controls.enabled = true;
+      startScreenBool = false;
+      blocker.style.display = 'none';
+      startScreen();
+    } else {
+      controls.enabled = false;
+      blocker.style.display = '-webkit-box';
+      blocker.style.display = '-moz-box';
+      blocker.style.display = 'box';
+      instructions.style.display = '';
+    }
+  };
+  let pointerlockerror = function (event) {
+    instructions.style.display = '';
+  };
+  // Hook pointer lock state change events
+  document.addEventListener('pointerlockchange', pointerlockchange, false);
+  document.addEventListener('mozpointerlockchange', pointerlockchange, false);
+  document.addEventListener('webkitpointerlockchange', pointerlockchange, false);
+  document.addEventListener('pointerlockerror', pointerlockerror, false);
+  document.addEventListener('mozpointerlockerror', pointerlockerror, false);
+  document.addEventListener('webkitpointerlockerror', pointerlockerror, false);
+  instructions.addEventListener('click', function (event) {
+    instructions.style.display = 'none';
+    // Ask the browser to lock the pointer
+    element.requestPointerLock = element.requestPointerLock || element.mozRequestPointerLock || element.webkitRequestPointerLock;
+    if (/Firefox/i.test(navigator.userAgent)) {
+      let fullscreenchange = function (event) {
+        if (document.fullscreenElement === element || document.mozFullscreenElement === element || document.mozFullScreenElement === element) {
+          document.removeEventListener('fullscreenchange', fullscreenchange);
+          document.removeEventListener('mozfullscreenchange', fullscreenchange);
+          element.requestPointerLock();
+        }
+      };
+      document.addEventListener('fullscreenchange', fullscreenchange, false);
+      document.addEventListener('mozfullscreenchange', fullscreenchange, false);
+      element.requestFullscreen = element.requestFullscreen || element.mozRequestFullscreen || element.mozRequestFullScreen || element.webkitRequestFullscreen;
+      element.requestFullscreen();
+    } else {
+      element.requestPointerLock();
+    }
+  }, false);
+} else {
+  instructions.innerHTML = 'Your browser doesn\'t seem to support Pointer Lock API';
+}
+//------------------------------------------------------------------------------------------
+
+
+
 let scene = new THREE.Scene();
 scene.background = new THREE.Color(0xffffff);
 scene.fog = new THREE.Fog(0xffffff, 0, 750);
@@ -52357,7 +52421,7 @@ walls[1] = new WallGenerator(-floorClass.w / 2, 50, 0, 1, 100, floorClass.w, whi
 walls[2] = new WallGenerator(0, 50, floorClass.h / 2, 1, 100, floorClass.h, white, scene, (-Math.PI / 2));
 walls[3] = new WallGenerator(0, 50, -floorClass.h / 2, 1, 100, floorClass.h, white, scene, (-Math.PI / 2));
 for (let x = 0; x < walls.length; x++) {
-    walls[x].addToScene();
+  walls[x].addToScene();
 }
 //-------------------------
 
@@ -52388,28 +52452,28 @@ mapAlgo.drawMap();
 InsideWallsNumberArray = mapAlgo.array;
 console.log("Before Error");
 for (let x = 0; x < mapAlgo.MazeSize; x++) {
-    for (let y = 0; y < mapAlgo.MazeSize; y++) {
-        InsideWalls[x] = [];
-    }
+  for (let y = 0; y < mapAlgo.MazeSize; y++) {
+    InsideWalls[x] = [];
+  }
 }
 
 for (let ro = 0; ro < mapAlgo.MazeSize; ro++) {
-    for (let co = 0; co < mapAlgo.MazeSize; co++) {
-        if (InsideWallsNumberArray[ro][co] == 1) {
-            //console.log("1");
-            let xValue = (ro * floorClass.w / mapAlgo.MazeSize) - (floorClass.w / 2) + ((floorClass.w / mapAlgo.MazeSize) / 2);
-            let zValue = (co * floorClass.h / mapAlgo.MazeSize) - (floorClass.w / 2) + ((floorClass.h / mapAlgo.MazeSize) / 2);
-            InsideWalls[ro][co] = new InsideWallsMaze(xValue, zValue, (floorClass.w / mapAlgo.MazeSize), false, scene);
-            InsideWalls[ro][co].addToScene();
-        }
-        if (InsideWallsNumberArray[ro][co] == 3) {
-            //console.log("3");
-            let xValue = (ro * floorClass.w / mapAlgo.MazeSize) - (floorClass.w / 2) + ((floorClass.w / mapAlgo.MazeSize) / 2);
-            let zValue = (co * floorClass.h / mapAlgo.MazeSize) - (floorClass.w / 2) + ((floorClass.h / mapAlgo.MazeSize) / 2);
-            InsideWalls[ro][co] = new InsideWallsMaze(xValue, zValue, (floorClass.w / mapAlgo.MazeSize), true, scene);
-            InsideWalls[ro][co].addToScene();
-        }
+  for (let co = 0; co < mapAlgo.MazeSize; co++) {
+    if (InsideWallsNumberArray[ro][co] == 1) {
+      //console.log("1");
+      let xValue = (ro * floorClass.w / mapAlgo.MazeSize) - (floorClass.w / 2) + ((floorClass.w / mapAlgo.MazeSize) / 2);
+      let zValue = (co * floorClass.h / mapAlgo.MazeSize) - (floorClass.w / 2) + ((floorClass.h / mapAlgo.MazeSize) / 2);
+      InsideWalls[ro][co] = new InsideWallsMaze(xValue, zValue, (floorClass.w / mapAlgo.MazeSize), false, scene);
+      InsideWalls[ro][co].addToScene();
     }
+    if (InsideWallsNumberArray[ro][co] == 3) {
+      //console.log("3");
+      let xValue = (ro * floorClass.w / mapAlgo.MazeSize) - (floorClass.w / 2) + ((floorClass.w / mapAlgo.MazeSize) / 2);
+      let zValue = (co * floorClass.h / mapAlgo.MazeSize) - (floorClass.w / 2) + ((floorClass.h / mapAlgo.MazeSize) / 2);
+      InsideWalls[ro][co] = new InsideWallsMaze(xValue, zValue, (floorClass.w / mapAlgo.MazeSize), true, scene);
+      InsideWalls[ro][co].addToScene();
+    }
+  }
 }
 
 
@@ -52469,55 +52533,55 @@ let ray = new THREE.Ray();
 
 //animate is like gameloop we could probably use setInverval if we wanted to E.X setInterval(animate, 33);
 let animate = function () {
-    requestAnimationFrame(animate);
-    if (controlsEnabled) {
-        let time = performance.now();
-        let delta = (time - prevTime) / 1000;
-        velocity.x -= velocity.x * 10.0 * delta;
-        velocity.z -= velocity.z * 10.0 * delta;
-        velocity.y -= 9.8 * 100.0 * delta; // 100.0 = mass
-        if (moveForward) {
-            velocity.z -= 1200.0 * delta;
-        };
-        if (moveBackward) {
-            velocity.z += 1200.0 * delta;
-        };
-        if (moveLeft) {
-            velocity.x -= 1200.0 * delta;
+  requestAnimationFrame(animate);
+  if (controlsEnabled) {
+    let time = performance.now();
+    let delta = (time - prevTime) / 1000;
+    velocity.x -= velocity.x * 10.0 * delta;
+    velocity.z -= velocity.z * 10.0 * delta;
+    velocity.y -= 9.8 * 100.0 * delta; // 100.0 = mass
+    if (moveForward) {
+      velocity.z -= 1200.0 * delta;
+    };
+    if (moveBackward) {
+      velocity.z += 1200.0 * delta;
+    };
+    if (moveLeft) {
+      velocity.x -= 1200.0 * delta;
 
-        };
-        if (moveRight) {
-            velocity.x += 1200.0 * delta;
-        };
+    };
+    if (moveRight) {
+      velocity.x += 1200.0 * delta;
+    };
 
-        controls.getObject().translateX(velocity.x * delta);
-        controls.getObject().translateY(velocity.y * delta);
-        controls.getObject().translateZ(velocity.z * delta);
-        if (controls.getObject().position.y < 10) {
-            velocity.y = 0;
-            controls.getObject().position.y = 10;
-            canJump = true;
-        }
-        if (jumping) {
-            camera.position.y += 2;
-        }
-        if (goingDown) {
-            camera.position.y -= 2;
-        }
-        prevTime = time;
-        // for (let vertexIndex = 0; vertexIndex < Player.geometry.vertices.length; vertexIndex++) {
-        //     let localVertex = Player.geometry.vertices[vertexIndex].clone();
-        //     let globalVertex = Player.matrix.multiplyVector3(localVertex);
-        //     let directionVector = globalVertex.sub(Player.position);
-
-        //     let ray = new THREE.Ray(Player.position, directionVector.clone().normalize());
-        //     let collisionResults = ray.intersectObjects(scene.children);
-        //     if (collisionResults.length > 0 && collisionResults[0].distance < directionVector.length()) {
-        //         console.log("Collided");
-        //     }
-        // }
+    controls.getObject().translateX(velocity.x * delta);
+    controls.getObject().translateY(velocity.y * delta);
+    controls.getObject().translateZ(velocity.z * delta);
+    if (controls.getObject().position.y < 10) {
+      velocity.y = 0;
+      controls.getObject().position.y = 10;
+      canJump = true;
     }
-    renderer.render(scene, camera);
+    if (jumping) {
+      camera.position.y += 2;
+    }
+    if (goingDown) {
+      camera.position.y -= 2;
+    }
+    prevTime = time;
+    // for (let vertexIndex = 0; vertexIndex < Player.geometry.vertices.length; vertexIndex++) {
+    //     let localVertex = Player.geometry.vertices[vertexIndex].clone();
+    //     let globalVertex = Player.matrix.multiplyVector3(localVertex);
+    //     let directionVector = globalVertex.sub(Player.position);
+
+    //     let ray = new THREE.Ray(Player.position, directionVector.clone().normalize());
+    //     let collisionResults = ray.intersectObjects(scene.children);
+    //     if (collisionResults.length > 0 && collisionResults[0].distance < directionVector.length()) {
+    //         console.log("Collided");
+    //     }
+    // }
+  }
+  renderer.render(scene, camera);
 };
 
 let counterForStart = 0;
@@ -52535,61 +52599,61 @@ function startScreen() {
         renderer.render(scene, camera);
     } else {
 
-        animate();
-    }
+    animate();
+  }
 }
 
 startScreen();
 //animate(); //to start loop
 
 document.addEventListener("keydown", event => {
-    //if we use arrow keys this will prevent them froming scroling the page down
-    if ([32, 37, 38, 39, 40].indexOf(event.keyCode) > -1) {
-        event.preventDefault();
-    }
-    switch (event.keyCode) {
-        case 87:
-            moveForward = true;
-            break;
-        case 83:
-            moveBackward = true;
-            break;
-        case 65:
-            moveLeft = true;
-            break;
-        case 68:
-            moveRight = true;
-            break;
-        case 32:
-            jumping = true;
-            break;
-        case 16:
-            goingDown = true;
-            break;
-    }
+  //if we use arrow keys this will prevent them froming scroling the page down
+  if ([32, 37, 38, 39, 40].indexOf(event.keyCode) > -1) {
+    event.preventDefault();
+  }
+  switch (event.keyCode) {
+    case 87:
+      moveForward = true;
+      break;
+    case 83:
+      moveBackward = true;
+      break;
+    case 65:
+      moveLeft = true;
+      break;
+    case 68:
+      moveRight = true;
+      break;
+    case 32:
+      jumping = true;
+      break;
+    case 16:
+      goingDown = true;
+      break;
+  }
 });
 document.addEventListener("keyup", event => {
-    //alert(event.keyCode);
-    switch (event.keyCode) {
-        case 87:
-            moveForward = false;
-            break;
-        case 83:
-            moveBackward = false;
-            break;
-        case 65:
-            moveLeft = false;
-            break;
-        case 68:
-            moveRight = false;
-            break;
-        case 32:
-            jumping = false;
-            break;
-        case 16:
-            goingDown = false;
-            break;
-    }
+  //alert(event.keyCode);
+  switch (event.keyCode) {
+    case 87:
+      moveForward = false;
+      break;
+    case 83:
+      moveBackward = false;
+      break;
+    case 65:
+      moveLeft = false;
+      break;
+    case 68:
+      moveRight = false;
+      break;
+    case 32:
+      jumping = false;
+      break;
+    case 16:
+      goingDown = false;
+      break;
+  }
 });
 
 // let canvas = document.getElementById("myCanvas");
