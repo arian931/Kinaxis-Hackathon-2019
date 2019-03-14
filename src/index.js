@@ -5,13 +5,9 @@ const Floor = require('./Floor.js');
 // const WallGenerator = require('./WallGenerator.js');
 require('./RecursiveMaze');
 require('./2DCanvas');
-require('./Controls');
+require('./3DControls');
 // const Platform = require('./Platform');
 const LevelOne = require('./LevelOne');
-/**
- * @author mrdoob / http://mrdoob.com/
- * @author Mugen87 / https://github.com/Mugen87
- */
 // const white = new THREE.Color('rgb(255, 255, 255)');
 // const black = new THREE.Color("rgb(0, 0, 0)");
 // const yellow = new THREE.Color("rgb(233, 255, 0)");
