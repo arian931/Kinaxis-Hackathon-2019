@@ -16,6 +16,7 @@ module.exports = class insideWallsMaze {
   addToScene() {
     let geometryFor = new THREE.BoxGeometry(this.w, this.heightOfWall, this.w);
     let materialFor;
+    console.log("AAAAAAAAAAAAA");
     if (!this.endBlock) {
       let texture = new THREE.TextureLoader().load("/src/05muronero.jpg");
       texture.wrapS = THREE.RepeatWrapping;

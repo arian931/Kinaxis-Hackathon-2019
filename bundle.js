@@ -51811,6 +51811,7 @@ module.exports = class insideWallsMaze {
   addToScene() {
     let geometryFor = new THREE.BoxGeometry(this.w, this.heightOfWall, this.w);
     let materialFor;
+    console.log("AAAAAAAAAAAAA");
     if (!this.endBlock) {
       let texture = new THREE.TextureLoader().load("/src/05muronero.jpg");
       texture.wrapS = THREE.RepeatWrapping;
@@ -52218,6 +52219,60 @@ module.exports = class RecursiveMaze {
   }
 }
 },{}],7:[function(require,module,exports){
+const canvas = document.getElementById('backgroundCanvas');
+const ctx = canvas.getContext('2d');
+
+let blocker = document.getElementById('he');
+
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
+
+console.log("2D CANVAS");
+console.log("IS IT WORKING");
+ctx.fillStyle = "red";
+// ctx.fillRect(0, 0, 100, 100);
+
+let number = 0;
+let moveRate = 5;
+let rightBar = canvas.width;
+let leftBar = -canvas.width / 2;
+var image = new Image();
+image.id = "pic"
+
+setInterval(gameLoop, 10);
+
+function gameLoop() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    //console.log(rightBar + " canvas/2" + canvas.width / 2)
+    if (rightBar >= canvas.width / 2) {
+        console.log("running");
+        ctx.clearRect(0, 0, 10000, 10000);
+        ctx.fillStyle = "white";
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        ctx.fillStyle = "black";
+        rightBar -= moveRate;
+        leftBar += moveRate;
+        ctx.fillRect(rightBar, 0, canvas.width / 2, canvas.height / 4);
+        ctx.fillRect(leftBar, canvas.height / 4, canvas.width / 2, canvas.height / 4);
+        ctx.fillRect(rightBar, canvas.height / 2, canvas.width / 2, canvas.height / 4);
+        ctx.fillRect(leftBar, canvas.height / 4 * 3, canvas.width / 2, canvas.height / 4);
+        image.src = canvas.toDataURL();
+        document.getElementById('he').appendChild(image);
+    } else {
+        switchToThreeD();
+    }
+}
+
+function switchToThreeD() {
+    console.log("Switch To 3d");
+    blocker.style.display = 'none';
+};
+
+function switchBack() {
+    console.log("Switch To 2d");
+    blocker.style.display = '';
+};
+},{}],8:[function(require,module,exports){
 /* eslint-disable linebreak-style */
 /* eslint-disable no-undef */
 
@@ -52258,7 +52313,7 @@ module.exports = class WallGenerator {
   }
 };
 
-},{}],8:[function(require,module,exports){
+},{}],9:[function(require,module,exports){
 (function (global){
 /* eslint-disable linebreak-style */
 /* eslint-disable no-undef */
@@ -52271,176 +52326,11 @@ const Map = require('./Map.js');
 const WallGenerator = require('./WallGenerator.js');
 //  const Door = require('./Door.js');
 const RecursiveMaze = require('./RecursiveMaze');
+const TwoDCanvas = require('./TwoDCanvas');
 /**
  * @author mrdoob / http://mrdoob.com/
  * @author Mugen87 / https://github.com/Mugen87
  */
-
-const canvas = document.getElementById('backgroundCanvas');
-const ctx = canvas.getContext('2d');
-
-let TCanvas = document.getElementById('he');
-
-console.log("FUICKKKKKKKKKKKKKKKKKKKKKKKKK");
-
-canvas.width = window.innerWidth;
-canvas.height = window.innerHeight;
-
-
-ctx.fillStyle = "red";
-// ctx.fillRect(0, 0, 100, 100);
-
-let moveRate = 5;
-let rightBar = canvas.width;
-let leftBar = -canvas.width / 2;
-var image = new Image();
-image.id = "pic"
-
-setInterval(gameLoop, 10);
-
-function gameLoop() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    if (leftBar <= canvas.width / 2) {
-        ctx.clearRect(0, 0, 10000, 10000);
-        ctx.fillStyle = "white";
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
-        ctx.fillStyle = "black";
-        rightBar -= moveRate;
-        leftBar += moveRate;
-        ctx.fillRect(rightBar, 0, canvas.width / 2, canvas.height / 4);
-        ctx.fillRect(leftBar, canvas.height / 4, canvas.width / 2, canvas.height / 4);
-        ctx.fillRect(rightBar, canvas.height / 2, canvas.width / 2, canvas.height / 4);
-        ctx.fillRect(leftBar, canvas.height / 4 * 3, canvas.width / 2, canvas.height / 4);
-
-        image.src = canvas.toDataURL();
-        document.getElementById('he').appendChild(image);
-    } else {
-        console.log("hello");
-        TCanvas.style.display = 'none';
-    }
-}
-THREE.PointerLockControls = function (camera, domElement) {
-
-    let scope = this;
-
-    this.domElement = domElement || document.body;
-    this.isLocked = false;
-
-    camera.rotation.set(0, 0, 0);
-
-    let pitchObject = new THREE.Object3D();
-    pitchObject.add(camera);
-
-    let yawObject = new THREE.Object3D();
-    yawObject.position.y = 10;
-    yawObject.add(pitchObject);
-
-    let PI_2 = Math.PI / 2;
-
-    function onMouseMove(event) {
-
-        if (scope.isLocked === false) return;
-
-        let movementX = event.movementX || event.mozMovementX || event.webkitMovementX || 0;
-        let movementY = event.movementY || event.mozMovementY || event.webkitMovementY || 0;
-
-        yawObject.rotation.y -= movementX * 0.002;
-        pitchObject.rotation.x -= movementY * 0.002;
-
-        pitchObject.rotation.x = Math.max(- PI_2, Math.min(PI_2, pitchObject.rotation.x));
-
-    }
-
-    function onPointerlockChange() {
-
-        if (document.pointerLockElement === scope.domElement) {
-
-            scope.dispatchEvent({ type: 'lock' });
-
-            scope.isLocked = true;
-
-        } else {
-
-            scope.dispatchEvent({ type: 'unlock' });
-
-            scope.isLocked = false;
-
-        }
-
-    }
-
-    function onPointerlockError() {
-
-        console.error('THREE.PointerLockControls: Unable to use Pointer Lock API');
-
-    }
-
-    this.connect = function () {
-
-        document.addEventListener('mousemove', onMouseMove, false);
-        document.addEventListener('pointerlockchange', onPointerlockChange, false);
-        document.addEventListener('pointerlockerror', onPointerlockError, false);
-
-    };
-
-    this.disconnect = function () {
-
-        document.removeEventListener('mousemove', onMouseMove, false);
-        document.removeEventListener('pointerlockchange', onPointerlockChange, false);
-        document.removeEventListener('pointerlockerror', onPointerlockError, false);
-
-    };
-
-    this.dispose = function () {
-
-        this.disconnect();
-
-    };
-
-    this.getObject = function () {
-
-        return yawObject;
-
-    };
-
-    this.getDirection = function () {
-
-        // assumes the camera itself is not rotated
-
-        let direction = new THREE.Vector3(0, 0, - 1);
-        let rotation = new THREE.Euler(0, 0, 0, 'YXZ');
-
-        return function (v) {
-
-            rotation.set(pitchObject.rotation.x, yawObject.rotation.y, 0);
-
-            v.copy(direction).applyEuler(rotation);
-
-            return v;
-
-        };
-
-    }();
-
-    this.lock = function () {
-
-        this.domElement.requestPointerLock();
-
-    };
-
-    this.unlock = function () {
-
-        document.exitPointerLock();
-
-    };
-
-    this.connect();
-
-};
-
-THREE.PointerLockControls.prototype = Object.create(THREE.EventDispatcher.prototype);
-THREE.PointerLockControls.prototype.constructor = THREE.PointerLockControls;
-
 let white = new THREE.Color("rgb(255, 255, 255)");
 let black = new THREE.Color("rgb(0, 0, 0)");
 let yellow = new THREE.Color("rgb(233, 255, 0)");
@@ -52448,78 +52338,10 @@ let green = new THREE.Color("rgb(0,255,0)");
 let blue = new THREE.Color("rgb(0,100,255)");
 let red = new THREE.Color("rgb(255,0,0)");
 
-let startScreenBool = true;
-
-//controls button and explanation
-let blocker = document.getElementById('blocker');
-let instructions = document.getElementById('instructions');
-
-// https://www.html5rocks.com/en/tutorials/pointerlock/intro/
-
-//CONTROLS BOILER PLATE ---------------------------------------------------------------------
-let havePointerLock = 'pointerLockElement' in document || 'mozPointerLockElement' in document || 'webkitPointerLockElement' in document;
-if (havePointerLock) {
-    let element = document.body;
-    let pointerlockchange = function (event) {
-        if (document.pointerLockElement === element || document.mozPointerLockElement === element || document.webkitPointerLockElement === element) {
-            controlsEnabled = true;
-            controls.enabled = true;
-            startScreenBool = false;
-            blocker.style.display = 'none';
-            startScreen();
-        } else {
-            controls.enabled = false;
-            blocker.style.display = '-webkit-box';
-            blocker.style.display = '-moz-box';
-            blocker.style.display = 'box';
-            instructions.style.display = '';
-        }
-    };
-    let pointerlockerror = function (event) {
-        instructions.style.display = '';
-    };
-    // Hook pointer lock state change events
-    document.addEventListener('pointerlockchange', pointerlockchange, false);
-    document.addEventListener('mozpointerlockchange', pointerlockchange, false);
-    document.addEventListener('webkitpointerlockchange', pointerlockchange, false);
-    document.addEventListener('pointerlockerror', pointerlockerror, false);
-    document.addEventListener('mozpointerlockerror', pointerlockerror, false);
-    document.addEventListener('webkitpointerlockerror', pointerlockerror, false);
-    instructions.addEventListener('click', function (event) {
-        instructions.style.display = 'none';
-        // Ask the browser to lock the pointer
-        element.requestPointerLock = element.requestPointerLock || element.mozRequestPointerLock || element.webkitRequestPointerLock;
-        if (/Firefox/i.test(navigator.userAgent)) {
-            let fullscreenchange = function (event) {
-                if (document.fullscreenElement === element || document.mozFullscreenElement === element || document.mozFullScreenElement === element) {
-                    document.removeEventListener('fullscreenchange', fullscreenchange);
-                    document.removeEventListener('mozfullscreenchange', fullscreenchange);
-                    element.requestPointerLock();
-                }
-            };
-            document.addEventListener('fullscreenchange', fullscreenchange, false);
-            document.addEventListener('mozfullscreenchange', fullscreenchange, false);
-            element.requestFullscreen = element.requestFullscreen || element.mozRequestFullscreen || element.mozRequestFullScreen || element.webkitRequestFullscreen;
-            element.requestFullscreen();
-        } else {
-            element.requestPointerLock();
-        }
-    }, false);
-} else {
-    instructions.innerHTML = 'Your browser doesn\'t seem to support Pointer Lock API';
-}
-//------------------------------------------------------------------------------------------
-
-
-
 let scene = new THREE.Scene();
 scene.background = new THREE.Color(0xffffff);
 scene.fog = new THREE.Fog(0xffffff, 0, 750);
 let camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 800);
-
-controls = new THREE.PointerLockControls(camera);
-scene.add(controls.getObject());
-
 let renderer = new THREE.WebGLRenderer();
 renderer.setPixelRatio(window.devicePixelRatio / 2);
 renderer.setSize(window.innerWidth, window.innerHeight);
@@ -52705,8 +52527,6 @@ blocker.style.display = '-moz-box';
 blocker.style.display = 'box';
 instructions.style.display = '';
 function startScreen() {
-    console.log(blocker + "%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%5");
-    console.log(instructions + "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
     if (counterForStart != 1000) {
         counterForStart++;
         requestAnimationFrame(startScreen);
@@ -52785,4 +52605,4 @@ document.addEventListener("keyup", event => {
 //     "webglcontextrestored", setupWebGLStateAndResources, false);
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./Floor.js":3,"./InsideWallsMaze.js":4,"./Map.js":5,"./RecursiveMaze":6,"./WallGenerator.js":7,"three":2,"three-gltf-loader":1}]},{},[8]);
+},{"./Floor.js":3,"./InsideWallsMaze.js":4,"./Map.js":5,"./RecursiveMaze":6,"./TwoDCanvas":7,"./WallGenerator.js":8,"three":2,"three-gltf-loader":1}]},{},[9]);
