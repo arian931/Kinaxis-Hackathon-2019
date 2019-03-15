@@ -48628,9 +48628,9 @@ module.exports = class LevelOne {
         this.platFormsClass = [];
         this.platFormConstructor = [];
         this.currentIndex = 0;
-        this.currentPositionX;
-        this.currentPositionY;
-        this.currentPositionZ;
+        this.currentPositionX = 0;
+        this.currentPositionY = 0;
+        this.currentPositionZ = 0;
         this.white = new THREE.Color("rgb(255, 255, 255)");
         this.black = new THREE.Color("rgb(0, 0, 0)");
         this.yellow = new THREE.Color("rgb(233, 255, 0)");
@@ -48659,18 +48659,36 @@ module.exports = class LevelOne {
             walls[x].addToScene();
         }
 
-        // this.buildStairCase(0, 0, 0, 0, 4);
-        // this.buildStairCase(this.currentPositionX, this.currentPositionY, this.currentPositionZ, 1, 2);
-        // this.buildStairCase(this.currentPositionX, this.currentPositionY, this.currentPositionZ, 2, 3);
-        // this.buildStairCase(this.currentPositionX, this.currentPositionY, this.currentPositionZ, 3, 1);
+        let DIR;
+        let NOS;
+        let LastDirection = 0;
+        let shouldJump;
+        for (let x = 0; x < 5; x++) {
+            while (true) {
+                DIR = Math.floor((Math.random() * 3));
+                if ((LastDirection == 0 && DIR != 1) || (LastDirection == 1 && DIR != 0) || (LastDirection == 3 && DIR != 2) || (LastDirection == 2 && DIR != 3)) {
+                    break;
+                }
+            }
+            LastDirection = DIR;
+            console.log(DIR + " DIR");
 
-        this.buildMovingCourse(0, 0, 0, 0, 4);
-        this.buildMovingCourse(0, 0, 0, 1, 4);
-        this.buildMovingCourse(0, 0, 0, 2, 4);
+            if (x % 2 != 0) {
+                NOS = Math.floor((Math.random() * 4) + 1);
+                shouldJump = Math.floor((Math.random() * 3));
+                if (shouldJump == 1) {
+                    this.buildStairCase(this.currentPositionX, this.currentPositionY, this.currentPositionZ, DIR, NOS, true);
+                } else {
+                    this.buildStairCase(this.currentPositionX, this.currentPositionY, this.currentPositionZ, DIR, NOS, false);
+                }
+            } else {
+                NOS = Math.floor((Math.random() * 1) + 1);
+                this.buildMovingCourse(this.currentPositionX, this.currentPositionY, this.currentPositionZ, DIR, NOS);
+            }
+        }
 
-
-        for (let x = 0; x < this.platFormConstructor.length - 1; x++) {
-            this.platFormsClass[x] = new Platform(this.platFormConstructor[x][0], this.platFormConstructor[x][1], this.platFormConstructor[x][2], this.platFormConstructor[x][3], this.platFormConstructor[x][4], this.platFormConstructor[x][5], this.platFormConstructor[x][6], this.platFormConstructor[x][7], this.platFormConstructor[x][8]);
+        for (let x = 0; x < this.platFormConstructor.length; x++) {
+            this.platFormsClass[x] = new Platform(this.platFormConstructor[x][0], this.platFormConstructor[x][1], this.platFormConstructor[x][2], this.platFormConstructor[x][3], this.platFormConstructor[x][4], this.platFormConstructor[x][5], this.platFormConstructor[x][6], this.platFormConstructor[x][7], this.platFormConstructor[x][8], this.platFormConstructor[x][9]);
             this.platFormsClass[x].addToScene();
         }
 
@@ -48706,14 +48724,10 @@ module.exports = class LevelOne {
         let curIndex;
         switch (Dir) {
             case 0:
-                console.log("Dir 0");
+                // console.log("Dir 0");
                 curIndex = this.currentIndex;
                 for (let x = curIndex; x < curIndex + NumOfSteps; x++) {
-                    if (x != 2) {
-                        this.platFormConstructor[x] = [xStair, yStair, zStair, 20, this.red, this.scene, false, false, false];
-                    } else {
-                        this.platFormConstructor[x] = [xStair, yStair, zStair, 20, this.red, this.scene, false, false, false];
-                    }
+                    this.platFormConstructor[x] = [xStair, yStair, zStair, 20, 20, this.red, this.scene, false, false, false];
                     xStair += 40;
                     yStair -= 0;
                     zStair += 10;
@@ -48721,14 +48735,10 @@ module.exports = class LevelOne {
                 }
                 break;
             case 1:
-                console.log("Dir 1");
+                // console.log("Dir 1");
                 curIndex = this.currentIndex;
                 for (let x = curIndex; x < curIndex + NumOfSteps; x++) {
-                    if (x != 2) {
-                        this.platFormConstructor[x] = [xStair, yStair, zStair, 20, this.red, this.scene, false, false, false];
-                    } else {
-                        this.platFormConstructor[x] = [xStair, yStair, zStair, 20, this.red, this.scene, false, false, false];
-                    }
+                    this.platFormConstructor[x] = [xStair, yStair, zStair, 20, 20, this.red, this.scene, false, false, false];
                     xStair -= 40;
                     yStair -= 0;
                     zStair += 10;
@@ -48736,83 +48746,163 @@ module.exports = class LevelOne {
                 }
                 break;
             case 2:
-                console.log("Dir 2");
+                // console.log("Dir 2");
                 curIndex = this.currentIndex;
                 for (let x = curIndex; x < curIndex + NumOfSteps; x++) {
-                    if (x != 2) {
-                        this.platFormConstructor[x] = [xStair, yStair, zStair, 20, this.red, this.scene, false, false, false];
-                    } else {
-                        this.platFormConstructor[x] = [xStair, yStair, zStair, 20, this.red, this.scene, false, false, false];
-                    }
-                    xStair -= 0;
-                    yStair += 40;
-                    zStair += 10;
-                    this.currentIndex++;
-                }
-                break;
-            case 3:
-                console.log("Dir 2");
-                curIndex = this.currentIndex;
-                for (let x = curIndex; x < curIndex + NumOfSteps; x++) {
-                    if (x != 2) {
-                        this.platFormConstructor[x] = [xStair, yStair, zStair, 20, this.red, this.scene, false, false, false];
-                    } else {
-                        this.platFormConstructor[x] = [xStair, yStair, zStair, 20, this.red, this.scene, false, false, false];
-                    }
+                    this.platFormConstructor[x] = [xStair, yStair, zStair, 20, 20, this.red, this.scene, false, false, false];
                     xStair = 0;
                     yStair -= 40;
                     zStair += 10;
                     this.currentIndex++;
                 }
                 break;
+            case 3:
+                // console.log("Dir 2");
+                curIndex = this.currentIndex;
+                for (let x = curIndex; x < curIndex + NumOfSteps; x++) {
+                    this.platFormConstructor[x] = [xStair, yStair, zStair, 20, 20, this.red, this.scene, false, false, false];
+                    xStair -= 0;
+                    yStair += 40;
+                    zStair += 10;
+                    this.currentIndex++;
+                }
+                break;
             default:
         }
+        zStair -= 5;
         this.currentPositionX = xStair;
         this.currentPositionY = yStair;
         this.currentPositionZ = zStair;
     }
-    buildMovingCourse(SX, SY, SZ, Dir, numOfJumps) {
+    buildMovingCourse(SX, SY, SZ, Dir, numOfJumps, upAndDown) {
         let curIndex;
         let xStair = SX;
         let yStair = SY;
         let zStair = SZ;
+
+        this.platFormConstructor[this.currentIndex] = [xStair, yStair, zStair, 20, 20, this.red, this.scene, false, false, false];
+        this.currentIndex++;
+
         switch (Dir) {
             case 0:
-                curIndex = this.currentIndex;
+                xStair += 40;
+                yStair -= 0;
+                zStair += 0;
+                curIndex = this.currentIndex
                 for (let x = curIndex; x < curIndex + numOfJumps; x++) {
-                    this.platFormConstructor[x] = [xStair, yStair, zStair, 20, this.red, this.scene, true, false, false];
-                    xStair += 40;
-                    yStair -= 0;
-                    zStair += 0;
-                    this.currentIndex++;
+                    if (upAndDown) {
+                        this.platFormConstructor[x] = [xStair, yStair, zStair, 20, 20, this.red, this.scene, true, false, false];
+                        xStair += 40;
+                        yStair -= 0;
+                        zStair += 0;
+                        this.currentIndex++;
+                    } else {
+                        this.platFormConstructor[x] = [xStair, yStair, zStair, 20, 20, this.red, this.scene, false, false, true];
+                        xStair += 40;
+                        yStair -= 0;
+                        zStair += 0;
+                        this.currentIndex++;
+                    }
                 }
                 break;
             case 1:
+                xStair -= 40;
+                yStair -= 0;
+                zStair += 0;
                 curIndex = this.currentIndex;
                 for (let x = curIndex; x < curIndex + numOfJumps; x++) {
-                    this.platFormConstructor[x] = [xStair, yStair, zStair, 20, this.red, this.scene, false, true, false];
-                    xStair -= 40;
-                    yStair -= 0;
-                    zStair += 0;
-                    this.currentIndex++;
+                    if (upAndDown) {
+                        this.platFormConstructor[x] = [xStair, yStair, zStair, 20, 20, this.red, this.scene, true, false, false];
+                        xStair -= 40;
+                        yStair -= 0;
+                        zStair += 0;
+                        this.currentIndex++;
+                    } else {
+                        this.platFormConstructor[x] = [xStair, yStair, zStair, 20, 20, this.red, this.scene, false, false, true];
+                        xStair -= 40;
+                        yStair -= 0;
+                        zStair += 0;
+                        this.currentIndex++;
+                    }
                 }
                 break;
             case 2:
+                xStair += 0;
+                yStair -= 40;
+                zStair += 0;
                 curIndex = this.currentIndex;
                 for (let x = curIndex; x < curIndex + numOfJumps; x++) {
-                    this.platFormConstructor[x] = [xStair, yStair, zStair, 20, this.red, this.scene, false, false, true];
-                    xStair -= 0;
-                    yStair -= 40;
-                    zStair += 0;
-                    this.currentIndex++;
+                    if (upAndDown) {
+                        this.platFormConstructor[x] = [xStair, yStair, zStair, 20, 20, this.red, this.scene, true, false, false];
+                        xStair -= 0;
+                        yStair -= 40;
+                        zStair += 0;
+                        this.currentIndex++;
+                    } else {
+                        this.platFormConstructor[x] = [xStair, yStair, zStair, 20, 20, this.red, this.scene, false, true, false];
+                        xStair -= 0;
+                        yStair -= 40;
+                        zStair += 0;
+                        this.currentIndex++;
+                    }
+                }
+                break;
+            case 3:
+                xStair += 0;
+                yStair += 40;
+                zStair += 0;
+                curIndex = this.currentIndex;
+                for (let x = curIndex; x < curIndex + numOfJumps; x++) {
+                    if (upAndDown) {
+                        this.platFormConstructor[x] = [xStair, yStair, zStair, 20, 20, this.red, this.scene, true, false, false];
+                        xStair -= 0;
+                        yStair += 40;
+                        zStair += 0;
+                        this.currentIndex++;
+                    } else {
+                        this.platFormConstructor[x] = [xStair, yStair, zStair, 20, 20, this.red, this.scene, false, true, false];
+                        xStair -= 0;
+                        yStair += 40;
+                        zStair += 0;
+                        this.currentIndex++;
+                    }
                 }
                 break;
             default:
         }
+
+        this.platFormConstructor[this.currentIndex] = [xStair, yStair, zStair, 20, 20, this.red, this.scene, false, false, false];
+        switch (Dir) {
+            case 0:
+
+                break;
+            case 0:
+                xStair -= 40;
+                yStair -= 0;
+                zStair += 0;
+                break;
+            case 0:
+                xStair -= 0;
+                yStair -= 40;
+                zStair += 0;
+                break;
+            case 0:
+                xStair += 0;
+                yStair += 40;
+                zStair += 0;
+                break;
+        }
+        this.currentIndex++;
+
         this.currentPositionX = xStair;
         this.currentPositionY = yStair;
         this.currentPositionZ = zStair;
     }
+    // buildWalkway(SX, SY, SZ, Dir, numOfJumps) {
+    //     switch(Dir) {
+
+    //     }
+    // }
 };
 
 },{"./2DCanvas":2,"./Floor.js":4,"./InsideWallsMaze.js":5,"./LevelOne":6,"./Map.js":7,"./Platform":8,"./RecursiveMaze":9,"./WallGenerator.js":10}],7:[function(require,module,exports){
@@ -49037,11 +49127,12 @@ module.exports = class Map {
 }
 },{}],8:[function(require,module,exports){
 module.exports = class Platform {
-    constructor(x, z, y, w, color, scene, movingVer, movingHor, movingZ) {
+    constructor(x, z, y, w, d, color, scene, movingVer, movingHor, movingZ) {
         this.x = x;
         this.y = y;
         this.z = z;
         this.w = w;
+        this.d = d;
         this.scene = scene;
         this.color = color;
         this.heightOfPlatform = 5;
@@ -49054,7 +49145,6 @@ module.exports = class Platform {
     }
 
     addToScene() {
-        console.log(this.movingZ + " moving Z");
         let geometryFor = new THREE.BoxGeometry(this.w, this.heightOfPlatform, this.w);
         let materialFor;
         materialFor = new THREE.MeshLambertMaterial({ color: this.color });
@@ -49067,7 +49157,7 @@ module.exports = class Platform {
 
     moveHor() {
         if (this.movePos) {
-            if (this.cubeFor.position.x <= this.x + this.moveRange) {
+            if (this.cubeFor.position.x <= this.x + (this.moveRange / 2)) {
                 //console.log("moveHor +");
                 this.cubeFor.position.x += 1;
             } else {
@@ -49075,7 +49165,7 @@ module.exports = class Platform {
                 this.movePos = false;
             }
         } else {
-            if (this.cubeFor.position.x >= this.x - this.moveRange) {
+            if (this.cubeFor.position.x >= this.x - (this.moveRange / 2)) {
                 //console.log("moveHor -");
                 this.cubeFor.position.x -= 1;
             } else {
@@ -49093,7 +49183,7 @@ module.exports = class Platform {
                 this.movePos = false;
             }
         } else {
-            if (this.cubeFor.position.y >= this.y - this.moveRange) {
+            if (this.cubeFor.position.y >= this.y - this.heightOfPlatform) {
                 //console.log("moveVer -");
                 this.cubeFor.position.y -= 1;
             } else {
@@ -49102,18 +49192,18 @@ module.exports = class Platform {
         }
     }
     moveZ() {
-        console.log("move Z");
+        // console.log("move Z");
         if (this.movePos) {
-            if (this.cubeFor.position.z <= this.z + this.moveRange) {
-                console.log("moveVer +");
+            if (this.cubeFor.position.z <= this.z + (this.moveRange / 2)) {
+                // console.log("moveVer +");
                 this.cubeFor.position.z += 1;
             } else {
                 //console.log(movePos);
                 this.movePos = false;
             }
         } else {
-            if (this.cubeFor.position.z >= this.z - this.moveRange) {
-                console.log("moveVer -");
+            if (this.cubeFor.position.z >= this.z - (this.moveRange / 2)) {
+                // console.log("moveVer -");
                 this.cubeFor.position.z -= 1;
             } else {
                 this.movePos = true;
