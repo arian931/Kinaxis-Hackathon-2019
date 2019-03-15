@@ -7,6 +7,7 @@ const TwoDCanvas = require('./2DCanvas');
 const Platform = require('./Platform');
 const LevelOne = require('./LevelOne');
 
+
 module.exports = class LevelOne {
     constructor(scene, renderer, camera) {
         this.scene = scene;
@@ -24,6 +25,7 @@ module.exports = class LevelOne {
         this.green = new THREE.Color("rgb(0,255,0)");
         this.blue = new THREE.Color("rgb(0,100,255)");
         this.red = new THREE.Color("rgb(255,0,0)");
+        this.buildASection = false;
     }
 
 
@@ -86,10 +88,31 @@ module.exports = class LevelOne {
     }
 
     gameLoop() {
-        //console.log("Game LOop");
-        // requestAnimationFrame(this.gameLoop());
+        if (this.buildASection) {
+            console.log("hi");
+            while (true) {
+                DIR = Math.floor((Math.random() * 3));
+                if ((LastDirection == 0 && DIR != 1) || (LastDirection == 1 && DIR != 0) || (LastDirection == 3 && DIR != 2) || (LastDirection == 2 && DIR != 3)) {
+                    break;
+                }
+            }
+            LastDirection = DIR;
+            console.log(DIR + " DIR");
+            let random = Math.floor((Math.random() * 1));
+            if (random == 0) {
+                NOS = Math.floor((Math.random() * 4) + 1);
+                shouldJump = Math.floor((Math.random() * 3));
+                if (shouldJump == 1) {
+                    this.buildStairCase(this.currentPositionX, this.currentPositionY, this.currentPositionZ, DIR, NOS, true);
+                } else {
+                    this.buildStairCase(this.currentPositionX, this.currentPositionY, this.currentPositionZ, DIR, NOS, false);
+                }
+            } else {
+                NOS = Math.floor((Math.random() * 1) + 1);
+                this.buildMovingCourse(this.currentPositionX, this.currentPositionY, this.currentPositionZ, DIR, NOS);
+            }
+        }
         for (let x = 0; x < this.platFormsClass.length; x++) {
-            //console.log(this.platFormsClass[x].movingHor);
             if (this.platFormsClass[x].movingHor) {
                 this.platFormsClass[x].moveHor();
             }
@@ -101,7 +124,7 @@ module.exports = class LevelOne {
                 this.platFormsClass[x].moveZ();
             }
         }
-        //this.renderer.render(this.scene, this.camera);
+        this.buildASection = false;
     }
 
     buildStairCase(SX, SY, SZ, Dir, NumOfSteps) {
@@ -258,36 +281,33 @@ module.exports = class LevelOne {
             default:
         }
 
-        this.platFormConstructor[this.currentIndex] = [xStair, yStair, zStair, 20, 20, this.red, this.scene, false, false, false];
-        switch (Dir) {
-            case 0:
-
-                break;
-            case 0:
-                xStair -= 40;
-                yStair -= 0;
-                zStair += 0;
-                break;
-            case 0:
-                xStair -= 0;
-                yStair -= 40;
-                zStair += 0;
-                break;
-            case 0:
-                xStair += 0;
-                yStair += 40;
-                zStair += 0;
-                break;
-        }
-        this.currentIndex++;
+        // this.platFormConstructor[this.currentIndex] = [xStair, yStair, zStair, 20, 20, this.red, this.scene, false, false, false];
+        // switch (Dir) {
+        //     case 0:
+        //         xStair += 40;
+        //         yStair -= 0;
+        //         zStair += 0;
+        //         break;
+        //     case 1:
+        //         xStair -= 40;
+        //         yStair -= 0;
+        //         zStair += 0;
+        //         break;
+        //     case 2:
+        //         xStair -= 0;
+        //         yStair -= 40;
+        //         zStair += 0;
+        //         break;
+        //     case 3:
+        //         xStair += 0;
+        //         yStair += 40;
+        //         zStair += 0;
+        //         break;
+        // }
+        // this.currentIndex++;
 
         this.currentPositionX = xStair;
         this.currentPositionY = yStair;
         this.currentPositionZ = zStair;
     }
-    // buildWalkway(SX, SY, SZ, Dir, numOfJumps) {
-    //     switch(Dir) {
-
-    //     }
-    // }
 };
