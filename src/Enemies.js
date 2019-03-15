@@ -1,4 +1,4 @@
-let enemie = (x,y,w,h,speed) => 
+class enemie = (x,y,w,h,speed) => 
     this.x = x;
     this.y = y;
     this.w = w;//width
