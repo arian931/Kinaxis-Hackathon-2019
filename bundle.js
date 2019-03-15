@@ -48677,15 +48677,17 @@ module.exports = class LevelOne {
 
             if (x % 2 != 0) {
                 NOS = Math.floor((Math.random() * 4) + 1);
-                shouldJump = Math.floor((Math.random() * 3));
-                if (shouldJump == 1) {
-                    this.buildStairCase(this.currentPositionX, this.currentPositionY, this.currentPositionZ, DIR, NOS, true);
-                } else {
-                    this.buildStairCase(this.currentPositionX, this.currentPositionY, this.currentPositionZ, DIR, NOS, false);
-                }
+                this.buildStairCase(this.currentPositionX, this.currentPositionY, this.currentPositionZ, DIR, NOS);
             } else {
-                NOS = Math.floor((Math.random() * 1) + 1);
-                this.buildMovingCourse(this.currentPositionX, this.currentPositionY, this.currentPositionZ, DIR, NOS);
+                shouldJump = Math.floor((Math.random() * 3));
+                console.log(shouldJump + "Should Jump");
+                if (shouldJump == 1) {
+                    console.log("should Jump");
+                    NOS = Math.floor((Math.random() * 1) + 1);
+                    this.buildMovingCourse(this.currentPositionX, this.currentPositionY, this.currentPositionZ, DIR, NOS, true);
+                } else {
+                    this.buildMovingCourse(this.currentPositionX, this.currentPositionY, this.currentPositionZ, DIR, NOS, false);
+                }
             }
         }
 
@@ -48701,30 +48703,7 @@ module.exports = class LevelOne {
     }
 
     gameLoop() {
-        if (this.buildASection) {
-            console.log("hi");
-            while (true) {
-                DIR = Math.floor((Math.random() * 3));
-                if ((LastDirection == 0 && DIR != 1) || (LastDirection == 1 && DIR != 0) || (LastDirection == 3 && DIR != 2) || (LastDirection == 2 && DIR != 3)) {
-                    break;
-                }
-            }
-            LastDirection = DIR;
-            console.log(DIR + " DIR");
-            let random = Math.floor((Math.random() * 1));
-            if (random == 0) {
-                NOS = Math.floor((Math.random() * 4) + 1);
-                shouldJump = Math.floor((Math.random() * 3));
-                if (shouldJump == 1) {
-                    this.buildStairCase(this.currentPositionX, this.currentPositionY, this.currentPositionZ, DIR, NOS, true);
-                } else {
-                    this.buildStairCase(this.currentPositionX, this.currentPositionY, this.currentPositionZ, DIR, NOS, false);
-                }
-            } else {
-                NOS = Math.floor((Math.random() * 1) + 1);
-                this.buildMovingCourse(this.currentPositionX, this.currentPositionY, this.currentPositionZ, DIR, NOS);
-            }
-        }
+
         for (let x = 0; x < this.platFormsClass.length; x++) {
             if (this.platFormsClass[x].movingHor) {
                 this.platFormsClass[x].moveHor();
@@ -48893,32 +48872,22 @@ module.exports = class LevelOne {
                 break;
             default:
         }
-
-        // this.platFormConstructor[this.currentIndex] = [xStair, yStair, zStair, 20, 20, this.red, this.scene, false, false, false];
-        // switch (Dir) {
-        //     case 0:
-        //         xStair += 40;
-        //         yStair -= 0;
-        //         zStair += 0;
-        //         break;
-        //     case 1:
-        //         xStair -= 40;
-        //         yStair -= 0;
-        //         zStair += 0;
-        //         break;
-        //     case 2:
-        //         xStair -= 0;
-        //         yStair -= 40;
-        //         zStair += 0;
-        //         break;
-        //     case 3:
-        //         xStair += 0;
-        //         yStair += 40;
-        //         zStair += 0;
-        //         break;
-        // }
-        // this.currentIndex++;
-
+        if (upAndDown) {
+            switch (Dir) {
+                case 0:
+                    xStair += 40;
+                    break;
+                case 1:
+                    xStair -= 40;
+                    break;
+                case 2:
+                    yStair -= 40;
+                    break;
+                case 3:
+                    yStair += 40;
+                    break;
+            }
+        }
         this.currentPositionX = xStair;
         this.currentPositionY = yStair;
         this.currentPositionZ = zStair;
