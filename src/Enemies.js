@@ -6,6 +6,7 @@ class enemy {} (x,y,w,h,speed) =>
     this.speed = (-speed||speed);
     this.update; {
         this.x = this.x + this.speed
+        this.x = this.x + this.speed
         //image insert here
         ellipse(this.x,this.y,this.w,this.h,this.speed);
     } 
