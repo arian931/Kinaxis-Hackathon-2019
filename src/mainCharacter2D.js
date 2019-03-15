@@ -3,7 +3,7 @@ keyPressed = function() {
 
 }
 
-let main = (x,y,speed,size) => {
+class main {} (x,y,speed,size) => {
    this.x = x;
    this.y = y;
    this.speed = speed;
