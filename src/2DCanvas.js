@@ -23,7 +23,9 @@ const image = new Image();
 image.id = 'pic';
 
 const gameLoop = () => {
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  ctx.clearRect(0, 0, canvas.width, canvas.height); //clears whole canvas so when you move something it does not leave a trail
+  ctx.fillStyle = 'white';
+  ctx.fillRect(0, 0, canvas.width, canvas.height); //drawing the whole canvas a white background
 
   /*
   -In here you put the game loop stuf so rendering moving stuff. 
@@ -35,7 +37,6 @@ const gameLoop = () => {
   and click open with live server
   */
 
-  // // console.log(rightBar + " canvas/2" + canvas.width / 2)
   // if (rightBar >= canvas.width / 2) {
   //   ctx.clearRect(0, 0, 10000, 10000);
   //   ctx.fillStyle = 'white';
@@ -52,6 +53,8 @@ const gameLoop = () => {
   // } else {
   //   switchTo3D();
   // }
+  image.src = canvas.toDataURL(); //leave this here don't worry about it
+  document.getElementById('he').appendChild(image); //leave this here don't worry about it
 };
 
-setInterval(gameLoop, 10);
+setInterval(gameLoop, 33);
