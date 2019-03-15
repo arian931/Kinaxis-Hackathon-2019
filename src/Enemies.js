@@ -1,4 +1,4 @@
-class enemie {} (x,y,w,h,speed) => 
+class enemy {} (x,y,w,h,speed) => 
     this.x = x;
     this.y = y;
     this.w = w;//width
@@ -10,12 +10,12 @@ class enemie {} (x,y,w,h,speed) =>
         ellipse(this.x,this.y,this.w,this.h,this.speed);
     } 
 
-let enemie = []
+let enemy = []
 for(let i = 0;i<15;i++){
-    let enemie = new enemie(random(),random(),20,20,10)
+    let enemy = new enemy(random(-10,-10),random(-10,-10),20,20,10)
 }
-
+ 
 const create = () => {
-    for(let i = 0;i<enemie;i++)
-    enemie[i].update
+    for(let i = 0;i<enemy;i++)
+    enemy[i].update
 };
