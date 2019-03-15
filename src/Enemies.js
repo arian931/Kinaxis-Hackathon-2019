@@ -1,22 +1,24 @@
-class enemy {} (x,y,w,h,speed) => 
+class enemie {} (x,y,w,h,speedX,speedY) => 
     this.x = x;
     this.y = y;
     this.w = w;//width
     this.h = h;//height
-    this.speed = (-speed||speed);
+    this.speedX = speedX||-speedX;
+    this.speedY = speedY||-speedY;
     this.update; {
-        this.x = this.x + this.speed
-        this.x = this.x + this.speed
+        this.x = this.x + this.speedX;
+        this.y = this.y + this.speedY;
         //image insert here
         ellipse(this.x,this.y,this.w,this.h,this.speed);
     } 
 
-let enemy = []
+let enemie = []
 for(let i = 0;i<15;i++){
-    let enemy = new enemy(random(-10,-10),random(-10,-10),20,20,10)
-}
- 
-const create = () => {
-    for(let i = 0;i<enemy;i++)
-    enemy[i].update
+    let enemie = new enemie(random(),random(),20,20,10)
 };
+
+const create = () => {
+    for(let i = 0;i<enemie;i++)
+    enemie[i].update
+};
+
