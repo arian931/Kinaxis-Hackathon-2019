@@ -48607,86 +48607,62 @@ const Platform = require('./Platform');
 const LevelOne = require('./LevelOne');
 
 module.exports = class LevelOne {
-  constructor(scene) {
-    this.scene = scene;
-  }
-
-  generateScene() {
-    let white = new THREE.Color("rgb(255, 255, 255)");
-    let black = new THREE.Color("rgb(0, 0, 0)");
-    let yellow = new THREE.Color("rgb(233, 255, 0)");
-    let green = new THREE.Color("rgb(0,255,0)");
-    let blue = new THREE.Color("rgb(0,100,255)");
-    let red = new THREE.Color("rgb(255,0,0)");
-
-    let floorClass = new Floor(1000, 1000, this.scene);
-    floorClass.addToScene();
-
-    //outer wall generation
-    let walls = [];
-    walls[0] = new WallGenerator(floorClass.w / 2, 50, 0, 1, 100, floorClass.w, white, this.scene, 0);
-    walls[1] = new WallGenerator(-floorClass.w / 2, 50, 0, 1, 100, floorClass.w, white, this.scene, 0);
-    walls[2] = new WallGenerator(0, 50, floorClass.h / 2, 1, 100, floorClass.h, white, this.scene, (-Math.PI / 2));
-    walls[3] = new WallGenerator(0, 50, -floorClass.h / 2, 1, 100, floorClass.h, white, this.scene, (-Math.PI / 2));
-    for (let x = 0; x < walls.length; x++) {
-      walls[x].addToScene();
+    constructor(scene, renderer, camera) {
+        this.scene = scene;
+        this.renderer = renderer;
+        this.camera = camera;
+        this.platFormsClass = [];
     }
 
-    let InsideWallsNumberArray;
-    let InsideWalls = [];
-    // console.log("hunt And KIll true");
-    // let mapAlgo = new Map();
-    // mapAlgo.drawMap();
-    // InsideWallsNumberArray = mapAlgo.array;
-
-    console.log("hunt And KIll true");
-
-    let platForm1 = new Platform(0, 100, 100, 50, red, this.scene);
-    platForm1.addToScene();
-    let platForm2 = new Platform(100, 0, 100, 50, black, this.scene);
-    platForm2.addToScene();
-    let platForm3 = new Platform(100, 100, 0, 50, white, this.scene);
-    platForm3.addToScene();
-    let platForm4 = new Platform(0, 0, 0, 50, green, this.scene);
-    platForm4.addToScene();
 
 
+    generateScene() {
+        let white = new THREE.Color("rgb(255, 255, 255)");
+        let black = new THREE.Color("rgb(0, 0, 0)");
+        let yellow = new THREE.Color("rgb(233, 255, 0)");
+        let green = new THREE.Color("rgb(0,255,0)");
+        let blue = new THREE.Color("rgb(0,100,255)");
+        let red = new THREE.Color("rgb(255,0,0)");
+        let floorClass = new Floor(1000, 1000, this.scene);
+        floorClass.addToScene();
+        let walls = [];
+        walls[0] = new WallGenerator(floorClass.w / 2, 50, 0, 1, 100, floorClass.w, white, this.scene, 0);
+        walls[1] = new WallGenerator(-floorClass.w / 2, 50, 0, 1, 100, floorClass.w, white, this.scene, 0);
+        walls[2] = new WallGenerator(0, 50, floorClass.h / 2, 1, 100, floorClass.h, white, this.scene, (-Math.PI / 2));
+        walls[3] = new WallGenerator(0, 50, -floorClass.h / 2, 1, 100, floorClass.h, white, this.scene, (-Math.PI / 2));
+        for (let x = 0; x < walls.length; x++) {
+            walls[x].addToScene();
+        }
+        let numberOfPlatforms = 4;
+        let platForms =
+            [
+                0, 100, 0, 1, red, this.scene, true, false,
+                0, 0, 100, 1, black, this.scene, false, false,
+                100, 0, 0, 1, green, this.scene, false, false,
+                0, 20, 20, 10, green, this.scene, false, true,
+            ]
+        console.log(platForms[13]);
+        for (let x = 0; x < numberOfPlatforms; x++) {
+            this.platFormsClass[x] = new Platform(platForms[x * 8], platForms[(x * 8) + 1], platForms[(x * 8) + 2], platForms[(x * 8) + 3], platForms[(x * 8) + 4], platForms[(x * 8) + 5], platForms[(x * 8) + 6], platForms[(x * 8) + 7]);
+            this.platFormsClass[x].addToScene();
+        }
+        var _this = this;
+        setInterval(function () {
+            _this.gameLoop();
+        }, 33);
+    }
 
-
-
-
-
-
-
-    // let mapAlgo = new RecursiveMaze();
-    // mapAlgo.drawMap();
-    // InsideWallsNumberArray = mapAlgo.array;
-
-    // for (let x = 0; x < mapAlgo.MazeSize; x++) {
-    //     for (let y = 0; y < mapAlgo.MazeSize; y++) {
-    //         InsideWalls[x] = [];
-    //     }
-    // }
-    // for (let ro = 0; ro < mapAlgo.MazeSize; ro++) {
-    //     for (let co = 0; co < mapAlgo.MazeSize; co++) {
-    //         if (InsideWallsNumberArray[ro][co] == 1) {
-    //             //console.log("1");
-    //             let xValue = (ro * floorClass.w / mapAlgo.MazeSize) - (floorClass.w / 2) + ((floorClass.w / mapAlgo.MazeSize) / 2);
-    //             let zValue = (co * floorClass.h / mapAlgo.MazeSize) - (floorClass.w / 2) + ((floorClass.h / mapAlgo.MazeSize) / 2);
-    //             InsideWalls[ro][co] = new InsideWallsMaze(xValue, zValue, (floorClass.w / mapAlgo.MazeSize), false, this.scene);
-    //             InsideWalls[ro][co].addToScene();
-    //         }
-    //         if (InsideWallsNumberArray[ro][co] == 3) {
-    //             //console.log("3");
-    //             let xValue = (ro * floorClass.w / mapAlgo.MazeSize) - (floorClass.w / 2) + ((floorClass.w / mapAlgo.MazeSize) / 2);
-    //             let zValue = (co * floorClass.h / mapAlgo.MazeSize) - (floorClass.w / 2) + ((floorClass.h / mapAlgo.MazeSize) / 2);
-    //             InsideWalls[ro][co] = new InsideWallsMaze(xValue, zValue, (floorClass.w / mapAlgo.MazeSize), true, this.scene);
-    //             InsideWalls[ro][co].addToScene();
-    //         }
-    //     }
-    // }
-
-  }
+    gameLoop() {
+        //console.log("Game LOop");
+        // requestAnimationFrame(this.gameLoop());
+        for (let x = 0; x < this.platFormsClass.length; x++) {
+            //console.log(this.platFormsClass[x].movingHor);
+            if (this.platFormsClass[x].movingHor) {
+                this.platFormsClass[x].moveHor();
+            }
+        }
+        //this.renderer.render(this.scene, this.camera);
+    }
 };
 
 },{"./2DCanvas":2,"./Floor.js":4,"./InsideWallsMaze.js":5,"./LevelOne":6,"./Map.js":7,"./Platform":8,"./RecursiveMaze":9,"./WallGenerator.js":10}],7:[function(require,module,exports){
@@ -48911,7 +48887,7 @@ module.exports = class Map {
 }
 },{}],8:[function(require,module,exports){
 module.exports = class Platform {
-    constructor(x, z, y, w, color, scene) {
+    constructor(x, z, y, w, color, scene, movingVer, movingHor) {
         this.x = x;
         this.y = y;
         this.z = z;
@@ -48919,19 +48895,44 @@ module.exports = class Platform {
         this.scene = scene;
         this.color = color;
         this.heightOfPlatform = 10;
-
+        this.movingHor = movingHor;
+        this.movingVer = movingVer;
+        this.cubeFor;
+        this.movePos = true;
+        this.moveRange = 50;
     }
 
     addToScene() {
         let geometryFor = new THREE.BoxGeometry(this.w, this.heightOfPlatform, this.w);
         let materialFor;
-        console.log('plat form');
+        //  console.log('plat form');
         materialFor = new THREE.MeshLambertMaterial({ color: this.color });
-        let cubeFor = new THREE.Mesh(geometryFor, materialFor);
-        this.scene.add(cubeFor);
-        cubeFor.position.x = this.x;
-        cubeFor.position.y = this.y;
-        cubeFor.position.z = this.z;
+        this.cubeFor = new THREE.Mesh(geometryFor, materialFor);
+        //  console.log(this.scene + "hi");
+        this.scene.add(this.cubeFor);
+        this.cubeFor.position.x = this.x;
+        this.cubeFor.position.y = this.y;
+        this.cubeFor.position.z = this.z;
+    }
+
+    moveHor() {
+        if (this.movePos) {
+            if (this.cubeFor.position.x <= this.x + this.moveRange) {
+                console.log("moveHor +");
+                this.cubeFor.position.x += 1;
+            } else {
+                //console.log(movePos);
+                this.movePos = false;
+            }
+        } else {
+            console.log("boo");
+            if (this.cubeFor.position.x >= this.x - this.moveRange) {
+                console.log("moveHor -");
+                this.cubeFor.position.x -= 1;
+            } else {
+                this.movePos = true;
+            }
+        }
     }
 };
 
@@ -49147,13 +49148,10 @@ module.exports = class WallGenerator {
 (function (global){
 global.THREE = require('three');
 const Floor = require('./Floor.js');
-// const InsideWallsMaze = require('./InsideWallsMaze.js');
-// const Map = require('./Map.js');
-// const WallGenerator = require('./WallGenerator.js');
+
 require('./RecursiveMaze');
 require('./2DCanvas');
 require('./3DControls');
-// const Platform = require('./Platform');
 const LevelOne = require('./LevelOne');
 // const white = new THREE.Color('rgb(255, 255, 255)');
 // const black = new THREE.Color("rgb(0, 0, 0)");
@@ -49248,8 +49246,9 @@ document.addEventListener('keyup', onKeyUp, false);
 
 floorClass.addToScene();
 
-const levelOne = new LevelOne(scene);
+const levelOne = new LevelOne(scene, renderer, camera);
 levelOne.generateScene();
+// let gameLoopOne = setInterval(levelOne.gameLoop(), 33);
 
 scene.background = blue;
 

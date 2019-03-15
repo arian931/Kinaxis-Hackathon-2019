@@ -1,12 +1,9 @@
 global.THREE = require('three');
 const Floor = require('./Floor.js');
-// const InsideWallsMaze = require('./InsideWallsMaze.js');
-// const Map = require('./Map.js');
-// const WallGenerator = require('./WallGenerator.js');
+
 require('./RecursiveMaze');
 require('./2DCanvas');
 require('./3DControls');
-// const Platform = require('./Platform');
 const LevelOne = require('./LevelOne');
 // const white = new THREE.Color('rgb(255, 255, 255)');
 // const black = new THREE.Color("rgb(0, 0, 0)");
@@ -101,8 +98,9 @@ document.addEventListener('keyup', onKeyUp, false);
 
 floorClass.addToScene();
 
-const levelOne = new LevelOne(scene);
+const levelOne = new LevelOne(scene, renderer, camera);
 levelOne.generateScene();
+// let gameLoopOne = setInterval(levelOne.gameLoop(), 33);
 
 scene.background = blue;
 
