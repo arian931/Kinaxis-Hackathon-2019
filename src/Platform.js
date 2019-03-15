@@ -6,7 +6,7 @@ module.exports = class Platform {
         this.w = w;
         this.scene = scene;
         this.color = color;
-        this.heightOfPlatform = 10;
+        this.heightOfPlatform = 5;
         this.movingHor = movingHor;
         this.movingVer = movingVer;
         this.cubeFor;
@@ -20,7 +20,7 @@ module.exports = class Platform {
         //  console.log('plat form');
         materialFor = new THREE.MeshLambertMaterial({ color: this.color });
         this.cubeFor = new THREE.Mesh(geometryFor, materialFor);
-        //  console.log(this.scene + "hi");
+        console.log(this.scene + " hi");
         this.scene.add(this.cubeFor);
         this.cubeFor.position.x = this.x;
         this.cubeFor.position.y = this.y;

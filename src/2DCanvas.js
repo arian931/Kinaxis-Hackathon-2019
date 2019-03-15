@@ -53,8 +53,8 @@ const gameLoop = () => {
   // } else {
   //   switchTo3D();
   // }
-  image.src = canvas.toDataURL(); //leave this here don't worry about it
-  document.getElementById('he').appendChild(image); //leave this here don't worry about it
+  // image.src = canvas.toDataURL(); //leave this here don't worry about it@
+  // document.getElementById('he').appendChild(image); //leave this here don't worry about it
 };
 
 setInterval(gameLoop, 33);

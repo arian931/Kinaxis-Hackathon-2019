@@ -48415,8 +48415,8 @@ const gameLoop = () => {
   // } else {
   //   switchTo3D();
   // }
-  image.src = canvas.toDataURL(); //leave this here don't worry about it
-  document.getElementById('he').appendChild(image); //leave this here don't worry about it
+  // image.src = canvas.toDataURL(); //leave this here don't worry about it@
+  // document.getElementById('he').appendChild(image); //leave this here don't worry about it
 };
 
 setInterval(gameLoop, 33);
@@ -48647,19 +48647,31 @@ module.exports = class LevelOne {
         for (let x = 0; x < walls.length; x++) {
             walls[x].addToScene();
         }
-        let numberOfPlatforms = 4;
-        let platForms =
-            [
-                0, 100, 0, 1, red, this.scene, true, false,
-                0, 0, 100, 1, black, this.scene, false, false,
-                100, 0, 0, 1, green, this.scene, false, false,
-                0, 20, 20, 10, green, this.scene, false, true,
-            ]
-        console.log(platForms[13]);
-        for (let x = 0; x < numberOfPlatforms; x++) {
-            this.platFormsClass[x] = new Platform(platForms[x * 8], platForms[(x * 8) + 1], platForms[(x * 8) + 2], platForms[(x * 8) + 3], platForms[(x * 8) + 4], platForms[(x * 8) + 5], platForms[(x * 8) + 6], platForms[(x * 8) + 7]);
+        let platFormConstructor = [];
+        // platFormConstructor[0] = [0, 100, 0, 1, red, this.scene, false, false,];
+        // platFormConstructor[1] = [0, 100, 0, 1, red, this.scene, true, false,];
+        // platFormConstructor[2] = [0, 100, 0, 1, red, this.scene, false, true,];
+
+        let xStair = 0;
+        let yStair = 0;
+        let zStair = 0;
+
+        for (let x = 0; x < 4; x++) {
+            if (x != 2) {
+                platFormConstructor[x] = [xStair, yStair, zStair, 20, red, this.scene, true, false];
+            } else {
+                platFormConstructor[x] = [xStair, yStair, zStair, 20, red, this.scene, true, false];
+            }
+            xStair += 40;
+            yStair += 0;
+            zStair += 10;
+        }
+        for (let x = 0; x < platFormConstructor.length - 1; x++) {
+            console.log("should be sceene");
+            this.platFormsClass[x] = new Platform(platFormConstructor[x][0], platFormConstructor[x][1], platFormConstructor[x][2], platFormConstructor[x][3], platFormConstructor[x][4], platFormConstructor[x][5], platFormConstructor[x][6], platFormConstructor[x][7]);
             this.platFormsClass[x].addToScene();
         }
+
         var _this = this;
         setInterval(function () {
             _this.gameLoop();
@@ -48908,7 +48920,7 @@ module.exports = class Platform {
         this.w = w;
         this.scene = scene;
         this.color = color;
-        this.heightOfPlatform = 10;
+        this.heightOfPlatform = 5;
         this.movingHor = movingHor;
         this.movingVer = movingVer;
         this.cubeFor;
@@ -48922,7 +48934,7 @@ module.exports = class Platform {
         //  console.log('plat form');
         materialFor = new THREE.MeshLambertMaterial({ color: this.color });
         this.cubeFor = new THREE.Mesh(geometryFor, materialFor);
-        //  console.log(this.scene + "hi");
+        console.log(this.scene + " hi");
         this.scene.add(this.cubeFor);
         this.cubeFor.position.x = this.x;
         this.cubeFor.position.y = this.y;
