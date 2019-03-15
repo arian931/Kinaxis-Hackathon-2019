@@ -1,4 +1,4 @@
-// still need to add imgine for the main character and making sure backround is fine and starting place, size,borders
+// still need to add imgine for the main character 
 keyPressed = function() {
 
 }
@@ -9,16 +9,16 @@ class main {} (x,y,speed,size) => {
    this.speed = speed;
    this.size = size;
    this.update; {
-       if(keycode === UP){
+       if(keycode === UP||W){
            this.y = this.y + this.speed;
        } 
-       if(keycode === DOWN){
+       if(keycode === DOWN||S){
            this.y = this.y - this.speed;
        }
-       if(keycode === RIGHT){
+       if(keycode === RIGHT||D){
            this.x = this.x + this.speed;
        }
-       if(keycode === LEFT){
+       if(keycode === LEFT||A){
            this.x = this.x - this.speed;
        };
        // add img
@@ -31,4 +31,4 @@ const main = Main(10,10,10,10) //change later
 draw = () => {
     brackround(fixed)
     main.update()
-} 
+}
