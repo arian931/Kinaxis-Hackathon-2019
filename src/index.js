@@ -37,6 +37,7 @@ const direction = new THREE.Vector3();
 
 const blocker = document.getElementById('blocker');
 const instructions = document.getElementById('instructions');
+
 instructions.addEventListener('click', () => {
   controls.lock();
 }, false);
@@ -126,5 +127,31 @@ const animate = () => {
   }
   renderer.render(scene, camera);
 };
-
 animate(); // to start loop
+let timeLeft = 100;
+
+
+
+const scoreTimer = document.getElementById("scoreAndTimer3d");
+const canvas = document.getElementById('scoreTimer'); // gets the canvas I want to use
+const ctx = canvas.getContext('2d'); // makes it so anything ctx. will appear on the canvas
+
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
+const image = new Image();
+image.id = 'pic';
+
+timer = () => {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  timeLeft--;
+  console.log("Timer going down");
+  console.log(timeLeft);
+  console.log("hi");
+  ctx.font = "75px TimesNewRoman";
+  ctx.fillText(timeLeft, canvas.width / 2 - 10, 100);
+  ctx.fillText(levelOne.score, canvas.width - 100, canvas.height - 10);
+  image.src = canvas.toDataURL();
+  image.src = canvas.toDataURL();
+  document.getElementById('scoreAndTimer3d').appendChild(image);
+}
+setInterval(timer, 1000);

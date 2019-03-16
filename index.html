@@ -16,7 +16,7 @@
 
     .hello {
       position: absolute;
-      display: inline;
+
     }
 
     #he {
@@ -50,12 +50,22 @@
       text-align: center;
       cursor: pointer;
     }
+
+    #scoreAndTimer3d {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
   </style>
 </head>
 
 <body>
   <canvas style="display: none" class="hundredPercent" id="backgroundCanvas"></canvas>
+  <canvas style="display: none" class="hello" id="scoreTimer"></canvas>
   <div id="he" class="hello">
+  </div>
+  <div id="scoreAndTimer3d" class="scoreAndTimer">
   </div>
 
   <div id="blocker">

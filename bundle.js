@@ -48639,6 +48639,9 @@ module.exports = class LevelOne {
         this.blue = new THREE.Color("rgb(0,100,255)");
         this.red = new THREE.Color("rgb(255,0,0)");
         this.buildASection = false;
+        this.counter = 0;
+        this.LastDirection = 0;
+        this.score = 1;
     }
 
 
@@ -48660,12 +48663,12 @@ module.exports = class LevelOne {
         for (let x = 0; x < walls.length; x++) {
             walls[x].addToScene();
         }
-
         let DIR;
         let NOS;
         let LastDirection = 0;
         let shouldJump;
         for (let x = 0; x < 5; x++) {
+            console.log("X: " + this.currentPositionX + " Y: " + this.currentPositionY + " Z: " + this.currentPositionZ);
             while (true) {
                 DIR = Math.floor((Math.random() * 3));
                 if ((LastDirection == 0 && DIR != 1) || (LastDirection == 1 && DIR != 0) || (LastDirection == 3 && DIR != 2) || (LastDirection == 2 && DIR != 3)) {
@@ -48673,16 +48676,16 @@ module.exports = class LevelOne {
                 }
             }
             LastDirection = DIR;
-            console.log(DIR + " DIR");
+            //console.log(DIR + " DIR");
 
             if (x % 2 != 0) {
                 NOS = Math.floor((Math.random() * 4) + 1);
                 this.buildStairCase(this.currentPositionX, this.currentPositionY, this.currentPositionZ, DIR, NOS);
             } else {
                 shouldJump = Math.floor((Math.random() * 3));
-                console.log(shouldJump + "Should Jump");
+                //console.log(shouldJump + "Should Jump");
                 if (shouldJump == 1) {
-                    console.log("should Jump");
+                    //console.log("should Jump");
                     NOS = Math.floor((Math.random() * 1) + 1);
                     this.buildMovingCourse(this.currentPositionX, this.currentPositionY, this.currentPositionZ, DIR, NOS, true);
                 } else {
@@ -48700,7 +48703,44 @@ module.exports = class LevelOne {
         setInterval(function () {
             _this.gameLoop();
         }, 33);
+        // setInterval(function () {
+        //     _this.test();
+        // }, 1000)
     }
+
+    test() {
+        let DIR;
+        let NOS;
+        let shouldJump;
+        while (true) {
+            DIR = Math.floor((Math.random() * 3));
+            if ((this.LastDirection == 0 && DIR != 1) || (this.LastDirection == 1 && DIR != 0) || (this.LastDirection == 3 && DIR != 2) || (this.LastDirection == 2 && DIR != 3)) {
+                break;
+            }
+        }
+        this.LastDirection = DIR;
+        //console.log(DIR + " DIR");
+        if (this.counter % 2 != 0) {
+            NOS = Math.floor((Math.random() * 4) + 1);
+            this.buildStairCase(this.currentPositionX, this.currentPositionY, this.currentPositionZ, DIR, NOS);
+        } else {
+            shouldJump = Math.floor((Math.random() * 3));
+            //console.log(shouldJump + "Should Jump");
+            if (shouldJump == 1) {
+                //console.log("should Jump");
+                NOS = Math.floor((Math.random() * 1) + 1);
+                this.buildMovingCourse(this.currentPositionX, this.currentPositionY, this.currentPositionZ, DIR, NOS, true);
+            } else {
+                this.buildMovingCourse(this.currentPositionX, this.currentPositionY, this.currentPositionZ, DIR, NOS, false);
+            }
+        }
+        for (let x = 0; x < this.platFormConstructor.length; x++) {
+            this.platFormsClass[x] = new Platform(this.platFormConstructor[x][0], this.platFormConstructor[x][1], this.platFormConstructor[x][2], this.platFormConstructor[x][3], this.platFormConstructor[x][4], this.platFormConstructor[x][5], this.platFormConstructor[x][6], this.platFormConstructor[x][7], this.platFormConstructor[x][8], this.platFormConstructor[x][9]);
+            this.platFormsClass[x].addToScene();
+        }
+        this.counter++;
+    }
+
 
     gameLoop() {
 
@@ -48726,7 +48766,7 @@ module.exports = class LevelOne {
         let curIndex;
         switch (Dir) {
             case 0:
-                // console.log("Dir 0");
+                //console.log("Dir 0");
                 curIndex = this.currentIndex;
                 for (let x = curIndex; x < curIndex + NumOfSteps; x++) {
                     this.platFormConstructor[x] = [xStair, yStair, zStair, 20, 20, this.red, this.scene, false, false, false];
@@ -48737,7 +48777,7 @@ module.exports = class LevelOne {
                 }
                 break;
             case 1:
-                // console.log("Dir 1");
+                //console.log("Dir 1");
                 curIndex = this.currentIndex;
                 for (let x = curIndex; x < curIndex + NumOfSteps; x++) {
                     this.platFormConstructor[x] = [xStair, yStair, zStair, 20, 20, this.red, this.scene, false, false, false];
@@ -48748,7 +48788,7 @@ module.exports = class LevelOne {
                 }
                 break;
             case 2:
-                // console.log("Dir 2");
+                //console.log("Dir 2");
                 curIndex = this.currentIndex;
                 for (let x = curIndex; x < curIndex + NumOfSteps; x++) {
                     this.platFormConstructor[x] = [xStair, yStair, zStair, 20, 20, this.red, this.scene, false, false, false];
@@ -48759,7 +48799,7 @@ module.exports = class LevelOne {
                 }
                 break;
             case 3:
-                // console.log("Dir 2");
+                //console.log("Dir 3");
                 curIndex = this.currentIndex;
                 for (let x = curIndex; x < curIndex + NumOfSteps; x++) {
                     this.platFormConstructor[x] = [xStair, yStair, zStair, 20, 20, this.red, this.scene, false, false, false];
@@ -48781,12 +48821,12 @@ module.exports = class LevelOne {
         let xStair = SX;
         let yStair = SY;
         let zStair = SZ;
-
         this.platFormConstructor[this.currentIndex] = [xStair, yStair, zStair, 20, 20, this.red, this.scene, false, false, false];
         this.currentIndex++;
 
         switch (Dir) {
             case 0:
+                //console.log("Dir Mov 0")
                 xStair += 40;
                 yStair -= 0;
                 zStair += 0;
@@ -48808,6 +48848,7 @@ module.exports = class LevelOne {
                 }
                 break;
             case 1:
+                //console.log("Dir Mov 1")
                 xStair -= 40;
                 yStair -= 0;
                 zStair += 0;
@@ -48829,19 +48870,20 @@ module.exports = class LevelOne {
                 }
                 break;
             case 2:
+                //console.log("Dir Mov 2")
                 xStair += 0;
                 yStair -= 40;
                 zStair += 0;
                 curIndex = this.currentIndex;
                 for (let x = curIndex; x < curIndex + numOfJumps; x++) {
                     if (upAndDown) {
-                        this.platFormConstructor[x] = [xStair, yStair, zStair, 20, 20, this.red, this.scene, true, false, false];
+                        this.platFormConstructor[x] = [xStair, yStair, zStair, 20, 20, this.black, this.scene, true, false, false];
                         xStair -= 0;
                         yStair -= 40;
                         zStair += 0;
                         this.currentIndex++;
                     } else {
-                        this.platFormConstructor[x] = [xStair, yStair, zStair, 20, 20, this.red, this.scene, false, true, false];
+                        this.platFormConstructor[x] = [xStair, yStair, zStair, 20, 20, this.black, this.scene, false, true, false];
                         xStair -= 0;
                         yStair -= 40;
                         zStair += 0;
@@ -48850,6 +48892,7 @@ module.exports = class LevelOne {
                 }
                 break;
             case 3:
+                // console.log("Dir Mov 3")
                 xStair += 0;
                 yStair += 40;
                 zStair += 0;
@@ -48875,16 +48918,16 @@ module.exports = class LevelOne {
         if (upAndDown) {
             switch (Dir) {
                 case 0:
-                    xStair += 40;
+                    xStair += 30;
                     break;
                 case 1:
-                    xStair -= 40;
+                    xStair -= 30;
                     break;
                 case 2:
-                    yStair -= 40;
+                    yStair -= 30;
                     break;
                 case 3:
-                    yStair += 40;
+                    yStair += 30;
                     break;
             }
         }
@@ -49449,6 +49492,7 @@ const direction = new THREE.Vector3();
 
 const blocker = document.getElementById('blocker');
 const instructions = document.getElementById('instructions');
+
 instructions.addEventListener('click', () => {
   controls.lock();
 }, false);
@@ -49538,8 +49582,33 @@ const animate = () => {
   }
   renderer.render(scene, camera);
 };
-
 animate(); // to start loop
+let timeLeft = 100;
 
+
+
+const scoreTimer = document.getElementById("scoreAndTimer3d");
+const canvas = document.getElementById('scoreTimer'); // gets the canvas I want to use
+const ctx = canvas.getContext('2d'); // makes it so anything ctx. will appear on the canvas
+
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
+const image = new Image();
+image.id = 'pic';
+
+timer = () => {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  timeLeft--;
+  console.log("Timer going down");
+  console.log(timeLeft);
+  console.log("hi");
+  ctx.font = "75px TimesNewRoman";
+  ctx.fillText(timeLeft, canvas.width / 2 - 10, 100);
+  ctx.fillText(levelOne.score, canvas.width - 100, canvas.height - 10);
+  image.src = canvas.toDataURL();
+  image.src = canvas.toDataURL();
+  document.getElementById('scoreAndTimer3d').appendChild(image);
+}
+setInterval(timer, 1000);
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{"./2DCanvas":2,"./3DControls":3,"./Floor.js":4,"./LevelOne":6,"./RecursiveMaze":9,"three":1}]},{},[11]);
