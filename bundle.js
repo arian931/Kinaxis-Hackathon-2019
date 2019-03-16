@@ -49431,7 +49431,8 @@ const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerH
 const controls = new THREE.PointerLockControls(camera);
 const renderer = new THREE.WebGLRenderer();
 const floorClass = new Floor(1000, 1000, scene);
-const raycaster = new THREE.Raycaster(new THREE.Vector3(), new THREE.Vector3(0, -1, 0), 0, 10);
+const bottomRaycaster = new THREE.Raycaster(new THREE.Vector3(), new THREE.Vector3(0, -1, 0), 0, 10);
+const topRaycaster = new THREE.Raycaster(new THREE.Vector3(), new THREE.Vector3(0, 1, 0), 0, 2);
 renderer.setPixelRatio(window.devicePixelRatio / 2);
 renderer.setSize(window.innerWidth, window.innerHeight);
 document.body.appendChild(renderer.domElement);
@@ -49482,7 +49483,7 @@ const onKeyDown = (event) => {
       moveRight = true;
       break;
     case 32: // space
-      if (canJump) velocity.y += 350;
+      if (canJump) velocity.y += 300;
       canJump = false;
       break;
     default:
@@ -49529,11 +49530,14 @@ scene.add(lightHem);
 const animate = () => {
   requestAnimationFrame(animate);
   if (controls.isLocked) {
-    raycaster.ray.origin.copy(controls.getObject().position);
-    raycaster.ray.origin.y -= 10;
-    // const intersections = raycaster.intersectObjects(objects);
-    // const onObject = intersections.length > 0;
-    const onObject = false;
+    bottomRaycaster.ray.origin.copy(controls.getObject().position);
+    bottomRaycaster.ray.origin.y -= 10;
+    topRaycaster.ray.origin.copy(controls.getObject().position);
+    const objects = levelOne.platFormsClass.map(x => x.cubeFor);
+    const bottomIntersections = bottomRaycaster.intersectObjects(objects);
+    const topIntersections = topRaycaster.intersectObjects(objects);
+    const onObject = bottomIntersections.length > 0;
+    const headHit = topIntersections.length > 0;
     time = performance.now();
     delta = (time - prevTime) / 1000;
     velocity.x -= velocity.x * 10.0 * delta;
@@ -49548,6 +49552,7 @@ const animate = () => {
       velocity.y = Math.max(0, velocity.y);
       canJump = true;
     }
+    if (headHit && velocity.y > 0) velocity.y = 0;
     controls.getObject().translateX(velocity.x * delta);
     controls.getObject().translateY(velocity.y * delta);
     controls.getObject().translateZ(velocity.z * delta);
