@@ -19,6 +19,8 @@ const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerH
 const controls = new THREE.PointerLockControls(camera);
 const renderer = new THREE.WebGLRenderer();
 const floorClass = new Floor(1000, 1000, scene);
+const bottomRaycaster = new THREE.Raycaster(new THREE.Vector3(), new THREE.Vector3(0, -1, 0), 0, 10);
+const topRaycaster = new THREE.Raycaster(new THREE.Vector3(), new THREE.Vector3(0, 1, 0), 0, 2);
 renderer.setPixelRatio(window.devicePixelRatio / 2);
 renderer.setSize(window.innerWidth, window.innerHeight);
 document.body.appendChild(renderer.domElement);
@@ -28,6 +30,7 @@ let moveForward = false;
 let moveBackward = false;
 let moveLeft = false;
 let moveRight = false;
+let canJump = false;
 
 let time;
 let delta;
@@ -67,6 +70,10 @@ const onKeyDown = (event) => {
     case 39: // right
     case 68: // d
       moveRight = true;
+      break;
+    case 32: // space
+      if (canJump) velocity.y += 300;
+      canJump = false;
       break;
     default:
       break;
@@ -111,18 +118,38 @@ scene.add(lightHem);
 // animate is like gameloop we could probably use setInverval if we wanted to E.X setInterval(animate, 33);
 const animate = () => {
   requestAnimationFrame(animate);
-  if (controls.isLocked === true) {
+  if (controls.isLocked) {
+    bottomRaycaster.ray.origin.copy(controls.getObject().position);
+    bottomRaycaster.ray.origin.y -= 10;
+    topRaycaster.ray.origin.copy(controls.getObject().position);
+    const objects = levelOne.platFormsClass.map(x => x.cubeFor);
+    const bottomIntersections = bottomRaycaster.intersectObjects(objects);
+    const topIntersections = topRaycaster.intersectObjects(objects);
+    const onObject = bottomIntersections.length > 0;
+    const headHit = topIntersections.length > 0;
     time = performance.now();
     delta = (time - prevTime) / 1000;
     velocity.x -= velocity.x * 10.0 * delta;
     velocity.z -= velocity.z * 10.0 * delta;
+    velocity.y -= 9.8 * 100.0 * delta; // 100.0 = mass
     direction.z = Number(moveForward) - Number(moveBackward);
     direction.x = Number(moveLeft) - Number(moveRight);
     direction.normalize(); // this ensures consistent movements in all directions
     if (moveForward || moveBackward) velocity.z -= direction.z * 400.0 * delta;
     if (moveLeft || moveRight) velocity.x -= direction.x * 400.0 * delta;
+    if (onObject) {
+      velocity.y = Math.max(0, velocity.y);
+      canJump = true;
+    }
+    if (headHit && velocity.y > 0) velocity.y = 0;
     controls.getObject().translateX(velocity.x * delta);
+    controls.getObject().translateY(velocity.y * delta);
     controls.getObject().translateZ(velocity.z * delta);
+    if (controls.getObject().position.y < 10) {
+      velocity.y = 0;
+      controls.getObject().position.y = 10;
+      canJump = true;
+    }
     prevTime = time;
   }
   renderer.render(scene, camera);
