@@ -17,6 +17,7 @@ module.exports = class LevelOne {
         this.platFormsClass = [];
         this.platFormConstructor = [];
         this.collectibles = [];
+        this.collectiblesCurrentIndex = 0;
         this.currentIndex = 0;
         this.currentPositionX = 0;
         this.currentPositionY = 0;
@@ -141,7 +142,7 @@ module.exports = class LevelOne {
                 this.platFormsClass[x].moveVer();
             }
             if (this.platFormsClass[x].movingZ) {
-                console.log("moving z is ture");
+                //console.log("moving z is ture");
                 this.platFormsClass[x].moveZ();
             }
         }
@@ -153,11 +154,19 @@ module.exports = class LevelOne {
         let yStair = SY;
         let zStair = SZ;
         let curIndex;
+        let random;
         switch (Dir) {
             case 0:
                 //console.log("Dir 0");
                 curIndex = this.currentIndex;
+                random = Math.floor((Math.random() * 2) + 1);
+                console.log(random + " random");
                 for (let x = curIndex; x < curIndex + NumOfSteps; x++) {
+                    if (random == 1) {
+                        this.collectibles[this.collectiblesCurrentIndex] = new Collectible(xStair, yStair, zStair + 10, this.scene);
+                        this.collectibles[this.collectiblesCurrentIndex].addToScene();
+                        this.collectiblesCurrentIndex++;
+                    }
                     this.platFormConstructor[x] = [xStair, yStair, zStair, 20, 20, this.red, this.scene, false, false, false];
                     xStair += 40;
                     yStair -= 0;
@@ -168,7 +177,14 @@ module.exports = class LevelOne {
             case 1:
                 //console.log("Dir 1");
                 curIndex = this.currentIndex;
+                random = Math.floor((Math.random() * 2) + 1);
+                console.log(random + " random");
                 for (let x = curIndex; x < curIndex + NumOfSteps; x++) {
+                    if (random == 1) {
+                        this.collectibles[this.collectiblesCurrentIndex] = new Collectible(xStair, yStair, zStair + 10, this.scene);
+                        this.collectibles[this.collectiblesCurrentIndex].addToScene();
+                        this.collectiblesCurrentIndex++;
+                    }
                     this.platFormConstructor[x] = [xStair, yStair, zStair, 20, 20, this.red, this.scene, false, false, false];
                     xStair -= 40;
                     yStair -= 0;
@@ -179,7 +195,14 @@ module.exports = class LevelOne {
             case 2:
                 //console.log("Dir 2");
                 curIndex = this.currentIndex;
+                random = Math.floor((Math.random() * 2) + 1);
+                console.log(random + " random");
                 for (let x = curIndex; x < curIndex + NumOfSteps; x++) {
+                    if (random == 1) {
+                        this.collectibles[this.collectiblesCurrentIndex] = new Collectible(xStair, yStair, zStair + 10, this.scene);
+                        this.collectibles[this.collectiblesCurrentIndex].addToScene();
+                        this.collectiblesCurrentIndex++;
+                    }
                     this.platFormConstructor[x] = [xStair, yStair, zStair, 20, 20, this.red, this.scene, false, false, false];
                     xStair = 0;
                     yStair -= 40;
@@ -190,7 +213,14 @@ module.exports = class LevelOne {
             case 3:
                 //console.log("Dir 3");
                 curIndex = this.currentIndex;
+                random = Math.floor((Math.random() * 2) + 1);
+                console.log(random + " random");
                 for (let x = curIndex; x < curIndex + NumOfSteps; x++) {
+                    if (random == 1) {
+                        this.collectibles[this.collectiblesCurrentIndex] = new Collectible(xStair, yStair, zStair + 10, this.scene);
+                        this.collectibles[this.collectiblesCurrentIndex].addToScene();
+                        this.collectiblesCurrentIndex++;
+                    }
                     this.platFormConstructor[x] = [xStair, yStair, zStair, 20, 20, this.red, this.scene, false, false, false];
                     xStair -= 0;
                     yStair += 40;

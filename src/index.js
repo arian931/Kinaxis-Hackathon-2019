@@ -169,9 +169,9 @@ image.id = 'pic';
 const timer = () => {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   timeLeft--;
-  console.log("Timer going down");
-  console.log(timeLeft);
-  console.log("hi");
+  //console.log("Timer going down");
+  // console.log(timeLeft);
+  // console.log("hi");
   ctx.font = "75px TimesNewRoman";
   ctx.fillText(timeLeft, canvas.width / 2 - 10, 100);
   ctx.fillText(levelOne.score, canvas.width - 100, canvas.height - 10);

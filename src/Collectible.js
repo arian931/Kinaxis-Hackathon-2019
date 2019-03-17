@@ -20,6 +20,5 @@ module.exports = class Collectiable {
     rotate() {
         this.cubeFor.rotation.x += 0.1;
         this.cubeFor.rotation.y += 0.1;
-
     }
 };
