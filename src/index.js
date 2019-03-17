@@ -135,8 +135,8 @@ const animate = () => {
     direction.z = Number(moveForward) - Number(moveBackward);
     direction.x = Number(moveLeft) - Number(moveRight);
     direction.normalize(); // this ensures consistent movements in all directions
-    if (moveForward || moveBackward) velocity.z -= direction.z * 400.0 * delta;
-    if (moveLeft || moveRight) velocity.x -= direction.x * 400.0 * delta;
+    if (moveForward || moveBackward) velocity.z -= direction.z * 1000.0 * delta;
+    if (moveLeft || moveRight) velocity.x -= direction.x * 1000.0 * delta;
     if (onObject) {
       velocity.y = Math.max(0, velocity.y);
       canJump = true;
@@ -157,9 +157,7 @@ const animate = () => {
 animate(); // to start loop
 let timeLeft = 100;
 
-
-
-const scoreTimer = document.getElementById("scoreAndTimer3d");
+const scoreTimer = document.getElementById('scoreAndTimer3d');
 const canvas = document.getElementById('scoreTimer'); // gets the canvas I want to use
 const ctx = canvas.getContext('2d'); // makes it so anything ctx. will appear on the canvas
 
@@ -168,7 +166,7 @@ canvas.height = window.innerHeight;
 const image = new Image();
 image.id = 'pic';
 
-timer = () => {
+const timer = () => {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   timeLeft--;
   console.log("Timer going down");
@@ -180,5 +178,5 @@ timer = () => {
   image.src = canvas.toDataURL();
   image.src = canvas.toDataURL();
   document.getElementById('scoreAndTimer3d').appendChild(image);
-}
+};
 setInterval(timer, 1000);
