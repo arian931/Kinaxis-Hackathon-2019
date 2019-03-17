@@ -123,7 +123,7 @@ module.exports = class LevelOne {
 
 
     gameLoop() {
-        if (this.camera.position.y <= -20) {
+        if (this.camera.position.y <= -2000) {
             this.camera.position.x = 0;
             this.camera.position.z = 0;
             this.camera.position.y = 10;
@@ -335,5 +335,16 @@ module.exports = class LevelOne {
         this.currentPositionX = xStair;
         this.currentPositionY = yStair;
         this.currentPositionZ = zStair;
+    }
+    collectibleCollision(obj) {
+        console.log("going into function");
+        for (let x = 0; x < this.collectibles.length; x++) {
+            console.log(obj.position.x);
+            console.log("obj");
+            console.log(this.collectibles[x].position.x);
+            if (this.collectibles[x].position.x == obj.position.x && this.collectibles[x].position.y == obj.position.y && this.collectibles[x].position.z == obj.position.z) {
+                console.log("found one to delete");
+            }
+        }
     }
 };

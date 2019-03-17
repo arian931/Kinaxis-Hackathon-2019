@@ -52169,7 +52169,7 @@ module.exports = class LevelOne {
 
 
     gameLoop() {
-        if (this.camera.position.y <= -20) {
+        if (this.camera.position.y <= -2000) {
             this.camera.position.x = 0;
             this.camera.position.z = 0;
             this.camera.position.y = 10;
@@ -52381,6 +52381,17 @@ module.exports = class LevelOne {
         this.currentPositionX = xStair;
         this.currentPositionY = yStair;
         this.currentPositionZ = zStair;
+    }
+    collectibleCollision(obj) {
+        console.log("going into function");
+        for (let x = 0; x < this.collectibles.length; x++) {
+            console.log(obj.position.x);
+            console.log("obj");
+            console.log(this.collectibles[x].position.x);
+            if (this.collectibles[x].position.x == obj.position.x && this.collectibles[x].position.y == obj.position.y && this.collectibles[x].position.z == obj.position.z) {
+                console.log("found one to delete");
+            }
+        }
     }
 };
 },{"./2DCanvas":3,"./Collectible":5,"./Floor.js":6,"./InsideWallsMaze.js":7,"./LevelOne":8,"./Map.js":9,"./Platform":10,"./RecursiveMaze":11,"./WallGenerator.js":12}],9:[function(require,module,exports){
@@ -53083,10 +53094,10 @@ const animate = () => {
       const directionVector = globalVertex.sub(position);
 
       const ray = new THREE.Raycaster(position, directionVector.clone().normalize());
-      const collisionResults = ray.intersectObjects(collectibles);
+      const collisionResults = ray.intersectObjects(collectibles[0]);
       if (collisionResults.length > 0 && collisionResults[0].distance < directionVector.length()) {
-        // a collision occurred... do something...
-        console.log('collision');
+        levelOne.collectibleCollision(collisionResults);
+        //console.log('collision');
       }
     }
     controls.getObject().translateX(velocity.x * delta);

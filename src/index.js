@@ -180,10 +180,10 @@ const animate = () => {
       const directionVector = globalVertex.sub(position);
 
       const ray = new THREE.Raycaster(position, directionVector.clone().normalize());
-      const collisionResults = ray.intersectObjects(collectibles);
+      const collisionResults = ray.intersectObjects(collectibles[0]);
       if (collisionResults.length > 0 && collisionResults[0].distance < directionVector.length()) {
-        // a collision occurred... do something...
-        console.log('collision');
+        levelOne.collectibleCollision(collisionResults);
+        //console.log('collision');
       }
     }
     controls.getObject().translateX(velocity.x * delta);
