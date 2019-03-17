@@ -178,11 +178,12 @@ const animate = () => {
       const globalVertex = localVertex.applyMatrix4(player.matrixWorld);
       const directionVector = globalVertex.sub(position);
 
-      const ray = new THREE.Raycaster(position, directionVector.clone().normalize());
-      const collisionResults = ray.intersectObjects(collectibles[0]);
-      if (collisionResults.length > 0 && collisionResults[0].distance < directionVector.length()) {
-        levelOne.collectibleCollision(collisionResults);
-        //console.log('collision');
+      const ray = new THREE.Raycaster(position, directionVector.clone().normalize(), 0, directionVector.length());
+      const collisionResults = ray.intersectObjects(collectibles);
+      if (collisionResults.length > 0) {
+        // a collision occurred... do something...
+        console.log(collisionResults);
+        console.log('collision');
       }
     }
     controls.getObject().translateX(velocity.x * delta);
