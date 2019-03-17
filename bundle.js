@@ -53056,17 +53056,24 @@ loader.load(
   },
 );
 
+const geometry = new THREE.BoxGeometry(10, 30, 10);
+const material = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
+const player = new THREE.Mesh(geometry, material);
+camera.add(player);
+
 // animate is like gameloop we could probably use setInverval if we wanted to E.X setInterval(animate, 33);
 const animate = () => {
   requestAnimationFrame(animate);
   if (controls.isLocked) {
-    bottomRaycaster.ray.origin.copy(controls.getObject().position);
-    bottomRaycaster.ray.origin.y -= 10;
-    topRaycaster.ray.origin.copy(controls.getObject().position);
+    // console.log();
+    bottomRaycaster.ray.origin.copy(player.matrixWorld.getPosition());
+    // // bottomRaycaster.ray.origin.y -= 10;
+    topRaycaster.ray.origin.copy(player.matrixWorld.getPosition());
     const objects = levelOne.platFormsClass.map(x => x.cubeFor);
     const bottomIntersections = bottomRaycaster.intersectObjects(objects);
     const topIntersections = topRaycaster.intersectObjects(objects);
     const onObject = bottomIntersections.length > 0;
+    // console.log(bottomIntersections.length);
     const headHit = topIntersections.length > 0;
     time = performance.now();
     delta = (time - prevTime) / 1000;
@@ -53083,6 +53090,21 @@ const animate = () => {
       canJump = true;
     }
     if (headHit && velocity.y > 0) velocity.y = 0;
+    for (let vertexIndex = 0; vertexIndex < player.geometry.vertices.length; vertexIndex++) {
+      const localVertex = player.geometry.vertices[vertexIndex].clone();
+      const globalVertex = localVertex.applyMatrix4(player.matrixWorld);
+      const position = new THREE.Vector3();
+      position.setFromMatrixPosition(player.matrixWorld);
+      const directionVector = globalVertex.sub(position);
+
+      const ray = new THREE.Raycaster(position, directionVector.clone().normalize());
+      const collisionResults = ray.intersectObjects(objects);
+      if (collisionResults.length > 0 && collisionResults[0].distance < directionVector.length()) {
+        // a collision occurred... do something...
+        // console.log(collisionResults);
+        console.log('collision');
+      }
+    }
     controls.getObject().translateX(velocity.x * delta);
     controls.getObject().translateY(velocity.y * delta);
     controls.getObject().translateZ(velocity.z * delta);
