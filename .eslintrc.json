@@ -2,6 +2,7 @@
   "extends": "airbnb-base",
   "globals": {
     "THREE": true,
+    "GLTFLoader": true,
     "window": true,
     "document": true,
     "requestAnimationFrame": true,
