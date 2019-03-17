@@ -20,7 +20,7 @@ const loader = new GLTFLoader();
 const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 800);
 const controls = new THREE.PointerLockControls(camera);
 const renderer = new THREE.WebGLRenderer();
-const floorClass = new Floor(1000, 1000, scene);
+
 const bottomRaycaster = new THREE.Raycaster(new THREE.Vector3(), new THREE.Vector3(0, -1, 0), 0, 10);
 const topRaycaster = new THREE.Raycaster(new THREE.Vector3(), new THREE.Vector3(0, 1, 0), 0, 2);
 renderer.setPixelRatio(window.devicePixelRatio / 2);
@@ -106,7 +106,8 @@ const onKeyUp = (event) => {
 document.addEventListener('keydown', onKeyDown, false);
 document.addEventListener('keyup', onKeyUp, false);
 
-floorClass.addToScene();
+// const floorClass = new Floor(1000, 1000, scene);
+// floorClass.addToScene();
 
 const levelOne = new LevelOne(scene, renderer, camera);
 levelOne.generateScene();
@@ -145,13 +146,16 @@ camera.add(player);
 const animate = () => {
   requestAnimationFrame(animate);
   if (controls.isLocked) {
+    const position = new THREE.Vector3();
+    position.setFromMatrixPosition(player.matrixWorld);
     // console.log();
-    bottomRaycaster.ray.origin.copy(player.matrixWorld.getPosition());
+    bottomRaycaster.ray.origin.copy(position);
     // // bottomRaycaster.ray.origin.y -= 10;
-    topRaycaster.ray.origin.copy(player.matrixWorld.getPosition());
-    const objects = levelOne.platFormsClass.map(x => x.cubeFor);
-    const bottomIntersections = bottomRaycaster.intersectObjects(objects);
-    const topIntersections = topRaycaster.intersectObjects(objects);
+    topRaycaster.ray.origin.copy(position);
+    const platforms = levelOne.platFormsClass.map(x => x.cubeFor);
+    const collectibles = levelOne.collectibles.map(x => x.cubeFor);
+    const bottomIntersections = bottomRaycaster.intersectObjects(platforms);
+    const topIntersections = topRaycaster.intersectObjects(platforms);
     const onObject = bottomIntersections.length > 0;
     // console.log(bottomIntersections.length);
     const headHit = topIntersections.length > 0;
@@ -173,24 +177,23 @@ const animate = () => {
     for (let vertexIndex = 0; vertexIndex < player.geometry.vertices.length; vertexIndex++) {
       const localVertex = player.geometry.vertices[vertexIndex].clone();
       const globalVertex = localVertex.applyMatrix4(player.matrixWorld);
-      const position = new THREE.Vector3();
-      position.setFromMatrixPosition(player.matrixWorld);
       const directionVector = globalVertex.sub(position);
 
       const ray = new THREE.Raycaster(position, directionVector.clone().normalize());
-      const collisionResults = ray.intersectObjects(objects);
+      const collisionResults = ray.intersectObjects(collectibles);
       if (collisionResults.length > 0 && collisionResults[0].distance < directionVector.length()) {
         // a collision occurred... do something...
-        // console.log(collisionResults);
         console.log('collision');
       }
     }
     controls.getObject().translateX(velocity.x * delta);
     controls.getObject().translateY(velocity.y * delta);
     controls.getObject().translateZ(velocity.z * delta);
-    if (controls.getObject().position.y < 10) {
+    if (position.y < -10) {
       velocity.y = 0;
+      controls.getObject().position.x = 0;
       controls.getObject().position.y = 10;
+      controls.getObject().position.z = 0;
       canJump = true;
     }
     prevTime = time;
