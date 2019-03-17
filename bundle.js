@@ -53082,10 +53082,11 @@ const animate = () => {
       const globalVertex = localVertex.applyMatrix4(player.matrixWorld);
       const directionVector = globalVertex.sub(position);
 
-      const ray = new THREE.Raycaster(position, directionVector.clone().normalize());
+      const ray = new THREE.Raycaster(position, directionVector.clone().normalize(), 0, directionVector.length());
       const collisionResults = ray.intersectObjects(collectibles);
-      if (collisionResults.length > 0 && collisionResults[0].distance < directionVector.length()) {
+      if (collisionResults.length > 0) {
         // a collision occurred... do something...
+        console.log(collisionResults);
         console.log('collision');
       }
     }
