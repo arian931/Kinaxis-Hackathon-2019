@@ -6,6 +6,7 @@ const RecursiveMaze = require('./RecursiveMaze');
 const TwoDCanvas = require('./2DCanvas');
 const Platform = require('./Platform');
 const LevelOne = require('./LevelOne');
+const Collectible = require('./Collectible');
 
 
 module.exports = class LevelOne {
@@ -15,6 +16,7 @@ module.exports = class LevelOne {
         this.camera = camera;
         this.platFormsClass = [];
         this.platFormConstructor = [];
+        this.collectibles = [];
         this.currentIndex = 0;
         this.currentPositionX = 0;
         this.currentPositionY = 0;
@@ -30,8 +32,6 @@ module.exports = class LevelOne {
         this.LastDirection = 0;
         this.score = 1;
     }
-
-
 
     generateScene() {
         let white = new THREE.Color("rgb(255, 255, 255)");
@@ -50,6 +50,8 @@ module.exports = class LevelOne {
         for (let x = 0; x < walls.length; x++) {
             walls[x].addToScene();
         }
+        this.collectibles[0] = new Collectible(5, 5, 5, this.scene);
+        this.collectibles[0].addToScene();
         let DIR;
         let NOS;
         let LastDirection = 0;
@@ -130,7 +132,7 @@ module.exports = class LevelOne {
 
 
     gameLoop() {
-
+        this.collectibles[0].rotate();
         for (let x = 0; x < this.platFormsClass.length; x++) {
             if (this.platFormsClass[x].movingHor) {
                 this.platFormsClass[x].moveHor();

@@ -48550,6 +48550,33 @@ THREE.PointerLockControls = function (camera, domElement) {
 THREE.PointerLockControls.prototype = Object.create(THREE.EventDispatcher.prototype);
 THREE.PointerLockControls.prototype.constructor = THREE.PointerLockControls;
 },{"three":1}],4:[function(require,module,exports){
+module.exports = class Collectiable {
+    constructor(x, z, y, scene) {
+        this.x = x;
+        this.y = y;
+        this.z = z;
+        this.scene = scene;
+        this.cubeFor;
+    }
+
+    addToScene() {
+        let geometryFor = new THREE.BoxGeometry(2, 2, 2);
+        let materialFor;
+        materialFor = new THREE.MeshLambertMaterial({ color: new THREE.Color("rgb(233, 255, 0)") });
+        this.cubeFor = new THREE.Mesh(geometryFor, materialFor);
+        this.scene.add(this.cubeFor);
+        this.cubeFor.position.x = this.x;
+        this.cubeFor.position.y = this.y;
+        this.cubeFor.position.z = this.z;
+    }
+    rotate() {
+        this.cubeFor.rotation.x += 0.1;
+        this.cubeFor.rotation.y += 0.1;
+
+    }
+};
+
+},{}],5:[function(require,module,exports){
 
 
 module.exports = class Floor {
@@ -48575,7 +48602,7 @@ module.exports = class Floor {
   }
 };
 
-},{}],5:[function(require,module,exports){
+},{}],6:[function(require,module,exports){
 module.exports = class insideWallsMaze {
   constructor(x, z, w, endBlock, scene) {
     this.x = x;
@@ -48610,7 +48637,7 @@ module.exports = class insideWallsMaze {
   }
 };
 
-},{}],6:[function(require,module,exports){
+},{}],7:[function(require,module,exports){
 const Floor = require('./Floor.js');
 const InsideWallsMaze = require('./InsideWallsMaze.js');
 const Map = require('./Map.js');
@@ -48619,6 +48646,7 @@ const RecursiveMaze = require('./RecursiveMaze');
 const TwoDCanvas = require('./2DCanvas');
 const Platform = require('./Platform');
 const LevelOne = require('./LevelOne');
+const Collectible = require('./Collectible');
 
 
 module.exports = class LevelOne {
@@ -48628,6 +48656,7 @@ module.exports = class LevelOne {
         this.camera = camera;
         this.platFormsClass = [];
         this.platFormConstructor = [];
+        this.collectibles = [];
         this.currentIndex = 0;
         this.currentPositionX = 0;
         this.currentPositionY = 0;
@@ -48643,8 +48672,6 @@ module.exports = class LevelOne {
         this.LastDirection = 0;
         this.score = 1;
     }
-
-
 
     generateScene() {
         let white = new THREE.Color("rgb(255, 255, 255)");
@@ -48663,6 +48690,8 @@ module.exports = class LevelOne {
         for (let x = 0; x < walls.length; x++) {
             walls[x].addToScene();
         }
+        this.collectibles[0] = new Collectible(5, 5, 5, this.scene);
+        this.collectibles[0].addToScene();
         let DIR;
         let NOS;
         let LastDirection = 0;
@@ -48743,7 +48772,7 @@ module.exports = class LevelOne {
 
 
     gameLoop() {
-
+        this.collectibles[0].rotate();
         for (let x = 0; x < this.platFormsClass.length; x++) {
             if (this.platFormsClass[x].movingHor) {
                 this.platFormsClass[x].moveHor();
@@ -48936,7 +48965,7 @@ module.exports = class LevelOne {
         this.currentPositionZ = zStair;
     }
 };
-},{"./2DCanvas":2,"./Floor.js":4,"./InsideWallsMaze.js":5,"./LevelOne":6,"./Map.js":7,"./Platform":8,"./RecursiveMaze":9,"./WallGenerator.js":10}],7:[function(require,module,exports){
+},{"./2DCanvas":2,"./Collectible":4,"./Floor.js":5,"./InsideWallsMaze.js":6,"./LevelOne":7,"./Map.js":8,"./Platform":9,"./RecursiveMaze":10,"./WallGenerator.js":11}],8:[function(require,module,exports){
 
 
 
@@ -49156,7 +49185,7 @@ module.exports = class Map {
     }
   }
 }
-},{}],8:[function(require,module,exports){
+},{}],9:[function(require,module,exports){
 module.exports = class Platform {
     constructor(x, z, y, w, d, color, scene, movingVer, movingHor, movingZ) {
         this.x = x;
@@ -49243,7 +49272,7 @@ module.exports = class Platform {
     }
 };
 
-},{}],9:[function(require,module,exports){
+},{}],10:[function(require,module,exports){
 /* eslint-disable eqeqeq */
 
 
@@ -49410,7 +49439,7 @@ module.exports = class RecursiveMaze {
     this.whichMove++;
   }
 }
-},{}],10:[function(require,module,exports){
+},{}],11:[function(require,module,exports){
 
 
 
@@ -49451,7 +49480,7 @@ module.exports = class WallGenerator {
   }
 };
 
-},{}],11:[function(require,module,exports){
+},{}],12:[function(require,module,exports){
 (function (global){
 global.THREE = require('three');
 const Floor = require('./Floor.js');
@@ -49638,4 +49667,4 @@ timer = () => {
 }
 setInterval(timer, 1000);
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./2DCanvas":2,"./3DControls":3,"./Floor.js":4,"./LevelOne":6,"./RecursiveMaze":9,"three":1}]},{},[11]);
+},{"./2DCanvas":2,"./3DControls":3,"./Floor.js":5,"./LevelOne":7,"./RecursiveMaze":10,"three":1}]},{},[12]);
