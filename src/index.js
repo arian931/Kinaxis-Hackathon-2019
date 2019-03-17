@@ -1,4 +1,5 @@
 global.THREE = require('three');
+global.GLTFLoader = require('three-gltf-loader');
 const Floor = require('./Floor.js');
 
 require('./RecursiveMaze');
@@ -15,6 +16,7 @@ const blue = new THREE.Color('rgb(0,100,255)');
 const scene = new THREE.Scene();
 scene.background = new THREE.Color(0xffffff);
 scene.fog = new THREE.Fog(0xffffff, 0, 750);
+const loader = new GLTFLoader();
 const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 800);
 const controls = new THREE.PointerLockControls(camera);
 const renderer = new THREE.WebGLRenderer();
@@ -115,6 +117,25 @@ scene.background = blue;
 const lightHem = new THREE.HemisphereLight(0xffffbb, 0x080820, 1);
 scene.add(lightHem);
 
+loader.load(
+  '../Art/3D/player_arm.glb',
+  (gltf) => {
+    // called when the resource is loaded
+    gltf.scene.scale.set(0.5, 0.5, 0.5);
+    camera.add(gltf.scene);
+    gltf.scene.rotateY(Math.PI / 2);
+    gltf.scene.position.set(5, -8, -7);
+  },
+  (xhr) => {
+    // called while loading is progressing
+    console.log(`${(xhr.loaded / xhr.total * 100)}% loaded`);
+  },
+  (error) => {
+    // called when loading has errors
+    console.error('An error happened', error);
+  },
+);
+
 // animate is like gameloop we could probably use setInverval if we wanted to E.X setInterval(animate, 33);
 const animate = () => {
   requestAnimationFrame(animate);
@@ -168,11 +189,11 @@ image.id = 'pic';
 
 const timer = () => {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
-  timeLeft--;
-  //console.log("Timer going down");
+  timeLeft -= 1;
+  // console.log("Timer going down");
   // console.log(timeLeft);
   // console.log("hi");
-  ctx.font = "75px TimesNewRoman";
+  ctx.font = '75px TimesNewRoman';
   ctx.fillText(timeLeft, canvas.width / 2 - 10, 100);
   ctx.fillText(levelOne.score, canvas.width - 100, canvas.height - 10);
   image.src = canvas.toDataURL();
