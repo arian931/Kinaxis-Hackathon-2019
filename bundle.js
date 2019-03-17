@@ -53049,8 +53049,7 @@ camera.add(player);
 const animate = () => {
   requestAnimationFrame(animate);
   if (controls.isLocked) {
-    const position = new THREE.Vector3();
-    position.setFromMatrixPosition(player.matrixWorld);
+    const position = new THREE.Vector3().setFromMatrixPosition(player.matrixWorld);
     // console.log();
     bottomRaycaster.ray.origin.copy(position);
     // // bottomRaycaster.ray.origin.y -= 10;
