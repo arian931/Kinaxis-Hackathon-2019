@@ -14,6 +14,8 @@ module.exports = class Platform {
         this.cubeFor;
         this.movePos = true;
         this.moveRange = 50;
+        this.appear = 50;
+        this.disappearDelay = 100;
     }
 
     addToScene() {
@@ -46,36 +48,35 @@ module.exports = class Platform {
         }
     }
     moveVer() {
-        if (this.movePos) {
-            if (this.cubeFor.position.y <= this.y + this.moveRange) {
-                //console.log("moveVer +");
-                this.cubeFor.position.y += 1;
+        //console.log("moveVer " + this.disappearDelay);
+        this.disappearDelay++;
+        if (this.disappearDelay >= 50) {
+            console.log("disappearDelay");
+            this.disappearDelay = 0;
+            if (this.appear) {
+                console.log(this.appear + " appear");
+                this.appear = false;
+                this.cubeFor.position.y = this.y;
             } else {
-                //console.log(movePos);
-                this.movePos = false;
-            }
-        } else {
-            if (this.cubeFor.position.y >= this.y - this.heightOfPlatform) {
-                //console.log("moveVer -");
-                this.cubeFor.position.y -= 1;
-            } else {
-                this.movePos = true;
+                console.log(this.appear + " appear");
+                this.appear = true;
+                this.cubeFor.position.y = -1000;
             }
         }
+
     }
     moveZ() {
-        // console.log("move Z");
         if (this.movePos) {
-            if (this.cubeFor.position.z <= this.z + (this.moveRange / 2)) {
-                // console.log("moveVer +");
+            if (this.cubeFor.position.z <= this.z + this.moveRange) {
+                //console.log("moveVer +");
                 this.cubeFor.position.z += 1;
             } else {
                 //console.log(movePos);
                 this.movePos = false;
             }
         } else {
-            if (this.cubeFor.position.z >= this.z - (this.moveRange / 2)) {
-                // console.log("moveVer -");
+            if (this.cubeFor.position.z >= this.z - this.heightOfPlatform) {
+                //console.log("moveVer -");
                 this.cubeFor.position.z -= 1;
             } else {
                 this.movePos = true;
