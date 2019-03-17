@@ -53094,9 +53094,7 @@ const animate = () => {
     controls.getObject().translateZ(velocity.z * delta);
     if (position.y < -10) {
       velocity.y = 0;
-      controls.getObject().position.x = 0;
-      controls.getObject().position.y = 10;
-      controls.getObject().position.z = 0;
+      controls.getObject().position.set(0, 10, 0);
       canJump = true;
     }
     prevTime = time;
