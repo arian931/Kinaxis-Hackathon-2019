@@ -35,21 +35,21 @@ module.exports = class LevelOne {
     }
 
     generateScene() {
-        let floorClass = new Floor(1000, 1000, this.scene);
-        floorClass.addToScene();
-        let walls = [];
-        walls[0] = new WallGenerator(floorClass.w / 2, 50, 0, 1, 100, floorClass.w, this.white, this.scene, 0);
-        walls[1] = new WallGenerator(-floorClass.w / 2, 50, 0, 1, 100, floorClass.w, this.white, this.scene, 0);
-        walls[2] = new WallGenerator(0, 50, floorClass.h / 2, 1, 100, floorClass.h, this.white, this.scene, (-Math.PI / 2));
-        walls[3] = new WallGenerator(0, 50, -floorClass.h / 2, 1, 100, floorClass.h, this.white, this.scene, (-Math.PI / 2));
-        for (let x = 0; x < walls.length; x++) {
-            walls[x].addToScene();
-        }
+        // let floorClass = new Floor(1000, 1000, this.scene);
+        // floorClass.addToScene();
+        // let walls = [];
+        // walls[0] = new WallGenerator(floorClass.w / 2, 50, 0, 1, 100, floorClass.w, this.white, this.scene, 0);
+        // walls[1] = new WallGenerator(-floorClass.w / 2, 50, 0, 1, 100, floorClass.w, this.white, this.scene, 0);
+        // walls[2] = new WallGenerator(0, 50, floorClass.h / 2, 1, 100, floorClass.h, this.white, this.scene, (-Math.PI / 2));
+        // walls[3] = new WallGenerator(0, 50, -floorClass.h / 2, 1, 100, floorClass.h, this.white, this.scene, (-Math.PI / 2));
+        // for (let x = 0; x < walls.length; x++) {
+        //     walls[x].addToScene();
+        // }
         let DIR;
         let NOS;
         let LastDirection = 0;
         let shouldJump;
-        for (let x = 0; x < 5; x++) {
+        for (let x = 0; x < 20; x++) {
             console.log("X: " + this.currentPositionX + " Y: " + this.currentPositionY + " Z: " + this.currentPositionZ);
             while (true) {
                 DIR = Math.floor((Math.random() * 3));
@@ -61,7 +61,7 @@ module.exports = class LevelOne {
             //console.log(DIR + " DIR");
 
             if (x % 2 != 0) {
-                NOS = Math.floor((Math.random() * 4) + 1);
+                NOS = Math.floor((Math.random() * 4) + 2);
                 this.buildStairCase(this.currentPositionX, this.currentPositionY, this.currentPositionZ, DIR, NOS);
             } else {
                 shouldJump = Math.floor((Math.random() * 4) + 1);
@@ -71,6 +71,7 @@ module.exports = class LevelOne {
                     NOS = Math.floor((Math.random() * 1) + 1);
                     this.buildMovingCourse(this.currentPositionX, this.currentPositionY, this.currentPositionZ, DIR, NOS, true);
                 } else {
+                    NOS = Math.floor((Math.random() * 2) + 1);
                     this.buildMovingCourse(this.currentPositionX, this.currentPositionY, this.currentPositionZ, DIR, NOS, false);
                 }
             }
@@ -122,6 +123,11 @@ module.exports = class LevelOne {
 
 
     gameLoop() {
+        if (this.camera.position.y <= -20) {
+            this.camera.position.x = 0;
+            this.camera.position.z = 0;
+            this.camera.position.y = 10;
+        }
         for (let x = 0; x < this.collectibles.length; x++) {
             this.collectibles[x].rotate();
         }
@@ -146,19 +152,20 @@ module.exports = class LevelOne {
         let zStair = SZ;
         let curIndex;
         let random;
+        random = Math.floor((Math.random() * NumOfSteps));
         switch (Dir) {
             case 0:
                 //console.log("Dir 0");
                 curIndex = this.currentIndex;
-                random = Math.floor((Math.random() * 2) + 1);
+                random += curIndex;
                 console.log(random + " random");
                 for (let x = curIndex; x < curIndex + NumOfSteps; x++) {
-                    if (random == 1) {
+                    if (random == x) {
                         this.collectibles[this.collectiblesCurrentIndex] = new Collectible(xStair, yStair, zStair + 10, this.scene);
                         this.collectibles[this.collectiblesCurrentIndex].addToScene();
                         this.collectiblesCurrentIndex++;
                     }
-                    this.platFormConstructor[x] = [xStair, yStair, zStair, 20, 20, this.red, this.scene, false, false, false];
+                    this.platFormConstructor[x] = [xStair, yStair, zStair, 20, 20, this.white, this.scene, false, false, false];
                     xStair += 40;
                     yStair -= 0;
                     zStair += 10;
@@ -168,15 +175,15 @@ module.exports = class LevelOne {
             case 1:
                 //console.log("Dir 1");
                 curIndex = this.currentIndex;
-                random = Math.floor((Math.random() * 2) + 1);
+                random += curIndex;
                 console.log(random + " random");
                 for (let x = curIndex; x < curIndex + NumOfSteps; x++) {
-                    if (random == 1) {
+                    if (random == x) {
                         this.collectibles[this.collectiblesCurrentIndex] = new Collectible(xStair, yStair, zStair + 10, this.scene);
                         this.collectibles[this.collectiblesCurrentIndex].addToScene();
                         this.collectiblesCurrentIndex++;
                     }
-                    this.platFormConstructor[x] = [xStair, yStair, zStair, 20, 20, this.red, this.scene, false, false, false];
+                    this.platFormConstructor[x] = [xStair, yStair, zStair, 20, 20, this.yellow, this.scene, false, false, false];
                     xStair -= 40;
                     yStair -= 0;
                     zStair += 10;
@@ -186,16 +193,16 @@ module.exports = class LevelOne {
             case 2:
                 //console.log("Dir 2");
                 curIndex = this.currentIndex;
-                random = Math.floor((Math.random() * 2) + 1);
+                random += curIndex;
                 console.log(random + " random");
                 for (let x = curIndex; x < curIndex + NumOfSteps; x++) {
-                    if (random == 1) {
+                    if (random == x) {
                         this.collectibles[this.collectiblesCurrentIndex] = new Collectible(xStair, yStair, zStair + 10, this.scene);
                         this.collectibles[this.collectiblesCurrentIndex].addToScene();
                         this.collectiblesCurrentIndex++;
                     }
                     this.platFormConstructor[x] = [xStair, yStair, zStair, 20, 20, this.red, this.scene, false, false, false];
-                    xStair = 0;
+                    xStair -= 0;
                     yStair -= 40;
                     zStair += 10;
                     this.currentIndex++;
@@ -204,15 +211,15 @@ module.exports = class LevelOne {
             case 3:
                 //console.log("Dir 3");
                 curIndex = this.currentIndex;
-                random = Math.floor((Math.random() * 2) + 1);
+                random += curIndex;
                 console.log(random + " random");
                 for (let x = curIndex; x < curIndex + NumOfSteps; x++) {
-                    if (random == 1) {
+                    if (random == x) {
                         this.collectibles[this.collectiblesCurrentIndex] = new Collectible(xStair, yStair, zStair + 10, this.scene);
                         this.collectibles[this.collectiblesCurrentIndex].addToScene();
                         this.collectiblesCurrentIndex++;
                     }
-                    this.platFormConstructor[x] = [xStair, yStair, zStair, 20, 20, this.red, this.scene, false, false, false];
+                    this.platFormConstructor[x] = [xStair, yStair, zStair, 20, 20, this.green, this.scene, false, false, false];
                     xStair -= 0;
                     yStair += 40;
                     zStair += 10;
@@ -221,7 +228,7 @@ module.exports = class LevelOne {
                 break;
             default:
         }
-        zStair -= 5;
+        // zStair -= 5;
         this.currentPositionX = xStair;
         this.currentPositionY = yStair;
         this.currentPositionZ = zStair;
@@ -243,13 +250,13 @@ module.exports = class LevelOne {
                 curIndex = this.currentIndex
                 for (let x = curIndex; x < curIndex + numOfJumps; x++) {
                     if (upAndDown) {
-                        this.platFormConstructor[x] = [xStair, yStair, zStair, 20, 20, this.black, this.scene, true, false, false];
+                        this.platFormConstructor[x] = [xStair, yStair, zStair, 20, 20, this.white, this.scene, true, false, false];
                         xStair += 40;
                         yStair -= 0;
                         zStair += 0;
                         this.currentIndex++;
                     } else {
-                        this.platFormConstructor[x] = [xStair, yStair, zStair, 20, 20, this.red, this.scene, false, false, true];
+                        this.platFormConstructor[x] = [xStair, yStair, zStair, 20, 20, this.white, this.scene, false, false, true];
                         xStair += 40;
                         yStair -= 0;
                         zStair += 0;
@@ -265,13 +272,13 @@ module.exports = class LevelOne {
                 curIndex = this.currentIndex;
                 for (let x = curIndex; x < curIndex + numOfJumps; x++) {
                     if (upAndDown) {
-                        this.platFormConstructor[x] = [xStair, yStair, zStair, 20, 20, this.black, this.scene, true, false, false];
+                        this.platFormConstructor[x] = [xStair, yStair, zStair, 20, 20, this.yellow, this.scene, true, false, false];
                         xStair -= 40;
                         yStair -= 0;
                         zStair += 0;
                         this.currentIndex++;
                     } else {
-                        this.platFormConstructor[x] = [xStair, yStair, zStair, 20, 20, this.red, this.scene, false, false, true];
+                        this.platFormConstructor[x] = [xStair, yStair, zStair, 20, 20, this.yellow, this.scene, false, false, true];
                         xStair -= 40;
                         yStair -= 0;
                         zStair += 0;
@@ -287,7 +294,7 @@ module.exports = class LevelOne {
                 curIndex = this.currentIndex;
                 for (let x = curIndex; x < curIndex + numOfJumps; x++) {
                     if (upAndDown) {
-                        this.platFormConstructor[x] = [xStair, yStair, zStair, 20, 20, this.black, this.scene, true, false, false];
+                        this.platFormConstructor[x] = [xStair, yStair, zStair, 20, 20, this.red, this.scene, true, false, false];
                         xStair -= 0;
                         yStair -= 40;
                         zStair += 0;
@@ -309,13 +316,13 @@ module.exports = class LevelOne {
                 curIndex = this.currentIndex;
                 for (let x = curIndex; x < curIndex + numOfJumps; x++) {
                     if (upAndDown) {
-                        this.platFormConstructor[x] = [xStair, yStair, zStair, 20, 20, this.black, this.scene, true, false, false];
+                        this.platFormConstructor[x] = [xStair, yStair, zStair, 20, 20, this.green, this.scene, true, false, false];
                         xStair -= 0;
                         yStair += 40;
                         zStair += 0;
                         this.currentIndex++;
                     } else {
-                        this.platFormConstructor[x] = [xStair, yStair, zStair, 20, 20, this.red, this.scene, false, true, false];
+                        this.platFormConstructor[x] = [xStair, yStair, zStair, 20, 20, this.green, this.scene, false, true, false];
                         xStair -= 0;
                         yStair += 40;
                         zStair += 0;

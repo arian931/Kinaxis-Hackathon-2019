@@ -20,7 +20,7 @@ const loader = new GLTFLoader();
 const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 800);
 const controls = new THREE.PointerLockControls(camera);
 const renderer = new THREE.WebGLRenderer();
-const floorClass = new Floor(1000, 1000, scene);
+
 const bottomRaycaster = new THREE.Raycaster(new THREE.Vector3(), new THREE.Vector3(0, -1, 0), 0, 10);
 const topRaycaster = new THREE.Raycaster(new THREE.Vector3(), new THREE.Vector3(0, 1, 0), 0, 2);
 renderer.setPixelRatio(window.devicePixelRatio / 2);
@@ -106,7 +106,8 @@ const onKeyUp = (event) => {
 document.addEventListener('keydown', onKeyDown, false);
 document.addEventListener('keyup', onKeyUp, false);
 
-floorClass.addToScene();
+// const floorClass = new Floor(1000, 1000, scene);
+// floorClass.addToScene();
 
 const levelOne = new LevelOne(scene, renderer, camera);
 levelOne.generateScene();
