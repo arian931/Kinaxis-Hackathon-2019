@@ -52382,14 +52382,14 @@ module.exports = class LevelOne {
         this.currentPositionY = yStair;
         this.currentPositionZ = zStair;
     }
-    collectibleCollision(obj) {
+    collectibleCollision(CX, CY, CZ) {
         console.log("going into function");
         for (let x = 0; x < this.collectibles.length; x++) {
-            console.log(obj.position.x);
-            console.log("obj");
-            console.log(this.collectibles[x].position.x);
-            if (this.collectibles[x].position.x == obj.position.x && this.collectibles[x].position.y == obj.position.y && this.collectibles[x].position.z == obj.position.z) {
+            if (this.collectibles[x].cubeFor.position.x == CX && this.collectibles[x].cubeFor.position.y == CY && this.collectibles[x].cubeFor.position.z == CZ) {
                 console.log("found one to delete");
+                this.scene.remove(this.collectibles[x].cubeFor);
+                this.collectibles.splice(x, 1);
+                this.score++;
             }
         }
     }
@@ -53092,11 +53092,13 @@ const animate = () => {
       const globalVertex = localVertex.applyMatrix4(player.matrixWorld);
       const directionVector = globalVertex.sub(position);
 
-      const ray = new THREE.Raycaster(position, directionVector.clone().normalize());
-      const collisionResults = ray.intersectObjects(collectibles[0]);
-      if (collisionResults.length > 0 && collisionResults[0].distance < directionVector.length()) {
-        levelOne.collectibleCollision(collisionResults);
-        //console.log('collision');
+      const ray = new THREE.Raycaster(position, directionVector.clone().normalize(), 0, directionVector.length());
+      const collisionResults = ray.intersectObjects(collectibles);
+      if (collisionResults.length > 0) {
+        // a collision occurred... do something...
+        console.log(collisionResults[0].object.position.x);
+        levelOne.collectibleCollision(collisionResults[0].object.position.x, collisionResults[0].object.position.y, collisionResults[0].object.position.z);
+        console.log('collision');
       }
     }
     controls.getObject().translateX(velocity.x * delta);

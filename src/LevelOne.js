@@ -336,14 +336,13 @@ module.exports = class LevelOne {
         this.currentPositionY = yStair;
         this.currentPositionZ = zStair;
     }
-    collectibleCollision(obj) {
+    collectibleCollision(CX, CY, CZ) {
         console.log("going into function");
         for (let x = 0; x < this.collectibles.length; x++) {
-            console.log(obj.position.x);
-            console.log("obj");
-            console.log(this.collectibles[x].position.x);
-            if (this.collectibles[x].position.x == obj.position.x && this.collectibles[x].position.y == obj.position.y && this.collectibles[x].position.z == obj.position.z) {
-                console.log("found one to delete");
+            if (this.collectibles[x].cubeFor.position.x == CX && this.collectibles[x].cubeFor.position.y == CY && this.collectibles[x].cubeFor.position.z == CZ) {
+                this.scene.remove(this.collectibles[x].cubeFor);
+                this.collectibles.splice(x, 1);
+                this.score++;
             }
         }
     }

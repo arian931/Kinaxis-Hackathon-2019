@@ -182,7 +182,8 @@ const animate = () => {
       const collisionResults = ray.intersectObjects(collectibles);
       if (collisionResults.length > 0) {
         // a collision occurred... do something...
-        console.log(collisionResults);
+        console.log(collisionResults[0].object.position.x);
+        levelOne.collectibleCollision(collisionResults[0].object.position.x, collisionResults[0].object.position.y, collisionResults[0].object.position.z);
         console.log('collision');
       }
     }
