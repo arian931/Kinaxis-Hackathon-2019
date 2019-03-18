@@ -52,7 +52,7 @@ module.exports = class LevelOne {
         let LastDirection = 0;
         let shouldJump;
 
-        this.scene.fog = new THREE.Fog(0xffffff, 200, 750);
+        this.scene.fog = new THREE.FogExp2(this.white, 0.005);
 
         for (let x = 0; x < 20; x++) {
             console.log("X: " + this.currentPositionX + " Y: " + this.currentPositionY + " Z: " + this.currentPositionZ);

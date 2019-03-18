@@ -52098,7 +52098,7 @@ module.exports = class LevelOne {
         let LastDirection = 0;
         let shouldJump;
 
-        this.scene.fog = new THREE.Fog(0xffffff, 200, 750);
+        this.scene.fog = new THREE.FogExp2(this.white, 0.005);
 
         for (let x = 0; x < 20; x++) {
             console.log("X: " + this.currentPositionX + " Y: " + this.currentPositionY + " Z: " + this.currentPositionZ);
@@ -52924,7 +52924,7 @@ require('./RecursiveMaze');
 require('./2DCanvas');
 require('./3DControls');
 const LevelOne = require('./LevelOne');
-// const white = new THREE.Color('rgb(255, 255, 255)');
+const white = new THREE.Color('rgb(255, 255, 255)');
 // const black = new THREE.Color("rgb(0, 0, 0)");
 // const yellow = new THREE.Color("rgb(233, 255, 0)");
 // const green = new THREE.Color("rgb(0,255,0)");
@@ -52932,7 +52932,7 @@ const blue = new THREE.Color('rgb(0,100,255)');
 // const red = new THREE.Color("rgb(255,0,0)");
 
 const scene = new THREE.Scene();
-scene.background = new THREE.Color(0xffffff);
+scene.background = white;
 const loader = new GLTFLoader();
 const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 800);
 const controls = new THREE.PointerLockControls(camera);
@@ -53033,7 +53033,7 @@ const levelOne = new LevelOne(scene, renderer, camera, sizeOfJump, sizeOfPlatfor
 levelOne.generateScene();
 // let gameLoopOne = setInterval(levelOne.gameLoop(), 33);
 
-scene.background = blue;
+scene.background = white;
 
 const lightHem = new THREE.HemisphereLight(0xffffbb, 0x080820, 1);
 scene.add(lightHem);
