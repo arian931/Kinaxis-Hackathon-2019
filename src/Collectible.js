@@ -8,7 +8,7 @@ module.exports = class Collectiable {
     }
 
     addToScene() {
-        let geometryFor = new THREE.BoxGeometry(2, 2, 2);
+        let geometryFor = new THREE.BoxGeometry(5, 5, 5);
         let materialFor;
         materialFor = new THREE.MeshLambertMaterial({ color: new THREE.Color("rgb(233, 255, 0)") });
         this.cubeFor = new THREE.Mesh(geometryFor, materialFor);
