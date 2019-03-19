@@ -4,30 +4,16 @@ const ctx = canvas.getContext("2d");
 canvas.width = window.innerHeight * 0.99;
 canvas.height = window.innerHeight * 0.97;
 
-// let walls = [];
-// let wallCounter = 0;
-// let notTaken = true;
-
-// canvas.addEventListener("click", getClickPosition => {
-//     mapAlgo.test();
-// }, false);
-
-// ctx.beginPath();
-// ctx.strokeStyle = "rgb(255,0,0)";
-// ctx.lineWidth = 2;
-// ctx.moveTo(0, 0);
-// ctx.lineTo(canvas.width, 0);
-// ctx.lineTo(canvas.width, canvas.height);
-// ctx.lineTo(0, canvas.height);
-// ctx.lineTo(0, 0);
-// ctx.stroke();
-
 let mapArray;
 
-let mapAlgo = new map();
+// let mapAlgo = new map();
+// mapAlgo.drawMap();
+// mapArray = mapAlgo.array;
 
-mapAlgo.drawMap();
-mapArray = mapAlgo.array;
+let Recursive = new RecursiveMaze();
+Recursive.drawMap();
+mapArray = Recursive.array
+
 //console.log(mapArray[0][0]);
 
 setInterval(gameLoop, 1000);
@@ -49,14 +35,12 @@ function gameLoop() {
                     ctx.fillRect(x * (canvas.width / row), y * (canvas.height / col), canvas.width / row, canvas.height / col);
                     break;
             }
+            if (x === 0 || x === row - 1 || y === 0 || y === row - 1) {
+                ctx.fillStyle = "rgb(0,0,0)";
+                ctx.fillRect(x * (canvas.width / row), y * (canvas.height / col), canvas.width / row, canvas.height / col);
+            }
         }
     }
     }
 
 
-
-function drawWalls() {
-    for (var n = 0; n < walls.length; n++) {
-        walls[n].draw(ctx);
-    }
-}
