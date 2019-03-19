@@ -67,7 +67,7 @@ module.exports = class Platform {
     }
     moveZ() {
         if (this.movePos) {
-            if (this.cubeFor.position.z <= this.z + this.moveRange) {
+            if (this.cubeFor.position.z <= this.z + (this.moveRange / 2)) {
                 //console.log("moveVer +");
                 this.cubeFor.position.z += 1;
             } else {
@@ -75,7 +75,7 @@ module.exports = class Platform {
                 this.movePos = false;
             }
         } else {
-            if (this.cubeFor.position.z >= this.z - this.heightOfPlatform) {
+            if (this.cubeFor.position.z >= this.z - (this.moveRange / 2)) {
                 //console.log("moveVer -");
                 this.cubeFor.position.z -= 1;
             } else {

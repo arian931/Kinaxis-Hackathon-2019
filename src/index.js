@@ -6,7 +6,7 @@ require('./RecursiveMaze');
 require('./2DCanvas');
 require('./3DControls');
 const LevelOne = require('./LevelOne');
-// const white = new THREE.Color('rgb(255, 255, 255)');
+const white = new THREE.Color('rgb(255, 255, 255)');
 // const black = new THREE.Color("rgb(0, 0, 0)");
 // const yellow = new THREE.Color("rgb(233, 255, 0)");
 // const green = new THREE.Color("rgb(0,255,0)");
@@ -14,8 +14,7 @@ const blue = new THREE.Color('rgb(0,100,255)');
 // const red = new THREE.Color("rgb(255,0,0)");
 
 const scene = new THREE.Scene();
-scene.background = new THREE.Color(0xffffff);
-scene.fog = new THREE.Fog(0xffffff, 0, 750);
+scene.background = white;
 const loader = new GLTFLoader();
 const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 800);
 const controls = new THREE.PointerLockControls(camera);
@@ -108,12 +107,15 @@ document.addEventListener('keyup', onKeyUp, false);
 
 // const floorClass = new Floor(1000, 1000, scene);
 // floorClass.addToScene();
+let sizeOfPlatforms = 30;
+let sizeOfJump = (sizeOfPlatforms / 2) + 50;
+console.log(sizeOfJump + " Size Of Jump");
 
-const levelOne = new LevelOne(scene, renderer, camera);
+const levelOne = new LevelOne(scene, renderer, camera, sizeOfJump, sizeOfPlatforms);
 levelOne.generateScene();
 // let gameLoopOne = setInterval(levelOne.gameLoop(), 33);
 
-scene.background = blue;
+scene.background = white;
 
 const lightHem = new THREE.HemisphereLight(0xffffbb, 0x080820, 1);
 scene.add(lightHem);
@@ -182,7 +184,6 @@ const animate = () => {
       const collisionResults = ray.intersectObjects(collectibles);
       if (collisionResults.length > 0) {
         // a collision occurred... do something...
-        console.log(collisionResults[0].object.position.x);
         levelOne.collectibleCollision(collisionResults[0].object.position.x, collisionResults[0].object.position.y, collisionResults[0].object.position.z);
         console.log('collision');
       }
@@ -190,7 +191,7 @@ const animate = () => {
     controls.getObject().translateX(velocity.x * delta);
     controls.getObject().translateY(velocity.y * delta);
     controls.getObject().translateZ(velocity.z * delta);
-    if (position.y < -10) {
+    if (position.y < -50) {
       velocity.y = 0;
       controls.getObject().position.set(0, 10, 0);
       canJump = true;
@@ -210,18 +211,27 @@ canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
 const image = new Image();
 image.id = 'pic';
-
+let forTimer = 0;
 const timer = () => {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
-  timeLeft -= 1;
+  forTimer++;
+  if (forTimer == 10) {
+    forTimer = 0;
+    timeLeft -= 1;
+    if (timeLeft <= 0) {
+      console.log("TIME LEFT IS ZERO GO BACK TO THE 2D Cavnas");
+    }
+  }
   // console.log("Timer going down");
   // console.log(timeLeft);
   // console.log("hi");
   ctx.font = '75px TimesNewRoman';
+  ctx.fillStyle = "black";
   ctx.fillText(timeLeft, canvas.width / 2 - 10, 100);
+  ctx.fillStyle = "white";
   ctx.fillText(levelOne.score, canvas.width - 100, canvas.height - 10);
   image.src = canvas.toDataURL();
   image.src = canvas.toDataURL();
   document.getElementById('scoreAndTimer3d').appendChild(image);
 };
-setInterval(timer, 1000);
+setInterval(timer, 100);
