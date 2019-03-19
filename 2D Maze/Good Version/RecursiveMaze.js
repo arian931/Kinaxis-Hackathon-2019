@@ -1,8 +1,4 @@
-/* eslint-disable eqeqeq */
-
-
-/* eslint-disable no-plusplus */
-
+// eslint-disable-next-line no-unused-vars
 class RecursiveMaze {
   constructor() {
     console.log("recursive");
@@ -35,12 +31,12 @@ class RecursiveMaze {
   drawMap() {
     // let counter = 0;
     for (let x = 0; x < this.MazeSize; x++) {
-      //console.log("howMany");
+      // console.log("howMany");
       this.array[x] = [];
     }
     for (let x = 0; x < this.MazeSize; x++) {
       for (let y = 0; y < this.MazeSize; y++) {
-        //console.log("HowManyY" + y);
+        // console.log("HowManyY" + y);
         this.array[x][y] = 1;
       }
     }
