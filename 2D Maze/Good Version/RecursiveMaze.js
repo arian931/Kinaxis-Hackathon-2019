@@ -3,7 +3,7 @@
 
 /* eslint-disable no-plusplus */
 
-module.exports = class RecursiveMaze {
+class RecursiveMaze {
   constructor() {
     console.log("recursive");
     this.array = [];
