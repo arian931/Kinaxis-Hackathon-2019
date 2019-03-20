@@ -5,7 +5,7 @@ keyPressed = function() {
 
 class main {} (x,y,speed,size) => {
    this.x = x;
-   this.y = y;
+   this.y = y; 
    this.speed = speed;
    this.size = size;
    this.update; {

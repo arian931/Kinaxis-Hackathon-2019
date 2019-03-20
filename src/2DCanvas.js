@@ -3,11 +3,11 @@ const ctx = canvas.getContext('2d'); // makes it so anything ctx. will appear on
 
 const blocker = document.getElementById('he'); // a div that overlaps the 3d canvas(dont worry about this)
 
-const switchTo3D = () => { //switches to 3d don't worry how it works
+const switchTo3D = () => { // switches to 3d don't worry how it works
   blocker.style.display = 'none';
 };
 
-const switchTo2D = () => { // switches to 2d don't worry how it works 
+const switchTo2D = () => { // switches to 2d don't worry how it works
   blocker.style.display = '';
 };
 
@@ -23,11 +23,15 @@ const image = new Image();
 image.id = 'pic';
 
 const gameLoop = () => {
-  ctx.clearRect(0, 0, canvas.width, canvas.height); //clears whole canvas so when you move something it does not leave a trail
+  ctx.clearRect(0, 0, canvas.width, canvas.height); // clears whole canvas so when you move something it does not leave a trail
   ctx.fillStyle = 'white';
-  ctx.fillRect(0, 0, canvas.width, canvas.height); //drawing the whole canvas a white background
+  ctx.fillRect(0, 0, canvas.width, canvas.height); // drawing the whole canvas a white background
+  
+};
 
-  /*
+setInterval(gameLoop, 33);
+
+/*
   -In here you put the game loop stuf so rendering moving stuff. 
   -This fucntion will run ever 33 miliseconds becuase of the function below it
   set inverval
@@ -55,6 +59,3 @@ const gameLoop = () => {
   // }
   // image.src = canvas.toDataURL(); //leave this here don't worry about it@
   // document.getElementById('he').appendChild(image); //leave this here don't worry about it
-};
-
-setInterval(gameLoop, 33);
