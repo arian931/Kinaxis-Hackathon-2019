@@ -1,11 +1,7 @@
-/* eslint-disable eqeqeq */
-
-
-/* eslint-disable no-plusplus */
-
+// eslint-disable-next-line no-unused-vars
 class RecursiveMaze {
-  constructor() {
-    console.log("recursive");
+  constructor(size) {
+    console.log('recursive');
     this.array = [];
     this.visitedPlacesX = [];
     this.visitedPlacesY = [];
@@ -29,19 +25,18 @@ class RecursiveMaze {
     this.howManyInDirectionR = 0;
     this.howManyInDirectionL = 0;
     this.testBool = false;
-    this.MazeSizeHeight = 50;
-    this.MazeSizeWidth = 100;
+    this.MazeSize = size + 1;
   }
 
   drawMap() {
     // let counter = 0;
     for (let x = 0; x < this.MazeSize; x++) {
-      //console.log("howMany");
+      // console.log("howMany");
       this.array[x] = [];
     }
     for (let x = 0; x < this.MazeSize; x++) {
       for (let y = 0; y < this.MazeSize; y++) {
-        //console.log("HowManyY" + y);
+        // console.log("HowManyY" + y);
         this.array[x][y] = 1;
       }
     }
@@ -76,9 +71,9 @@ class RecursiveMaze {
       this.startingLocationY = this.visitedPlacesY[this.whichMove];
       this.solidfiedCounter++;
       return true;
-    } else {
-      return false;
     }
+    return false;
+
   }
 
   test() {
@@ -92,7 +87,7 @@ class RecursiveMaze {
   }
 
   checkDirection() {
-    console.log("Check Direction");
+    console.log('Check Direction');
     let x = this.startingLocationX;
     let y = this.startingLocationY;
     // this.array[x][y] = 0;
@@ -124,13 +119,12 @@ class RecursiveMaze {
     }
     if (canGo) {
       return true;
-    } else {
-      return false;
     }
+    return false;
   }
 
   kill() {
-    console.log("kill");
+    console.log('kill');
     let choice = Math.floor(Math.random() * this.PossibleDirections.length);
     this.visitedPlacesX[this.whichMove] = this.startingLocationX;
     this.visitedPlacesY[this.whichMove] = this.startingLocationY;
