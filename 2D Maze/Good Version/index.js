@@ -31,11 +31,8 @@ function gameLoop() {
           ctx.fillRect(x * (canvas.width / row), y * (canvas.height / col), canvas.width / row, canvas.height / col);
           break;
       }
-      // if (x === 0 || x === row - 1 || y === 0 || y === row - 1) {
-      //   ctx.fillStyle = 'rgb(0,0,0)';
-      //   ctx.fillRect(x * (canvas.width / row), y * (canvas.height / col), canvas.width / row, canvas.height / col);
-      // }
+      
     }
   }
 }
-setInterval(gameLoop, 1000);
+setInterval(gameLoop, 33);
