@@ -223,9 +223,6 @@ const timer = () => {
       console.log("TIME LEFT IS ZERO GO BACK TO THE 2D Cavnas");
     }
   }
-  // console.log("Timer going down");
-  // console.log(timeLeft);
-  // console.log("hi");
   ctx.font = '75px TimesNewRoman';
   ctx.fillStyle = "black";
   ctx.fillText(timeLeft, canvas.width / 2 - 10, 100);

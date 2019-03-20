@@ -29,7 +29,8 @@ class RecursiveMaze {
     this.howManyInDirectionR = 0;
     this.howManyInDirectionL = 0;
     this.testBool = false;
-    this.MazeSize = 50;
+    this.MazeSizeHeight = 50;
+    this.MazeSizeWidth = 100;
   }
 
   drawMap() {
