@@ -1,6 +1,6 @@
 // eslint-disable-next-line no-unused-vars
 class RecursiveMaze {
-  constructor() {
+  constructor(size) {
     console.log('recursive');
     this.array = [];
     this.visitedPlacesX = [];
@@ -25,7 +25,7 @@ class RecursiveMaze {
     this.howManyInDirectionR = 0;
     this.howManyInDirectionL = 0;
     this.testBool = false;
-    this.MazeSize = 50;
+    this.MazeSize = size + 1;
   }
 
   drawMap() {
@@ -71,9 +71,9 @@ class RecursiveMaze {
       this.startingLocationY = this.visitedPlacesY[this.whichMove];
       this.solidfiedCounter++;
       return true;
-    } else {
-      return false;
-    }
+    } 
+    return false;
+    
   }
 
   test() {
@@ -119,9 +119,8 @@ class RecursiveMaze {
     }
     if (canGo) {
       return true;
-    } else {
-      return false;
-    }
+    } 
+    return false;
   }
 
   kill() {
