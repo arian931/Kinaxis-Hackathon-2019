@@ -1,16 +1,18 @@
+/* eslint-disable eqeqeq */
+/* eslint-disable no-plusplus */
+/* eslint-disable no-shadow */
 global.THREE = require('three');
 global.GLTFLoader = require('three-gltf-loader');
-const Floor = require('./Floor.js');
 
-require('./RecursiveMaze');
 require('./2DCanvas');
 require('./3DControls');
 const LevelOne = require('./LevelOne');
+
 const white = new THREE.Color('rgb(255, 255, 255)');
 // const black = new THREE.Color("rgb(0, 0, 0)");
 // const yellow = new THREE.Color("rgb(233, 255, 0)");
 // const green = new THREE.Color("rgb(0,255,0)");
-const blue = new THREE.Color('rgb(0,100,255)');
+// const blue = new THREE.Color('rgb(0,100,255)');
 // const red = new THREE.Color("rgb(255,0,0)");
 
 const scene = new THREE.Scene();
@@ -20,7 +22,12 @@ const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerH
 const controls = new THREE.PointerLockControls(camera);
 const renderer = new THREE.WebGLRenderer();
 
-const bottomRaycaster = new THREE.Raycaster(new THREE.Vector3(), new THREE.Vector3(0, -1, 0), 0, 10);
+const bottomRaycaster = new THREE.Raycaster(
+  new THREE.Vector3(),
+  new THREE.Vector3(0, -1, 0),
+  0,
+  10,
+);
 const topRaycaster = new THREE.Raycaster(new THREE.Vector3(), new THREE.Vector3(0, 1, 0), 0, 2);
 renderer.setPixelRatio(window.devicePixelRatio / 2);
 renderer.setSize(window.innerWidth, window.innerHeight);
@@ -42,9 +49,13 @@ const direction = new THREE.Vector3();
 const blocker = document.getElementById('blocker');
 const instructions = document.getElementById('instructions');
 
-instructions.addEventListener('click', () => {
-  controls.lock();
-}, false);
+instructions.addEventListener(
+  'click',
+  () => {
+    controls.lock();
+  },
+  false,
+);
 controls.addEventListener('lock', () => {
   instructions.style.display = 'none';
   blocker.style.display = 'none';
@@ -107,9 +118,9 @@ document.addEventListener('keyup', onKeyUp, false);
 
 // const floorClass = new Floor(1000, 1000, scene);
 // floorClass.addToScene();
-let sizeOfPlatforms = 30;
-let sizeOfJump = (sizeOfPlatforms / 2) + 50;
-console.log(sizeOfJump + " Size Of Jump");
+const sizeOfPlatforms = 30;
+const sizeOfJump = sizeOfPlatforms / 2 + 50;
+console.log(`${sizeOfJump} Size Of Jump`);
 
 const levelOne = new LevelOne(scene, renderer, camera, sizeOfJump, sizeOfPlatforms);
 levelOne.generateScene();
@@ -131,7 +142,7 @@ loader.load(
   },
   (xhr) => {
     // called while loading is progressing
-    console.log(`${(xhr.loaded / xhr.total * 100)}% loaded`);
+    console.log(`${(xhr.loaded / xhr.total) * 100}% loaded`);
   },
   (error) => {
     // called when loading has errors
@@ -180,7 +191,12 @@ const animate = () => {
       const globalVertex = localVertex.applyMatrix4(player.matrixWorld);
       const directionVector = globalVertex.sub(position);
 
-      const ray = new THREE.Raycaster(position, directionVector.clone().normalize(), 0, directionVector.length());
+      const ray = new THREE.Raycaster(
+        position,
+        directionVector.clone().normalize(),
+        0,
+        directionVector.length(),
+      );
       const collisionResults = ray.intersectObjects(collectibles);
       if (collisionResults.length > 0) {
         // a collision occurred... do something...
@@ -204,7 +220,7 @@ const animate = () => {
 animate(); // to start loop
 let timeLeft = 100;
 
-const scoreTimer = document.getElementById('scoreAndTimer3d');
+// const scoreTimer = document.getElementById('scoreAndTimer3d');
 const canvas = document.getElementById('scoreTimer'); // gets the canvas I want to use
 const ctx = canvas.getContext('2d'); // makes it so anything ctx. will appear on the canvas
 
@@ -220,13 +236,13 @@ const timer = () => {
     forTimer = 0;
     timeLeft -= 1;
     if (timeLeft <= 0) {
-      console.log("TIME LEFT IS ZERO GO BACK TO THE 2D Cavnas");
+      console.log('TIME LEFT IS ZERO GO BACK TO THE 2D Cavnas');
     }
   }
   ctx.font = '75px TimesNewRoman';
-  ctx.fillStyle = "black";
+  ctx.fillStyle = 'black';
   ctx.fillText(timeLeft, canvas.width / 2 - 10, 100);
-  ctx.fillStyle = "white";
+  ctx.fillStyle = 'white';
   ctx.fillText(levelOne.score, canvas.width - 100, canvas.height - 10);
   image.src = canvas.toDataURL();
   image.src = canvas.toDataURL();

@@ -51772,11 +51772,11 @@ const ctx = canvas.getContext('2d'); // makes it so anything ctx. will appear on
 
 const blocker = document.getElementById('he'); // a div that overlaps the 3d canvas(dont worry about this)
 
-const switchTo3D = () => { //switches to 3d don't worry how it works
+const switchTo3D = () => { // switches to 3d don't worry how it works
   blocker.style.display = 'none';
 };
 
-const switchTo2D = () => { // switches to 2d don't worry how it works 
+const switchTo2D = () => { // switches to 2d don't worry how it works
   blocker.style.display = '';
 };
 
@@ -51792,11 +51792,15 @@ const image = new Image();
 image.id = 'pic';
 
 const gameLoop = () => {
-  ctx.clearRect(0, 0, canvas.width, canvas.height); //clears whole canvas so when you move something it does not leave a trail
+  ctx.clearRect(0, 0, canvas.width, canvas.height); // clears whole canvas so when you move something it does not leave a trail
   ctx.fillStyle = 'white';
-  ctx.fillRect(0, 0, canvas.width, canvas.height); //drawing the whole canvas a white background
+  ctx.fillRect(0, 0, canvas.width, canvas.height); // drawing the whole canvas a white background
+  
+};
 
-  /*
+setInterval(gameLoop, 33);
+
+/*
   -In here you put the game loop stuf so rendering moving stuff. 
   -This fucntion will run ever 33 miliseconds becuase of the function below it
   set inverval
@@ -51824,10 +51828,6 @@ const gameLoop = () => {
   // }
   // image.src = canvas.toDataURL(); //leave this here don't worry about it@
   // document.getElementById('he').appendChild(image); //leave this here don't worry about it
-};
-
-setInterval(gameLoop, 33);
-
 },{}],4:[function(require,module,exports){
 const THREE = require('three');
 /**
@@ -51983,8 +51983,6 @@ module.exports = class Collectiable {
 };
 
 },{}],6:[function(require,module,exports){
-
-
 module.exports = class Floor {
   constructor(w, h, scene) {
     this.w = w;
@@ -51995,15 +51993,15 @@ module.exports = class Floor {
   addToScene() {
     const geometryFloor = new THREE.PlaneBufferGeometry(this.w, this.h);
     geometryFloor.rotateX(-Math.PI / 2);
-    const texture = new THREE.TextureLoader().load("/src/04muroverde.jpg");
+    const texture = new THREE.TextureLoader().load('/src/04muroverde.jpg');
     texture.wrapS = THREE.RepeatWrapping;
     texture.wrapT = THREE.RepeatWrapping;
     texture.repeat.set(10, 10);
     const material = new THREE.MeshBasicMaterial({
-      map: texture
+      map: texture,
     });
     // let material = new THREE.MeshLambertMaterial({ color: 0xffff00, side: THREE.DoubleSide });
-    let plane = new THREE.Mesh(geometryFloor, material);
+    const plane = new THREE.Mesh(geometryFloor, material);
     this.scene.add(plane);
   }
 };
@@ -52217,7 +52215,7 @@ module.exports = class LevelOne {
                         this.collectiblesCurrentIndex++;
                     }
                     this.platFormConstructor[x] = [xStair, yStair, zStair, this.sizeOfPlatforms, 20, this.white, this.scene, false, false, false];
-                    xStair += this.jumpDistance;
+                    xStair += this.jumpDistance / 2;
                     yStair -= 0;
                     zStair += 10;
                     this.currentIndex++;
@@ -52235,7 +52233,7 @@ module.exports = class LevelOne {
                         this.collectiblesCurrentIndex++;
                     }
                     this.platFormConstructor[x] = [xStair, yStair, zStair, this.sizeOfPlatforms, 20, this.yellow, this.scene, false, false, false];
-                    xStair -= this.jumpDistance;
+                    xStair -= this.jumpDistance / 2;
                     yStair -= 0;
                     zStair += 10;
                     this.currentIndex++;
@@ -52254,7 +52252,7 @@ module.exports = class LevelOne {
                     }
                     this.platFormConstructor[x] = [xStair, yStair, zStair, this.sizeOfPlatforms, 20, this.red, this.scene, false, false, false];
                     xStair -= 0;
-                    yStair -= this.jumpDistance;
+                    yStair -= this.jumpDistance / 2;
                     zStair += 10;
                     this.currentIndex++;
                 }
@@ -52272,7 +52270,7 @@ module.exports = class LevelOne {
                     }
                     this.platFormConstructor[x] = [xStair, yStair, zStair, this.sizeOfPlatforms, 20, this.green, this.scene, false, false, false];
                     xStair -= 0;
-                    yStair += this.jumpDistance;
+                    yStair += this.jumpDistance / 2;
                     zStair += 10;
                     this.currentIndex++;
                 }
@@ -52707,14 +52705,11 @@ module.exports = class Platform {
 };
 
 },{}],11:[function(require,module,exports){
-/* eslint-disable eqeqeq */
-
-
-/* eslint-disable no-plusplus */
-
+// eslint-disable-next-line no-unused-vars
 module.exports = class RecursiveMaze {
-  constructor() {
-    console.log("recursive");
+  constructor(size) {
+    // eslint-disable-next-line no-console
+    console.log('recursive');
     this.array = [];
     this.visitedPlacesX = [];
     this.visitedPlacesY = [];
@@ -52728,36 +52723,41 @@ module.exports = class RecursiveMaze {
     this.left = false;
     this.startingLocationX = 1;
     this.startingLocationY = 1;
+    // eslint-disable-next-line no-unused-expressions
     this.currentX;
+    // eslint-disable-next-line no-unused-expressions
     this.currentY;
     this.PossibleDirections = [];
     this.first = false;
+    // eslint-disable-next-line no-unused-expressions
     this.RCToIndex;
     this.howManyInDirectionF = 0;
     this.howManyInDirectionD = 0;
     this.howManyInDirectionR = 0;
     this.howManyInDirectionL = 0;
     this.testBool = false;
-    this.MazeSize = 50;
+    this.MazeSize = size + 1;
   }
 
   drawMap() {
     // let counter = 0;
     for (let x = 0; x < this.MazeSize; x++) {
-      //console.log("howMany");
+      // console.log("howMany");
       this.array[x] = [];
     }
     for (let x = 0; x < this.MazeSize; x++) {
       for (let y = 0; y < this.MazeSize; y++) {
-        //console.log("HowManyY" + y);
+        // console.log("HowManyY" + y);
         this.array[x][y] = 1;
       }
     }
     this.array[this.startingLocationX][this.startingLocationY] = 0;
+    // eslint-disable-next-line no-constant-condition
     while (true) {
       if (this.checkDirection()) {
         this.kill();
       } else {
+        // eslint-disable-next-line no-console
         console.log('check Direction = false;');
         if (!this.finalTest()) {
           // console.log("HUNT FAILED FOR SHO");
@@ -52775,18 +52775,19 @@ module.exports = class RecursiveMaze {
   }
 
   finalTest() {
+    // eslint-disable-next-line no-plusplus
     this.whichMove--;
-    if (this.whichMove != 0) {
+    if (this.whichMove !== 0) {
       // console.log("going back");
       // this.solidfiedX[this.solidfiedCounter] = this.visitedPlacesX[this.whichMove];
       // this.solidfiedY[this.solidfiedCounter] = this.visitedPlacesY[this.whichMove];
       this.startingLocationX = this.visitedPlacesX[this.whichMove];
       this.startingLocationY = this.visitedPlacesY[this.whichMove];
+      // eslint-disable-next-line no-plusplus
       this.solidfiedCounter++;
       return true;
-    } else {
-      return false;
     }
+    return false;
   }
 
   test() {
@@ -52800,31 +52801,32 @@ module.exports = class RecursiveMaze {
   }
 
   checkDirection() {
-    console.log("Check Direction");
-    let x = this.startingLocationX;
-    let y = this.startingLocationY;
+    // eslint-disable-next-line no-console
+    // console.log('Check Direction');
+    const x = this.startingLocationX;
+    const y = this.startingLocationY;
     // this.array[x][y] = 0;
     let canGo = false;
     this.PossibleDirections = [];
-    if (x + 2 < this.MazeSize - 1 && this.array[x + 2][y] == 1 && this.array[x + 1][y] == 1) {
+    if (x + 2 < this.MazeSize - 1 && this.array[x + 2][y] === 1 && this.array[x + 1][y] === 1) {
       // right
       // console.log("R");
       this.PossibleDirections.push('R');
       canGo = true;
     }
-    if (x - 2 > 0 && this.array[x - 2][y] == 1 && this.array[x - 1][y] == 1) {
+    if (x - 2 > 0 && this.array[x - 2][y] === 1 && this.array[x - 1][y] === 1) {
       // left
       // console.log("L");
       this.PossibleDirections.push('L');
       canGo = true;
     }
-    if (y + 2 < this.MazeSize - 1 && this.array[x][y + 2] == 1 && this.array[x][y + 1] == 1) {
+    if (y + 2 < this.MazeSize - 1 && this.array[x][y + 2] === 1 && this.array[x][y + 1] === 1) {
       // bottom
       // console.log("D");
       this.PossibleDirections.push('D');
       canGo = true;
     }
-    if (y - 2 > 0 && this.array[x][y - 2] == 1 && this.array[x][y - 1] == 1) {
+    if (y - 2 > 0 && this.array[x][y - 2] === 1 && this.array[x][y - 1] === 1) {
       // up
       // console.log("U");
       this.PossibleDirections.push('U');
@@ -52832,14 +52834,14 @@ module.exports = class RecursiveMaze {
     }
     if (canGo) {
       return true;
-    } else {
-      return false;
     }
+    return false;
   }
 
   kill() {
-    console.log("kill");
-    let choice = Math.floor(Math.random() * this.PossibleDirections.length);
+    // eslint-disable-next-line no-console
+    // console.log('kill');
+    const choice = Math.floor(Math.random() * this.PossibleDirections.length);
     this.visitedPlacesX[this.whichMove] = this.startingLocationX;
     this.visitedPlacesY[this.whichMove] = this.startingLocationY;
     switch (this.PossibleDirections[choice]) {
@@ -52870,9 +52872,11 @@ module.exports = class RecursiveMaze {
       default:
         break;
     }
+    // eslint-disable-next-line no-plusplus
     this.whichMove++;
   }
-}
+};
+
 },{}],12:[function(require,module,exports){
 
 
@@ -52916,19 +52920,21 @@ module.exports = class WallGenerator {
 
 },{}],13:[function(require,module,exports){
 (function (global){
+/* eslint-disable eqeqeq */
+/* eslint-disable no-plusplus */
+/* eslint-disable no-shadow */
 global.THREE = require('three');
 global.GLTFLoader = require('three-gltf-loader');
-const Floor = require('./Floor.js');
 
-require('./RecursiveMaze');
 require('./2DCanvas');
 require('./3DControls');
 const LevelOne = require('./LevelOne');
+
 const white = new THREE.Color('rgb(255, 255, 255)');
 // const black = new THREE.Color("rgb(0, 0, 0)");
 // const yellow = new THREE.Color("rgb(233, 255, 0)");
 // const green = new THREE.Color("rgb(0,255,0)");
-const blue = new THREE.Color('rgb(0,100,255)');
+// const blue = new THREE.Color('rgb(0,100,255)');
 // const red = new THREE.Color("rgb(255,0,0)");
 
 const scene = new THREE.Scene();
@@ -52938,7 +52944,12 @@ const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerH
 const controls = new THREE.PointerLockControls(camera);
 const renderer = new THREE.WebGLRenderer();
 
-const bottomRaycaster = new THREE.Raycaster(new THREE.Vector3(), new THREE.Vector3(0, -1, 0), 0, 10);
+const bottomRaycaster = new THREE.Raycaster(
+  new THREE.Vector3(),
+  new THREE.Vector3(0, -1, 0),
+  0,
+  10,
+);
 const topRaycaster = new THREE.Raycaster(new THREE.Vector3(), new THREE.Vector3(0, 1, 0), 0, 2);
 renderer.setPixelRatio(window.devicePixelRatio / 2);
 renderer.setSize(window.innerWidth, window.innerHeight);
@@ -52960,9 +52971,13 @@ const direction = new THREE.Vector3();
 const blocker = document.getElementById('blocker');
 const instructions = document.getElementById('instructions');
 
-instructions.addEventListener('click', () => {
-  controls.lock();
-}, false);
+instructions.addEventListener(
+  'click',
+  () => {
+    controls.lock();
+  },
+  false,
+);
 controls.addEventListener('lock', () => {
   instructions.style.display = 'none';
   blocker.style.display = 'none';
@@ -53025,9 +53040,9 @@ document.addEventListener('keyup', onKeyUp, false);
 
 // const floorClass = new Floor(1000, 1000, scene);
 // floorClass.addToScene();
-let sizeOfPlatforms = 30;
-let sizeOfJump = (sizeOfPlatforms / 2) + 50;
-console.log(sizeOfJump + " Size Of Jump");
+const sizeOfPlatforms = 30;
+const sizeOfJump = sizeOfPlatforms / 2 + 50;
+console.log(`${sizeOfJump} Size Of Jump`);
 
 const levelOne = new LevelOne(scene, renderer, camera, sizeOfJump, sizeOfPlatforms);
 levelOne.generateScene();
@@ -53049,7 +53064,7 @@ loader.load(
   },
   (xhr) => {
     // called while loading is progressing
-    console.log(`${(xhr.loaded / xhr.total * 100)}% loaded`);
+    console.log(`${(xhr.loaded / xhr.total) * 100}% loaded`);
   },
   (error) => {
     // called when loading has errors
@@ -53098,11 +53113,17 @@ const animate = () => {
       const globalVertex = localVertex.applyMatrix4(player.matrixWorld);
       const directionVector = globalVertex.sub(position);
 
-      const ray = new THREE.Raycaster(position, directionVector.clone().normalize(), 0, directionVector.length());
+      const ray = new THREE.Raycaster(
+        position,
+        directionVector.clone().normalize(),
+        0,
+        directionVector.length(),
+      );
       const collisionResults = ray.intersectObjects(collectibles);
       if (collisionResults.length > 0) {
         // a collision occurred... do something...
-        levelOne.collectibleCollision(collisionResults[0].object.position.x, collisionResults[0].object.position.y, collisionResults[0].object.position.z);
+        const { position } = collisionResults[0].object;
+        levelOne.collectibleCollision(position.x, position.y, position.z);
         console.log('collision');
       }
     }
@@ -53121,7 +53142,7 @@ const animate = () => {
 animate(); // to start loop
 let timeLeft = 100;
 
-const scoreTimer = document.getElementById('scoreAndTimer3d');
+// const scoreTimer = document.getElementById('scoreAndTimer3d');
 const canvas = document.getElementById('scoreTimer'); // gets the canvas I want to use
 const ctx = canvas.getContext('2d'); // makes it so anything ctx. will appear on the canvas
 
@@ -53137,16 +53158,13 @@ const timer = () => {
     forTimer = 0;
     timeLeft -= 1;
     if (timeLeft <= 0) {
-      console.log("TIME LEFT IS ZERO GO BACK TO THE 2D Cavnas");
+      console.log('TIME LEFT IS ZERO GO BACK TO THE 2D Cavnas');
     }
   }
-  // console.log("Timer going down");
-  // console.log(timeLeft);
-  // console.log("hi");
   ctx.font = '75px TimesNewRoman';
-  ctx.fillStyle = "black";
+  ctx.fillStyle = 'black';
   ctx.fillText(timeLeft, canvas.width / 2 - 10, 100);
-  ctx.fillStyle = "white";
+  ctx.fillStyle = 'white';
   ctx.fillText(levelOne.score, canvas.width - 100, canvas.height - 10);
   image.src = canvas.toDataURL();
   image.src = canvas.toDataURL();
@@ -53155,4 +53173,4 @@ const timer = () => {
 setInterval(timer, 100);
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./2DCanvas":3,"./3DControls":4,"./Floor.js":6,"./LevelOne":8,"./RecursiveMaze":11,"three":2,"three-gltf-loader":1}]},{},[13]);
+},{"./2DCanvas":3,"./3DControls":4,"./LevelOne":8,"three":2,"three-gltf-loader":1}]},{},[13]);
