@@ -1,3 +1,4 @@
+// eslint-disable-next-line no-unused-vars
 class MainCharacter {
   constructor(x, y) {
     this.image = new Image();
@@ -20,5 +21,4 @@ class MainCharacter {
   draw(context) {
     context.drawImage(this.image, 0, 0, 128, 128, 0, 0, this.width, this.height);
   }
-
 }

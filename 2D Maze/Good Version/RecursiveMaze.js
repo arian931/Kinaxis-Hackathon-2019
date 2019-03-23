@@ -45,6 +45,7 @@ class RecursiveMaze {
       }
     }
     this.array[this.startingLocationX][this.startingLocationY] = 0;
+    // eslint-disable-next-line no-constant-condition
     while (true) {
       if (this.checkDirection()) {
         this.kill();
@@ -94,7 +95,7 @@ class RecursiveMaze {
 
   checkDirection() {
     // eslint-disable-next-line no-console
-    //console.log('Check Direction');
+    // console.log('Check Direction');
     const x = this.startingLocationX;
     const y = this.startingLocationY;
     // this.array[x][y] = 0;
@@ -132,7 +133,7 @@ class RecursiveMaze {
 
   kill() {
     // eslint-disable-next-line no-console
-    //console.log('kill');
+    // console.log('kill');
     const choice = Math.floor(Math.random() * this.PossibleDirections.length);
     this.visitedPlacesX[this.whichMove] = this.startingLocationX;
     this.visitedPlacesY[this.whichMove] = this.startingLocationY;

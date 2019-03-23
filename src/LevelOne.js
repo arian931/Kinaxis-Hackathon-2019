@@ -171,7 +171,7 @@ module.exports = class LevelOne {
                         this.collectiblesCurrentIndex++;
                     }
                     this.platFormConstructor[x] = [xStair, yStair, zStair, this.sizeOfPlatforms, 20, this.white, this.scene, false, false, false];
-                    xStair += this.jumpDistance;
+                    xStair += this.jumpDistance / 2;
                     yStair -= 0;
                     zStair += 10;
                     this.currentIndex++;
@@ -189,7 +189,7 @@ module.exports = class LevelOne {
                         this.collectiblesCurrentIndex++;
                     }
                     this.platFormConstructor[x] = [xStair, yStair, zStair, this.sizeOfPlatforms, 20, this.yellow, this.scene, false, false, false];
-                    xStair -= this.jumpDistance;
+                    xStair -= this.jumpDistance / 2;
                     yStair -= 0;
                     zStair += 10;
                     this.currentIndex++;
@@ -208,7 +208,7 @@ module.exports = class LevelOne {
                     }
                     this.platFormConstructor[x] = [xStair, yStair, zStair, this.sizeOfPlatforms, 20, this.red, this.scene, false, false, false];
                     xStair -= 0;
-                    yStair -= this.jumpDistance;
+                    yStair -= this.jumpDistance / 2;
                     zStair += 10;
                     this.currentIndex++;
                 }
@@ -226,7 +226,7 @@ module.exports = class LevelOne {
                     }
                     this.platFormConstructor[x] = [xStair, yStair, zStair, this.sizeOfPlatforms, 20, this.green, this.scene, false, false, false];
                     xStair -= 0;
-                    yStair += this.jumpDistance;
+                    yStair += this.jumpDistance / 2;
                     zStair += 10;
                     this.currentIndex++;
                 }
