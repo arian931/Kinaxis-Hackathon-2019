@@ -4,7 +4,7 @@ const ctx = canvas.getContext('2d');
 const tilemap = new Image();
 tilemap.src = '../../Art/2D/tilemap.png';
 
-canvas.width = window.innerHeight;
+canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
 
 let mapArray;
