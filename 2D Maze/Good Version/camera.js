@@ -1,3 +1,4 @@
+// eslint-disable-next-line no-unused-vars
 class PlayerCamera {
   constructor(player, width, height) {
     this.player = player;
@@ -15,5 +16,4 @@ class PlayerCamera {
   draw(context, buffer) {
     context.drawImage(buffer.canvas, Math.max(0, this.x), Math.max(0, this.y), this.width, this.height, 0, 0, context.canvas.width, context.canvas.height);
   }
-
 }
