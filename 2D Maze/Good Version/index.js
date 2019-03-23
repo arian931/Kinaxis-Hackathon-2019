@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 const canvas = document.getElementById('2DMaze');
 const ctx = canvas.getContext('2d');
 
@@ -5,7 +6,7 @@ const tilemap = new Image();
 tilemap.src = '../../Art/2D/tilemap.png';
 
 canvas.width = window.innerHeight;
-canvas.height = window.innerHeight;
+canvas.height = window.innerWidth;
 
 let mapArray;
 
@@ -23,7 +24,7 @@ mapArray = Recursive.array;
 const buffer = document.createElement('CANVAS').getContext('2d');
 buffer.canvas.width = 128 * row;
 buffer.canvas.height = 128 * col;
-console.log(buffer.canvas.width + ' ' + buffer.canvas.height);
+console.log(`${buffer.canvas.width} ${buffer.canvas.height}`);
 // buffer.drawImage(tilemap, 0, 0);
 
 // Create the image buffer of the map.
@@ -43,20 +44,21 @@ tilemap.onload = () => {
             } else {
               buffer.drawImage(tilemap, 128, 0, 128, 128, 128 * x, 128 * y, 128, 128);
             }
+          } else if (
+            (mapArray[x][y + 1] === 0 && mapArray[x][y - 1] === 0)
+            || (mapArray[x][y + 1] === 0 && mapArray[x][y - 1] === 1)
+          ) {
+            buffer.drawImage(tilemap, 0, 0, 128, 128, 128 * x, 128 * y, 128, 128);
           } else {
-            if (mapArray[x][y + 1] === 0 && mapArray[x][y - 1] === 0 || mapArray[x][y + 1] === 0 && mapArray[x][y - 1] === 1) {
-              buffer.drawImage(tilemap, 0, 0, 128, 128, 128 * x, 128 * y, 128, 128);
-            } else {
-              buffer.drawImage(tilemap, 128, 0, 128, 128, 128 * x, 128 * y, 128, 128);
-            }
+            buffer.drawImage(tilemap, 128, 0, 128, 128, 128 * x, 128 * y, 128, 128);
           }
           break;
-        default: break;
+        default:
+          break;
       }
     }
   }
 };
-
 document.addEventListener('keydown', (event) => {
   switch (event.code) {
     case 'KeyD':
@@ -71,7 +73,8 @@ document.addEventListener('keydown', (event) => {
     case 'KeyS':
       Player.yDir = 1;
       break;
-    default: break;
+    default:
+      break;
   }
 });
 
@@ -89,13 +92,12 @@ document.addEventListener('keyup', (event) => {
     case 'KeyS':
       Player.yDir = 0;
       break;
-    default: break;
+    default:
+      break;
   }
 });
 
-
 function gameLoop() {
-
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   /*
   for (let x = 0; x < row; x++) {
