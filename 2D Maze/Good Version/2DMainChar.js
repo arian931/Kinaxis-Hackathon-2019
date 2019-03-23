@@ -18,7 +18,7 @@ class MainCharacter {
   }
 
   draw(context) {
-    context.drawImage(this.image, 0, 0, 128, 128, this.x, this.y, this.width, this.height);
+    context.drawImage(this.image, 0, 0, 128, 128, 0, 0, this.width, this.height);
   }
 
 }
