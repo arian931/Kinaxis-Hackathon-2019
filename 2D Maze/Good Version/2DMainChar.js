@@ -2,7 +2,7 @@
 class MainCharacter {
   constructor(x, y, context) {
     this.image = new Image();
-    this.image.src = '../../Art/2D/female2_spritesheet.png';
+    this.image.src = '../../Art/2D/male1_spritesheet.png';
     this.camera = undefined;
     this.x = x;
     this.y = y;
@@ -10,10 +10,10 @@ class MainCharacter {
     this.height = 128;
     this.xDir = 0;
     this.yDir = 0;
-    this.speed = 220;
+    this.speed = 240;
     this.hSpeed = 0;
     this.vSpeed = 0;
-    this.animationSpeed = 0.2;
+    this.animationSpeed = 0.21;
     this.spriteDir = 0; // 0 = right, 1 = down, 2 = left, 3 = up.
     this.spriteIndexX = 0;
     this.spriteIndexY = 0;

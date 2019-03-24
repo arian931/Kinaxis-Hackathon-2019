@@ -41,13 +41,13 @@ Camera.attachBuffer(buffer);
 tilemap.onload = () => {
   for (let y = 0; y < mapSize; y++) {
     for (let x = 0; x < mapSize; x++) {
-      // buffer.drawImage(tilemap, 0, 0, 128, 128, 0, 0, 128, 128);
       switch (mapArray[x][y]) {
-        case 0:
-          buffer.drawImage(tilemap, 128 * 2, 0, 128, 128, 128 * x, 128 * y, 128, 128);
+        case 0: // Ground
+          // 3 different ground tiles(2, 3, 4).
+          // https://stackoverflow.com/a/4960020 for random number between two numbers.
+          buffer.drawImage(tilemap, 128 * Math.floor(Math.random() * (4 - 2 + 1) + 2), 0, 128, 128, 128 * x, 128 * y, 128, 128);
           break;
         case 1: // Walls
-          // buffer.drawImage(tilemap, 0, 0, 128, 128, 128 * x, 128 * y, 128, 128);
           if (y - 1 < 0) {
             if (mapArray[x][y + 1] === 0) {
               buffer.drawImage(tilemap, 0, 0, 128, 128, 128 * x, 128 * y, 128, 128);
