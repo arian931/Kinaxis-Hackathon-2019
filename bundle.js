@@ -52948,9 +52948,9 @@ const bottomRaycaster = new THREE.Raycaster(
   new THREE.Vector3(),
   new THREE.Vector3(0, -1, 0),
   0,
-  10,
+  20,
 );
-const topRaycaster = new THREE.Raycaster(new THREE.Vector3(), new THREE.Vector3(0, 1, 0), 0, 2);
+// const topRaycaster = new THREE.Raycaster(new THREE.Vector3(), new THREE.Vector3(0, 1, 0), 0, 2);
 renderer.setPixelRatio(window.devicePixelRatio / 2);
 renderer.setSize(window.innerWidth, window.innerHeight);
 document.body.appendChild(renderer.domElement);
@@ -53085,14 +53085,14 @@ const animate = () => {
     // console.log();
     bottomRaycaster.ray.origin.copy(position);
     // // bottomRaycaster.ray.origin.y -= 10;
-    topRaycaster.ray.origin.copy(position);
+    // topRaycaster.ray.origin.copy(position);
     const platforms = levelOne.platFormsClass.map(x => x.cubeFor);
     const collectibles = levelOne.collectibles.map(x => x.cubeFor);
     const bottomIntersections = bottomRaycaster.intersectObjects(platforms);
-    const topIntersections = topRaycaster.intersectObjects(platforms);
-    const onObject = bottomIntersections.length > 0;
+    // const topIntersections = topRaycaster.intersectObjects(platforms);
+    // const onObject = ;
     // console.log(bottomIntersections.length);
-    const headHit = topIntersections.length > 0;
+    // const headHit = topIntersections.length > 0;
     time = performance.now();
     delta = (time - prevTime) / 1000;
     velocity.x -= velocity.x * 10.0 * delta;
@@ -53103,11 +53103,12 @@ const animate = () => {
     direction.normalize(); // this ensures consistent movements in all directions
     if (moveForward || moveBackward) velocity.z -= direction.z * 1000.0 * delta;
     if (moveLeft || moveRight) velocity.x -= direction.x * 1000.0 * delta;
-    if (onObject) {
+    if (bottomIntersections.length > 0) {
       velocity.y = Math.max(0, velocity.y);
+      // controls.getObject().position.set(0, bottomIntersections[0].y + 10, 0);
       canJump = true;
     }
-    if (headHit && velocity.y > 0) velocity.y = 0;
+    // if (headHit && velocity.y > 0) velocity.y = 0;
     for (let vertexIndex = 0; vertexIndex < player.geometry.vertices.length; vertexIndex++) {
       const localVertex = player.geometry.vertices[vertexIndex].clone();
       const globalVertex = localVertex.applyMatrix4(player.matrixWorld);
@@ -53130,10 +53131,14 @@ const animate = () => {
     controls.getObject().translateX(velocity.x * delta);
     controls.getObject().translateY(velocity.y * delta);
     controls.getObject().translateZ(velocity.z * delta);
+    if (bottomIntersections.length > 0 && position.y < bottomIntersections[0].object.position.y + 20) {
+      controls.getObject().position.y = bottomIntersections[0].object.position.y + 20;
+      // controls.getObject().position.set(position.x, bottomIntersections[0].object.y + 10, position.z);
+    }
     if (position.y < -50) {
-      velocity.y = 0;
+      // velocity.y = 0;
       controls.getObject().position.set(0, 10, 0);
-      canJump = true;
+      // canJump = true;
     }
     prevTime = time;
   }
