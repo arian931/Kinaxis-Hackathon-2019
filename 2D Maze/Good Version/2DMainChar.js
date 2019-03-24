@@ -2,7 +2,7 @@
 class MainCharacter {
   constructor(x, y, context) {
     this.image = new Image();
-    this.image.src = '../../Art/2D/male1_spritesheet.png';
+    this.image.src = '../../Art/2D/male2_spritesheet.png';
     this.camera = undefined;
     this.x = x;
     this.y = y;

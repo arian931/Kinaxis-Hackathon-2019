@@ -63,6 +63,11 @@ tilemap.onload = () => {
             buffer.drawImage(tilemap, 128, 0, 128, 128, 128 * x, 128 * y, 128, 128);
           }
           break;
+        case 3: // Exit
+          // 3 different ground tiles(2, 3, 4).
+          // https://stackoverflow.com/a/4960020 for random number between two numbers.
+          buffer.drawImage(tilemap, 128 * Math.floor(Math.random() * (4 - 2 + 1) + 2), 0, 128, 128, 128 * x, 128 * y, 128, 128);
+          break;
         default:
           break;
       }
