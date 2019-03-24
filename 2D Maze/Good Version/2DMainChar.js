@@ -13,8 +13,7 @@ class MainCharacter {
     this.speed = 220;
     this.hSpeed = 0;
     this.vSpeed = 0;
-    this.animationSpeedInit = 0.2;
-    this.animationSpeed = this.animationSpeedInit;
+    this.animationSpeed = 0.2;
     this.spriteDir = 0; // 0 = right, 1 = down, 2 = left, 3 = up.
     this.spriteIndexX = 0;
     this.spriteIndexY = 0;
