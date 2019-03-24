@@ -23,7 +23,7 @@ let worldPosY = 0;
 // eslint-disable-next-line no-undef
 
 const Recursive = new RecursiveMaze(mapSize);
-const Player = new MainCharacter(128 * 4, 128 * 4, ctx);
+const Player = new MainCharacter(128, 128, ctx);
 const Camera = new PlayerCamera(ctx);
 Camera.attachTo(Player);
 Recursive.drawMap();
