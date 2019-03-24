@@ -1,3 +1,4 @@
+/* eslint-disable eqeqeq */
 /* eslint-disable radix */
 // eslint-disable-next-line no-unused-vars
 class MainCharacter {
@@ -19,9 +20,15 @@ class MainCharacter {
     this.spriteIndexX = 0;
     this.spriteIndexY = 0;
     this.context = context;
+    this.CWidth = width;
+    this.CHeight = height;
+    this.mazeSize = mazeSize;
+    this.mazeArray = mazeArray;
   }
 
   update(dt) {
+    this.posX = parseInt((this.x + 64) / ((this.CWidth * 128) / this.CWidth));
+    this.posY = parseInt((this.y + 64) / ((this.CHeight * 128) / this.CHeight));
     // 0.7071 is a magic constant for diagonal movement.
     this.hSpeed = (this.xDir !== 0 && this.yDir !== 0 ? this.speed * 0.7071 : this.speed) * this.xDir;
     this.vSpeed = (this.xDir !== 0 && this.yDir !== 0 ? this.speed * 0.7071 : this.speed) * this.yDir;
@@ -62,6 +69,7 @@ class MainCharacter {
   }
 
   checkMovePosX() {
+    console.log('check move pos x');
     if (this.posX <= 1) {
       this.posX = 2;
     }
@@ -74,12 +82,18 @@ class MainCharacter {
     if (this.posY >= this.mazeSize - 1) {
       this.posY = this.mazeSize - 2;
     }
-    for (let x = this.posX - 2; x < this.posX + 2; x++) {
-      for (let y = this.posY - 2; y < this.mazeSize + 2; y++) {
-        // console.log(`${x} x`);
-        // console.log(`${y}d y`);
-        // console.log(this.mazeArray[x][y]);
-        // console.log('array');
+    for (let x = 0; x < this.mazeSize; x++) {
+      for (let y = 0; y < this.mazeSize; y++) {
+        if (this.mazeArray[x][y] == 1) {
+          if (
+            this.x + this.width >= x * 128
+            && this.y + this.height >= (y + 1) * 128
+            && this.y <= y * 128
+          ) {
+            console.log('hitting wall');
+            return false;
+          }
+        }
       }
     }
     return true;
