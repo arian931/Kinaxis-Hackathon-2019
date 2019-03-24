@@ -16,8 +16,9 @@ class MainCharacter {
   }
 
   update(dt) {
-    this.x += this.speed * this.xDir * dt;
-    this.y += this.speed * this.yDir * dt;
+    // 0.7071 is a magic constant for diagonal movement.
+    this.x += (this.xDir !== 0 && this.yDir !== 0 ? this.speed * 0.7071 : this.speed) * this.xDir * dt;
+    this.y += (this.xDir !== 0 && this.yDir !== 0 ? this.speed * 0.7071 : this.speed) * this.yDir * dt;
   }
 
 
