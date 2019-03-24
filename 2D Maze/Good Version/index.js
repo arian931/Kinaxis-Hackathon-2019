@@ -122,10 +122,10 @@ function update() {
   // move the world position as the player moves. We use the world position as the camera's
   // position and subtract the world position from the player's position(this makes the player move with the camera).
   if (Player.x + Player.width / 2 > Camera.vWidth / 2 && Player.x + Player.width / 2 < buffer.canvas.width - Camera.vWidth / 2) {
-    worldPosX += Player.speed * Player.xDir * dt;
+    worldPosX += Player.hSpeed * dt;
   }
   if (Player.y + Player.height / 2 > Camera.vHeight / 2 && Player.y + Player.height / 2 < buffer.canvas.height - Camera.vHeight / 2) {
-    worldPosY += Player.speed * Player.yDir * dt;
+    worldPosY += Player.vSpeed * dt;
   }
   // Lock the world position
   if (worldPosX <= 0) {
