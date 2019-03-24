@@ -1,24 +1,28 @@
 /* eslint-disable no-undef */
 const canvas = document.getElementById('2DMaze');
 const ctx = canvas.getContext('2d');
-
-const tilemap = new Image();
-tilemap.src = '../../Art/2D/tilemap.png';
-
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
 
+// Load the tilemap.
+const tilemap = new Image();
+tilemap.src = '../../Art/2D/tilemap.png';
+
+// Map stuff.
 let mapArray;
+const mapSize = 29;
 
-const row = 29;
-const col = 29;
+// FPS
+let dt = 0;
+let lastTime = Date.now();
 
+// Define world position variables.
 let worldPosX = 0;
 let worldPosY = 0;
 
 // eslint-disable-next-line no-undef
 
-const Recursive = new RecursiveMaze(row);
+const Recursive = new RecursiveMaze(mapSize);
 const Player = new MainCharacter(128 * 4, 128 * 4, ctx);
 const Camera = new PlayerCamera(ctx);
 Camera.attachTo(Player);
@@ -26,17 +30,17 @@ Recursive.drawMap();
 // eslint-disable-next-line prefer-const
 mapArray = Recursive.array;
 
+// Create the buffer image of the map.
 const buffer = document.createElement('CANVAS').getContext('2d');
-buffer.canvas.width = 128 * row;
-buffer.canvas.height = 128 * col;
+buffer.canvas.width = 128 * mapSize;
+buffer.canvas.height = 128 * mapSize;
 Camera.attachBuffer(buffer);
-console.log(`${buffer.canvas.width} ${buffer.canvas.height}`);
-// buffer.drawImage(tilemap, 0, 0);
+// console.log(`${buffer.canvas.width} ${buffer.canvas.height}`);
 
 // Create the image buffer of the map.
 tilemap.onload = () => {
-  for (let y = 0; y < col; y++) {
-    for (let x = 0; x < row; x++) {
+  for (let y = 0; y < mapSize; y++) {
+    for (let x = 0; x < mapSize; x++) {
       // buffer.drawImage(tilemap, 0, 0, 128, 128, 0, 0, 128, 128);
       switch (mapArray[x][y]) {
         case 0:
@@ -65,13 +69,6 @@ tilemap.onload = () => {
     }
   }
 };
-document.addEventListener('keypress', (event) => {
-  switch (event.code) {
-    case 'KeyF':
-      cX += 1000;
-      break;
-  }
-});
 
 document.addEventListener('keydown', (event) => {
   switch (event.code) {
@@ -111,8 +108,53 @@ document.addEventListener('keyup', (event) => {
   }
 });
 
-function gameLoop() {
+function update() {
+
+  // Calucute delta time.
+  const nowTime = Date.now();
+  dt = (nowTime - lastTime) / 1000;
+  lastTime = nowTime;
+  //console.log(deltaTime);
+
+  // Update global position.
+  // If the player moves half the distance of the camera's view dimensions
+  // from the edges of the buffer(left = 0, top = 0, right = 128*col bottom = 128*row), it'll
+  // move the world position as the player moves. We use the world position as the camera's
+  // position and subtract the world position from the player's position(this makes the player move with the camera).
+  if (Player.x + Player.width / 2 > Camera.vWidth / 2 && Player.x + Player.width / 2 < buffer.canvas.width - Camera.vWidth / 2) {
+    worldPosX += Player.speed * Player.xDir * dt;
+  }
+  if (Player.y + Player.height / 2 > Camera.vHeight / 2 && Player.y + Player.height / 2 < buffer.canvas.height - Camera.vHeight / 2) {
+    worldPosY += Player.speed * Player.yDir * dt;
+  }
+  // Lock the world position
+  if (worldPosX <= 0) {
+    worldPosX = 0;
+  } else if (worldPosX >= buffer.canvas.width - Camera.vWidth) {
+    worldPosX = buffer.canvas.width - Camera.vWidth;
+  }
+  if (worldPosY <= 0) {
+    worldPosY = 0;
+  } else if (worldPosY >= buffer.canvas.height - canvas.height) {
+    worldPosY = buffer.canvas.height - canvas.height;
+  }
+
+  // Update the objects.
+  Player.update(dt);
+  Camera.update(dt);
+}
+
+function draw() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
+  Camera.draw(worldPosX, worldPosY);
+  Player.draw(ctx, worldPosX, worldPosY);
+}
+
+function gameLoop() {
+  window.requestAnimationFrame(gameLoop);
+  update();
+  draw();
+  // Draws the maze.
   /*
   for (let x = 0; x < row; x++) {
     for (let y = 0; y < col; y++) {
@@ -132,27 +174,7 @@ function gameLoop() {
     }
   }
   */
-  // Update objects.
-  if (Player.x + Player.width / 2 > Camera.vWidth / 2 && Player.x + Player.width / 2 < buffer.canvas.width - Camera.vWidth / 2) {
-    worldPosX += Player.speed * Player.xDir;
-  }
-  if (Player.y + Player.height / 2 > Camera.vHeight / 2 && Player.y + Player.height / 2 < buffer.canvas.height - Camera.vHeight / 2) {
-    worldPosY += Player.speed * Player.yDir;
-  }
-  if (worldPosX <= 0) {
-    worldPosX = 0;
-  } else if (worldPosX >= buffer.canvas.width - Camera.vWidth) {
-    worldPosX = buffer.canvas.width - Camera.vWidth;
-  }
-  if (worldPosY <= 0) {
-    worldPosY = 0;
-  } else if (worldPosY >= buffer.canvas.height - canvas.height) {
-    worldPosY = buffer.canvas.height - canvas.height;
-  }
-  Player.update(buffer);
-  Camera.update();
-  Camera.draw(worldPosX, worldPosY);
-  Player.draw(ctx, worldPosX, worldPosY);
   // console.log('Player: (' + Player.x + ', ' + Player.y + ')\nCamera: (' + Camera.x + ', ' + Camera.y + ')');
 }
-setInterval(gameLoop, 33);
+// setInterval(gameLoop, 33);
+window.requestAnimationFrame(gameLoop);

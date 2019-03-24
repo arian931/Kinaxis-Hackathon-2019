@@ -5,8 +5,6 @@ class PlayerCamera {
     this.ctx = ctx;
     this.vWidth = ctx.canvas.width;
     this.vHeight = ctx.canvas.height;
-    this.x = 0;
-    this.y = 0;
     this.xDir = 0;
     this.yDir = 0;
     this.buffer = undefined;
@@ -14,13 +12,14 @@ class PlayerCamera {
 
   attachTo(player) {
     this.player = player;
+
   }
 
   attachBuffer(buffer) {
     this.buffer = buffer;
   }
 
-  update() {
+  update(dt) {
     if (this.player !== undefined) {
       this.x = this.player.x - this.player.width / 2 - this.vWidth / 2;
       this.y = this.player.y - this.player.height / 2 - this.vHeight / 2;

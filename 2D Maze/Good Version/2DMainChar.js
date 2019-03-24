@@ -10,14 +10,14 @@ class MainCharacter {
     this.height = 128;
     this.xDir = 0;
     this.yDir = 0;
-    this.speed = 10;
+    this.speed = 220;
     this.animationSpeed = 0.2;
     this.context = context;
   }
 
-  update(buffer) {
-    this.x += this.speed * this.xDir;
-    this.y += this.speed * this.yDir;
+  update(dt) {
+    this.x += this.speed * this.xDir * dt;
+    this.y += this.speed * this.yDir * dt;
   }
 
 
