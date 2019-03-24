@@ -13,10 +13,15 @@ let mapArray;
 const row = 29;
 const col = 29;
 
+let worldPosX = 0;
+let worldPosY = 0;
+
 // eslint-disable-next-line no-undef
+
 const Recursive = new RecursiveMaze(row);
-const Player = new MainCharacter(0, 0);
-const Camera = new PlayerCamera(Player, canvas.width, canvas.height);
+const Player = new MainCharacter(128 * 4, 128 * 4, ctx);
+const Camera = new PlayerCamera(ctx);
+Camera.attachTo(Player);
 Recursive.drawMap();
 // eslint-disable-next-line prefer-const
 mapArray = Recursive.array;
@@ -24,6 +29,7 @@ mapArray = Recursive.array;
 const buffer = document.createElement('CANVAS').getContext('2d');
 buffer.canvas.width = 128 * row;
 buffer.canvas.height = 128 * col;
+Camera.attachBuffer(buffer);
 console.log(`${buffer.canvas.width} ${buffer.canvas.height}`);
 // buffer.drawImage(tilemap, 0, 0);
 
@@ -59,6 +65,14 @@ tilemap.onload = () => {
     }
   }
 };
+document.addEventListener('keypress', (event) => {
+  switch (event.code) {
+    case 'KeyF':
+      cX += 1000;
+      break;
+  }
+});
+
 document.addEventListener('keydown', (event) => {
   switch (event.code) {
     case 'KeyD':
@@ -84,7 +98,7 @@ document.addEventListener('keyup', (event) => {
       Player.xDir = 0;
       break;
     case 'KeyA':
-      Player.xDir = -0;
+      Player.xDir = 0;
       break;
     case 'KeyW':
       Player.yDir = 0;
@@ -118,23 +132,27 @@ function gameLoop() {
     }
   }
   */
-  // Draw the map.
-  /*
-  ctx.drawImage(
-    buffer.canvas,
-    Math.max(0, Player.x + Player.width / 2 - canvas.width / 2),
-    Math.max(0, Player.y + Player.height / 2 - canvas.height / 2),
-    canvas.width, canvas.height,
-    0,
-    0,
-    canvas.width, canvas.height
-  );
-  */
   // Update objects.
-  Player.update();
+  if (Player.x + Player.width / 2 > Camera.vWidth / 2 && Player.x + Player.width / 2 < buffer.canvas.width - Camera.vWidth / 2) {
+    worldPosX += Player.speed * Player.xDir;
+  }
+  if (Player.y + Player.height / 2 > Camera.vHeight / 2 && Player.y + Player.height / 2 < buffer.canvas.height - Camera.vHeight / 2) {
+    worldPosY += Player.speed * Player.yDir;
+  }
+  if (worldPosX <= 0) {
+    worldPosX = 0;
+  } else if (worldPosX >= buffer.canvas.width - Camera.vWidth) {
+    worldPosX = buffer.canvas.width - Camera.vWidth;
+  }
+  if (worldPosY <= 0) {
+    worldPosY = 0;
+  } else if (worldPosY >= buffer.canvas.height - canvas.height) {
+    worldPosY = buffer.canvas.height - canvas.height;
+  }
+  Player.update(buffer);
   Camera.update();
-  Camera.draw(ctx, buffer);
-  Player.draw(ctx);
+  Camera.draw(worldPosX, worldPosY);
+  Player.draw(ctx, worldPosX, worldPosY);
   // console.log('Player: (' + Player.x + ', ' + Player.y + ')\nCamera: (' + Camera.x + ', ' + Camera.y + ')');
 }
 setInterval(gameLoop, 33);

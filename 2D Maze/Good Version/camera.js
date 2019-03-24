@@ -1,19 +1,33 @@
 // eslint-disable-next-line no-unused-vars
 class PlayerCamera {
-  constructor(player, width, height) {
+  constructor(ctx) {
+    this.player = undefined;
+    this.ctx = ctx;
+    this.vWidth = ctx.canvas.width;
+    this.vHeight = ctx.canvas.height;
+    this.x = 0;
+    this.y = 0;
+    this.xDir = 0;
+    this.yDir = 0;
+    this.buffer = undefined;
+  }
+
+  attachTo(player) {
     this.player = player;
-    this.width = width;
-    this.height = height;
-    this.x = this.player.x;
-    this.y = this.player.y;
+  }
+
+  attachBuffer(buffer) {
+    this.buffer = buffer;
   }
 
   update() {
-    this.x = this.player.x - this.width / 2;
-    this.y = this.player.y - this.height / 2;
+    if (this.player !== undefined) {
+      this.x = this.player.x - this.player.width / 2 - this.vWidth / 2;
+      this.y = this.player.y - this.player.height / 2 - this.vHeight / 2;
+    }
   }
 
-  draw(context, buffer) {
-    context.drawImage(buffer.canvas, Math.max(0, this.x), Math.max(0, this.y), this.width, this.height, 0, 0, context.canvas.width, context.canvas.height);
+  draw(worldPosX, worldPosY) {
+    this.ctx.drawImage(this.buffer.canvas, worldPosX, worldPosY, this.vWidth, this.vHeight, 0, 0, this.ctx.canvas.width, this.ctx.canvas.height);
   }
 }
