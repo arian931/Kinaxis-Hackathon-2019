@@ -5,8 +5,8 @@ const ctx = canvas.getContext('2d');
 const tilemap = new Image();
 tilemap.src = '../../Art/2D/tilemap.png';
 
-canvas.width = window.innerHeight;
-canvas.height = window.innerWidth;
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
 
 let mapArray;
 
@@ -15,11 +15,20 @@ const col = 29;
 
 // eslint-disable-next-line no-undef
 const Recursive = new RecursiveMaze(row);
-const Player = new MainCharacter(0, 0);
-const Camera = new PlayerCamera(Player, canvas.width, canvas.height);
 Recursive.drawMap();
 // eslint-disable-next-line prefer-const
 mapArray = Recursive.array;
+const Player = new MainCharacter(
+  (canvas.width / Recursive.MazeSize) * 2,
+  (canvas.height / Recursive.MazeSize) * 2 * 2,
+  canvas.width,
+  canvas.height,
+  Recursive.MazeSize,
+  mapArray,
+);
+const Camera = new PlayerCamera(Player, canvas.width, canvas.height);
+
+// eslint-disable-next-line prefer-const
 
 const buffer = document.createElement('CANVAS').getContext('2d');
 buffer.canvas.width = 128 * row;
@@ -62,7 +71,10 @@ tilemap.onload = () => {
 document.addEventListener('keydown', (event) => {
   switch (event.code) {
     case 'KeyD':
-      Player.xDir = 1;
+      if (Player.checkMovePosX()) {
+        console.log('+X');
+        Player.xDir = 1;
+      }
       break;
     case 'KeyA':
       Player.xDir = -1;
