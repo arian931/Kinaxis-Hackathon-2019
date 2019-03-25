@@ -110,21 +110,27 @@ tilemap.onload = () => {
     }
   }
 };
+// keyPressed = function () {
 
+// }
 document.addEventListener('keydown', (event) => {
   switch (event.code) {
+    case 'KeyRight':
     case 'KeyD':
       if (Player.checkMovePosX()) {
         console.log('+X');
         Player.xDir = 1;
       }
       break;
+    case 'KeyLeft':
     case 'KeyA':
       Player.xDir = -1;
       break;
+    case 'KeyUp':
     case 'KeyW':
       Player.yDir = -1;
       break;
+    case 'KeyDown':
     case 'KeyS':
       Player.yDir = 1;
       break;
@@ -135,15 +141,19 @@ document.addEventListener('keydown', (event) => {
 
 document.addEventListener('keyup', (event) => {
   switch (event.code) {
+    case 'KeyRight':
     case 'KeyD':
       Player.xDir = 0;
       break;
+    case 'KeyLeft':
     case 'KeyA':
       Player.xDir = 0;
       break;
+    case 'KeyUp':
     case 'KeyW':
       Player.yDir = 0;
       break;
+    case 'KeyDown':
     case 'KeyS':
       Player.yDir = 0;
       break;
