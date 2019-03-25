@@ -110,9 +110,6 @@ tilemap.onload = () => {
     }
   }
 };
-// keyPressed = function () {
-
-// }
 document.addEventListener('keydown', (event) => {
   switch (event.code) {
     case 'KeyRight':
