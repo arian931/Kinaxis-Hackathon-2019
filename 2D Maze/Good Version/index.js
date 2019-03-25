@@ -11,6 +11,8 @@ tilemap.src = '../../Art/2D/tilemap.png';
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
 
+const drawOrder = [];
+
 let mapArray;
 const mapSize = 29;
 
@@ -24,6 +26,8 @@ let worldPosY = 0;
 
 // eslint-disable-next-line no-undef
 
+const enemyController = new EnemyController();
+enemyController.enemies.push(new EnemyAnxiety(128, 120));
 const Recursive = new RecursiveMaze(mapSize);
 const Camera = new PlayerCamera(ctx);
 Recursive.drawMap();
@@ -187,12 +191,38 @@ function update() {
   // Update the objects.
   Player.update(dt);
   Camera.update(dt);
+
+  for (let i = 0; i < enemyController.enemies.length; i++) {
+    const enemy = enemyController.enemies[i];
+    enemy.update(dt);
+    if (mapArray[Math.floor(((enemy.x + enemy.width / 2) + (enemy.width / 2 * enemy.xDir)) / enemy.width)][Math.floor((enemy.y + enemy.height / 2) / enemy.height)] === 1) {
+      enemy.xDir *= -1;
+    }
+    if (mapArray[Math.floor((enemy.x + enemy.width / 2) / enemy.width)][Math.floor(((enemy.y + enemy.height / 2) + (enemy.height / 2 * enemy.yDir)) / enemy.height)]) {
+      enemy.yDir *= -1;
+    }
+  }
 }
 
 function draw() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   Camera.draw(worldPosX, worldPosY);
   Player.draw(ctx, worldPosX, worldPosY);
+  let drewPlayer = false;
+  for (let i = 0; i < enemyController.enemies.length; i++) {
+    const enemy = enemyController.enemies[i];
+    if (!drewPlayer) {
+      if (Player.y < enemy.y) {
+        Player.draw(ctx, worldPosX, worldPosY);
+        enemy.draw(ctx, worldPosX, worldPosY);
+      } else {
+        enemy.draw(ctx, worldPosX, worldPosY);
+        Player.draw(ctx, worldPosX, worldPosY);
+      }
+      drewPlayer = true;
+    }
+
+  }
 }
 
 function gameLoop() {
