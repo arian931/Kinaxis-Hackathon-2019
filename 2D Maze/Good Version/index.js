@@ -130,7 +130,7 @@ document.addEventListener('keydown', (event) => {
     case 'KeyW':
       Player.yDir = -1;
       break;
-    case 'KeyDown'
+    case 'KeyDown':
     case 'KeyS':
       Player.yDir = 1;
       break;
@@ -145,15 +145,15 @@ document.addEventListener('keyup', (event) => {
     case 'KeyD':
       Player.xDir = 0;
       break;
-    case 'KeyLeft'
+    case 'KeyLeft':
     case 'KeyA':
       Player.xDir = 0;
       break;
-    case 'KeyUp'
+    case 'KeyUp':
     case 'KeyW':
       Player.yDir = 0;
       break;
-    case 'KeyDown'
+    case 'KeyDown':
     case 'KeyS':
       Player.yDir = 0;
       break;
