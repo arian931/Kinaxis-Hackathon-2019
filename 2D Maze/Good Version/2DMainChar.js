@@ -58,7 +58,7 @@ class MainCharacter {
     context.drawImage(
       this.image,
       this.width * Math.floor(this.spriteIndexX),
-      this.height * this.spriteIndexY,
+      this.height * this.spriteIndexY + 1,
       this.width,
       this.height,
       this.x - worldPosX,
