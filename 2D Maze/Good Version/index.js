@@ -233,7 +233,6 @@ function draw() {
       }
       drewPlayer = true;
     }
-
   }
 
   // Draw the extra wall.
@@ -243,8 +242,8 @@ function draw() {
     worldPosY,
   );
 }
-const row = mapsize - 1;
-const col = mapsize - 1;
+const row = mapSize;
+const col = mapSize;
 
 const drawMiniMap = () => {
   for (let x = 0; x < row; x++) {
@@ -257,20 +256,22 @@ const drawMiniMap = () => {
           ctxx.fillRect(x * (miniMap.width / row), y * (miniMap.height / col), miniMap.width / row, miniMap.height / col);
           break;
         case 1:
-          // console.log("Wall");
+          console.log('Wall');
           ctxx.fillStyle = 'rgb(128,128,128)'; // Grey walls
           ctxx.fillRect(x * (miniMap.width / row), y * (miniMap.height / col), miniMap.width / row, miniMap.height / col);
           break;
       }
     }
   }
+  ctxx.fillStyle = 'rgb(0,0,255)'; // Blue square for player
+  ctxx.fillRect(x * (miniMap.width / row), y * (miniMap.height / col), miniMap.width / row, miniMap.height / col);
 };
 
 function gameLoop() {
   window.requestAnimationFrame(gameLoop);
   update();
   draw();
-  // drawMiniMap();
+  drawMiniMap();
 }
 
 window.requestAnimationFrame(gameLoop);
