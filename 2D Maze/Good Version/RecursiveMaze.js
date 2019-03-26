@@ -2,7 +2,7 @@
 class RecursiveMaze {
   constructor(size) {
     // eslint-disable-next-line no-console
-    console.log('recursive');
+    //console.log('recursive');
     this.array = [];
     this.visitedPlacesX = [];
     this.visitedPlacesY = [];
@@ -32,7 +32,7 @@ class RecursiveMaze {
     this.MazeSize = size + 1;
   }
 
-  drawMap() {
+  draw() {
     // let counter = 0;
     for (let x = 0; x < this.MazeSize; x++) {
       // console.log("howMany");

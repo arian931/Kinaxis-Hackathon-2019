@@ -1,16 +1,20 @@
 /* eslint-disable no-undef */
 const canvas = document.getElementById('2DMaze');
+const miniMap = document.getElementById('miniMap');
 const ctx = canvas.getContext('2d');
+const ctxx = miniMap.getContext('2d');
+// const ctx = miniMap.getContext('2d');
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
+miniMap.width = window.innerWidth / 7;
+miniMap.height = window.innerHeight / 7;
+
 
 // Load the tilemap.
 const tilemap = new Image();
 tilemap.src = '../../Art/2D/tilemap.png';
 
-canvas.width = window.innerWidth;
-canvas.height = window.innerHeight;
-
+// eslint-disable-next-line no-unused-vars
 const drawOrder = [];
 
 let mapArray;
@@ -30,7 +34,7 @@ const enemyController = new EnemyController();
 enemyController.enemies.push(new EnemyAnxiety(128, 120));
 const Recursive = new RecursiveMaze(mapSize);
 const Camera = new PlayerCamera(ctx);
-Recursive.drawMap();
+Recursive.draw();
 // eslint-disable-next-line prefer-const
 mapArray = Recursive.array;
 const Player = new MainCharacter(
@@ -110,21 +114,24 @@ tilemap.onload = () => {
     }
   }
 };
-
 document.addEventListener('keydown', (event) => {
   switch (event.code) {
+    case 'KeyRight':
     case 'KeyD':
       if (Player.checkMovePosX()) {
         console.log('+X');
         Player.xDir = 1;
       }
       break;
+    case 'KeyLeft':
     case 'KeyA':
       Player.xDir = -1;
       break;
+    case 'KeyUp':
     case 'KeyW':
       Player.yDir = -1;
       break;
+    case 'KeyDown':
     case 'KeyS':
       Player.yDir = 1;
       break;
@@ -135,15 +142,19 @@ document.addEventListener('keydown', (event) => {
 
 document.addEventListener('keyup', (event) => {
   switch (event.code) {
+    case 'KeyRight':
     case 'KeyD':
       Player.xDir = 0;
       break;
+    case 'KeyLeft':
     case 'KeyA':
       Player.xDir = 0;
       break;
+    case 'KeyUp':
     case 'KeyW':
       Player.yDir = 0;
       break;
+    case 'KeyDown':
     case 'KeyS':
       Player.yDir = 0;
       break;
@@ -215,7 +226,8 @@ function update() {
 function draw() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   Camera.draw(worldPosX, worldPosY);
-  Player.draw(ctx, worldPosX, worldPosY);
+  // Player.draw(ctx, worldPosX, worldPosY);
+  // Draws the player behind/infront of enemies depending on its y;
   let drewPlayer = false;
   for (let i = 0; i < enemyController.enemies.length; i++) {
     const enemy = enemyController.enemies[i];
@@ -231,32 +243,36 @@ function draw() {
     }
   }
 }
+const row = mapSize;
+const col = mapSize;
 
-function gameLoop() {
-  window.requestAnimationFrame(gameLoop);
-  update();
-  draw();
-  // Draws the maze.
-  /*
+const drawMiniMap = () => {
   for (let x = 0; x < row; x++) {
     for (let y = 0; y < col; y++) {
       // eslint-disable-next-line default-case
       switch (mapArray[x][y]) {
         case 0:
           // console.log("No Wall");
-          ctx.fillStyle = 'rgb(255,255,255)';
-          ctx.fillRect(x * (canvas.width / row), y * (canvas.height / col), canvas.width / row, canvas.height / col);
+          ctxx.fillStyle = 'rgb(0,128,0)'; // Green Walls
+          ctxx.fillRect(x * (miniMap.width / row), y * (miniMap.height / col), miniMap.width / row, miniMap.height / col);
           break;
         case 1:
-          // console.log("Wall");
-          ctx.fillStyle = 'rgb(0,0,0)';
-          ctx.fillRect(x * (canvas.width / row), y * (canvas.height / col), canvas.width / row, canvas.height / col);
+          console.log('Wall');
+          ctxx.fillStyle = 'rgb(128,128,128)'; // Grey walls
+          ctxx.fillRect(x * (miniMap.width / row), y * (miniMap.height / col), miniMap.width / row, miniMap.height / col);
           break;
       }
     }
   }
-  */
-  // console.log('Player: (' + Player.x + ', ' + Player.y + ')\nCamera: (' + Camera.x + ', ' + Camera.y + ')');
+  ctxx.fillStyle = 'rgb(0,0,255)'; // Blue square for player
+  ctxx.fillRect(x * (miniMap.width / row), y * (miniMap.height / col), miniMap.width / row, miniMap.height / col);
+};
+
+function gameLoop() {
+  window.requestAnimationFrame(gameLoop);
+  update();
+  draw();
+  drawMiniMap();
 }
-// setInterval(gameLoop, 33);
+
 window.requestAnimationFrame(gameLoop);
