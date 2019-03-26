@@ -1,3 +1,4 @@
+/* eslint-disable no-plusplus */
 /* eslint-disable no-param-reassign */
 /* eslint-disable prefer-const */
 /* eslint-disable class-methods-use-this */
@@ -27,15 +28,34 @@ class MainCharacter {
     this.CHeight = height;
     this.mazeSize = mazeSize;
     this.mazeArray = mazeArray;
+    this.posTopX = parseInt(this.x / ((this.CWidth * 128) / this.CWidth));
+    this.posTopY = parseInt(this.y / ((this.CHeight * 128) / this.CHeight));
+    this.calcForSquareX = (this.CWidth * 128) / this.CWidth;
+    this.moveRight = false;
+    this.moveLeft = false;
+    this.moveUp = false;
+    this.moveDown = false;
+    this.counter = 10;
+    this.playerSpeed = 8;
   }
 
-  update(dt) {
+  update() {
     // 0.7071 is a magic constant for diagonal movement.
-    this.hSpeed = (this.xDir !== 0 && this.yDir !== 0 ? this.speed * 0.7071 : this.speed) * this.xDir;
-    this.vSpeed = (this.xDir !== 0 && this.yDir !== 0 ? this.speed * 0.7071 : this.speed) * this.yDir;
-    this.x += this.hSpeed * dt;
-    this.y += this.vSpeed * dt;
-
+    this.counter++;
+    if (this.moveRight) {
+      this.checkMovePosX();
+    }
+    if (this.moveLeft) {
+      this.checkMoveNegX();
+    }
+    if (this.moveDown) {
+      this.checkMovePosY();
+      console.log('down');
+    }
+    if (this.moveUp) {
+      this.checkMoveNegY();
+      console.log('up');
+    }
     // Animate the sprite.
     this.spriteIndexX = (this.spriteIndexX + this.animationSpeed) % 8;
 
@@ -72,46 +92,44 @@ class MainCharacter {
   }
 
   checkMovePosX() {
-    console.log('check move pos x');
-    let posTopX = parseInt((this.x + 78) / ((this.CWidth * 128) / this.CWidth));
-    let posTopY = parseInt((this.y + this.height - 20) / ((this.CHeight * 128) / this.CHeight));
-    let posBotX = parseInt((this.x + 78) / ((this.CWidth * 128) / this.CWidth));
-    let posBotY = parseInt((this.y + this.height) / ((this.CHeight * 128) / this.CHeight));
-    console.log(
-      `TopX: ${posTopX} TopY: ${posTopY} Array Value: ${this.mazeArray[posTopX][posTopY]}`,
-    );
-    if (this.mazeArray[posTopX][posTopY] == 0) {
-      return true;
+    this.posTopY = parseInt((this.y + this.height) / ((this.CHeight * 128) / this.CHeight));
+    this.posTopX = parseInt((this.x + 76 + this.playerSpeed) / ((this.CWidth * 128) / this.CWidth));
+    // console.log(`${this.posTopX} posTopY ${this.posTopY}`);
+    if (this.mazeArray[this.posTopX][this.posTopY] == 0) {
+      this.x += this.playerSpeed;
     }
-    console.log('cant walk');
-    this.xDir = 0;
-    return false;
   }
 
   checkMoveNegX() {
-    // console.log('check X Neg');
-    // let posTopX = parseInt(this.x / ((this.CWidth * 128) / this.CWidth));
-    // let posTopY = parseInt(this.y / ((this.CHeight * 128) / this.CHeight));
-    // let posBotX = parseInt(this.x / ((this.CWidth * 128) / this.CWidth));
-    // let posBotY = parseInt((this.y + this.height) / ((this.CHeight * 128) / this.CHeight));
-    // console.log(
-    //   `TopX: ${posTopX} TopY: ${posTopY} Array Value: ${this.mazeArray[posTopX][posTopY]}`,
-    // );
-    // if (this.mazeArray[posTopX][posTopY] == 0 && this.mazeArray[posBotX][posBotY] == 0) {
-    //   return true;
-    // }
-    // this.xDir = 0;
-    // return false;
-    return true;
+    this.posTopY = parseInt((this.y + this.height) / ((this.CHeight * 128) / this.CHeight));
+    this.posTopX = parseInt((this.x + 50 - this.playerSpeed) / ((this.CWidth * 128) / this.CWidth));
+    // console.log(`${this.posTopX} posTopY ${this.posTopY}`);
+    if (this.mazeArray[this.posTopX][this.posTopY] == 0) {
+      this.x -= this.playerSpeed;
+    }
   }
 
   checkMovePosY() {
-    console.log(`check Y POs${this.y}`);
-    return true;
+    // console.log('hello');
+    this.posTopY = parseInt(
+      (this.y + this.height + this.playerSpeed) / ((this.CHeight * 128) / this.CHeight),
+    );
+    console.log(this.posTopY);
+    if (this.mazeArray[this.posTopX][this.posTopY] == 0) {
+      this.y += this.playerSpeed;
+    }
   }
 
   checkMoveNegY() {
-    console.log(`check Y Neg${this.y}`);
-    return true;
+    // console.log('hello');
+    this.posTopY = parseInt(
+      (this.y + this.height - 20 - this.playerSpeed) / ((this.CHeight * 128) / this.CHeight),
+    );
+    console.log(this.posTopY);
+    if (this.mazeArray[this.posTopX][this.posTopY] == 0) {
+      this.y -= this.playerSpeed;
+    } else {
+      console.log('collison');
+    }
   }
 }

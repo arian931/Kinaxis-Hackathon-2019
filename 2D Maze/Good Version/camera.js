@@ -18,7 +18,7 @@ class PlayerCamera {
     this.buffer = buffer;
   }
 
-  update(dt) {
+  update() {
     if (this.player !== undefined) {
       this.x = this.player.x - this.player.width / 2 - this.vWidth / 2;
       this.y = this.player.y - this.player.height / 2 - this.vHeight / 2;
