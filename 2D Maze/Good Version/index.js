@@ -239,10 +239,17 @@ function draw() {
   // Draw the extra wall.
   ctx.drawImage(
     buffer.canvas,
-    Math.floor(Player.x / Player.height),
-    worldPosY,
+    Math.floor((Player.x - Player.width) / Player.width),
+    Math.floor((Player.y + Player.width + Player.vSpeed) / Player.height),
+    Player.width * 3,
+    Player.height,
+    Player.x - Player.width - worldPosX,
+    Player.y + Player.height - worldPosY,
+    Player.width * 3,
+    Player.height,
   );
 }
+/*
 const row = mapsize - 1;
 const col = mapsize - 1;
 
@@ -265,6 +272,7 @@ const drawMiniMap = () => {
     }
   }
 };
+*/
 
 function gameLoop() {
   window.requestAnimationFrame(gameLoop);
