@@ -1,16 +1,20 @@
 /* eslint-disable no-undef */
 const canvas = document.getElementById('2DMaze');
+const miniMap = document.getElementById('miniMap');
 const ctx = canvas.getContext('2d');
+const ctxx = miniMap.getContext('2d');
+// const ctx = miniMap.getContext('2d');
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
+miniMap.width = window.innerWidth / 7;
+miniMap.height = window.innerHeight / 7;
+
 
 // Load the tilemap.
 const tilemap = new Image();
 tilemap.src = '../../Art/2D/tilemap.png';
 
-canvas.width = window.innerWidth;
-canvas.height = window.innerHeight;
-
+// eslint-disable-next-line no-unused-vars
 const drawOrder = [];
 
 let mapArray;
@@ -239,32 +243,34 @@ function draw() {
     worldPosY,
   );
 }
+const row = mapsize - 1;
+const col = mapsize - 1;
 
-function gameLoop() {
-  window.requestAnimationFrame(gameLoop);
-  update();
-  draw();
-  // Draws the maze.
-  /*
+const drawMiniMap = () => {
   for (let x = 0; x < row; x++) {
     for (let y = 0; y < col; y++) {
       // eslint-disable-next-line default-case
       switch (mapArray[x][y]) {
         case 0:
           // console.log("No Wall");
-          ctx.fillStyle = 'rgb(255,255,255)';
-          ctx.fillRect(x * (canvas.width / row), y * (canvas.height / col), canvas.width / row, canvas.height / col);
+          ctxx.fillStyle = 'rgb(0,128,0)'; // Green Walls
+          ctxx.fillRect(x * (miniMap.width / row), y * (miniMap.height / col), miniMap.width / row, miniMap.height / col);
           break;
         case 1:
           // console.log("Wall");
-          ctx.fillStyle = 'rgb(0,0,0)';
-          ctx.fillRect(x * (canvas.width / row), y * (canvas.height / col), canvas.width / row, canvas.height / col);
+          ctxx.fillStyle = 'rgb(128,128,128)'; // Grey walls
+          ctxx.fillRect(x * (miniMap.width / row), y * (miniMap.height / col), miniMap.width / row, miniMap.height / col);
           break;
       }
     }
   }
-  */
-  // console.log('Player: (' + Player.x + ', ' + Player.y + ')\nCamera: (' + Camera.x + ', ' + Camera.y + ')');
+};
+
+function gameLoop() {
+  window.requestAnimationFrame(gameLoop);
+  update();
+  draw();
+  // drawMiniMap();
 }
-// setInterval(gameLoop, 33);
+
 window.requestAnimationFrame(gameLoop);
