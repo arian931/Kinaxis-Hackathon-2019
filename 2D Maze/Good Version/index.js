@@ -7,7 +7,7 @@ const ctxx = miniMap.getContext('2d');
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
 miniMap.width = window.innerWidth / 7;
-miniMap.height = window.innerHeight / 7;
+miniMap.height = window.innerWidth / 7;
 
 
 // Load the tilemap.
