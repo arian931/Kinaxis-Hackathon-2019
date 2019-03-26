@@ -214,7 +214,8 @@ function update() {
 function draw() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   Camera.draw(worldPosX, worldPosY);
-  Player.draw(ctx, worldPosX, worldPosY);
+  // Player.draw(ctx, worldPosX, worldPosY);
+  // Draws the player behind/infront of enemies depending on its y;
   let drewPlayer = false;
   for (let i = 0; i < enemyController.enemies.length; i++) {
     const enemy = enemyController.enemies[i];
@@ -230,6 +231,13 @@ function draw() {
     }
 
   }
+
+  // Draw the extra wall.
+  ctx.drawImage(
+    buffer.canvas,
+    Math.floor(Player.x / Player.height),
+    worldPosY,
+  );
 }
 
 function gameLoop() {
