@@ -77,7 +77,7 @@ class EnemyAnxiety extends Enemy {
       this.x - worldPosX,
       this.y - worldPosY,
       this.width,
-      this.height
+      this.height,
     );
   }
 }
