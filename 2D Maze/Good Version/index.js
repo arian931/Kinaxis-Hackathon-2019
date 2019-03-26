@@ -34,7 +34,7 @@ const enemyController = new EnemyController();
 enemyController.enemies.push(new EnemyAnxiety(128, 120));
 const Recursive = new RecursiveMaze(mapSize);
 const Camera = new PlayerCamera(ctx);
-Recursive.drawMap();
+Recursive.draw();
 // eslint-disable-next-line prefer-const
 mapArray = Recursive.array;
 const Player = new MainCharacter(
