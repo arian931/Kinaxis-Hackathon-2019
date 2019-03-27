@@ -117,18 +117,22 @@ document.addEventListener('keydown', (event) => {
   switch (event.code) {
     case 'KeyRight':
     case 'KeyD':
+      Player.xDir = 1;
       Player.moveRight = true;
       break;
     case 'KeyLeft':
     case 'KeyA':
+      Player.xDir = -1;
       Player.moveLeft = true;
       break;
     case 'KeyUp':
     case 'KeyW':
+      Player.yDir = -1;
       Player.moveUp = true;
       break;
     case 'KeyDown':
     case 'KeyS':
+      Player.yDir = 1;
       Player.moveDown = true;
       break;
     default:
@@ -140,18 +144,22 @@ document.addEventListener('keyup', (event) => {
   switch (event.code) {
     case 'KeyRight':
     case 'KeyD':
+      Player.xDir = 0;
       Player.moveRight = false;
       break;
     case 'KeyLeft':
     case 'KeyA':
+      Player.xDir = 0;
       Player.moveLeft = false;
       break;
     case 'KeyUp':
     case 'KeyW':
+      Player.yDir = 0;
       Player.moveUp = false;
       break;
     case 'KeyDown':
     case 'KeyS':
+      Player.yDir = 0;
       Player.moveDown = false;
       break;
     default:
@@ -178,13 +186,13 @@ function update() {
     Player.x + Player.width / 2 > Camera.vWidth / 2
     && Player.x + Player.width / 2 < buffer.canvas.width - Camera.vWidth / 2
   ) {
-    worldPosX += Player.hSpeed * dt;
+    worldPosX += Player.hSpeed;
   }
   if (
     Player.y + Player.height / 2 > Camera.vHeight / 2
     && Player.y + Player.height / 2 < buffer.canvas.height - Camera.vHeight / 2
   ) {
-    worldPosY += Player.vSpeed * dt;
+    worldPosY += Player.vSpeed;
   }
   // Lock the world position
   if (worldPosX <= 0) {
@@ -202,7 +210,7 @@ function update() {
   Player.update(dt);
   Camera.update(dt);
 
-  
+
   // Updates character on minimadp
   // ctxx.fillStyle = 'rgb(0,0,255)'; // Blue square for player
   // ctxx.fillRect(player.x * (miniMap.width / row), player.y * (miniMap.height / col), miniMap.width / row, miniMap.height / col);
@@ -212,14 +220,14 @@ function update() {
     enemy.update(dt);
     if (
       mapArray[
-        Math.floor((enemy.x + enemy.width / 2 + (enemy.width / 2) * enemy.xDir) / enemy.width)
+      Math.floor((enemy.x + enemy.width / 2 + (enemy.width / 2) * enemy.xDir) / enemy.width)
       ][Math.floor((enemy.y + enemy.height / 2) / enemy.height)] === 1
     ) {
       enemy.xDir *= -1;
     }
     if (
       mapArray[Math.floor((enemy.x + enemy.width / 2) / enemy.width)][
-        Math.floor((enemy.y + enemy.height / 2 + (enemy.height / 2) * enemy.yDir) / enemy.height)
+      Math.floor((enemy.y + enemy.height / 2 + (enemy.height / 2) * enemy.yDir) / enemy.height)
       ]
     ) {
       enemy.yDir *= -1;
@@ -246,6 +254,7 @@ function draw() {
       drewPlayer = true;
     }
   }
+  ctx.fillText(worldPosX + " " + worldPosX, 20, 20);
 }
 
 for (let x = 0; x < row; x++) {
