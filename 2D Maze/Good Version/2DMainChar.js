@@ -36,12 +36,14 @@ class MainCharacter {
     this.moveUp = false;
     this.moveDown = false;
     this.counter = 10;
-    this.playerSpeed = 8;
+    this.playerSpeed = 4;
   }
 
   update() {
     // 0.7071 is a magic constant for diagonal movement.
     this.counter++;
+    this.hSpeed = 0;
+    this.vSpeed = 0;
     if (this.moveRight) {
       this.checkMovePosX();
     }
@@ -96,7 +98,8 @@ class MainCharacter {
     this.posTopX = parseInt((this.x + 76 + this.playerSpeed) / ((this.CWidth * 128) / this.CWidth));
     // console.log(`${this.posTopX} posTopY ${this.posTopY}`);
     if (this.mazeArray[this.posTopX][this.posTopY] == 0) {
-      this.x += this.playerSpeed;
+      this.hSpeed = this.playerSpeed;
+      this.x += this.hSpeed;
     }
   }
 
@@ -105,7 +108,8 @@ class MainCharacter {
     this.posTopX = parseInt((this.x + 52 - this.playerSpeed) / ((this.CWidth * 128) / this.CWidth));
     // console.log(`${this.posTopX} posTopY ${this.posTopY}`);
     if (this.mazeArray[this.posTopX][this.posTopY] == 0) {
-      this.x -= this.playerSpeed;
+      this.hSpeed = -this.playerSpeed;
+      this.x += this.hSpeed;
     }
   }
 
@@ -117,7 +121,8 @@ class MainCharacter {
     this.posTopX = parseInt((this.x + 50) / ((this.CWidth * 128) / this.CWidth));
     console.log(this.posTopY);
     if (this.mazeArray[this.posTopX][this.posTopY] == 0) {
-      this.y += this.playerSpeed;
+      this.vSpeed = this.playerSpeed;
+      this.y += this.vSpeed;
     }
   }
 
@@ -129,9 +134,8 @@ class MainCharacter {
     this.posTopX = parseInt((this.x + 50) / ((this.CWidth * 128) / this.CWidth));
     console.log(this.posTopY);
     if (this.mazeArray[this.posTopX][this.posTopY] == 0) {
-      this.y -= this.playerSpeed;
-    } else {
-      console.log('collison');
+      this.vSpeed = -this.playerSpeed;
+      this.y += this.vSpeed;
     }
   }
 }
