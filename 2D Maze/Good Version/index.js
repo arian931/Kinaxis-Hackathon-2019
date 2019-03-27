@@ -1,3 +1,5 @@
+/* eslint-disable no-unused-vars */
+/* eslint-disable eqeqeq */
 /* eslint-disable no-undef */
 const canvas = document.getElementById('2DMaze');
 const miniMap = document.getElementById('miniMap');
@@ -119,21 +121,33 @@ document.addEventListener('keydown', (event) => {
     case 'KeyD':
       Player.xDir = 1;
       Player.moveRight = true;
+      Player.moveLeft = false;
+      Player.moveDown = false;
+      Player.moveUp = false;
       break;
     case 'KeyLeft':
     case 'KeyA':
       Player.xDir = -1;
       Player.moveLeft = true;
+      Player.moveRight = false;
+      Player.moveDown = false;
+      Player.moveUp = false;
       break;
     case 'KeyUp':
     case 'KeyW':
       Player.yDir = -1;
       Player.moveUp = true;
+      Player.moveRight = false;
+      Player.moveDown = false;
+      Player.moveLeft = false;
       break;
     case 'KeyDown':
     case 'KeyS':
       Player.yDir = 1;
       Player.moveDown = true;
+      Player.moveRight = false;
+      Player.moveUp = false;
+      Player.moveLeft = false;
       break;
     default:
       break;
@@ -234,7 +248,60 @@ function update() {
     }
   }
 }
+let miniMapSquareToDeletX = 1;
+let miniMapSquareToDeletY = 1;
 
+function drawMiniMap() {
+  ctxx.clearRect(
+    miniMapSquareToDeletX * (miniMap.width / row),
+    miniMapSquareToDeletY * (miniMap.height / col),
+    miniMap.width / row,
+    miniMap.height / col,
+  );
+  ctxx.fillStyle = 'rgba(0,128,0)';
+  ctxx.fillRect(
+    miniMapSquareToDeletX * (miniMap.width / row),
+    miniMapSquareToDeletY * (miniMap.height / col),
+    miniMap.width / row,
+    miniMap.height / col,
+  );
+  ctxx.fillStyle = 'rgba(0,0,200,0.65)';
+  ctxx.fillRect(
+    Player.posTopX * (miniMap.width / row),
+    Player.posTopY * (miniMap.height / col),
+    miniMap.width / row,
+    miniMap.height / col,
+  );
+  miniMapSquareToDeletX = Player.posTopX;
+  miniMapSquareToDeletY = Player.posTopY;
+}
+for (let x = 0; x < row; x++) {
+  for (let y = 0; y < col; y++) {
+    // eslint-disable-next-line default-case
+    switch (mapArray[x][y]) {
+      case 0:
+        // console.log("No Wall");
+        ctxx.fillStyle = 'rgba(0,128,0, 0.65)'; // Green Walls
+        ctxx.fillRect(
+          x * (miniMap.width / row),
+          y * (miniMap.height / col),
+          miniMap.width / row,
+          miniMap.height / col,
+        );
+        break;
+      case 1:
+        console.log('Wall');
+        ctxx.fillStyle = 'rgba(128,128,128,0.65)'; // Grey walls
+        ctxx.fillRect(
+          x * (miniMap.width / row),
+          y * (miniMap.height / col),
+          miniMap.width / row,
+          miniMap.height / col,
+        );
+        break;
+    }
+  }
+}
 function draw() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   Camera.draw(worldPosX, worldPosY);
@@ -254,35 +321,12 @@ function draw() {
       drewPlayer = true;
     }
   }
-}
-
-for (let x = 0; x < row; x++) {
-  for (let y = 0; y < col; y++) {
-    // eslint-disable-next-line default-case
-    switch (mapArray[x][y]) {
-      case 0:
-        // console.log("No Wall");
-        ctxx.fillStyle = 'rgb(0,128,0)'; // Green Walls
-        ctxx.fillRect(
-          x * (miniMap.width / row),
-          y * (miniMap.height / col),
-          miniMap.width / row,
-          miniMap.height / col,
-        );
-        break;
-      case 1:
-        console.log('Wall');
-        ctxx.fillStyle = 'rgb(128,128,128)'; // Grey walls
-        ctxx.fillRect(
-          x * (miniMap.width / row),
-          y * (miniMap.height / col),
-          miniMap.width / row,
-          miniMap.height / col,
-        );
-        break;
-    }
+  ctx.fillText(`${worldPosX} ${worldPosX}`, 20, 20);
+  if (miniMapSquareToDeletX != Player.posTopX || miniMapSquareToDeletY != Player.posTopY) {
+    drawMiniMap();
   }
 }
+drawMiniMap();
 
 function gameLoop() {
   window.requestAnimationFrame(gameLoop);
