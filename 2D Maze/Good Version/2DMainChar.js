@@ -102,7 +102,7 @@ class MainCharacter {
 
   checkMoveNegX() {
     this.posTopY = parseInt((this.y + this.height) / ((this.CHeight * 128) / this.CHeight));
-    this.posTopX = parseInt((this.x + 50 - this.playerSpeed) / ((this.CWidth * 128) / this.CWidth));
+    this.posTopX = parseInt((this.x + 52 - this.playerSpeed) / ((this.CWidth * 128) / this.CWidth));
     // console.log(`${this.posTopX} posTopY ${this.posTopY}`);
     if (this.mazeArray[this.posTopX][this.posTopY] == 0) {
       this.x -= this.playerSpeed;
