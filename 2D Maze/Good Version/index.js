@@ -186,13 +186,13 @@ function update() {
     Player.x + Player.width / 2 > Camera.vWidth / 2
     && Player.x + Player.width / 2 < buffer.canvas.width - Camera.vWidth / 2
   ) {
-    worldPosX += Player.hSpeed;
+    worldPosX = Player.x + Player.width / 2 - Camera.vWidth / 2;
   }
   if (
     Player.y + Player.height / 2 > Camera.vHeight / 2
     && Player.y + Player.height / 2 < buffer.canvas.height - Camera.vHeight / 2
   ) {
-    worldPosY += Player.vSpeed;
+    worldPosY = Player.y + Player.height / 2 - Camera.vHeight / 2;
   }
   // Lock the world position
   if (worldPosX <= 0) {
@@ -210,6 +210,7 @@ function update() {
   Player.update(dt);
   Camera.update(dt);
 
+
   // Updates character on minimadp
   // ctxx.fillStyle = 'rgb(0,0,255)'; // Blue square for player
   // ctxx.fillRect(player.x * (miniMap.width / row), player.y * (miniMap.height / col), miniMap.width / row, miniMap.height / col);
@@ -219,23 +220,20 @@ function update() {
     enemy.update(dt);
     if (
       mapArray[
-        Math.floor((enemy.x + enemy.width / 2 + (enemy.width / 2) * enemy.xDir) / enemy.width)
+      Math.floor((enemy.x + enemy.width / 2 + (enemy.width / 2) * enemy.xDir) / enemy.width)
       ][Math.floor((enemy.y + enemy.height / 2) / enemy.height)] === 1
     ) {
       enemy.xDir *= -1;
     }
     if (
       mapArray[Math.floor((enemy.x + enemy.width / 2) / enemy.width)][
-        Math.floor((enemy.y + enemy.height / 2 + (enemy.height / 2) * enemy.yDir) / enemy.height)
+      Math.floor((enemy.y + enemy.height / 2 + (enemy.height / 2) * enemy.yDir) / enemy.height)
       ]
     ) {
       enemy.yDir *= -1;
     }
   }
 }
-
-let miniMapSquareToDeletX = 0;
-let miniMapSquareToDeletY = 0;
 
 function draw() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -256,23 +254,6 @@ function draw() {
       drewPlayer = true;
     }
   }
-  ctx.fillText(`${worldPosX} ${worldPosX}`, 20, 20);
-  ctxx.fillStyle = 'rgb(0,128,0)';
-  ctxx.fillRect(
-    miniMapSquareToDeletX * (miniMap.width / row),
-    miniMapSquareToDeletY * (miniMap.height / col),
-    miniMap.width / row,
-    miniMap.height / col,
-  );
-  ctxx.fillStyle = 'rgb(0,0,200)';
-  ctxx.fillRect(
-    Player.posTopX * (miniMap.width / row),
-    Player.posTopY * (miniMap.height / col),
-    miniMap.width / row,
-    miniMap.height / col,
-  );
-  miniMapSquareToDeletX = Player.posTopX;
-  miniMapSquareToDeletY = Player.posTopY;
 }
 
 for (let x = 0; x < row; x++) {
