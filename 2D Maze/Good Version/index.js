@@ -10,6 +10,7 @@ miniMap.width = window.innerWidth / 7;
 miniMap.height = window.innerWidth / 7;
 
 
+
 // Load the tilemap.
 const tilemap = new Image();
 tilemap.src = '../../Art/2D/tilemap.png';
@@ -163,6 +164,9 @@ document.addEventListener('keyup', (event) => {
   }
 });
 
+const row = mapSize;
+const col = mapSize;
+
 function update() {
   // Calucute delta time.
   const nowTime = Date.now();
@@ -203,6 +207,11 @@ function update() {
   Player.update(dt);
   Camera.update(dt);
 
+  
+  // Updates character on minimap
+  // ctxx.fillStyle = 'rgb(0,0,255)'; // Blue square for player
+  // ctxx.fillRect(player.x * (miniMap.width / row), player.y * (miniMap.height / col), miniMap.width / row, miniMap.height / col);
+
   for (let i = 0; i < enemyController.enemies.length; i++) {
     const enemy = enemyController.enemies[i];
     enemy.update(dt);
@@ -235,36 +244,30 @@ function draw() {
     }
   }
 }
-const row = mapSize;
-const col = mapSize;
 
-const drawMiniMap = () => {
-  for (let x = 0; x < row; x++) {
-    for (let y = 0; y < col; y++) {
-      // eslint-disable-next-line default-case
-      switch (mapArray[x][y]) {
-        case 0:
-          // console.log("No Wall");
-          ctxx.fillStyle = 'rgb(0,128,0)'; // Green Walls
-          ctxx.fillRect(x * (miniMap.width / row), y * (miniMap.height / col), miniMap.width / row, miniMap.height / col);
-          break;
-        case 1:
-          console.log('Wall');
-          ctxx.fillStyle = 'rgb(128,128,128)'; // Grey walls
-          ctxx.fillRect(x * (miniMap.width / row), y * (miniMap.height / col), miniMap.width / row, miniMap.height / col);
-          break;
-      }
+// Generates MiniMap
+for (let x = 0; x < row; x++) {
+  for (let y = 0; y < col; y++) {
+    // eslint-disable-next-line default-case
+    switch (mapArray[x][y]) {
+      case 0:
+        // console.log("No Wall");
+        ctxx.fillStyle = 'rgb(0,128,0)'; // Green Walls
+        ctxx.fillRect(x * (miniMap.width / row), y * (miniMap.height / col), miniMap.width / row, miniMap.height / col);
+        break;
+      case 1:
+        console.log('Wall');
+        ctxx.fillStyle = 'rgb(128,128,128)'; // Grey walls
+        ctxx.fillRect(x * (miniMap.width / row), y * (miniMap.height / col), miniMap.width / row, miniMap.height / col);
+        break;
     }
   }
-  ctxx.fillStyle = 'rgb(0,0,255)'; // Blue square for player
-  ctxx.fillRect(x * (miniMap.width / row), y * (miniMap.height / col), miniMap.width / row, miniMap.height / col);
-};
+}
 
 function gameLoop() {
   window.requestAnimationFrame(gameLoop);
   update();
   draw();
-  drawMiniMap();
 }
 
 window.requestAnimationFrame(gameLoop);
