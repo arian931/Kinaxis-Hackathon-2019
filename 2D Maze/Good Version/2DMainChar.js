@@ -104,7 +104,7 @@ class MainCharacter {
     this.posTopX = parseInt((this.x + 76 + this.playerSpeed) / ((this.CWidth * 128) / this.CWidth));
     // console.log(`${this.posTopX} posTopY ${this.posTopY}`);
     if (this.mazeArray[this.posTopX][this.posTopY] == 0) {
-      this.hSpeed = this.playerSpeed;
+      this.hSpeed += this.playerSpeed;
       this.x += this.hSpeed;
     }
   }
@@ -114,7 +114,7 @@ class MainCharacter {
     this.posTopX = parseInt((this.x + 52 - this.playerSpeed) / ((this.CWidth * 128) / this.CWidth));
     // console.log(`${this.posTopX} posTopY ${this.posTopY}`);
     if (this.mazeArray[this.posTopX][this.posTopY] == 0) {
-      this.hSpeed = -this.playerSpeed;
+      this.hSpeed -= this.playerSpeed;
       this.x += this.hSpeed;
     }
   }
@@ -127,7 +127,7 @@ class MainCharacter {
     this.posTopX = parseInt((this.x + 50) / ((this.CWidth * 128) / this.CWidth));
     console.log(this.posTopY);
     if (this.mazeArray[this.posTopX][this.posTopY] == 0) {
-      this.vSpeed = this.playerSpeed;
+      this.vSpeed += this.playerSpeed;
       this.y += this.vSpeed;
     }
   }
@@ -140,7 +140,7 @@ class MainCharacter {
     this.posTopX = parseInt((this.x + 50) / ((this.CWidth * 128) / this.CWidth));
     console.log(this.posTopY);
     if (this.mazeArray[this.posTopX][this.posTopY] == 0) {
-      this.vSpeed = -this.playerSpeed;
+      this.vSpeed -= this.playerSpeed;
       this.y += this.vSpeed;
     }
   }

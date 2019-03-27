@@ -201,13 +201,13 @@ function update() {
     Player.x + Player.width / 2 > Camera.vWidth / 2
     && Player.x + Player.width / 2 < buffer.canvas.width - Camera.vWidth / 2
   ) {
-    worldPosX += Player.hSpeed;
+    worldPosX = Player.x + Player.width / 2 - Camera.vWidth / 2;
   }
   if (
     Player.y + Player.height / 2 > Camera.vHeight / 2
     && Player.y + Player.height / 2 < buffer.canvas.height - Camera.vHeight / 2
   ) {
-    worldPosY += Player.vSpeed;
+    worldPosY = Player.y + Player.height / 2 - Camera.vHeight / 2;
   }
   // Lock the world position
   if (worldPosX <= 0) {
@@ -272,8 +272,8 @@ function drawMiniMap() {
     (miniMap.width / row) * 0.95,
     (miniMap.height / col) * 0.95,
   );
-  miniMapSquareToDeletX = Player.posTopX;
-  miniMapSquareToDeletY = Player.posTopY;
+  miniMapSquareToDeletX = Math.floor((Player.x + Player.width / 2) / Player.width); // Player.posTopX;
+  miniMapSquareToDeletY = Math.floor((Player.y + Player.height - 4) / Player.height); // Player.posTopY;
 }
 for (let x = 0; x < row; x++) {
   for (let y = 0; y < col; y++) {
