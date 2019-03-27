@@ -100,7 +100,6 @@ class MainCharacter {
     if (this.mazeArray[this.posTopX][this.posTopY] == 0) {
       this.hSpeed += this.playerSpeed;
       this.x += this.hSpeed;
-      this.spriteIndexY = 1;
     }
   }
 

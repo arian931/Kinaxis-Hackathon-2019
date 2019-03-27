@@ -267,13 +267,13 @@ function drawMiniMap() {
   );
   ctxx.fillStyle = 'rgba(0,0,200,0.65)';
   ctxx.fillRect(
-    Player.posTopX * (miniMap.width / row),
-    Player.posTopY * (miniMap.height / col),
+    Math.floor((Player.x + Player.width / 2) / Player.width) * (miniMap.width / row),
+    Math.floor((Player.y + Player.height - 4) / Player.height) * (miniMap.height / col),
     miniMap.width / row,
     miniMap.height / col,
   );
-  miniMapSquareToDeletX = Player.posTopX;
-  miniMapSquareToDeletY = Player.posTopY;
+  miniMapSquareToDeletX = Math.floor((Player.x + Player.width / 2) / Player.width);//Player.posTopX;
+  miniMapSquareToDeletY = Math.floor((Player.y + Player.height - 4) / Player.height);//Player.posTopY;
 }
 for (let x = 0; x < row; x++) {
   for (let y = 0; y < col; y++) {
