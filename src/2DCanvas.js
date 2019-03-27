@@ -3,6 +3,7 @@
 /* eslint-disable no-undef */
 console.log('FUCKKKKKKKkkkkk !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!');
 const EnemyController = require('./enemy');
+const EnemyAnxiety = require('./enemy');
 const RecursiveMaze = require('./RecursiveMaze');
 const PlayerCamera = require('./camera');
 const MainCharacter = require('./2DMainChar');
@@ -12,7 +13,6 @@ console.log(canvas);
 // const miniMap = document.getElementById('miniMap');
 const ctx = canvas.getContext('2d');
 // const ctxx = miniMap.getContext('2d');
-// const ctx = miniMap.getContext('2d');
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
 // miniMap.width = window.innerWidth / 7;
@@ -37,8 +37,8 @@ let worldPosX = 0;
 let worldPosY = 0;
 
 // eslint-disable-next-line no-undef
-// const enemyController = new EnemyController();
-// enemyController.enemies.push(new EnemyAnxiety(128, 120));
+const enemyController = new EnemyController();
+enemyController.enemies.push(new EnemyAnxiety(128, 120));
 const Recursive = new RecursiveMaze(mapSize);
 const Camera = new PlayerCamera(ctx);
 Recursive.draw();
@@ -236,28 +236,32 @@ function update() {
   Player.update(dt);
   Camera.update(dt);
 
-  // Updates character on minimadp
   // ctxx.fillStyle = 'rgb(0,0,255)'; // Blue square for player
-  // ctxx.fillRect(player.x * (miniMap.width / row), player.y * (miniMap.height / col), miniMap.width / row, miniMap.height / col);
+  // ctxx.fillRect(
+  //   player.x * (miniMap.width / row),
+  //   player.y * (miniMap.height / col),
+  //   miniMap.width / row,
+  //   miniMap.height / col,
+  // );
 
-  // for (let i = 0; i < enemyController.enemies.length; i++) {
-  //   const enemy = enemyController.enemies[i];
-  //   enemy.update(dt);
-  //   if (
-  //     mapArray[
-  //       Math.floor((enemy.x + enemy.width / 2 + (enemy.width / 2) * enemy.xDir) / enemy.width)
-  //     ][Math.floor((enemy.y + enemy.height / 2) / enemy.height)] === 1
-  //   ) {
-  //     enemy.xDir *= -1;
-  //   }
-  //   if (
-  //     mapArray[Math.floor((enemy.x + enemy.width / 2) / enemy.width)][
-  //       Math.floor((enemy.y + enemy.height / 2 + (enemy.height / 2) * enemy.yDir) / enemy.height)
-  //     ]
-  //   ) {
-  //     enemy.yDir *= -1;
-  //   }
-  // }
+  for (let i = 0; i < enemyController.enemies.length; i++) {
+    const enemy = enemyController.enemies[i];
+    enemy.update(dt);
+    if (
+      mapArray[
+        Math.floor((enemy.x + enemy.width / 2 + (enemy.width / 2) * enemy.xDir) / enemy.width)
+      ][Math.floor((enemy.y + enemy.height / 2) / enemy.height)] === 1
+    ) {
+      enemy.xDir *= -1;
+    }
+    if (
+      mapArray[Math.floor((enemy.x + enemy.width / 2) / enemy.width)][
+        Math.floor((enemy.y + enemy.height / 2 + (enemy.height / 2) * enemy.yDir) / enemy.height)
+      ]
+    ) {
+      enemy.yDir *= -1;
+    }
+  }
   image.src = canvas.toDataURL();
   document.getElementById('he').appendChild(image);
 }

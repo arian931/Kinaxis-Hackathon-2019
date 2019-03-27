@@ -126,7 +126,7 @@ function loadLevelOne() {
   levelOne.generateScene();
   const gameLoopOne = setInterval(levelOne.gameLoop(), 33);
 }
-loadLevelOne();
+// loadLevelOne();
 
 scene.background = white;
 const lightHem = new THREE.HemisphereLight(0xffffbb, 0x080820, 1);
@@ -257,13 +257,21 @@ const timer = () => {
   image.src = canvas.toDataURL();
   document.getElementById('scoreAndTimer3d').appendChild(image);
 };
-setInterval(timer, 100);
+// setInterval(timer, 100);
 
 const TwoCanvas = document.getElementById('he');
 function checkFor3dTransation() {
   console.log('seeing if its 3d');
   if (TwoCanvas.style.display == 'none') {
     console.log('found to switch to 3d');
+    loadLevelOne();
+    clearInterval(checkingThree);
   }
 }
-const checkForThreeSwitchInterval = setInterval(checkFor3dTransation(), 33);
+const checkingThree = setInterval(checkFor3dTransation, 100);
+
+function clearScene() {
+  while (scene.children.length > 0) {
+    scene.remove(scene.children[0]);
+  }
+}
