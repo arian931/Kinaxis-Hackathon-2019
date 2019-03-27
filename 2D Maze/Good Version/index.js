@@ -38,7 +38,7 @@ Recursive.draw();
 mapArray = Recursive.array;
 const Player = new MainCharacter(
   130,
-  130,
+  120,
   canvas.width,
   canvas.height,
   Recursive.MazeSize,
