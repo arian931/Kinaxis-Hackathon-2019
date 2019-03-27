@@ -7,7 +7,7 @@ spriteEnemyBPD.src = '../../Art/2D/enemy_borderline_personality_disorderanxiety_
 const spriteEnemyDepression = new Image();
 spriteEnemyDepression.src = '../../Art/2D/enemy_depression_spritesheet.png';
 
-class EnemyController {
+module.exports = class EnemyController {
   constructor() {
     // this.spriteEnemyAnxiety = new Image();
     // this.spriteEnemyAnxiety.src = '../../Art/2D/enemy_anxiety_spritesheet.png';
@@ -17,7 +17,7 @@ class EnemyController {
     // this.spriteEnemyDepression = '../../Art/2D/enemy_depression_spritesheet.png';
     this.enemies = [];
   }
-}
+};
 
 class Enemy {
   constructor(x, y) {
@@ -40,7 +40,7 @@ class Enemy {
   draw(ctx) {}
 }
 
-class EnemyAnxiety extends Enemy {
+module.exports = class EnemyAnxiety extends Enemy {
   constructor(x, y) {
     super(x, y);
     this.speed = 220;
@@ -82,4 +82,4 @@ class EnemyAnxiety extends Enemy {
       this.height,
     );
   }
-}
+};

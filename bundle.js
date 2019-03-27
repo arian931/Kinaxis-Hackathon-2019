@@ -51767,68 +51767,504 @@ module.exports = _GLTFLoader;
 }));
 
 },{}],3:[function(require,module,exports){
-const canvas = document.getElementById('backgroundCanvas'); // gets the canvas I want to use
-const ctx = canvas.getContext('2d'); // makes it so anything ctx. will appear on the canvas
+/* eslint-disable no-unused-vars */
+/* eslint-disable eqeqeq */
+/* eslint-disable no-undef */
+console.log('FUCKKKKKKKkkkkk !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!');
+const EnemyController = require('./enemy');
+const RecursiveMaze = require('./RecursiveMaze');
+const PlayerCamera = require('./camera');
+const MainCharacter = require('./2DMainChar');
 
-const blocker = document.getElementById('he'); // a div that overlaps the 3d canvas(dont worry about this)
+const canvas = document.getElementById('backgroundCanvas');
+console.log(canvas);
+// const miniMap = document.getElementById('miniMap');
+const ctx = canvas.getContext('2d');
+// const ctxx = miniMap.getContext('2d');
+// const ctx = miniMap.getContext('2d');
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
+// miniMap.width = window.innerWidth / 7;
+// miniMap.height = window.innerWidth / 7;
 
-const switchTo3D = () => { // switches to 3d don't worry how it works
-  blocker.style.display = 'none';
-};
+// Load the tilemap.
+const tilemap = new Image();
+tilemap.src = '../../Art/2D/tilemap.png';
 
-const switchTo2D = () => { // switches to 2d don't worry how it works
-  blocker.style.display = '';
-};
+// eslint-disable-next-line no-unused-vars
+const drawOrder = [];
 
-canvas.width = window.innerWidth; // makes the canvas the width of the screen
-canvas.height = window.innerHeight; // makes the canvas the height of the screen
-ctx.fillStyle = 'red';
-// ctx.fillRect(0, 0, 100, 100);
+let mapArray;
+const mapSize = 29;
 
-const moveRate = 5;
-let rightBar = canvas.width;
-let leftBar = -canvas.width / 2;
+// FPS
+let dt = 0;
+let lastTime = Date.now();
+
+// Define world position variables.
+let worldPosX = 0;
+let worldPosY = 0;
+
+// eslint-disable-next-line no-undef
+// const enemyController = new EnemyController();
+// enemyController.enemies.push(new EnemyAnxiety(128, 120));
+const Recursive = new RecursiveMaze(mapSize);
+const Camera = new PlayerCamera(ctx);
+Recursive.draw();
+const divToDrawTo = document.getElementById('he');
 const image = new Image();
 image.id = 'pic';
 
-const gameLoop = () => {
-  ctx.clearRect(0, 0, canvas.width, canvas.height); // clears whole canvas so when you move something it does not leave a trail
-  ctx.fillStyle = 'white';
-  ctx.fillRect(0, 0, canvas.width, canvas.height); // drawing the whole canvas a white background
-  
+// eslint-disable-next-line prefer-const
+mapArray = Recursive.array;
+const Player = new MainCharacter(
+  130,
+  120,
+  canvas.width,
+  canvas.height,
+  Recursive.MazeSize,
+  mapArray,
+  ctx,
+  // enemyController.enemies,
+);
+Camera.attachTo(Player);
+
+// eslint-disable-next-line prefer-const
+
+// Create the buffer image of the map.
+const buffer = document.createElement('CANVAS').getContext('2d');
+buffer.canvas.width = 128 * mapSize;
+buffer.canvas.height = 128 * mapSize;
+Camera.attachBuffer(buffer);
+// console.log(`${buffer.canvas.width} ${buffer.canvas.height}`);
+
+// Create the image buffer of the map.
+tilemap.onload = () => {
+  for (let y = 0; y < mapSize; y++) {
+    for (let x = 0; x < mapSize; x++) {
+      switch (mapArray[x][y]) {
+        case 0: // Ground
+          // 3 different ground tiles(2, 3, 4).
+          // https://stackoverflow.com/a/4960020 for random number between two numbers.
+          buffer.drawImage(
+            tilemap,
+            128 * Math.floor(Math.random() * (4 - 2 + 1) + 2),
+            0,
+            128,
+            128,
+            128 * x,
+            128 * y,
+            128,
+            128,
+          );
+          break;
+        case 1: // Walls
+          if (y - 1 < 0) {
+            if (mapArray[x][y + 1] === 0) {
+              buffer.drawImage(tilemap, 0, 0, 128, 128, 128 * x, 128 * y, 128, 128);
+            } else {
+              buffer.drawImage(tilemap, 128, 0, 128, 128, 128 * x, 128 * y, 128, 128);
+            }
+          } else if (
+            (mapArray[x][y + 1] === 0 && mapArray[x][y - 1] === 0)
+            || (mapArray[x][y + 1] === 0 && mapArray[x][y - 1] === 1)
+          ) {
+            buffer.drawImage(tilemap, 0, 0, 128, 128, 128 * x, 128 * y, 128, 128);
+          } else {
+            buffer.drawImage(tilemap, 128, 0, 128, 128, 128 * x, 128 * y, 128, 128);
+          }
+          break;
+        case 3: // Exit
+          // 3 different ground tiles(2, 3, 4).
+          // https://stackoverflow.com/a/4960020 for random number between two numbers.
+          buffer.drawImage(
+            tilemap,
+            128 * Math.floor(Math.random() * (4 - 2 + 1) + 2),
+            0,
+            128,
+            128,
+            128 * x,
+            128 * y,
+            128,
+            128,
+          );
+          break;
+        default:
+          break;
+      }
+    }
+  }
+};
+document.addEventListener('keydown', (event) => {
+  switch (event.code) {
+    case 'KeyRight':
+    case 'KeyD':
+      divToDrawTo.style.display = 'none';
+      Player.xDir = 1;
+      Player.moveRight = true;
+      Player.moveLeft = false;
+      Player.moveDown = false;
+      Player.moveUp = false;
+      break;
+    case 'KeyLeft':
+    case 'KeyA':
+      Player.xDir = -1;
+      Player.moveLeft = true;
+      Player.moveRight = false;
+      Player.moveDown = false;
+      Player.moveUp = false;
+      break;
+    case 'KeyUp':
+    case 'KeyW':
+      Player.yDir = -1;
+      Player.moveUp = true;
+      Player.moveRight = false;
+      Player.moveDown = false;
+      Player.moveLeft = false;
+      break;
+    case 'KeyDown':
+    case 'KeyS':
+      Player.yDir = 1;
+      Player.moveDown = true;
+      Player.moveRight = false;
+      Player.moveUp = false;
+      Player.moveLeft = false;
+      break;
+    default:
+      break;
+  }
+});
+
+document.addEventListener('keyup', (event) => {
+  switch (event.code) {
+    case 'KeyRight':
+    case 'KeyD':
+      Player.xDir = 0;
+      Player.moveRight = false;
+      break;
+    case 'KeyLeft':
+    case 'KeyA':
+      Player.xDir = 0;
+      Player.moveLeft = false;
+      break;
+    case 'KeyUp':
+    case 'KeyW':
+      Player.yDir = 0;
+      Player.moveUp = false;
+      break;
+    case 'KeyDown':
+    case 'KeyS':
+      Player.yDir = 0;
+      Player.moveDown = false;
+      break;
+    default:
+      break;
+  }
+});
+
+const row = mapSize;
+const col = mapSize;
+
+function update() {
+  // Calucute delta time.
+  const nowTime = Date.now();
+  dt = (nowTime - lastTime) / 1000;
+  lastTime = nowTime;
+  // console.log(deltaTime);
+
+  // Update global position.
+  // If the player moves half the distance of the camera's view dimensions
+  // from the edges of the buffer(left = 0, top = 0, right = 128*col bottom = 128*row), it'll
+  // move the world position as the player moves. We use the world position as the camera's
+  // position and subtract the world position from the player's position(this makes the player move with the camera).
+  if (
+    Player.x + Player.width / 2 > Camera.vWidth / 2
+    && Player.x + Player.width / 2 < buffer.canvas.width - Camera.vWidth / 2
+  ) {
+    worldPosX += Player.hSpeed;
+  }
+  if (
+    Player.y + Player.height / 2 > Camera.vHeight / 2
+    && Player.y + Player.height / 2 < buffer.canvas.height - Camera.vHeight / 2
+  ) {
+    worldPosY += Player.vSpeed;
+  }
+  // Lock the world position
+  if (worldPosX <= 0) {
+    worldPosX = 0;
+  } else if (worldPosX >= buffer.canvas.width - Camera.vWidth) {
+    worldPosX = buffer.canvas.width - Camera.vWidth;
+  }
+  if (worldPosY <= 0) {
+    worldPosY = 0;
+  } else if (worldPosY >= buffer.canvas.height - canvas.height) {
+    worldPosY = buffer.canvas.height - canvas.height;
+  }
+
+  // Update the objects.
+  Player.update(dt);
+  Camera.update(dt);
+
+  // Updates character on minimadp
+  // ctxx.fillStyle = 'rgb(0,0,255)'; // Blue square for player
+  // ctxx.fillRect(player.x * (miniMap.width / row), player.y * (miniMap.height / col), miniMap.width / row, miniMap.height / col);
+
+  // for (let i = 0; i < enemyController.enemies.length; i++) {
+  //   const enemy = enemyController.enemies[i];
+  //   enemy.update(dt);
+  //   if (
+  //     mapArray[
+  //       Math.floor((enemy.x + enemy.width / 2 + (enemy.width / 2) * enemy.xDir) / enemy.width)
+  //     ][Math.floor((enemy.y + enemy.height / 2) / enemy.height)] === 1
+  //   ) {
+  //     enemy.xDir *= -1;
+  //   }
+  //   if (
+  //     mapArray[Math.floor((enemy.x + enemy.width / 2) / enemy.width)][
+  //       Math.floor((enemy.y + enemy.height / 2 + (enemy.height / 2) * enemy.yDir) / enemy.height)
+  //     ]
+  //   ) {
+  //     enemy.yDir *= -1;
+  //   }
+  // }
+  image.src = canvas.toDataURL();
+  document.getElementById('he').appendChild(image);
+}
+const miniMapSquareToDeletX = 1;
+const miniMapSquareToDeletY = 1;
+
+function drawMiniMap() {
+  // ctxx.clearRect(
+  //   miniMapSquareToDeletX * (miniMap.width / row),
+  //   miniMapSquareToDeletY * (miniMap.height / col),
+  //   (miniMap.width / row) * 0.95,
+  //   (miniMap.height / col) * 0.95,
+  // );
+  // ctxx.fillStyle = 'rgba(0,128,0, 0.65)'; // Green Walls
+  // ctxx.fillRect(
+  //   miniMapSquareToDeletX * (miniMap.width / row),
+  //   miniMapSquareToDeletY * (miniMap.height / col),
+  //   (miniMap.width / row) * 0.95,
+  //   (miniMap.height / col) * 0.95,
+  // );
+  // ctxx.fillStyle = 'rgba(0,0,200,0.5)';
+  // ctxx.fillRect(
+  //   Player.posTopX * (miniMap.width / row),
+  //   Player.posTopY * (miniMap.height / col),
+  //   (miniMap.width / row) * 0.95,
+  //   (miniMap.height / col) * 0.95,
+  // );
+  // miniMapSquareToDeletX = Player.posTopX;
+  // miniMapSquareToDeletY = Player.posTopY;
+}
+// for (let x = 0; x < row; x++) {
+//   for (let y = 0; y < col; y++) {
+//     // eslint-disable-next-line default-case
+//     switch (mapArray[x][y]) {
+//       case 0:
+//         // console.log("No Wall");
+//         ctxx.fillStyle = 'rgba(0,128,0, 0.65)'; // Green Walls
+//         ctxx.fillRect(
+//           x * (miniMap.width / row),
+//           y * (miniMap.height / col),
+//           miniMap.width / row,
+//           miniMap.height / col,
+//         );
+//         break;
+//       case 1:
+//         console.log('Wall');
+//         ctxx.fillStyle = 'rgba(128,128,128,0.65)'; // Grey walls
+//         ctxx.fillRect(
+//           x * (miniMap.width / row),
+//           y * (miniMap.height / col),
+//           miniMap.width / row,
+//           miniMap.height / col,
+//         );
+//         break;
+//     }
+//   }
+// }
+function draw() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  Camera.draw(worldPosX, worldPosY);
+  Player.draw(ctx, worldPosX, worldPosY);
+  // Draws the player behind/infront of enemies depending on its y;
+  const drewPlayer = false;
+  // for (let i = 0; i < enemyController.enemies.length; i++) {
+  //   const enemy = enemyController.enemies[i];
+  //   if (!drewPlayer) {
+  //     if (Player.y < enemy.y) {
+  //       Player.draw(ctx, worldPosX, worldPosY);
+  //       enemy.draw(ctx, worldPosX, worldPosY);
+  //     } else {
+  //       enemy.draw(ctx, worldPosX, worldPosY);
+  //       Player.draw(ctx, worldPosX, worldPosY);
+  //     }
+  //     drewPlayer = true;
+  //   }
+  // }
+  ctx.fillText(`${worldPosX} ${worldPosX}`, 20, 20);
+  // if (miniMapSquareToDeletX != Player.posTopX || miniMapSquareToDeletY != Player.posTopY) {
+  //   drawMiniMap();
+  // }
+}
+drawMiniMap();
+
+function gameLoop() {
+  window.requestAnimationFrame(gameLoop);
+  update();
+  draw();
+}
+
+window.requestAnimationFrame(gameLoop);
+
+},{"./2DMainChar":4,"./RecursiveMaze":12,"./camera":14,"./enemy":15}],4:[function(require,module,exports){
+/* eslint-disable no-plusplus */
+/* eslint-disable no-param-reassign */
+/* eslint-disable prefer-const */
+/* eslint-disable class-methods-use-this */
+/* eslint-disable eqeqeq */
+/* eslint-disable radix */
+// eslint-disable-next-line no-unused-vars
+module.exports = class MainCharacter {
+  constructor(x, y, width, height, mazeSize, mazeArray, context, EnemyArray) {
+    this.image = new Image();
+    this.image.src = '../../Art/2D/male2_spritesheet.png';
+    this.camera = undefined;
+    this.x = x;
+    this.y = y;
+    this.width = 128;
+    this.height = 128;
+    this.xDir = 0;
+    this.yDir = 0;
+    this.speed = 240;
+    this.hSpeed = 0;
+    this.vSpeed = 0;
+    this.animationSpeed = 0.21;
+    this.spriteDir = 0; // 0 = right, 1 = down, 2 = left, 3 = up.
+    this.spriteIndexX = 0;
+    this.spriteIndexY = 0;
+    this.context = context;
+    this.CWidth = width;
+    this.CHeight = height;
+    this.mazeSize = mazeSize;
+    this.mazeArray = mazeArray;
+    this.posTopX = parseInt(this.x / ((this.CWidth * 128) / this.CWidth));
+    this.posTopY = parseInt(this.y / ((this.CHeight * 128) / this.CHeight));
+    this.calcForSquareX = (this.CWidth * 128) / this.CWidth;
+    this.moveRight = false;
+    this.moveLeft = false;
+    this.moveUp = false;
+    this.moveDown = false;
+    this.counter = 10;
+    this.playerSpeed = 4;
+    this.EnemyArray = EnemyArray;
+  }
+
+  update() {
+    // 0.7071 is a magic constant for diagonal movement.
+    this.counter++;
+    this.hSpeed = 0;
+    this.vSpeed = 0;
+    if (this.moveRight) {
+      this.checkMovePosX();
+    }
+    if (this.moveLeft) {
+      this.checkMoveNegX();
+    }
+    if (this.moveDown) {
+      this.checkMovePosY();
+    }
+    if (this.moveUp) {
+      this.checkMoveNegY();
+    }
+    // Animate the sprite.
+    this.spriteIndexX = (this.spriteIndexX + this.animationSpeed) % 8;
+
+    if (this.xDir === 0 && this.yDir === 0) {
+      this.spriteIndexX = this.spriteDir;
+      this.spriteIndexY = 0;
+    }
+
+    if (this.yDir !== 0) {
+      this.spriteDir = this.yDir === 1 ? 1 : 3;
+      this.spriteIndexY = this.spriteDir + 1;
+    }
+
+    if (this.xDir !== 0) {
+      this.spriteDir = this.xDir === 1 ? 0 : 2;
+      this.spriteIndexY = this.spriteDir + 1;
+    }
+    // for (let j = 0; j < this.EnemyArray.length; j++) {
+    //   if (this.EnemyArray[j].posX == this.posTopX && this.EnemyArray[j].posY == this.posTopY) {
+    //     console.log('collied with E');
+    //   }
+    // }
+  }
+
+  draw(context, worldPosX, worldPosY) {
+    // console.log('draw');
+    context.drawImage(
+      this.image,
+      this.width * Math.floor(this.spriteIndexX),
+      this.height * this.spriteIndexY + 1,
+      this.width,
+      this.height,
+      this.x - worldPosX,
+      this.y - worldPosY,
+      128,
+      128,
+    );
+    context.fillStyle = 'rgba(0,0,0,0.5)';
+    context.fillRect(this.x + 50 - worldPosX, this.y - worldPosY + this.height, 28, -20);
+  }
+
+  checkMovePosX() {
+    this.posTopY = parseInt((this.y + this.height) / ((this.CHeight * 128) / this.CHeight));
+    this.posTopX = parseInt((this.x + 76 + this.playerSpeed) / ((this.CWidth * 128) / this.CWidth));
+    // console.log(`${this.posTopX} posTopY ${this.posTopY}`);
+    if (this.mazeArray[this.posTopX][this.posTopY] == 0) {
+      this.hSpeed = this.playerSpeed;
+      this.x += this.hSpeed;
+    }
+  }
+
+  checkMoveNegX() {
+    this.posTopY = parseInt((this.y + this.height) / ((this.CHeight * 128) / this.CHeight));
+    this.posTopX = parseInt((this.x + 52 - this.playerSpeed) / ((this.CWidth * 128) / this.CWidth));
+    // console.log(`${this.posTopX} posTopY ${this.posTopY}`);
+    if (this.mazeArray[this.posTopX][this.posTopY] == 0) {
+      this.hSpeed = -this.playerSpeed;
+      this.x += this.hSpeed;
+    }
+  }
+
+  checkMovePosY() {
+    // console.log('hello');
+    this.posTopY = parseInt(
+      (this.y + this.height + this.playerSpeed) / ((this.CHeight * 128) / this.CHeight),
+    );
+    this.posTopX = parseInt((this.x + 50) / ((this.CWidth * 128) / this.CWidth));
+    if (this.mazeArray[this.posTopX][this.posTopY] == 0) {
+      this.vSpeed = this.playerSpeed;
+      this.y += this.vSpeed;
+    }
+  }
+
+  checkMoveNegY() {
+    // console.log('hello');
+    this.posTopY = parseInt(
+      (this.y + this.height - 20 - this.playerSpeed) / ((this.CHeight * 128) / this.CHeight),
+    );
+    this.posTopX = parseInt((this.x + 50) / ((this.CWidth * 128) / this.CWidth));
+    if (this.mazeArray[this.posTopX][this.posTopY] == 0) {
+      this.vSpeed = -this.playerSpeed;
+      this.y += this.vSpeed;
+    }
+  }
 };
 
-setInterval(gameLoop, 33);
-
-/*
-  -In here you put the game loop stuf so rendering moving stuff. 
-  -This fucntion will run ever 33 miliseconds becuase of the function below it
-  set inverval
-  -for an example of how a maze is built check out the folder in this progect
-  called map making.
-  -to load it go inside the html file in the folder and right click anywhere
-  and click open with live server
-  */
-
-  // if (rightBar >= canvas.width / 2) {
-  //   ctx.clearRect(0, 0, 10000, 10000);
-  //   ctx.fillStyle = 'white';
-  //   ctx.fillRect(0, 0, canvas.width, canvas.height);
-  //   ctx.fillStyle = 'black';
-  //   rightBar -= moveRate;
-  //   leftBar += moveRate;
-  //   ctx.fillRect(rightBar, 0, canvas.width / 2, canvas.height / 4);
-  //   ctx.fillRect(leftBar, canvas.height / 4, canvas.width / 2, canvas.height / 4);
-  //   ctx.fillRect(rightBar, canvas.height / 2, canvas.width / 2, canvas.height / 4);
-  //   ctx.fillRect(leftBar, canvas.height / 4 * 3, canvas.width / 2, canvas.height / 4);
-  //   image.src = canvas.toDataURL();
-  //   document.getElementById('he').appendChild(image);
-  // } else {
-  //   switchTo3D();
-  // }
-  // image.src = canvas.toDataURL(); //leave this here don't worry about it@
-  // document.getElementById('he').appendChild(image); //leave this here don't worry about it
-},{}],4:[function(require,module,exports){
+},{}],5:[function(require,module,exports){
 const THREE = require('three');
 /**
  * @author mrdoob / http://mrdoob.com/
@@ -51836,127 +52272,100 @@ const THREE = require('three');
  */
 
 THREE.PointerLockControls = function (camera, domElement) {
-
-  var scope = this;
+  const scope = this;
 
   this.domElement = domElement || document.body;
   this.isLocked = false;
 
   camera.rotation.set(0, 0, 0);
 
-  var pitchObject = new THREE.Object3D();
+  const pitchObject = new THREE.Object3D();
   pitchObject.add(camera);
 
-  var yawObject = new THREE.Object3D();
+  const yawObject = new THREE.Object3D();
   yawObject.position.y = 10;
   yawObject.add(pitchObject);
 
-  var PI_2 = Math.PI / 2;
+  const PI_2 = Math.PI / 2;
 
   function onMouseMove(event) {
-
     if (scope.isLocked === false) return;
 
-    var movementX = event.movementX || event.mozMovementX || event.webkitMovementX || 0;
-    var movementY = event.movementY || event.mozMovementY || event.webkitMovementY || 0;
+    const movementX = event.movementX || event.mozMovementX || event.webkitMovementX || 0;
+    const movementY = event.movementY || event.mozMovementY || event.webkitMovementY || 0;
 
     yawObject.rotation.y -= movementX * 0.002;
     pitchObject.rotation.x -= movementY * 0.002;
 
-    pitchObject.rotation.x = Math.max(- PI_2, Math.min(PI_2, pitchObject.rotation.x));
-
+    pitchObject.rotation.x = Math.max(-PI_2, Math.min(PI_2, pitchObject.rotation.x));
   }
 
   function onPointerlockChange() {
-
     if (document.pointerLockElement === scope.domElement) {
-
       scope.dispatchEvent({ type: 'lock' });
 
       scope.isLocked = true;
-
     } else {
-
       scope.dispatchEvent({ type: 'unlock' });
 
       scope.isLocked = false;
-
     }
-
   }
 
   function onPointerlockError() {
-
     console.error('THREE.PointerLockControls: Unable to use Pointer Lock API');
-
   }
 
   this.connect = function () {
-
     document.addEventListener('mousemove', onMouseMove, false);
     document.addEventListener('pointerlockchange', onPointerlockChange, false);
     document.addEventListener('pointerlockerror', onPointerlockError, false);
-
   };
 
   this.disconnect = function () {
-
     document.removeEventListener('mousemove', onMouseMove, false);
     document.removeEventListener('pointerlockchange', onPointerlockChange, false);
     document.removeEventListener('pointerlockerror', onPointerlockError, false);
-
   };
 
   this.dispose = function () {
-
     this.disconnect();
-
   };
 
   this.getObject = function () {
-
     return yawObject;
-
   };
 
-  this.getDirection = function () {
-
+  this.getDirection = (function () {
     // assumes the camera itself is not rotated
 
-    var direction = new THREE.Vector3(0, 0, - 1);
-    var rotation = new THREE.Euler(0, 0, 0, 'YXZ');
+    const direction = new THREE.Vector3(0, 0, -1);
+    const rotation = new THREE.Euler(0, 0, 0, 'YXZ');
 
     return function (v) {
-
       rotation.set(pitchObject.rotation.x, yawObject.rotation.y, 0);
 
       v.copy(direction).applyEuler(rotation);
 
       return v;
-
     };
-
-  }();
+  }());
 
   this.lock = function () {
-
     this.domElement.requestPointerLock();
-
   };
 
   this.unlock = function () {
-
     document.exitPointerLock();
-
   };
 
   this.connect();
-
 };
 
 THREE.PointerLockControls.prototype = Object.create(THREE.EventDispatcher.prototype);
 THREE.PointerLockControls.prototype.constructor = THREE.PointerLockControls;
-},{"three":2}],5:[function(require,module,exports){
+
+},{"three":2}],6:[function(require,module,exports){
 module.exports = class Collectiable {
     constructor(x, z, y, scene) {
         this.x = x;
@@ -51982,7 +52391,7 @@ module.exports = class Collectiable {
     }
 };
 
-},{}],6:[function(require,module,exports){
+},{}],7:[function(require,module,exports){
 module.exports = class Floor {
   constructor(w, h, scene) {
     this.w = w;
@@ -52006,7 +52415,7 @@ module.exports = class Floor {
   }
 };
 
-},{}],7:[function(require,module,exports){
+},{}],8:[function(require,module,exports){
 module.exports = class insideWallsMaze {
   constructor(x, z, w, endBlock, scene) {
     this.x = x;
@@ -52041,7 +52450,10 @@ module.exports = class insideWallsMaze {
   }
 };
 
-},{}],8:[function(require,module,exports){
+},{}],9:[function(require,module,exports){
+/* eslint-disable no-underscore-dangle */
+/* eslint-disable eqeqeq */
+/* eslint-disable no-plusplus */
 const Floor = require('./Floor.js');
 const InsideWallsMaze = require('./InsideWallsMaze.js');
 const Map = require('./Map.js');
@@ -52052,351 +52464,588 @@ const Platform = require('./Platform');
 const LevelOne = require('./LevelOne');
 const Collectible = require('./Collectible');
 
-
 module.exports = class LevelOne {
-    constructor(scene, renderer, camera, jumpDistance, sizeOfPlatforms) {
-        this.scene = scene;
-        this.renderer = renderer;
-        this.camera = camera;
-        this.platFormsClass = [];
-        this.platFormConstructor = [];
-        this.collectibles = [];
-        this.collectiblesCurrentIndex = 0;
-        this.currentIndex = 0;
-        this.currentPositionX = 0;
-        this.currentPositionY = 0;
-        this.currentPositionZ = 0;
-        this.white = new THREE.Color("rgb(255, 255, 255)");
-        this.black = new THREE.Color("rgb(0, 0, 0)");
-        this.yellow = new THREE.Color("rgb(233, 255, 0)");
-        this.green = new THREE.Color("rgb(0,255,0)");
-        this.blue = new THREE.Color("rgb(0,100,255)");
-        this.red = new THREE.Color("rgb(255,0,0)");
-        this.buildASection = false;
-        this.counter = 0;
-        this.LastDirection = 0;
-        this.score = 0;
-        this.jumpDistance = jumpDistance;
-        this.sizeOfPlatforms = sizeOfPlatforms;
-    }
+  constructor(scene, renderer, camera, jumpDistance, sizeOfPlatforms) {
+    this.scene = scene;
+    this.renderer = renderer;
+    this.camera = camera;
+    this.platFormsClass = [];
+    this.platFormConstructor = [];
+    this.collectibles = [];
+    this.collectiblesCurrentIndex = 0;
+    this.currentIndex = 0;
+    this.currentPositionX = 0;
+    this.currentPositionY = 0;
+    this.currentPositionZ = 0;
+    this.white = new THREE.Color('rgb(255, 255, 255)');
+    this.black = new THREE.Color('rgb(0, 0, 0)');
+    this.yellow = new THREE.Color('rgb(233, 255, 0)');
+    this.green = new THREE.Color('rgb(0,255,0)');
+    this.blue = new THREE.Color('rgb(0,100,255)');
+    this.red = new THREE.Color('rgb(255,0,0)');
+    this.buildASection = false;
+    this.counter = 0;
+    this.LastDirection = 0;
+    this.score = 0;
+    this.jumpDistance = jumpDistance;
+    this.sizeOfPlatforms = sizeOfPlatforms;
+  }
 
-    generateScene() {
-        // let floorClass = new Floor(1000, 1000, this.scene);
-        // floorClass.addToScene();
-        // let walls = [];
-        // walls[0] = new WallGenerator(floorClass.w / 2, 50, 0, 1, 100, floorClass.w, this.white, this.scene, 0);
-        // walls[1] = new WallGenerator(-floorClass.w / 2, 50, 0, 1, 100, floorClass.w, this.white, this.scene, 0);
-        // walls[2] = new WallGenerator(0, 50, floorClass.h / 2, 1, 100, floorClass.h, this.white, this.scene, (-Math.PI / 2));
-        // walls[3] = new WallGenerator(0, 50, -floorClass.h / 2, 1, 100, floorClass.h, this.white, this.scene, (-Math.PI / 2));
-        // for (let x = 0; x < walls.length; x++) {
-        //     walls[x].addToScene();
-        // }
-        let DIR;
-        let NOS;
-        let LastDirection = 0;
-        let shouldJump;
+  generateScene() {
+    // let floorClass = new Floor(1000, 1000, this.scene);
+    // floorClass.addToScene();
+    // let walls = [];
+    // walls[0] = new WallGenerator(floorClass.w / 2, 50, 0, 1, 100, floorClass.w, this.white, this.scene, 0);
+    // walls[1] = new WallGenerator(-floorClass.w / 2, 50, 0, 1, 100, floorClass.w, this.white, this.scene, 0);
+    // walls[2] = new WallGenerator(0, 50, floorClass.h / 2, 1, 100, floorClass.h, this.white, this.scene, (-Math.PI / 2));
+    // walls[3] = new WallGenerator(0, 50, -floorClass.h / 2, 1, 100, floorClass.h, this.white, this.scene, (-Math.PI / 2));
+    // for (let x = 0; x < walls.length; x++) {
+    //     walls[x].addToScene();
+    // }
+    let DIR;
+    let NOS;
+    let LastDirection = 0;
+    let shouldJump;
 
-        this.scene.fog = new THREE.FogExp2(this.white, 0.005);
+    this.scene.fog = new THREE.FogExp2(this.white, 0.005);
 
-        for (let x = 0; x < 20; x++) {
-            console.log("X: " + this.currentPositionX + " Y: " + this.currentPositionY + " Z: " + this.currentPositionZ);
-            while (true) {
-                DIR = Math.floor((Math.random() * 3));
-                if ((LastDirection == 0 && DIR != 1) || (LastDirection == 1 && DIR != 0) || (LastDirection == 3 && DIR != 2) || (LastDirection == 2 && DIR != 3)) {
-                    break;
-                }
-            }
-            LastDirection = DIR;
-            //console.log(DIR + " DIR");
-
-            if (x % 2 != 0) {
-                NOS = Math.floor((Math.random() * 4) + 2);
-                this.buildStairCase(this.currentPositionX, this.currentPositionY, this.currentPositionZ, DIR, NOS);
-            } else {
-                shouldJump = Math.floor((Math.random() * 4) + 1);
-                //console.log(shouldJump + "Should Jump");
-                if (shouldJump == 1) {
-                    //console.log("should Jump");
-                    NOS = Math.floor((Math.random() * 1) + 1);
-                    this.buildMovingCourse(this.currentPositionX, this.currentPositionY, this.currentPositionZ, DIR, NOS, true);
-                } else {
-                    NOS = Math.floor((Math.random() * 2) + 1);
-                    this.buildMovingCourse(this.currentPositionX, this.currentPositionY, this.currentPositionZ, DIR, NOS, false);
-                }
-            }
+    for (let x = 0; x < 20; x++) {
+      console.log(
+        `X: ${this.currentPositionX} Y: ${this.currentPositionY} Z: ${this.currentPositionZ}`,
+      );
+      while (true) {
+        DIR = Math.floor(Math.random() * 3);
+        if (
+          (LastDirection == 0 && DIR != 1)
+          || (LastDirection == 1 && DIR != 0)
+          || (LastDirection == 3 && DIR != 2)
+          || (LastDirection == 2 && DIR != 3)
+        ) {
+          break;
         }
+      }
+      LastDirection = DIR;
+      // console.log(DIR + " DIR");
 
-        for (let x = 0; x < this.platFormConstructor.length; x++) {
-            this.platFormsClass[x] = new Platform(this.platFormConstructor[x][0], this.platFormConstructor[x][1], this.platFormConstructor[x][2], this.platFormConstructor[x][3], this.platFormConstructor[x][4], this.platFormConstructor[x][5], this.platFormConstructor[x][6], this.platFormConstructor[x][7], this.platFormConstructor[x][8], this.platFormConstructor[x][9]);
-            this.platFormsClass[x].addToScene();
-        }
-
-        var _this = this;
-        setInterval(function () {
-            _this.gameLoop();
-        }, 33);
-    }
-
-    test() {
-        let DIR;
-        let NOS;
-        let shouldJump;
-        while (true) {
-            DIR = Math.floor((Math.random() * 3));
-            if ((this.LastDirection == 0 && DIR != 1) || (this.LastDirection == 1 && DIR != 0) || (this.LastDirection == 3 && DIR != 2) || (this.LastDirection == 2 && DIR != 3)) {
-                break;
-            }
-        }
-        this.LastDirection = DIR;
-        //console.log(DIR + " DIR");
-        if (this.counter % 2 != 0) {
-            NOS = Math.floor((Math.random() * 4) + 1);
-            this.buildStairCase(this.currentPositionX, this.currentPositionY, this.currentPositionZ, DIR, NOS);
+      if (x % 2 != 0) {
+        NOS = Math.floor(Math.random() * 4 + 2);
+        this.buildStairCase(
+          this.currentPositionX,
+          this.currentPositionY,
+          this.currentPositionZ,
+          DIR,
+          NOS,
+        );
+      } else {
+        shouldJump = Math.floor(Math.random() * 4 + 1);
+        // console.log(shouldJump + "Should Jump");
+        if (shouldJump == 1) {
+          // console.log("should Jump");
+          NOS = Math.floor(Math.random() * 1 + 1);
+          this.buildMovingCourse(
+            this.currentPositionX,
+            this.currentPositionY,
+            this.currentPositionZ,
+            DIR,
+            NOS,
+            true,
+          );
         } else {
-            shouldJump = Math.floor((Math.random() * 3));
-            //console.log(shouldJump + "Should Jump");
-            if (shouldJump == 1) {
-                //console.log("should Jump");
-                NOS = Math.floor((Math.random() * 1) + 1);
-                this.buildMovingCourse(this.currentPositionX, this.currentPositionY, this.currentPositionZ, DIR, NOS, true);
-            } else {
-                this.buildMovingCourse(this.currentPositionX, this.currentPositionY, this.currentPositionZ, DIR, NOS, false);
-            }
+          NOS = Math.floor(Math.random() * 2 + 1);
+          this.buildMovingCourse(
+            this.currentPositionX,
+            this.currentPositionY,
+            this.currentPositionZ,
+            DIR,
+            NOS,
+            false,
+          );
         }
-        for (let x = 0; x < this.platFormConstructor.length; x++) {
-            this.platFormsClass[x] = new Platform(this.platFormConstructor[x][0], this.platFormConstructor[x][1], this.platFormConstructor[x][2], this.platFormConstructor[x][3], this.platFormConstructor[x][4], this.platFormConstructor[x][5], this.platFormConstructor[x][6], this.platFormConstructor[x][7], this.platFormConstructor[x][8], this.platFormConstructor[x][9]);
-            this.platFormsClass[x].addToScene();
-        }
-        this.counter++;
+      }
     }
 
-
-    gameLoop() {
-        if (this.camera.position.y <= -2000) {
-            this.camera.position.x = 0;
-            this.camera.position.z = 0;
-            this.camera.position.y = 10;
-        }
-        for (let x = 0; x < this.collectibles.length; x++) {
-            this.collectibles[x].rotate();
-        }
-
-        for (let x = 0; x < this.platFormsClass.length; x++) {
-            if (this.platFormsClass[x].movingHor) {
-                this.platFormsClass[x].moveHor();
-            }
-            if (this.platFormsClass[x].movingVer) {
-                this.platFormsClass[x].moveVer();
-            }
-            if (this.platFormsClass[x].movingZ) {
-                this.platFormsClass[x].moveZ();
-            }
-        }
-        this.buildASection = false;
+    for (let x = 0; x < this.platFormConstructor.length; x++) {
+      this.platFormsClass[x] = new Platform(
+        this.platFormConstructor[x][0],
+        this.platFormConstructor[x][1],
+        this.platFormConstructor[x][2],
+        this.platFormConstructor[x][3],
+        this.platFormConstructor[x][4],
+        this.platFormConstructor[x][5],
+        this.platFormConstructor[x][6],
+        this.platFormConstructor[x][7],
+        this.platFormConstructor[x][8],
+        this.platFormConstructor[x][9],
+      );
+      this.platFormsClass[x].addToScene();
     }
 
-    buildStairCase(SX, SY, SZ, Dir, NumOfSteps) {
-        let xStair = SX;
-        let yStair = SY;
-        let zStair = SZ;
-        let curIndex;
-        let random;
-        random = Math.floor((Math.random() * NumOfSteps));
-        switch (Dir) {
-            case 0:
-                //console.log("Dir 0");
-                curIndex = this.currentIndex;
-                random += curIndex;
-                console.log(random + " random");
-                for (let x = curIndex; x < curIndex + NumOfSteps; x++) {
-                    if (random == x) {
-                        this.collectibles[this.collectiblesCurrentIndex] = new Collectible(xStair, yStair, zStair + 10, this.scene);
-                        this.collectibles[this.collectiblesCurrentIndex].addToScene();
-                        this.collectiblesCurrentIndex++;
-                    }
-                    this.platFormConstructor[x] = [xStair, yStair, zStair, this.sizeOfPlatforms, 20, this.white, this.scene, false, false, false];
-                    xStair += this.jumpDistance / 2;
-                    yStair -= 0;
-                    zStair += 10;
-                    this.currentIndex++;
-                }
-                break;
-            case 1:
-                //console.log("Dir 1");
-                curIndex = this.currentIndex;
-                random += curIndex;
-                console.log(random + " random");
-                for (let x = curIndex; x < curIndex + NumOfSteps; x++) {
-                    if (random == x) {
-                        this.collectibles[this.collectiblesCurrentIndex] = new Collectible(xStair, yStair, zStair + 10, this.scene);
-                        this.collectibles[this.collectiblesCurrentIndex].addToScene();
-                        this.collectiblesCurrentIndex++;
-                    }
-                    this.platFormConstructor[x] = [xStair, yStair, zStair, this.sizeOfPlatforms, 20, this.yellow, this.scene, false, false, false];
-                    xStair -= this.jumpDistance / 2;
-                    yStair -= 0;
-                    zStair += 10;
-                    this.currentIndex++;
-                }
-                break;
-            case 2:
-                //console.log("Dir 2");
-                curIndex = this.currentIndex;
-                random += curIndex;
-                console.log(random + " random");
-                for (let x = curIndex; x < curIndex + NumOfSteps; x++) {
-                    if (random == x) {
-                        this.collectibles[this.collectiblesCurrentIndex] = new Collectible(xStair, yStair, zStair + 10, this.scene);
-                        this.collectibles[this.collectiblesCurrentIndex].addToScene();
-                        this.collectiblesCurrentIndex++;
-                    }
-                    this.platFormConstructor[x] = [xStair, yStair, zStair, this.sizeOfPlatforms, 20, this.red, this.scene, false, false, false];
-                    xStair -= 0;
-                    yStair -= this.jumpDistance / 2;
-                    zStair += 10;
-                    this.currentIndex++;
-                }
-                break;
-            case 3:
-                //console.log("Dir 3");
-                curIndex = this.currentIndex;
-                random += curIndex;
-                console.log(random + " random");
-                for (let x = curIndex; x < curIndex + NumOfSteps; x++) {
-                    if (random == x) {
-                        this.collectibles[this.collectiblesCurrentIndex] = new Collectible(xStair, yStair, zStair + 10, this.scene);
-                        this.collectibles[this.collectiblesCurrentIndex].addToScene();
-                        this.collectiblesCurrentIndex++;
-                    }
-                    this.platFormConstructor[x] = [xStair, yStair, zStair, this.sizeOfPlatforms, 20, this.green, this.scene, false, false, false];
-                    xStair -= 0;
-                    yStair += this.jumpDistance / 2;
-                    zStair += 10;
-                    this.currentIndex++;
-                }
-                break;
-            default:
-        }
-        // zStair -= 5;
-        this.currentPositionX = xStair;
-        this.currentPositionY = yStair;
-        this.currentPositionZ = zStair;
-    }
-    buildMovingCourse(SX, SY, SZ, Dir, numOfJumps, upAndDown) {
-        let curIndex;
-        let xStair = SX;
-        let yStair = SY;
-        let zStair = SZ;
-        this.platFormConstructor[this.currentIndex] = [xStair, yStair, zStair, this.sizeOfPlatforms, 20, this.red, this.scene, false, false, false];
-        this.currentIndex++;
+    const _this = this;
+    setInterval(() => {
+      _this.gameLoop();
+    }, 33);
+  }
 
-        switch (Dir) {
-            case 0:
-                //console.log("Dir Mov 0")
-                xStair += this.jumpDistance;
-                yStair -= 0;
-                zStair += 0;
-                curIndex = this.currentIndex
-                for (let x = curIndex; x < curIndex + numOfJumps; x++) {
-                    if (upAndDown) {
-                        this.platFormConstructor[x] = [xStair, yStair, zStair, this.sizeOfPlatforms, 20, this.white, this.scene, true, false, false];
-                        xStair += this.jumpDistance;
-                        yStair -= 0;
-                        zStair += 0;
-                        this.currentIndex++;
-                    } else {
-                        this.platFormConstructor[x] = [xStair, yStair, zStair, this.sizeOfPlatforms, 20, this.white, this.scene, false, false, true];
-                        xStair += this.jumpDistance;
-                        yStair -= 0;
-                        zStair += 0;
-                        this.currentIndex++;
-                    }
-                }
-                break;
-            case 1:
-                //console.log("Dir Mov 1")
-                xStair -= this.jumpDistance;
-                yStair -= 0;
-                zStair += 0;
-                curIndex = this.currentIndex;
-                for (let x = curIndex; x < curIndex + numOfJumps; x++) {
-                    if (upAndDown) {
-                        this.platFormConstructor[x] = [xStair, yStair, zStair, this.sizeOfPlatforms, 20, this.yellow, this.scene, true, false, false];
-                        xStair -= this.jumpDistance;
-                        yStair -= 0;
-                        zStair += 0;
-                        this.currentIndex++;
-                    } else {
-                        this.platFormConstructor[x] = [xStair, yStair, zStair, this.sizeOfPlatforms, 20, this.yellow, this.scene, false, false, true];
-                        xStair -= this.jumpDistance;
-                        yStair -= 0;
-                        zStair += 0;
-                        this.currentIndex++;
-                    }
-                }
-                break;
-            case 2:
-                //console.log("Dir Mov 2")
-                xStair += 0;
-                yStair -= this.jumpDistance;
-                zStair += 0;
-                curIndex = this.currentIndex;
-                for (let x = curIndex; x < curIndex + numOfJumps; x++) {
-                    if (upAndDown) {
-                        this.platFormConstructor[x] = [xStair, yStair, zStair, this.sizeOfPlatforms, 20, this.red, this.scene, true, false, false];
-                        xStair -= 0;
-                        yStair -= this.jumpDistance;
-                        zStair += 0;
-                        this.currentIndex++;
-                    } else {
-                        this.platFormConstructor[x] = [xStair, yStair, zStair, this.sizeOfPlatforms, 20, this.red, this.scene, false, true, false];
-                        xStair -= 0;
-                        yStair -= this.jumpDistance;
-                        zStair += 0;
-                        this.currentIndex++;
-                    }
-                }
-                break;
-            case 3:
-                // console.log("Dir Mov 3")
-                xStair += 0;
-                yStair += this.jumpDistance;
-                zStair += 0;
-                curIndex = this.currentIndex;
-                for (let x = curIndex; x < curIndex + numOfJumps; x++) {
-                    if (upAndDown) {
-                        this.platFormConstructor[x] = [xStair, yStair, zStair, this.sizeOfPlatforms, 20, this.green, this.scene, true, false, false];
-                        xStair -= 0;
-                        yStair += this.jumpDistance;
-                        zStair += 0;
-                        this.currentIndex++;
-                    } else {
-                        this.platFormConstructor[x] = [xStair, yStair, zStair, this.sizeOfPlatforms, 20, this.green, this.scene, false, true, false];
-                        xStair -= 0;
-                        yStair += this.jumpDistance;
-                        zStair += 0;
-                        this.currentIndex++;
-                    }
-                }
-                break;
-            default:
-        }
-        this.currentPositionX = xStair;
-        this.currentPositionY = yStair;
-        this.currentPositionZ = zStair;
+  test() {
+    let DIR;
+    let NOS;
+    let shouldJump;
+    while (true) {
+      DIR = Math.floor(Math.random() * 3);
+      if (
+        (this.LastDirection == 0 && DIR != 1)
+        || (this.LastDirection == 1 && DIR != 0)
+        || (this.LastDirection == 3 && DIR != 2)
+        || (this.LastDirection == 2 && DIR != 3)
+      ) {
+        break;
+      }
     }
-    collectibleCollision(CX, CY, CZ) {
-        console.log("going into function");
-        for (let x = 0; x < this.collectibles.length; x++) {
-            if (this.collectibles[x].cubeFor.position.x == CX && this.collectibles[x].cubeFor.position.y == CY && this.collectibles[x].cubeFor.position.z == CZ) {
-                this.scene.remove(this.collectibles[x].cubeFor);
-                this.collectibles.splice(x, 1);
-                this.score++;
-            }
-        }
+    this.LastDirection = DIR;
+    // console.log(DIR + " DIR");
+    if (this.counter % 2 != 0) {
+      NOS = Math.floor(Math.random() * 4 + 1);
+      this.buildStairCase(
+        this.currentPositionX,
+        this.currentPositionY,
+        this.currentPositionZ,
+        DIR,
+        NOS,
+      );
+    } else {
+      shouldJump = Math.floor(Math.random() * 3);
+      // console.log(shouldJump + "Should Jump");
+      if (shouldJump == 1) {
+        // console.log("should Jump");
+        NOS = Math.floor(Math.random() * 1 + 1);
+        this.buildMovingCourse(
+          this.currentPositionX,
+          this.currentPositionY,
+          this.currentPositionZ,
+          DIR,
+          NOS,
+          true,
+        );
+      } else {
+        this.buildMovingCourse(
+          this.currentPositionX,
+          this.currentPositionY,
+          this.currentPositionZ,
+          DIR,
+          NOS,
+          false,
+        );
+      }
     }
+    for (let x = 0; x < this.platFormConstructor.length; x++) {
+      this.platFormsClass[x] = new Platform(
+        this.platFormConstructor[x][0],
+        this.platFormConstructor[x][1],
+        this.platFormConstructor[x][2],
+        this.platFormConstructor[x][3],
+        this.platFormConstructor[x][4],
+        this.platFormConstructor[x][5],
+        this.platFormConstructor[x][6],
+        this.platFormConstructor[x][7],
+        this.platFormConstructor[x][8],
+        this.platFormConstructor[x][9],
+      );
+      this.platFormsClass[x].addToScene();
+    }
+    this.counter++;
+  }
+
+  gameLoop() {
+    if (this.camera.position.y <= -2000) {
+      this.camera.position.x = 0;
+      this.camera.position.z = 0;
+      this.camera.position.y = 10;
+    }
+    for (let x = 0; x < this.collectibles.length; x++) {
+      this.collectibles[x].rotate();
+    }
+
+    for (let x = 0; x < this.platFormsClass.length; x++) {
+      if (this.platFormsClass[x].movingHor) {
+        this.platFormsClass[x].moveHor();
+      }
+      if (this.platFormsClass[x].movingVer) {
+        this.platFormsClass[x].moveVer();
+      }
+      if (this.platFormsClass[x].movingZ) {
+        this.platFormsClass[x].moveZ();
+      }
+    }
+    this.buildASection = false;
+  }
+
+  buildStairCase(SX, SY, SZ, Dir, NumOfSteps) {
+    let xStair = SX;
+    let yStair = SY;
+    let zStair = SZ;
+    let curIndex;
+    let random;
+    random = Math.floor(Math.random() * NumOfSteps);
+    switch (Dir) {
+      case 0:
+        // console.log("Dir 0");
+        curIndex = this.currentIndex;
+        random += curIndex;
+        for (let x = curIndex; x < curIndex + NumOfSteps; x++) {
+          if (random == x) {
+            this.collectibles[this.collectiblesCurrentIndex] = new Collectible(
+              xStair,
+              yStair,
+              zStair + 10,
+              this.scene,
+            );
+            this.collectibles[this.collectiblesCurrentIndex].addToScene();
+            this.collectiblesCurrentIndex++;
+          }
+          this.platFormConstructor[x] = [
+            xStair,
+            yStair,
+            zStair,
+            this.sizeOfPlatforms,
+            20,
+            this.white,
+            this.scene,
+            false,
+            false,
+            false,
+          ];
+          xStair += this.jumpDistance / 2;
+          yStair -= 0;
+          zStair += 10;
+          this.currentIndex++;
+        }
+        break;
+      case 1:
+        // console.log("Dir 1");
+        curIndex = this.currentIndex;
+        random += curIndex;
+        for (let x = curIndex; x < curIndex + NumOfSteps; x++) {
+          if (random == x) {
+            this.collectibles[this.collectiblesCurrentIndex] = new Collectible(
+              xStair,
+              yStair,
+              zStair + 10,
+              this.scene,
+            );
+            this.collectibles[this.collectiblesCurrentIndex].addToScene();
+            this.collectiblesCurrentIndex++;
+          }
+          this.platFormConstructor[x] = [
+            xStair,
+            yStair,
+            zStair,
+            this.sizeOfPlatforms,
+            20,
+            this.yellow,
+            this.scene,
+            false,
+            false,
+            false,
+          ];
+          xStair -= this.jumpDistance / 2;
+          yStair -= 0;
+          zStair += 10;
+          this.currentIndex++;
+        }
+        break;
+      case 2:
+        // console.log("Dir 2");
+        curIndex = this.currentIndex;
+        random += curIndex;
+        for (let x = curIndex; x < curIndex + NumOfSteps; x++) {
+          if (random == x) {
+            this.collectibles[this.collectiblesCurrentIndex] = new Collectible(
+              xStair,
+              yStair,
+              zStair + 10,
+              this.scene,
+            );
+            this.collectibles[this.collectiblesCurrentIndex].addToScene();
+            this.collectiblesCurrentIndex++;
+          }
+          this.platFormConstructor[x] = [
+            xStair,
+            yStair,
+            zStair,
+            this.sizeOfPlatforms,
+            20,
+            this.red,
+            this.scene,
+            false,
+            false,
+            false,
+          ];
+          xStair -= 0;
+          yStair -= this.jumpDistance / 2;
+          zStair += 10;
+          this.currentIndex++;
+        }
+        break;
+      case 3:
+        // console.log("Dir 3");
+        curIndex = this.currentIndex;
+        random += curIndex;
+        for (let x = curIndex; x < curIndex + NumOfSteps; x++) {
+          if (random == x) {
+            this.collectibles[this.collectiblesCurrentIndex] = new Collectible(
+              xStair,
+              yStair,
+              zStair + 10,
+              this.scene,
+            );
+            this.collectibles[this.collectiblesCurrentIndex].addToScene();
+            this.collectiblesCurrentIndex++;
+          }
+          this.platFormConstructor[x] = [
+            xStair,
+            yStair,
+            zStair,
+            this.sizeOfPlatforms,
+            20,
+            this.green,
+            this.scene,
+            false,
+            false,
+            false,
+          ];
+          xStair -= 0;
+          yStair += this.jumpDistance / 2;
+          zStair += 10;
+          this.currentIndex++;
+        }
+        break;
+      default:
+    }
+    // zStair -= 5;
+    this.currentPositionX = xStair;
+    this.currentPositionY = yStair;
+    this.currentPositionZ = zStair;
+  }
+
+  buildMovingCourse(SX, SY, SZ, Dir, numOfJumps, upAndDown) {
+    let curIndex;
+    let xStair = SX;
+    let yStair = SY;
+    let zStair = SZ;
+    this.platFormConstructor[this.currentIndex] = [
+      xStair,
+      yStair,
+      zStair,
+      this.sizeOfPlatforms,
+      20,
+      this.red,
+      this.scene,
+      false,
+      false,
+      false,
+    ];
+    this.currentIndex++;
+
+    switch (Dir) {
+      case 0:
+        // console.log("Dir Mov 0")
+        xStair += this.jumpDistance;
+        yStair -= 0;
+        zStair += 0;
+        curIndex = this.currentIndex;
+        for (let x = curIndex; x < curIndex + numOfJumps; x++) {
+          if (upAndDown) {
+            this.platFormConstructor[x] = [
+              xStair,
+              yStair,
+              zStair,
+              this.sizeOfPlatforms,
+              20,
+              this.white,
+              this.scene,
+              true,
+              false,
+              false,
+            ];
+            xStair += this.jumpDistance;
+            yStair -= 0;
+            zStair += 0;
+            this.currentIndex++;
+          } else {
+            this.platFormConstructor[x] = [
+              xStair,
+              yStair,
+              zStair,
+              this.sizeOfPlatforms,
+              20,
+              this.white,
+              this.scene,
+              false,
+              false,
+              true,
+            ];
+            xStair += this.jumpDistance;
+            yStair -= 0;
+            zStair += 0;
+            this.currentIndex++;
+          }
+        }
+        break;
+      case 1:
+        // console.log("Dir Mov 1")
+        xStair -= this.jumpDistance;
+        yStair -= 0;
+        zStair += 0;
+        curIndex = this.currentIndex;
+        for (let x = curIndex; x < curIndex + numOfJumps; x++) {
+          if (upAndDown) {
+            this.platFormConstructor[x] = [
+              xStair,
+              yStair,
+              zStair,
+              this.sizeOfPlatforms,
+              20,
+              this.yellow,
+              this.scene,
+              true,
+              false,
+              false,
+            ];
+            xStair -= this.jumpDistance;
+            yStair -= 0;
+            zStair += 0;
+            this.currentIndex++;
+          } else {
+            this.platFormConstructor[x] = [
+              xStair,
+              yStair,
+              zStair,
+              this.sizeOfPlatforms,
+              20,
+              this.yellow,
+              this.scene,
+              false,
+              false,
+              true,
+            ];
+            xStair -= this.jumpDistance;
+            yStair -= 0;
+            zStair += 0;
+            this.currentIndex++;
+          }
+        }
+        break;
+      case 2:
+        // console.log("Dir Mov 2")
+        xStair += 0;
+        yStair -= this.jumpDistance;
+        zStair += 0;
+        curIndex = this.currentIndex;
+        for (let x = curIndex; x < curIndex + numOfJumps; x++) {
+          if (upAndDown) {
+            this.platFormConstructor[x] = [
+              xStair,
+              yStair,
+              zStair,
+              this.sizeOfPlatforms,
+              20,
+              this.red,
+              this.scene,
+              true,
+              false,
+              false,
+            ];
+            xStair -= 0;
+            yStair -= this.jumpDistance;
+            zStair += 0;
+            this.currentIndex++;
+          } else {
+            this.platFormConstructor[x] = [
+              xStair,
+              yStair,
+              zStair,
+              this.sizeOfPlatforms,
+              20,
+              this.red,
+              this.scene,
+              false,
+              true,
+              false,
+            ];
+            xStair -= 0;
+            yStair -= this.jumpDistance;
+            zStair += 0;
+            this.currentIndex++;
+          }
+        }
+        break;
+      case 3:
+        // console.log("Dir Mov 3")
+        xStair += 0;
+        yStair += this.jumpDistance;
+        zStair += 0;
+        curIndex = this.currentIndex;
+        for (let x = curIndex; x < curIndex + numOfJumps; x++) {
+          if (upAndDown) {
+            this.platFormConstructor[x] = [
+              xStair,
+              yStair,
+              zStair,
+              this.sizeOfPlatforms,
+              20,
+              this.green,
+              this.scene,
+              true,
+              false,
+              false,
+            ];
+            xStair -= 0;
+            yStair += this.jumpDistance;
+            zStair += 0;
+            this.currentIndex++;
+          } else {
+            this.platFormConstructor[x] = [
+              xStair,
+              yStair,
+              zStair,
+              this.sizeOfPlatforms,
+              20,
+              this.green,
+              this.scene,
+              false,
+              true,
+              false,
+            ];
+            xStair -= 0;
+            yStair += this.jumpDistance;
+            zStair += 0;
+            this.currentIndex++;
+          }
+        }
+        break;
+      default:
+    }
+    this.currentPositionX = xStair;
+    this.currentPositionY = yStair;
+    this.currentPositionZ = zStair;
+  }
+
+  collectibleCollision(CX, CY, CZ) {
+    for (let x = 0; x < this.collectibles.length; x++) {
+      if (
+        this.collectibles[x].cubeFor.position.x == CX
+        && this.collectibles[x].cubeFor.position.y == CY
+        && this.collectibles[x].cubeFor.position.z == CZ
+      ) {
+        this.scene.remove(this.collectibles[x].cubeFor);
+        this.collectibles.splice(x, 1);
+        this.score++;
+      }
+    }
+  }
 };
-},{"./2DCanvas":3,"./Collectible":5,"./Floor.js":6,"./InsideWallsMaze.js":7,"./LevelOne":8,"./Map.js":9,"./Platform":10,"./RecursiveMaze":11,"./WallGenerator.js":12}],9:[function(require,module,exports){
+
+},{"./2DCanvas":3,"./Collectible":6,"./Floor.js":7,"./InsideWallsMaze.js":8,"./LevelOne":9,"./Map.js":10,"./Platform":11,"./RecursiveMaze":12,"./WallGenerator.js":13}],10:[function(require,module,exports){
 
 
 
@@ -52616,100 +53265,95 @@ module.exports = class Map {
     }
   }
 }
-},{}],10:[function(require,module,exports){
+},{}],11:[function(require,module,exports){
+/* eslint-disable no-plusplus */
 module.exports = class Platform {
-    constructor(x, z, y, w, d, color, scene, movingVer, movingHor, movingZ) {
-        this.x = x;
-        this.y = y;
-        this.z = z;
-        this.w = w;
-        this.d = d;
-        this.scene = scene;
-        this.color = color;
-        this.heightOfPlatform = 5;
-        this.movingHor = movingHor;
-        this.movingVer = movingVer;
-        this.movingZ = movingZ;
-        this.cubeFor;
-        this.movePos = true;
-        this.moveRange = 50;
-        this.appear = 50;
-        this.disappearDelay = 100;
-    }
+  constructor(x, z, y, w, d, color, scene, movingVer, movingHor, movingZ) {
+    this.x = x;
+    this.y = y;
+    this.z = z;
+    this.w = w;
+    this.d = d;
+    this.scene = scene;
+    this.color = color;
+    this.heightOfPlatform = 5;
+    this.movingHor = movingHor;
+    this.movingVer = movingVer;
+    this.movingZ = movingZ;
+    this.cubeFor;
+    this.movePos = true;
+    this.moveRange = 50;
+    this.appear = 50;
+    this.disappearDelay = 100;
+  }
 
-    addToScene() {
-        let geometryFor = new THREE.BoxGeometry(this.w, this.heightOfPlatform, this.w);
-        let materialFor;
-        materialFor = new THREE.MeshLambertMaterial({ color: this.color });
-        this.cubeFor = new THREE.Mesh(geometryFor, materialFor);
-        this.scene.add(this.cubeFor);
-        this.cubeFor.position.x = this.x;
+  addToScene() {
+    const geometryFor = new THREE.BoxGeometry(this.w, this.heightOfPlatform, this.w);
+    let materialFor;
+    materialFor = new THREE.MeshLambertMaterial({ color: this.color });
+    this.cubeFor = new THREE.Mesh(geometryFor, materialFor);
+    this.scene.add(this.cubeFor);
+    this.cubeFor.position.x = this.x;
+    this.cubeFor.position.y = this.y;
+    this.cubeFor.position.z = this.z;
+  }
+
+  moveHor() {
+    if (this.movePos) {
+      if (this.cubeFor.position.x <= this.x + this.moveRange / 2) {
+        // console.log("moveHor +");
+        this.cubeFor.position.x += 1;
+      } else {
+        // console.log(movePos);
+        this.movePos = false;
+      }
+    } else if (this.cubeFor.position.x >= this.x - this.moveRange / 2) {
+      // console.log("moveHor -");
+      this.cubeFor.position.x -= 1;
+    } else {
+      this.movePos = true;
+    }
+  }
+
+  moveVer() {
+    // console.log("moveVer " + this.disappearDelay);
+    this.disappearDelay++;
+    if (this.disappearDelay >= 50) {
+      this.disappearDelay = 0;
+      if (this.appear) {
+        this.appear = false;
         this.cubeFor.position.y = this.y;
-        this.cubeFor.position.z = this.z;
+      } else {
+        this.appear = true;
+        this.cubeFor.position.y = -1000;
+      }
     }
+  }
 
-    moveHor() {
-        if (this.movePos) {
-            if (this.cubeFor.position.x <= this.x + (this.moveRange / 2)) {
-                //console.log("moveHor +");
-                this.cubeFor.position.x += 1;
-            } else {
-                //console.log(movePos);
-                this.movePos = false;
-            }
-        } else {
-            if (this.cubeFor.position.x >= this.x - (this.moveRange / 2)) {
-                //console.log("moveHor -");
-                this.cubeFor.position.x -= 1;
-            } else {
-                this.movePos = true;
-            }
-        }
+  moveZ() {
+    if (this.movePos) {
+      if (this.cubeFor.position.z <= this.z + this.moveRange / 2) {
+        // console.log("moveVer +");
+        this.cubeFor.position.z += 1;
+      } else {
+        // console.log(movePos);
+        this.movePos = false;
+      }
+    } else if (this.cubeFor.position.z >= this.z - this.moveRange / 2) {
+      // console.log("moveVer -");
+      this.cubeFor.position.z -= 1;
+    } else {
+      this.movePos = true;
     }
-    moveVer() {
-        //console.log("moveVer " + this.disappearDelay);
-        this.disappearDelay++;
-        if (this.disappearDelay >= 50) {
-            console.log("disappearDelay");
-            this.disappearDelay = 0;
-            if (this.appear) {
-                console.log(this.appear + " appear");
-                this.appear = false;
-                this.cubeFor.position.y = this.y;
-            } else {
-                console.log(this.appear + " appear");
-                this.appear = true;
-                this.cubeFor.position.y = -1000;
-            }
-        }
-
-    }
-    moveZ() {
-        if (this.movePos) {
-            if (this.cubeFor.position.z <= this.z + (this.moveRange / 2)) {
-                //console.log("moveVer +");
-                this.cubeFor.position.z += 1;
-            } else {
-                //console.log(movePos);
-                this.movePos = false;
-            }
-        } else {
-            if (this.cubeFor.position.z >= this.z - (this.moveRange / 2)) {
-                //console.log("moveVer -");
-                this.cubeFor.position.z -= 1;
-            } else {
-                this.movePos = true;
-            }
-        }
-    }
+  }
 };
 
-},{}],11:[function(require,module,exports){
+},{}],12:[function(require,module,exports){
 // eslint-disable-next-line no-unused-vars
 module.exports = class RecursiveMaze {
   constructor(size) {
     // eslint-disable-next-line no-console
-    console.log('recursive');
+    // console.log('recursive');
     this.array = [];
     this.visitedPlacesX = [];
     this.visitedPlacesY = [];
@@ -52739,7 +53383,7 @@ module.exports = class RecursiveMaze {
     this.MazeSize = size + 1;
   }
 
-  drawMap() {
+  draw() {
     // let counter = 0;
     for (let x = 0; x < this.MazeSize; x++) {
       // console.log("howMany");
@@ -52877,7 +53521,7 @@ module.exports = class RecursiveMaze {
   }
 };
 
-},{}],12:[function(require,module,exports){
+},{}],13:[function(require,module,exports){
 
 
 
@@ -52918,7 +53562,137 @@ module.exports = class WallGenerator {
   }
 };
 
-},{}],13:[function(require,module,exports){
+},{}],14:[function(require,module,exports){
+// eslint-disable-next-line no-unused-vars
+module.exports = class PlayerCamera {
+  constructor(ctx) {
+    this.player = undefined;
+    this.ctx = ctx;
+    this.vWidth = ctx.canvas.width;
+    this.vHeight = ctx.canvas.height;
+    this.xDir = 0;
+    this.yDir = 0;
+    this.buffer = undefined;
+  }
+
+  attachTo(player) {
+    this.player = player;
+  }
+
+  attachBuffer(buffer) {
+    this.buffer = buffer;
+  }
+
+  update() {
+    if (this.player !== undefined) {
+      this.x = this.player.x - this.player.width / 2 - this.vWidth / 2;
+      this.y = this.player.y - this.player.height / 2 - this.vHeight / 2;
+    }
+  }
+
+  draw(worldPosX, worldPosY) {
+    this.ctx.drawImage(
+      this.buffer.canvas,
+      worldPosX,
+      worldPosY,
+      this.vWidth,
+      this.vHeight,
+      0,
+      0,
+      this.ctx.canvas.width,
+      this.ctx.canvas.height,
+    );
+  }
+};
+
+},{}],15:[function(require,module,exports){
+/* eslint-disable radix */
+// Load the sprite sheets.
+const spriteEnemyAnxiety = new Image();
+spriteEnemyAnxiety.src = '../../Art/2D/enemy_anxiety_spritesheet.png';
+const spriteEnemyBPD = new Image();
+spriteEnemyBPD.src = '../../Art/2D/enemy_borderline_personality_disorderanxiety_spritesheet.png';
+const spriteEnemyDepression = new Image();
+spriteEnemyDepression.src = '../../Art/2D/enemy_depression_spritesheet.png';
+
+module.exports = class EnemyController {
+  constructor() {
+    // this.spriteEnemyAnxiety = new Image();
+    // this.spriteEnemyAnxiety.src = '../../Art/2D/enemy_anxiety_spritesheet.png';
+    // this.spriteEnemyBPD = new Image();
+    // this.spriteEnemyBPD.src = '../../Art/2D/enemy_borderline_personality_disorderanxiety_spritesheet.png';
+    // this.spriteEnemyDepression = new Image();
+    // this.spriteEnemyDepression = '../../Art/2D/enemy_depression_spritesheet.png';
+    this.enemies = [];
+  }
+};
+
+class Enemy {
+  constructor(x, y) {
+    this.x = x;
+    this.y = y;
+    this.width = 128;
+    this.height = 128;
+    this.xDir = 0;
+    this.yDir = 0;
+    this.speed = 0;
+    this.hSpeed = 0;
+    this.vSpeed = 0;
+    this.spriteIndexX = 0;
+    this.spriteIndexY = 1;
+    this.animationSpeed = 0;
+  }
+
+  update() {}
+
+  draw(ctx) {}
+}
+
+module.exports = class EnemyAnxiety extends Enemy {
+  constructor(x, y) {
+    super(x, y);
+    this.speed = 220;
+    this.xDir = 1;
+    this.animationSpeed = 0.18;
+    this.sprite = spriteEnemyAnxiety;
+    this.animationSize = 3;
+    this.CWidth = 29;
+    this.CHeight = 29;
+    this.posX = parseInt(this.x / ((this.CWidth * 128) / this.CWidth));
+    this.posY = parseInt(this.y / ((this.CHeight * 128) / this.CHeight));
+  }
+
+  update(dt) {
+    this.hSpeed = this.speed * this.xDir * dt;
+    this.vSpeed = this.speed * this.yDir * dt;
+    this.x += this.hSpeed;
+    this.y += this.vSpeed;
+
+    this.spriteIndexX = (this.spriteIndexX + this.animationSpeed) % this.animationSize;
+
+    if (this.xDir !== 0) {
+      this.spriteIndexY = this.xDir === 1 ? 1 : 3;
+    }
+    this.posX = parseInt((this.x + 50) / ((this.CWidth * 128) / this.CWidth));
+    this.posY = parseInt((this.y + 20) / ((this.CHeight * 128) / this.CHeight));
+  }
+
+  draw(ctx, worldPosX, worldPosY) {
+    ctx.drawImage(
+      this.sprite,
+      this.width * Math.floor(this.spriteIndexX),
+      this.height * this.spriteIndexY,
+      this.width,
+      this.height,
+      this.x - worldPosX,
+      this.y - worldPosY,
+      this.width,
+      this.height,
+    );
+  }
+};
+
+},{}],16:[function(require,module,exports){
 (function (global){
 /* eslint-disable eqeqeq */
 /* eslint-disable no-plusplus */
@@ -53043,13 +53817,14 @@ document.addEventListener('keyup', onKeyUp, false);
 const sizeOfPlatforms = 30;
 const sizeOfJump = sizeOfPlatforms / 2 + 50;
 console.log(`${sizeOfJump} Size Of Jump`);
-
 const levelOne = new LevelOne(scene, renderer, camera, sizeOfJump, sizeOfPlatforms);
-levelOne.generateScene();
-// let gameLoopOne = setInterval(levelOne.gameLoop(), 33);
+function loadLevelOne() {
+  levelOne.generateScene();
+  const gameLoopOne = setInterval(levelOne.gameLoop(), 33);
+}
+loadLevelOne();
 
 scene.background = white;
-
 const lightHem = new THREE.HemisphereLight(0xffffbb, 0x080820, 1);
 scene.add(lightHem);
 
@@ -53131,7 +53906,10 @@ const animate = () => {
     controls.getObject().translateX(velocity.x * delta);
     controls.getObject().translateY(velocity.y * delta);
     controls.getObject().translateZ(velocity.z * delta);
-    if (bottomIntersections.length > 0 && position.y < bottomIntersections[0].object.position.y + 20) {
+    if (
+      bottomIntersections.length > 0
+      && position.y < bottomIntersections[0].object.position.y + 20
+    ) {
       controls.getObject().position.y = bottomIntersections[0].object.position.y + 20;
       // controls.getObject().position.set(position.x, bottomIntersections[0].object.y + 10, position.z);
     }
@@ -53177,5 +53955,14 @@ const timer = () => {
 };
 setInterval(timer, 100);
 
+const TwoCanvas = document.getElementById('he');
+function checkFor3dTransation() {
+  console.log('seeing if its 3d');
+  if (TwoCanvas.style.display == 'none') {
+    console.log('found to switch to 3d');
+  }
+}
+const checkForThreeSwitchInterval = setInterval(checkFor3dTransation(), 33);
+
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./2DCanvas":3,"./3DControls":4,"./LevelOne":8,"three":2,"three-gltf-loader":1}]},{},[13]);
+},{"./2DCanvas":3,"./3DControls":5,"./LevelOne":9,"three":2,"three-gltf-loader":1}]},{},[16]);

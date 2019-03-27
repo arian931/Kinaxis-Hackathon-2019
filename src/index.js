@@ -121,13 +121,14 @@ document.addEventListener('keyup', onKeyUp, false);
 const sizeOfPlatforms = 30;
 const sizeOfJump = sizeOfPlatforms / 2 + 50;
 console.log(`${sizeOfJump} Size Of Jump`);
-
 const levelOne = new LevelOne(scene, renderer, camera, sizeOfJump, sizeOfPlatforms);
-levelOne.generateScene();
-// let gameLoopOne = setInterval(levelOne.gameLoop(), 33);
+function loadLevelOne() {
+  levelOne.generateScene();
+  const gameLoopOne = setInterval(levelOne.gameLoop(), 33);
+}
+loadLevelOne();
 
 scene.background = white;
-
 const lightHem = new THREE.HemisphereLight(0xffffbb, 0x080820, 1);
 scene.add(lightHem);
 
@@ -209,7 +210,10 @@ const animate = () => {
     controls.getObject().translateX(velocity.x * delta);
     controls.getObject().translateY(velocity.y * delta);
     controls.getObject().translateZ(velocity.z * delta);
-    if (bottomIntersections.length > 0 && position.y < bottomIntersections[0].object.position.y + 20) {
+    if (
+      bottomIntersections.length > 0
+      && position.y < bottomIntersections[0].object.position.y + 20
+    ) {
       controls.getObject().position.y = bottomIntersections[0].object.position.y + 20;
       // controls.getObject().position.set(position.x, bottomIntersections[0].object.y + 10, position.z);
     }
@@ -254,3 +258,12 @@ const timer = () => {
   document.getElementById('scoreAndTimer3d').appendChild(image);
 };
 setInterval(timer, 100);
+
+const TwoCanvas = document.getElementById('he');
+function checkFor3dTransation() {
+  console.log('seeing if its 3d');
+  if (TwoCanvas.style.display == 'none') {
+    console.log('found to switch to 3d');
+  }
+}
+const checkForThreeSwitchInterval = setInterval(checkFor3dTransation(), 33);

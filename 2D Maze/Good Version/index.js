@@ -46,6 +46,7 @@ const Player = new MainCharacter(
   Recursive.MazeSize,
   mapArray,
   ctx,
+  enemyController.enemies,
 );
 Camera.attachTo(Player);
 
@@ -254,22 +255,22 @@ function drawMiniMap() {
   ctxx.clearRect(
     miniMapSquareToDeletX * (miniMap.width / row),
     miniMapSquareToDeletY * (miniMap.height / col),
-    miniMap.width / row,
-    miniMap.height / col,
+    (miniMap.width / row) * 0.95,
+    (miniMap.height / col) * 0.95,
   );
-  ctxx.fillStyle = 'rgba(0,128,0)';
+  ctxx.fillStyle = 'rgba(0,128,0, 0.65)'; // Green Walls
   ctxx.fillRect(
     miniMapSquareToDeletX * (miniMap.width / row),
     miniMapSquareToDeletY * (miniMap.height / col),
-    miniMap.width / row,
-    miniMap.height / col,
+    (miniMap.width / row) * 0.95,
+    (miniMap.height / col) * 0.95,
   );
-  ctxx.fillStyle = 'rgba(0,0,200,0.65)';
+  ctxx.fillStyle = 'rgba(0,0,200,0.5)';
   ctxx.fillRect(
     Player.posTopX * (miniMap.width / row),
     Player.posTopY * (miniMap.height / col),
-    miniMap.width / row,
-    miniMap.height / col,
+    (miniMap.width / row) * 0.95,
+    (miniMap.height / col) * 0.95,
   );
   miniMapSquareToDeletX = Player.posTopX;
   miniMapSquareToDeletY = Player.posTopY;
