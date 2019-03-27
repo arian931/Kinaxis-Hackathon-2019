@@ -114,6 +114,7 @@ class MainCharacter {
     this.posTopY = parseInt(
       (this.y + this.height + this.playerSpeed) / ((this.CHeight * 128) / this.CHeight),
     );
+    this.posTopX = parseInt((this.x + 50) / ((this.CWidth * 128) / this.CWidth));
     console.log(this.posTopY);
     if (this.mazeArray[this.posTopX][this.posTopY] == 0) {
       this.y += this.playerSpeed;
@@ -125,6 +126,7 @@ class MainCharacter {
     this.posTopY = parseInt(
       (this.y + this.height - 20 - this.playerSpeed) / ((this.CHeight * 128) / this.CHeight),
     );
+    this.posTopX = parseInt((this.x + 50) / ((this.CWidth * 128) / this.CWidth));
     console.log(this.posTopY);
     if (this.mazeArray[this.posTopX][this.posTopY] == 0) {
       this.y -= this.playerSpeed;
