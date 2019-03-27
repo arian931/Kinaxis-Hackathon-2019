@@ -1,3 +1,5 @@
+/* eslint-disable no-unused-vars */
+/* eslint-disable eqeqeq */
 /* eslint-disable no-undef */
 const canvas = document.getElementById('2DMaze');
 const miniMap = document.getElementById('miniMap');
@@ -38,12 +40,13 @@ Recursive.draw();
 mapArray = Recursive.array;
 const Player = new MainCharacter(
   130,
-  130,
+  120,
   canvas.width,
   canvas.height,
   Recursive.MazeSize,
   mapArray,
   ctx,
+  enemyController.enemies,
 );
 Camera.attachTo(Player);
 
@@ -117,19 +120,35 @@ document.addEventListener('keydown', (event) => {
   switch (event.code) {
     case 'KeyRight':
     case 'KeyD':
+      Player.xDir = 1;
       Player.moveRight = true;
+      Player.moveLeft = false;
+      Player.moveDown = false;
+      Player.moveUp = false;
       break;
     case 'KeyLeft':
     case 'KeyA':
+      Player.xDir = -1;
       Player.moveLeft = true;
+      Player.moveRight = false;
+      Player.moveDown = false;
+      Player.moveUp = false;
       break;
     case 'KeyUp':
     case 'KeyW':
+      Player.yDir = -1;
       Player.moveUp = true;
+      Player.moveRight = false;
+      Player.moveDown = false;
+      Player.moveLeft = false;
       break;
     case 'KeyDown':
     case 'KeyS':
+      Player.yDir = 1;
       Player.moveDown = true;
+      Player.moveRight = false;
+      Player.moveUp = false;
+      Player.moveLeft = false;
       break;
     default:
       break;
@@ -140,24 +159,31 @@ document.addEventListener('keyup', (event) => {
   switch (event.code) {
     case 'KeyRight':
     case 'KeyD':
+      Player.xDir = 0;
       Player.moveRight = false;
       break;
     case 'KeyLeft':
     case 'KeyA':
+      Player.xDir = 0;
       Player.moveLeft = false;
       break;
     case 'KeyUp':
     case 'KeyW':
+      Player.yDir = 0;
       Player.moveUp = false;
       break;
     case 'KeyDown':
     case 'KeyS':
+      Player.yDir = 0;
       Player.moveDown = false;
       break;
     default:
       break;
   }
 });
+
+const row = mapSize;
+const col = mapSize;
 
 function update() {
   // Calucute delta time.
@@ -175,13 +201,13 @@ function update() {
     Player.x + Player.width / 2 > Camera.vWidth / 2
     && Player.x + Player.width / 2 < buffer.canvas.width - Camera.vWidth / 2
   ) {
-    worldPosX += Player.hSpeed * dt;
+    worldPosX = Player.x + Player.width / 2 - Camera.vWidth / 2;
   }
   if (
     Player.y + Player.height / 2 > Camera.vHeight / 2
     && Player.y + Player.height / 2 < buffer.canvas.height - Camera.vHeight / 2
   ) {
-    worldPosY += Player.vSpeed * dt;
+    worldPosY = Player.y + Player.height / 2 - Camera.vHeight / 2;
   }
   // Lock the world position
   if (worldPosX <= 0) {
@@ -198,6 +224,10 @@ function update() {
   // Update the objects.
   Player.update(dt);
   Camera.update(dt);
+
+  // Updates character on minimadp
+  // ctxx.fillStyle = 'rgb(0,0,255)'; // Blue square for player
+  // ctxx.fillRect(player.x * (miniMap.width / row), player.y * (miniMap.height / col), miniMap.width / row, miniMap.height / col);
 
   for (let i = 0; i < enemyController.enemies.length; i++) {
     const enemy = enemyController.enemies[i];
@@ -218,7 +248,60 @@ function update() {
     }
   }
 }
+let miniMapSquareToDeletX = 1;
+let miniMapSquareToDeletY = 1;
 
+function drawMiniMap() {
+  ctxx.clearRect(
+    miniMapSquareToDeletX * (miniMap.width / row),
+    miniMapSquareToDeletY * (miniMap.height / col),
+    (miniMap.width / row) * 0.95,
+    (miniMap.height / col) * 0.95,
+  );
+  ctxx.fillStyle = 'rgba(0,128,0, 0.65)'; // Green Walls
+  ctxx.fillRect(
+    miniMapSquareToDeletX * (miniMap.width / row),
+    miniMapSquareToDeletY * (miniMap.height / col),
+    (miniMap.width / row) * 0.95,
+    (miniMap.height / col) * 0.95,
+  );
+  ctxx.fillStyle = 'rgba(0,0,200,0.5)';
+  ctxx.fillRect(
+    Player.posTopX * (miniMap.width / row),
+    Player.posTopY * (miniMap.height / col),
+    (miniMap.width / row) * 0.95,
+    (miniMap.height / col) * 0.95,
+  );
+  miniMapSquareToDeletX = Math.floor((Player.x + Player.width / 2) / Player.width); // Player.posTopX;
+  miniMapSquareToDeletY = Math.floor((Player.y + Player.height - 4) / Player.height); // Player.posTopY;
+}
+for (let x = 0; x < row; x++) {
+  for (let y = 0; y < col; y++) {
+    // eslint-disable-next-line default-case
+    switch (mapArray[x][y]) {
+      case 0:
+        // console.log("No Wall");
+        ctxx.fillStyle = 'rgba(0,128,0, 0.65)'; // Green Walls
+        ctxx.fillRect(
+          x * (miniMap.width / row),
+          y * (miniMap.height / col),
+          miniMap.width / row,
+          miniMap.height / col,
+        );
+        break;
+      case 1:
+        console.log('Wall');
+        ctxx.fillStyle = 'rgba(128,128,128,0.65)'; // Grey walls
+        ctxx.fillRect(
+          x * (miniMap.width / row),
+          y * (miniMap.height / col),
+          miniMap.width / row,
+          miniMap.height / col,
+        );
+        break;
+    }
+  }
+}
 function draw() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   Camera.draw(worldPosX, worldPosY);
@@ -238,52 +321,17 @@ function draw() {
       drewPlayer = true;
     }
   }
+  ctx.fillText(`${worldPosX} ${worldPosX}`, 20, 20);
+  if (miniMapSquareToDeletX != Player.posTopX || miniMapSquareToDeletY != Player.posTopY) {
+    drawMiniMap();
+  }
 }
-const row = mapSize;
-const col = mapSize;
-
-const drawMiniMap = () => {
-  // for (let x = 0; x < row; x++) {
-  //   for (let y = 0; y < col; y++) {
-  //     // eslint-disable-next-line default-case
-  //     switch (mapArray[x][y]) {
-  //       case 0:
-  //         // console.log("No Wall");
-  //         ctxx.fillStyle = 'rgb(0,128,0)'; // Green Walls
-  //         ctxx.fillRect(
-  //           x * (miniMap.width / row),
-  //           y * (miniMap.height / col),
-  //           miniMap.width / row,
-  //           miniMap.height / col,
-  //         );
-  //         break;
-  //       case 1:
-  //         console.log('Wall');
-  //         ctxx.fillStyle = 'rgb(128,128,128)'; // Grey walls
-  //         ctxx.fillRect(
-  //           x * (miniMap.width / row),
-  //           y * (miniMap.height / col),
-  //           miniMap.width / row,
-  //           miniMap.height / col,
-  //         );
-  //         break;
-  //     }
-  //   }
-  // }
-  // ctxx.fillStyle = 'rgb(0,0,255)'; // Blue square for player
-  // ctxx.fillRect(
-  //   x * (miniMap.width / row),
-  //   y * (miniMap.height / col),
-  //   miniMap.width / row,
-  //   miniMap.height / col,
-  // );
-};
+drawMiniMap();
 
 function gameLoop() {
   window.requestAnimationFrame(gameLoop);
   update();
   draw();
-  drawMiniMap();
 }
 
 window.requestAnimationFrame(gameLoop);

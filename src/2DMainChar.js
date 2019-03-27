@@ -5,7 +5,7 @@
 /* eslint-disable eqeqeq */
 /* eslint-disable radix */
 // eslint-disable-next-line no-unused-vars
-class MainCharacter {
+module.exports = class MainCharacter {
   constructor(x, y, width, height, mazeSize, mazeArray, context, EnemyArray) {
     this.image = new Image();
     this.image.src = '../../Art/2D/male2_spritesheet.png';
@@ -53,11 +53,9 @@ class MainCharacter {
     }
     if (this.moveDown) {
       this.checkMovePosY();
-      console.log('down');
     }
     if (this.moveUp) {
       this.checkMoveNegY();
-      console.log('up');
     }
     // Animate the sprite.
     this.spriteIndexX = (this.spriteIndexX + this.animationSpeed) % 8;
@@ -76,14 +74,15 @@ class MainCharacter {
       this.spriteDir = this.xDir === 1 ? 0 : 2;
       this.spriteIndexY = this.spriteDir + 1;
     }
-    for (let j = 0; j < this.EnemyArray.length; j++) {
-      if (this.EnemyArray[j].posX == this.posTopX && this.EnemyArray[j].posY == this.posTopY) {
-        console.log('collied with E');
-      }
-    }
+    // for (let j = 0; j < this.EnemyArray.length; j++) {
+    //   if (this.EnemyArray[j].posX == this.posTopX && this.EnemyArray[j].posY == this.posTopY) {
+    //     console.log('collied with E');
+    //   }
+    // }
   }
 
   draw(context, worldPosX, worldPosY) {
+    // console.log('draw');
     context.drawImage(
       this.image,
       this.width * Math.floor(this.spriteIndexX),
@@ -104,7 +103,7 @@ class MainCharacter {
     this.posTopX = parseInt((this.x + 76 + this.playerSpeed) / ((this.CWidth * 128) / this.CWidth));
     // console.log(`${this.posTopX} posTopY ${this.posTopY}`);
     if (this.mazeArray[this.posTopX][this.posTopY] == 0) {
-      this.hSpeed += this.playerSpeed;
+      this.hSpeed = this.playerSpeed;
       this.x += this.hSpeed;
     }
   }
@@ -114,7 +113,7 @@ class MainCharacter {
     this.posTopX = parseInt((this.x + 52 - this.playerSpeed) / ((this.CWidth * 128) / this.CWidth));
     // console.log(`${this.posTopX} posTopY ${this.posTopY}`);
     if (this.mazeArray[this.posTopX][this.posTopY] == 0) {
-      this.hSpeed -= this.playerSpeed;
+      this.hSpeed = -this.playerSpeed;
       this.x += this.hSpeed;
     }
   }
@@ -125,9 +124,8 @@ class MainCharacter {
       (this.y + this.height + this.playerSpeed) / ((this.CHeight * 128) / this.CHeight),
     );
     this.posTopX = parseInt((this.x + 50) / ((this.CWidth * 128) / this.CWidth));
-    console.log(this.posTopY);
     if (this.mazeArray[this.posTopX][this.posTopY] == 0) {
-      this.vSpeed += this.playerSpeed;
+      this.vSpeed = this.playerSpeed;
       this.y += this.vSpeed;
     }
   }
@@ -138,10 +136,9 @@ class MainCharacter {
       (this.y + this.height - 20 - this.playerSpeed) / ((this.CHeight * 128) / this.CHeight),
     );
     this.posTopX = parseInt((this.x + 50) / ((this.CWidth * 128) / this.CWidth));
-    console.log(this.posTopY);
     if (this.mazeArray[this.posTopX][this.posTopY] == 0) {
-      this.vSpeed -= this.playerSpeed;
+      this.vSpeed = -this.playerSpeed;
       this.y += this.vSpeed;
     }
   }
-}
+};

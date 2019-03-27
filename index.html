@@ -1,82 +1,78 @@
 <!DOCTYPE html>
 <html>
+  <head>
+    <title>🌑WHACC🌑</title>
+    <style>
+      body {
+        margin: 0;
+        overflow: hidden;
+      }
 
-<head>
-  <title>🌑WHACC🌑</title>
-  <style>
-    body {
-      margin: 0;
-      overflow: hidden;
-    }
+      canvas {
+        width: 100%;
+        height: 100%;
+      }
 
-    canvas {
-      width: 100%;
-      height: 100%;
-    }
+      #he {
+        position: absolute;
+        display: block;
+      }
 
-    .hello {
-      position: absolute;
+      #blocker {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        /* background-color: rgba(0, 0, 0, 0.5); */
+      }
 
-    }
+      #instructions {
+        width: 100%;
+        height: 100%;
+        display: -webkit-box;
+        display: -moz-box;
+        display: box;
+        -webkit-box-orient: horizontal;
+        -moz-box-orient: horizontal;
+        box-orient: horizontal;
+        -webkit-box-pack: center;
+        -moz-box-pack: center;
+        box-pack: center;
+        -webkit-box-align: center;
+        -moz-box-align: center;
+        box-align: center;
+        color: #ffffff;
+        text-align: center;
+        cursor: pointer;
+      }
 
-    #he {
-      position: absolute;
-      display: block;
-    }
+      #scoreAndTimer3d {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        display: block;
+      }
+    </style>
+  </head>
 
-    #blocker {
-      position: absolute;
-      width: 100%;
-      height: 100%;
-      /* background-color: rgba(0, 0, 0, 0.5); */
-    }
+  <body>
+    <canvas
+      style="display: none"
+      class="hundredPercent"
+      id="backgroundCanvas"
+    ></canvas>
+    <canvas style="display: none" class="hello" id="scoreTimer"></canvas>
+    <div id="he" class="hello"></div>
+    <div id="scoreAndTimer3d" class="scoreAndTimer"></div>
 
-    #instructions {
-      width: 100%;
-      height: 100%;
-      display: -webkit-box;
-      display: -moz-box;
-      display: box;
-      -webkit-box-orient: horizontal;
-      -moz-box-orient: horizontal;
-      box-orient: horizontal;
-      -webkit-box-pack: center;
-      -moz-box-pack: center;
-      box-pack: center;
-      -webkit-box-align: center;
-      -moz-box-align: center;
-      box-align: center;
-      color: #ffffff;
-      text-align: center;
-      cursor: pointer;
-    }
-
-    #scoreAndTimer3d {
-      position: absolute;
-      width: 100%;
-      height: 100%;
-      display: block;
-    }
-  </style>
-</head>
-
-<body>
-  <canvas style="display: none" class="hundredPercent" id="backgroundCanvas"></canvas>
-  <canvas style="display: none" class="hello" id="scoreTimer"></canvas>
-  <div id="he" class="hello">
-  </div>
-  <div id="scoreAndTimer3d" class="scoreAndTimer">
-  </div>
-
-  <div id="blocker">
-    <div id="instructions">
-      <span style="font-size:40px">Click to play</span>
-      <br />
-      (W, A, S, D = Move, SPACE = Jump, MOUSE = Look around)
+    <div id="blocker">
+      <div id="instructions">
+        <span style="font-size:40px">Click to play</span>
+        <br />
+        (W, A, S, D = Move, SPACE = Jump, MOUSE = Look around)
+      </div>
     </div>
-  </div>
 
-  <script src="bundle.js"></script>
-</body>
-
+    <script src="bundle.js"></script>
+    <script src="src/enemy.js" type="text/javascript"></script>
+  </body>
 </html>
