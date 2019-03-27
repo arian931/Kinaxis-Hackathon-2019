@@ -119,21 +119,33 @@ document.addEventListener('keydown', (event) => {
     case 'KeyD':
       Player.xDir = 1;
       Player.moveRight = true;
+      Player.moveLeft = false;
+      Player.moveDown = false;
+      Player.moveUp = false;
       break;
     case 'KeyLeft':
     case 'KeyA':
       Player.xDir = -1;
       Player.moveLeft = true;
+      Player.moveRight = false;
+      Player.moveDown = false;
+      Player.moveUp = false;
       break;
     case 'KeyUp':
     case 'KeyW':
       Player.yDir = -1;
       Player.moveUp = true;
+      Player.moveRight = false;
+      Player.moveDown = false;
+      Player.moveLeft = false;
       break;
     case 'KeyDown':
     case 'KeyS':
       Player.yDir = 1;
       Player.moveDown = true;
+      Player.moveRight = false;
+      Player.moveUp = false;
+      Player.moveLeft = false;
       break;
     default:
       break;
