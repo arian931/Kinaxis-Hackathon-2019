@@ -51772,6 +51772,7 @@ module.exports = _GLTFLoader;
 /* eslint-disable no-undef */
 console.log('FUCKKKKKKKkkkkk !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!');
 const EnemyController = require('./enemy');
+const EnemyAnxiety = require('./enemy');
 const RecursiveMaze = require('./RecursiveMaze');
 const PlayerCamera = require('./camera');
 const MainCharacter = require('./2DMainChar');
@@ -51781,7 +51782,6 @@ console.log(canvas);
 // const miniMap = document.getElementById('miniMap');
 const ctx = canvas.getContext('2d');
 // const ctxx = miniMap.getContext('2d');
-// const ctx = miniMap.getContext('2d');
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
 // miniMap.width = window.innerWidth / 7;
@@ -51806,8 +51806,8 @@ let worldPosX = 0;
 let worldPosY = 0;
 
 // eslint-disable-next-line no-undef
-// const enemyController = new EnemyController();
-// enemyController.enemies.push(new EnemyAnxiety(128, 120));
+const enemyController = new EnemyController();
+enemyController.enemies.push(new EnemyAnxiety(128, 120));
 const Recursive = new RecursiveMaze(mapSize);
 const Camera = new PlayerCamera(ctx);
 Recursive.draw();
@@ -52005,28 +52005,32 @@ function update() {
   Player.update(dt);
   Camera.update(dt);
 
-  // Updates character on minimadp
   // ctxx.fillStyle = 'rgb(0,0,255)'; // Blue square for player
-  // ctxx.fillRect(player.x * (miniMap.width / row), player.y * (miniMap.height / col), miniMap.width / row, miniMap.height / col);
+  // ctxx.fillRect(
+  //   player.x * (miniMap.width / row),
+  //   player.y * (miniMap.height / col),
+  //   miniMap.width / row,
+  //   miniMap.height / col,
+  // );
 
-  // for (let i = 0; i < enemyController.enemies.length; i++) {
-  //   const enemy = enemyController.enemies[i];
-  //   enemy.update(dt);
-  //   if (
-  //     mapArray[
-  //       Math.floor((enemy.x + enemy.width / 2 + (enemy.width / 2) * enemy.xDir) / enemy.width)
-  //     ][Math.floor((enemy.y + enemy.height / 2) / enemy.height)] === 1
-  //   ) {
-  //     enemy.xDir *= -1;
-  //   }
-  //   if (
-  //     mapArray[Math.floor((enemy.x + enemy.width / 2) / enemy.width)][
-  //       Math.floor((enemy.y + enemy.height / 2 + (enemy.height / 2) * enemy.yDir) / enemy.height)
-  //     ]
-  //   ) {
-  //     enemy.yDir *= -1;
-  //   }
-  // }
+  for (let i = 0; i < enemyController.enemies.length; i++) {
+    const enemy = enemyController.enemies[i];
+    enemy.update(dt);
+    if (
+      mapArray[
+        Math.floor((enemy.x + enemy.width / 2 + (enemy.width / 2) * enemy.xDir) / enemy.width)
+      ][Math.floor((enemy.y + enemy.height / 2) / enemy.height)] === 1
+    ) {
+      enemy.xDir *= -1;
+    }
+    if (
+      mapArray[Math.floor((enemy.x + enemy.width / 2) / enemy.width)][
+        Math.floor((enemy.y + enemy.height / 2 + (enemy.height / 2) * enemy.yDir) / enemy.height)
+      ]
+    ) {
+      enemy.yDir *= -1;
+    }
+  }
   image.src = canvas.toDataURL();
   document.getElementById('he').appendChild(image);
 }
@@ -53648,7 +53652,7 @@ class Enemy {
   draw(ctx) {}
 }
 
-module.exports = class EnemyAnxiety extends Enemy {
+class EnemyAnxiety extends Enemy {
   constructor(x, y) {
     super(x, y);
     this.speed = 220;
@@ -53690,7 +53694,7 @@ module.exports = class EnemyAnxiety extends Enemy {
       this.height,
     );
   }
-};
+}
 
 },{}],16:[function(require,module,exports){
 (function (global){
@@ -53822,7 +53826,7 @@ function loadLevelOne() {
   levelOne.generateScene();
   const gameLoopOne = setInterval(levelOne.gameLoop(), 33);
 }
-loadLevelOne();
+// loadLevelOne();
 
 scene.background = white;
 const lightHem = new THREE.HemisphereLight(0xffffbb, 0x080820, 1);
@@ -53953,16 +53957,24 @@ const timer = () => {
   image.src = canvas.toDataURL();
   document.getElementById('scoreAndTimer3d').appendChild(image);
 };
-setInterval(timer, 100);
+// setInterval(timer, 100);
 
 const TwoCanvas = document.getElementById('he');
 function checkFor3dTransation() {
   console.log('seeing if its 3d');
   if (TwoCanvas.style.display == 'none') {
     console.log('found to switch to 3d');
+    loadLevelOne();
+    clearInterval(checkingThree);
   }
 }
-const checkForThreeSwitchInterval = setInterval(checkFor3dTransation(), 33);
+const checkingThree = setInterval(checkFor3dTransation, 100);
+
+function clearScene() {
+  while (scene.children.length > 0) {
+    scene.remove(scene.children[0]);
+  }
+}
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{"./2DCanvas":3,"./3DControls":5,"./LevelOne":9,"three":2,"three-gltf-loader":1}]},{},[16]);

@@ -40,7 +40,7 @@ class Enemy {
   draw(ctx) {}
 }
 
-module.exports = class EnemyAnxiety extends Enemy {
+class EnemyAnxiety extends Enemy {
   constructor(x, y) {
     super(x, y);
     this.speed = 220;
@@ -82,4 +82,4 @@ module.exports = class EnemyAnxiety extends Enemy {
       this.height,
     );
   }
-};
+}
