@@ -60,6 +60,8 @@ const Player = new MainCharacter(
 );
 Camera.attachTo(Player);
 
+let InThreeD = false;
+
 // eslint-disable-next-line prefer-const
 
 // Create the buffer image of the map.
@@ -130,7 +132,6 @@ document.addEventListener('keydown', (event) => {
   switch (event.code) {
     case 'KeyRight':
     case 'KeyD':
-      divToDrawTo.style.display = 'none';
       Player.xDir = 1;
       Player.moveRight = true;
       Player.moveLeft = false;
@@ -160,6 +161,9 @@ document.addEventListener('keydown', (event) => {
       Player.moveRight = false;
       Player.moveUp = false;
       Player.moveLeft = false;
+      break;
+    case 'Space':
+      switchToThreeD();
       break;
     default:
       break;
@@ -244,24 +248,24 @@ function update() {
   //   miniMap.height / col,
   // );
 
-  for (let i = 0; i < enemyController.enemies.length; i++) {
-    const enemy = enemyController.enemies[i];
-    enemy.update(dt);
-    if (
-      mapArray[
-        Math.floor((enemy.x + enemy.width / 2 + (enemy.width / 2) * enemy.xDir) / enemy.width)
-      ][Math.floor((enemy.y + enemy.height / 2) / enemy.height)] === 1
-    ) {
-      enemy.xDir *= -1;
-    }
-    if (
-      mapArray[Math.floor((enemy.x + enemy.width / 2) / enemy.width)][
-        Math.floor((enemy.y + enemy.height / 2 + (enemy.height / 2) * enemy.yDir) / enemy.height)
-      ]
-    ) {
-      enemy.yDir *= -1;
-    }
-  }
+  // for (let i = 0; i < enemyController.enemies.length; i++) {
+  //   const enemy = enemyController.enemies[i];
+  //   enemy.update(dt);
+  //   if (
+  //     mapArray[
+  //       Math.floor((enemy.x + enemy.width / 2 + (enemy.width / 2) * enemy.xDir) / enemy.width)
+  //     ][Math.floor((enemy.y + enemy.height / 2) / enemy.height)] === 1
+  //   ) {
+  //     enemy.xDir *= -1;
+  //   }
+  //   if (
+  //     mapArray[Math.floor((enemy.x + enemy.width / 2) / enemy.width)][
+  //       Math.floor((enemy.y + enemy.height / 2 + (enemy.height / 2) * enemy.yDir) / enemy.height)
+  //     ]
+  //   ) {
+  //     enemy.yDir *= -1;
+  //   }
+  // }
   image.src = canvas.toDataURL();
   document.getElementById('he').appendChild(image);
 }
@@ -346,9 +350,31 @@ function draw() {
 drawMiniMap();
 
 function gameLoop() {
-  window.requestAnimationFrame(gameLoop);
-  update();
-  draw();
+  if (!InThreeD) {
+    window.requestAnimationFrame(gameLoop);
+    update();
+    draw();
+  } else {
+    // console.log('not running 2d');
+  }
 }
-
+function switchBackTo2D() {
+  // console.log('2d is back');
+  window.requestAnimationFrame(gameLoop);
+  InThreeD = false;
+}
+const checkForSwitchBack = document.getElementById('he');
+function funToCheckForSwitchBack() {
+  // console.log('checkingFor3d');
+  if (checkForSwitchBack.style.display == 'block') {
+    switchBackTo2D();
+    // console.log('back 2d');
+  }
+}
+let checkForSwitchBackInerval;
+function switchToThreeD() {
+  divToDrawTo.style.display = 'none';
+  InThreeD = true;
+  checkForSwitchBackInerval = setInterval(funToCheckForSwitchBack, 33);
+}
 window.requestAnimationFrame(gameLoop);

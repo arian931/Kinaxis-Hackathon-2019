@@ -87,6 +87,10 @@ const onKeyDown = (event) => {
       if (canJump) velocity.y += 300;
       canJump = false;
       break;
+    case 76:
+      // eslint-disable-next-line no-use-before-define
+      switchBackToTwoD();
+      break;
     default:
       break;
   }
@@ -246,6 +250,7 @@ const timer = () => {
     timeLeft -= 1;
     if (timeLeft <= 0) {
       console.log('TIME LEFT IS ZERO GO BACK TO THE 2D Cavnas');
+      switchBackToTwoD();
     }
   }
   ctx.font = '75px TimesNewRoman';
@@ -258,20 +263,33 @@ const timer = () => {
   document.getElementById('scoreAndTimer3d').appendChild(image);
 };
 // setInterval(timer, 100);
-
+let number = 0;
 const TwoCanvas = document.getElementById('he');
 function checkFor3dTransation() {
-  console.log('seeing if its 3d');
-  if (TwoCanvas.style.display == 'none') {
+  console.log('NUMBER');
+  if (TwoCanvas.style.display == 'none' && number == 0) {
+    number++;
     console.log('found to switch to 3d');
     loadLevelOne();
     clearInterval(checkingThree);
+  } else if (number != 0) {
+    console.log('fuck');
+    clearInterval(checkingThree);
   }
 }
-const checkingThree = setInterval(checkFor3dTransation, 100);
+let checkingThree = setInterval(checkFor3dTransation, 100);
 
+function switchBackToTwoD() {
+  TwoCanvas.style.display = 'block';
+  console.log(
+    'switch back to 2d !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!',
+  );
+  checkingThree = setInterval(checkFor3dTransation, 100);
+  clearScene();
+}
 function clearScene() {
   while (scene.children.length > 0) {
+    console.log(scene.children[0]);
     scene.remove(scene.children[0]);
   }
 }
