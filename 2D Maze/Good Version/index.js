@@ -5,7 +5,6 @@ const canvas = document.getElementById('2DMaze');
 const miniMap = document.getElementById('miniMap');
 const ctx = canvas.getContext('2d');
 const ctxx = miniMap.getContext('2d');
-// const ctx = miniMap.getContext('2d');
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
 miniMap.width = window.innerWidth / 7;
@@ -225,10 +224,6 @@ function update() {
   Player.update(dt);
   Camera.update(dt);
 
-  // Updates character on minimadp
-  // ctxx.fillStyle = 'rgb(0,0,255)'; // Blue square for player
-  // ctxx.fillRect(player.x * (miniMap.width / row), player.y * (miniMap.height / col), miniMap.width / row, miniMap.height / col);
-
   for (let i = 0; i < enemyController.enemies.length; i++) {
     const enemy = enemyController.enemies[i];
     enemy.update(dt);
@@ -252,21 +247,21 @@ let miniMapSquareToDeletX = 1;
 let miniMapSquareToDeletY = 1;
 
 function drawMiniMap() {
-  ctxx.clearRect(
+  ctxx.clearRect( // Clear previous player position
     miniMapSquareToDeletX * (miniMap.width / row),
     miniMapSquareToDeletY * (miniMap.height / col),
     (miniMap.width / row) * 0.95,
     (miniMap.height / col) * 0.95,
   );
   ctxx.fillStyle = 'rgba(0,128,0, 0.65)'; // Green Walls
-  ctxx.fillRect(
+  ctxx.fillRect( // Fill spot with green walls
     miniMapSquareToDeletX * (miniMap.width / row),
     miniMapSquareToDeletY * (miniMap.height / col),
     (miniMap.width / row) * 0.95,
     (miniMap.height / col) * 0.95,
   );
-  ctxx.fillStyle = 'rgba(0,0,200,0.5)';
-  ctxx.fillRect(
+  ctxx.fillStyle = 'rgba(0,0,200,0.5)'; // Blue player dot
+  ctxx.fillRect( // Draw new player position
     Player.posTopX * (miniMap.width / row),
     Player.posTopY * (miniMap.height / col),
     (miniMap.width / row) * 0.95,
@@ -321,7 +316,7 @@ function draw() {
       drewPlayer = true;
     }
   }
-  ctx.fillText(`${worldPosX} ${worldPosX}`, 20, 20);
+  // ctx.fillText(`${worldPosX} ${worldPosX}`, 20, 20);
   if (miniMapSquareToDeletX != Player.posTopX || miniMapSquareToDeletY != Player.posTopY) {
     drawMiniMap();
   }
