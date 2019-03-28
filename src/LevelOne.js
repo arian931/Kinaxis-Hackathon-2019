@@ -39,6 +39,7 @@ module.exports = class LevelOne {
   }
 
   generateScene() {
+    console.log('GENERATING THE SCENE');
     let DIR;
     let NOS;
     let LastDirection = 0;
@@ -47,9 +48,9 @@ module.exports = class LevelOne {
     this.scene.fog = new THREE.FogExp2(this.white, 0.005);
 
     for (let x = 0; x < 20; x++) {
-      console.log(
-        `X: ${this.currentPositionX} Y: ${this.currentPositionY} Z: ${this.currentPositionZ}`,
-      );
+      // console.log(
+      //   `X: ${this.currentPositionX} Y: ${this.currentPositionY} Z: ${this.currentPositionZ}`,
+      // );
       while (true) {
         DIR = Math.floor(Math.random() * 3);
         if (
@@ -198,9 +199,9 @@ module.exports = class LevelOne {
       this.camera.position.z = 0;
       this.camera.position.y = 10;
     }
-    for (let x = 0; x < this.collectibles.length; x++) {
-      this.collectibles[x].rotate();
-    }
+    // for (let x = 0; x < this.collectibles.length; x++) {
+    //   this.collectibles[x].rotate();
+    // }
 
     for (let x = 0; x < this.platFormsClass.length; x++) {
       if (this.platFormsClass[x].movingHor) {
@@ -588,11 +589,13 @@ module.exports = class LevelOne {
     for (let j = 0; j < this.collectibles.length; j++) {
       this.scene.remove(this.collectibles[j].cubeFor);
       this.collectibles = [];
+      this.collectibles.length = 0;
     }
     for (let j = 0; j < this.platFormsClass.length; j++) {
       console.log('deletingplatforms');
       this.scene.remove(this.platFormsClass[j].cubeFor);
       this.platFormsClass = [];
+      this.platFormsClass.length = 0;
     }
   }
 };

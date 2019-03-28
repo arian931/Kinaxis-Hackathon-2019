@@ -52523,6 +52523,7 @@ module.exports = class LevelOne {
   }
 
   generateScene() {
+    console.log('GENERATING THE SCENE');
     let DIR;
     let NOS;
     let LastDirection = 0;
@@ -52531,9 +52532,9 @@ module.exports = class LevelOne {
     this.scene.fog = new THREE.FogExp2(this.white, 0.005);
 
     for (let x = 0; x < 20; x++) {
-      console.log(
-        `X: ${this.currentPositionX} Y: ${this.currentPositionY} Z: ${this.currentPositionZ}`,
-      );
+      // console.log(
+      //   `X: ${this.currentPositionX} Y: ${this.currentPositionY} Z: ${this.currentPositionZ}`,
+      // );
       while (true) {
         DIR = Math.floor(Math.random() * 3);
         if (
@@ -52682,9 +52683,9 @@ module.exports = class LevelOne {
       this.camera.position.z = 0;
       this.camera.position.y = 10;
     }
-    for (let x = 0; x < this.collectibles.length; x++) {
-      this.collectibles[x].rotate();
-    }
+    // for (let x = 0; x < this.collectibles.length; x++) {
+    //   this.collectibles[x].rotate();
+    // }
 
     for (let x = 0; x < this.platFormsClass.length; x++) {
       if (this.platFormsClass[x].movingHor) {
@@ -53072,11 +53073,13 @@ module.exports = class LevelOne {
     for (let j = 0; j < this.collectibles.length; j++) {
       this.scene.remove(this.collectibles[j].cubeFor);
       this.collectibles = [];
+      this.collectibles.length = 0;
     }
     for (let j = 0; j < this.platFormsClass.length; j++) {
       console.log('deletingplatforms');
       this.scene.remove(this.platFormsClass[j].cubeFor);
       this.platFormsClass = [];
+      this.platFormsClass.length = 0;
     }
   }
 };
@@ -53859,10 +53862,7 @@ const sizeOfJump = sizeOfPlatforms / 2 + 50;
 console.log(`${sizeOfJump} Size Of Jump`);
 const levelOne = new LevelOne(scene, renderer, camera, sizeOfJump, sizeOfPlatforms);
 let gameLoopOne;
-function loadLevelOne() {
-  levelOne.generateScene();
-  gameLoopOne = setInterval(levelOne.gameLoop(), 33);
-}
+function loadLevelOne() {}
 // loadLevelOne();
 
 scene.background = white;
@@ -53929,7 +53929,6 @@ const animate = () => {
       const localVertex = player.geometry.vertices[vertexIndex].clone();
       const globalVertex = localVertex.applyMatrix4(player.matrixWorld);
       const directionVector = globalVertex.sub(position);
-
       const ray = new THREE.Raycaster(
         position,
         directionVector.clone().normalize(),
@@ -53999,10 +53998,11 @@ const timer = () => {
 const TwoCanvas = document.getElementById('backgroundCanvas');
 function checkFor3dTransation() {
   if (TwoCanvas.style.display == 'none') {
-    console.log('found to switch to 3d');
-    loadLevelOne();
     clearInterval(checkingThree);
+    console.log('running');
+    levelOne.generateScene();
     clearInterval(gameLoopOne);
+    gameLoopOne = setInterval(levelOne.gameLoop(), 33);
   }
 }
 let checkingThree = setInterval(checkFor3dTransation, 100);

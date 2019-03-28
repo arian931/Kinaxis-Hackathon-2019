@@ -127,10 +127,7 @@ const sizeOfJump = sizeOfPlatforms / 2 + 50;
 console.log(`${sizeOfJump} Size Of Jump`);
 const levelOne = new LevelOne(scene, renderer, camera, sizeOfJump, sizeOfPlatforms);
 let gameLoopOne;
-function loadLevelOne() {
-  levelOne.generateScene();
-  gameLoopOne = setInterval(levelOne.gameLoop(), 33);
-}
+function loadLevelOne() {}
 // loadLevelOne();
 
 scene.background = white;
@@ -197,7 +194,6 @@ const animate = () => {
       const localVertex = player.geometry.vertices[vertexIndex].clone();
       const globalVertex = localVertex.applyMatrix4(player.matrixWorld);
       const directionVector = globalVertex.sub(position);
-
       const ray = new THREE.Raycaster(
         position,
         directionVector.clone().normalize(),
@@ -267,10 +263,11 @@ const timer = () => {
 const TwoCanvas = document.getElementById('backgroundCanvas');
 function checkFor3dTransation() {
   if (TwoCanvas.style.display == 'none') {
-    console.log('found to switch to 3d');
-    loadLevelOne();
     clearInterval(checkingThree);
+    console.log('running');
+    levelOne.generateScene();
     clearInterval(gameLoopOne);
+    gameLoopOne = setInterval(levelOne.gameLoop(), 33);
   }
 }
 let checkingThree = setInterval(checkFor3dTransation, 100);
