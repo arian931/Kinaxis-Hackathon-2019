@@ -42,7 +42,7 @@ enemyController.enemies.push(new EnemyAnxiety(128, 120));
 const Recursive = new RecursiveMaze(mapSize);
 const Camera = new PlayerCamera(ctx);
 Recursive.draw();
-const divToDrawTo = document.getElementById('he');
+const divToDrawTo = document.getElementById('backgroundCanvas');
 const image = new Image();
 image.id = 'pic';
 
@@ -266,8 +266,8 @@ function update() {
   //     enemy.yDir *= -1;
   //   }
   // }
-  image.src = canvas.toDataURL();
-  document.getElementById('he').appendChild(image);
+  // image.src = canvas.toDataURL();
+  // document.getElementById('he').appendChild(image);
 }
 const miniMapSquareToDeletX = 1;
 const miniMapSquareToDeletY = 1;
@@ -363,10 +363,9 @@ function switchBackTo2D() {
   window.requestAnimationFrame(gameLoop);
   InThreeD = false;
 }
-const checkForSwitchBack = document.getElementById('he');
 function funToCheckForSwitchBack() {
   // console.log('checkingFor3d');
-  if (checkForSwitchBack.style.display == 'block') {
+  if (divToDrawTo.style.display == 'block') {
     switchBackTo2D();
     // console.log('back 2d');
   }

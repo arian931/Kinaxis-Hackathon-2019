@@ -35,8 +35,8 @@
         -moz-box-orient: horizontal;
         box-orient: horizontal;
         -webkit-box-pack: center;
-        -moz-box-pack: center;‰
-        box-pack: center;
+        -moz-box-pack: center;
+        ‰box-pack: center;
         -webkit-box-align: center;
         -moz-box-align: center;
         box-align: center;
@@ -51,15 +51,13 @@
         height: 100%;
         display: block;
       }
+      #backgroundCanvas {
+        display: block;
+      }
     </style>
   </head>
-
   <body>
-    <canvas
-      style="display: none"
-      class="hundredPercent"
-      id="backgroundCanvas"
-    ></canvas>
+    <canvas class="hundredPercent" id="backgroundCanvas"></canvas>
     <canvas style="display: none" class="hello" id="scoreTimer"></canvas>
     <div id="he" class="hello"></div>
     <div id="scoreAndTimer3d" class="scoreAndTimer"></div>

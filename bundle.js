@@ -51811,7 +51811,7 @@ enemyController.enemies.push(new EnemyAnxiety(128, 120));
 const Recursive = new RecursiveMaze(mapSize);
 const Camera = new PlayerCamera(ctx);
 Recursive.draw();
-const divToDrawTo = document.getElementById('he');
+const divToDrawTo = document.getElementById('backgroundCanvas');
 const image = new Image();
 image.id = 'pic';
 
@@ -52035,8 +52035,8 @@ function update() {
   //     enemy.yDir *= -1;
   //   }
   // }
-  image.src = canvas.toDataURL();
-  document.getElementById('he').appendChild(image);
+  // image.src = canvas.toDataURL();
+  // document.getElementById('he').appendChild(image);
 }
 const miniMapSquareToDeletX = 1;
 const miniMapSquareToDeletY = 1;
@@ -52132,10 +52132,9 @@ function switchBackTo2D() {
   window.requestAnimationFrame(gameLoop);
   InThreeD = false;
 }
-const checkForSwitchBack = document.getElementById('he');
 function funToCheckForSwitchBack() {
   // console.log('checkingFor3d');
-  if (checkForSwitchBack.style.display == 'block') {
+  if (divToDrawTo.style.display == 'block') {
     switchBackTo2D();
     // console.log('back 2d');
   }
@@ -52522,16 +52521,6 @@ module.exports = class LevelOne {
   }
 
   generateScene() {
-    // let floorClass = new Floor(1000, 1000, this.scene);
-    // floorClass.addToScene();
-    // let walls = [];
-    // walls[0] = new WallGenerator(floorClass.w / 2, 50, 0, 1, 100, floorClass.w, this.white, this.scene, 0);
-    // walls[1] = new WallGenerator(-floorClass.w / 2, 50, 0, 1, 100, floorClass.w, this.white, this.scene, 0);
-    // walls[2] = new WallGenerator(0, 50, floorClass.h / 2, 1, 100, floorClass.h, this.white, this.scene, (-Math.PI / 2));
-    // walls[3] = new WallGenerator(0, 50, -floorClass.h / 2, 1, 100, floorClass.h, this.white, this.scene, (-Math.PI / 2));
-    // for (let x = 0; x < walls.length; x++) {
-    //     walls[x].addToScene();
-    // }
     let DIR;
     let NOS;
     let LastDirection = 0;
@@ -52744,7 +52733,7 @@ module.exports = class LevelOne {
             false,
             false,
           ];
-          xStair += this.jumpDistance / 2;
+          xStair += this.jumpDistance;
           yStair -= 0;
           zStair += 10;
           this.currentIndex++;
@@ -52777,7 +52766,7 @@ module.exports = class LevelOne {
             false,
             false,
           ];
-          xStair -= this.jumpDistance / 2;
+          xStair -= this.jumpDistance;
           yStair -= 0;
           zStair += 10;
           this.currentIndex++;
@@ -52811,7 +52800,7 @@ module.exports = class LevelOne {
             false,
           ];
           xStair -= 0;
-          yStair -= this.jumpDistance / 2;
+          yStair -= this.jumpDistance;
           zStair += 10;
           this.currentIndex++;
         }
@@ -52844,7 +52833,7 @@ module.exports = class LevelOne {
             false,
           ];
           xStair -= 0;
-          yStair += this.jumpDistance / 2;
+          yStair += this.jumpDistance;
           zStair += 10;
           this.currentIndex++;
         }
@@ -54006,9 +53995,8 @@ const timer = () => {
 };
 // setInterval(timer, 100);
 let number = 0;
-const TwoCanvas = document.getElementById('he');
+const TwoCanvas = document.getElementById('backgroundCanvas');
 function checkFor3dTransation() {
-  console.log('NUMBER');
   if (TwoCanvas.style.display == 'none' && number == 0) {
     number++;
     console.log('found to switch to 3d');

@@ -264,9 +264,8 @@ const timer = () => {
 };
 // setInterval(timer, 100);
 let number = 0;
-const TwoCanvas = document.getElementById('he');
+const TwoCanvas = document.getElementById('backgroundCanvas');
 function checkFor3dTransation() {
-  console.log('NUMBER');
   if (TwoCanvas.style.display == 'none' && number == 0) {
     number++;
     console.log('found to switch to 3d');

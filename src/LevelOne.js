@@ -39,16 +39,6 @@ module.exports = class LevelOne {
   }
 
   generateScene() {
-    // let floorClass = new Floor(1000, 1000, this.scene);
-    // floorClass.addToScene();
-    // let walls = [];
-    // walls[0] = new WallGenerator(floorClass.w / 2, 50, 0, 1, 100, floorClass.w, this.white, this.scene, 0);
-    // walls[1] = new WallGenerator(-floorClass.w / 2, 50, 0, 1, 100, floorClass.w, this.white, this.scene, 0);
-    // walls[2] = new WallGenerator(0, 50, floorClass.h / 2, 1, 100, floorClass.h, this.white, this.scene, (-Math.PI / 2));
-    // walls[3] = new WallGenerator(0, 50, -floorClass.h / 2, 1, 100, floorClass.h, this.white, this.scene, (-Math.PI / 2));
-    // for (let x = 0; x < walls.length; x++) {
-    //     walls[x].addToScene();
-    // }
     let DIR;
     let NOS;
     let LastDirection = 0;
@@ -261,7 +251,7 @@ module.exports = class LevelOne {
             false,
             false,
           ];
-          xStair += this.jumpDistance / 2;
+          xStair += this.jumpDistance;
           yStair -= 0;
           zStair += 10;
           this.currentIndex++;
@@ -294,7 +284,7 @@ module.exports = class LevelOne {
             false,
             false,
           ];
-          xStair -= this.jumpDistance / 2;
+          xStair -= this.jumpDistance;
           yStair -= 0;
           zStair += 10;
           this.currentIndex++;
@@ -328,7 +318,7 @@ module.exports = class LevelOne {
             false,
           ];
           xStair -= 0;
-          yStair -= this.jumpDistance / 2;
+          yStair -= this.jumpDistance;
           zStair += 10;
           this.currentIndex++;
         }
@@ -361,7 +351,7 @@ module.exports = class LevelOne {
             false,
           ];
           xStair -= 0;
-          yStair += this.jumpDistance / 2;
+          yStair += this.jumpDistance;
           zStair += 10;
           this.currentIndex++;
         }
