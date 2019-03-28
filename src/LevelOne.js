@@ -586,14 +586,13 @@ module.exports = class LevelOne {
       'cleared objects !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!',
     );
     for (let j = 0; j < this.collectibles.length; j++) {
-      console.log('deletingColectivb');
       this.scene.remove(this.collectibles[j].cubeFor);
-      this.collectibles.splice(j, 1);
+      this.collectibles = [];
     }
     for (let j = 0; j < this.platFormsClass.length; j++) {
       console.log('deletingplatforms');
       this.scene.remove(this.platFormsClass[j].cubeFor);
-      this.platFormsClass.splice(j, 1);
+      this.platFormsClass = [];
     }
   }
 };

@@ -126,9 +126,10 @@ const sizeOfPlatforms = 30;
 const sizeOfJump = sizeOfPlatforms / 2 + 50;
 console.log(`${sizeOfJump} Size Of Jump`);
 const levelOne = new LevelOne(scene, renderer, camera, sizeOfJump, sizeOfPlatforms);
+let gameLoopOne;
 function loadLevelOne() {
   levelOne.generateScene();
-  const gameLoopOne = setInterval(levelOne.gameLoop(), 33);
+  gameLoopOne = setInterval(levelOne.gameLoop(), 33);
 }
 // loadLevelOne();
 
@@ -263,17 +264,13 @@ const timer = () => {
   document.getElementById('scoreAndTimer3d').appendChild(image);
 };
 // setInterval(timer, 100);
-let number = 0;
 const TwoCanvas = document.getElementById('backgroundCanvas');
 function checkFor3dTransation() {
-  if (TwoCanvas.style.display == 'none' && number == 0) {
-    number++;
+  if (TwoCanvas.style.display == 'none') {
     console.log('found to switch to 3d');
     loadLevelOne();
     clearInterval(checkingThree);
-  } else if (number != 0) {
-    console.log('fuck');
-    clearInterval(checkingThree);
+    clearInterval(gameLoopOne);
   }
 }
 let checkingThree = setInterval(checkFor3dTransation, 100);
@@ -287,8 +284,5 @@ function switchBackToTwoD() {
   clearScene();
 }
 function clearScene() {
-  while (scene.children.length > 0) {
-    console.log(scene.children[0]);
-    scene.remove(scene.children[0]);
-  }
+  levelOne.clearObjects();
 }

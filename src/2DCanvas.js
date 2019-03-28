@@ -360,13 +360,14 @@ function gameLoop() {
 }
 function switchBackTo2D() {
   // console.log('2d is back');
-  window.requestAnimationFrame(gameLoop);
   InThreeD = false;
+  gameLoop();
 }
 function funToCheckForSwitchBack() {
   // console.log('checkingFor3d');
   if (divToDrawTo.style.display == 'block') {
     switchBackTo2D();
+    clearInterval(checkForSwitchBackInerval);
     // console.log('back 2d');
   }
 }

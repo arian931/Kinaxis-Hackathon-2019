@@ -52129,13 +52129,14 @@ function gameLoop() {
 }
 function switchBackTo2D() {
   // console.log('2d is back');
-  window.requestAnimationFrame(gameLoop);
   InThreeD = false;
+  gameLoop();
 }
 function funToCheckForSwitchBack() {
   // console.log('checkingFor3d');
   if (divToDrawTo.style.display == 'block') {
     switchBackTo2D();
+    clearInterval(checkForSwitchBackInerval);
     // console.log('back 2d');
   }
 }
@@ -52396,28 +52397,29 @@ THREE.PointerLockControls.prototype.constructor = THREE.PointerLockControls;
 
 },{"three":2}],6:[function(require,module,exports){
 module.exports = class Collectiable {
-    constructor(x, z, y, scene) {
-        this.x = x;
-        this.y = y;
-        this.z = z;
-        this.scene = scene;
-        this.cubeFor;
-    }
+  constructor(x, z, y, scene) {
+    this.x = x;
+    this.y = y;
+    this.z = z;
+    this.scene = scene;
+    this.cubeFor;
+  }
 
-    addToScene() {
-        let geometryFor = new THREE.BoxGeometry(5, 5, 5);
-        let materialFor;
-        materialFor = new THREE.MeshLambertMaterial({ color: new THREE.Color("rgb(233, 255, 0)") });
-        this.cubeFor = new THREE.Mesh(geometryFor, materialFor);
-        this.scene.add(this.cubeFor);
-        this.cubeFor.position.x = this.x;
-        this.cubeFor.position.y = this.y;
-        this.cubeFor.position.z = this.z;
-    }
-    rotate() {
-        this.cubeFor.rotation.x += 0.1;
-        this.cubeFor.rotation.y += 0.1;
-    }
+  addToScene() {
+    const geometryFor = new THREE.BoxGeometry(5, 5, 5);
+    let materialFor;
+    materialFor = new THREE.MeshLambertMaterial({ color: new THREE.Color('rgb(233, 255, 0)') });
+    this.cubeFor = new THREE.Mesh(geometryFor, materialFor);
+    this.scene.add(this.cubeFor);
+    this.cubeFor.position.x = this.x;
+    this.cubeFor.position.y = this.y;
+    this.cubeFor.position.z = this.z;
+  }
+
+  rotate() {
+    this.cubeFor.rotation.x += 0.1;
+    this.cubeFor.rotation.y += 0.1;
+  }
 };
 
 },{}],7:[function(require,module,exports){
@@ -53068,14 +53070,13 @@ module.exports = class LevelOne {
       'cleared objects !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!',
     );
     for (let j = 0; j < this.collectibles.length; j++) {
-      console.log('deletingColectivb');
       this.scene.remove(this.collectibles[j].cubeFor);
-      this.collectibles.splice(j, 1);
+      this.collectibles = [];
     }
     for (let j = 0; j < this.platFormsClass.length; j++) {
       console.log('deletingplatforms');
       this.scene.remove(this.platFormsClass[j].cubeFor);
-      this.platFormsClass.splice(j, 1);
+      this.platFormsClass = [];
     }
   }
 };
@@ -53857,9 +53858,10 @@ const sizeOfPlatforms = 30;
 const sizeOfJump = sizeOfPlatforms / 2 + 50;
 console.log(`${sizeOfJump} Size Of Jump`);
 const levelOne = new LevelOne(scene, renderer, camera, sizeOfJump, sizeOfPlatforms);
+let gameLoopOne;
 function loadLevelOne() {
   levelOne.generateScene();
-  const gameLoopOne = setInterval(levelOne.gameLoop(), 33);
+  gameLoopOne = setInterval(levelOne.gameLoop(), 33);
 }
 // loadLevelOne();
 
@@ -53994,17 +53996,13 @@ const timer = () => {
   document.getElementById('scoreAndTimer3d').appendChild(image);
 };
 // setInterval(timer, 100);
-let number = 0;
 const TwoCanvas = document.getElementById('backgroundCanvas');
 function checkFor3dTransation() {
-  if (TwoCanvas.style.display == 'none' && number == 0) {
-    number++;
+  if (TwoCanvas.style.display == 'none') {
     console.log('found to switch to 3d');
     loadLevelOne();
     clearInterval(checkingThree);
-  } else if (number != 0) {
-    console.log('fuck');
-    clearInterval(checkingThree);
+    clearInterval(gameLoopOne);
   }
 }
 let checkingThree = setInterval(checkFor3dTransation, 100);
@@ -54018,10 +54016,7 @@ function switchBackToTwoD() {
   clearScene();
 }
 function clearScene() {
-  while (scene.children.length > 0) {
-    console.log(scene.children[0]);
-    scene.remove(scene.children[0]);
-  }
+  levelOne.clearObjects();
 }
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
