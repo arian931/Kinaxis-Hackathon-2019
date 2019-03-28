@@ -2,21 +2,21 @@
 /* eslint-disable eqeqeq */
 /* eslint-disable no-undef */
 console.log('FUCKKKKKKKkkkkk !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!');
-const EnemyController = require('./enemy');
-const EnemyAnxiety = require('./enemy');
+const EnemyController = require('./enemyController');
+const EnemyAnxiety = require('./enemies/enemyAnxiety');
 const RecursiveMaze = require('./RecursiveMaze');
 const PlayerCamera = require('./camera');
 const MainCharacter = require('./2DMainChar');
 
 const canvas = document.getElementById('backgroundCanvas');
 console.log(canvas);
-// const miniMap = document.getElementById('miniMap');
+//const miniMap = document.getElementById('minimapCanvas');
 const ctx = canvas.getContext('2d');
-// const ctxx = miniMap.getContext('2d');
+//const ctxx = miniMap.getContext('2d');
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
-// miniMap.width = window.innerWidth / 7;
-// miniMap.height = window.innerWidth / 7;
+//miniMap.width = window.innerWidth / 7;
+//miniMap.height = window.innerWidth / 7;
 
 // Load the tilemap.
 const tilemap = new Image();
@@ -64,6 +64,14 @@ let InThreeD = false;
 
 // eslint-disable-next-line prefer-const
 
+// create minimap
+const minimap = document.createElement('canvas').getContext('2d');
+minimap.canvas.width = window.innerWidth / 7.2;
+minimap.canvas.height = minimap.canvas.width;
+const minimapPosX = canvas.width - minimap.canvas.width - 32;
+const minimapPosY = 32;
+const minimapAlpha = 0.7;
+
 // Create the buffer image of the map.
 const buffer = document.createElement('CANVAS').getContext('2d');
 buffer.canvas.width = 128 * mapSize;
@@ -90,6 +98,13 @@ tilemap.onload = () => {
             128,
             128,
           );
+          minimap.fillStyle = `rgba(83, 244, 65, ${minimapAlpha})`;
+          minimap.fillRect(
+            x * minimap.canvas.width / mapSize,
+            y * minimap.canvas.height / mapSize,
+            minimap.canvas.width / mapSize,
+            minimap.canvas.height / mapSize
+          );
           break;
         case 1: // Walls
           if (y - 1 < 0) {
@@ -106,6 +121,13 @@ tilemap.onload = () => {
           } else {
             buffer.drawImage(tilemap, 128, 0, 128, 128, 128 * x, 128 * y, 128, 128);
           }
+          minimap.fillStyle = `rgba(56, 56, 56, ${minimapAlpha})`;
+          minimap.fillRect(
+            x * minimap.canvas.width / mapSize,
+            y * minimap.canvas.height / mapSize,
+            minimap.canvas.width / mapSize,
+            minimap.canvas.height / mapSize
+          );
           break;
         case 3: // Exit
           // 3 different ground tiles(2, 3, 4).
@@ -120,6 +142,13 @@ tilemap.onload = () => {
             128 * y,
             128,
             128,
+          );
+          minimap.fillStyle = `rgba(83, 244, 65, ${minimapAlpha})`;
+          minimap.fillRect(
+            x * minimap.canvas.width / mapSize,
+            y * minimap.canvas.height / mapSize,
+            minimap.canvas.width / mapSize,
+            minimap.canvas.height / mapSize
           );
           break;
         default:
@@ -216,13 +245,13 @@ function update() {
     Player.x + Player.width / 2 > Camera.vWidth / 2
     && Player.x + Player.width / 2 < buffer.canvas.width - Camera.vWidth / 2
   ) {
-    worldPosX += Player.hSpeed;
+    worldPosX = Player.x + Player.width / 2 - Camera.vWidth / 2;
   }
   if (
     Player.y + Player.height / 2 > Camera.vHeight / 2
     && Player.y + Player.height / 2 < buffer.canvas.height - Camera.vHeight / 2
   ) {
-    worldPosY += Player.vSpeed;
+    worldPosY = Player.y + Player.height / 2 - Camera.vHeight / 2;
   }
   // Lock the world position
   if (worldPosX <= 0) {
@@ -242,35 +271,35 @@ function update() {
 
   // ctxx.fillStyle = 'rgb(0,0,255)'; // Blue square for player
   // ctxx.fillRect(
-  //   player.x * (miniMap.width / row),
-  //   player.y * (miniMap.height / col),
+  //   Player.x * (miniMap.width / row),
+  //   Player.y * (miniMap.height / col),
   //   miniMap.width / row,
   //   miniMap.height / col,
   // );
 
-  // for (let i = 0; i < enemyController.enemies.length; i++) {
-  //   const enemy = enemyController.enemies[i];
-  //   enemy.update(dt);
-  //   if (
-  //     mapArray[
-  //       Math.floor((enemy.x + enemy.width / 2 + (enemy.width / 2) * enemy.xDir) / enemy.width)
-  //     ][Math.floor((enemy.y + enemy.height / 2) / enemy.height)] === 1
-  //   ) {
-  //     enemy.xDir *= -1;
-  //   }
-  //   if (
-  //     mapArray[Math.floor((enemy.x + enemy.width / 2) / enemy.width)][
-  //       Math.floor((enemy.y + enemy.height / 2 + (enemy.height / 2) * enemy.yDir) / enemy.height)
-  //     ]
-  //   ) {
-  //     enemy.yDir *= -1;
-  //   }
-  // }
+  for (let i = 0; i < enemyController.enemies.length; i++) {
+    const enemy = enemyController.enemies[i];
+    enemy.update(dt);
+    if (
+      mapArray[
+      Math.floor((enemy.x + enemy.width / 2 + (enemy.width / 2) * enemy.xDir) / enemy.width)
+      ][Math.floor((enemy.y + enemy.height / 2) / enemy.height)] === 1
+    ) {
+      enemy.xDir *= -1;
+    }
+    if (
+      mapArray[Math.floor((enemy.x + enemy.width / 2) / enemy.width)][
+      Math.floor((enemy.y + enemy.height / 2 + (enemy.height / 2) * enemy.yDir) / enemy.height)
+      ]
+    ) {
+      enemy.yDir *= -1;
+    }
+  }
   // image.src = canvas.toDataURL();
   // document.getElementById('he').appendChild(image);
 }
-const miniMapSquareToDeletX = 1;
-const miniMapSquareToDeletY = 1;
+let miniMapSquareToDeletX = 1;
+let miniMapSquareToDeletY = 1;
 
 function drawMiniMap() {
   // ctxx.clearRect(
@@ -288,13 +317,17 @@ function drawMiniMap() {
   // );
   // ctxx.fillStyle = 'rgba(0,0,200,0.5)';
   // ctxx.fillRect(
-  //   Player.posTopX * (miniMap.width / row),
-  //   Player.posTopY * (miniMap.height / col),
+  //   // Don't change this to the commented lines below.
+  //   Math.floor((Player.x + Player.width / 2) / Player.width) * (miniMap.width / row),
+  //   Math.floor((Player.y + Player.height - 4) / Player.height) * (miniMap.height / col),
+  //   // Player.posTopX * (miniMap.width / row),
+  //   // Player.posTopY * (miniMap.height / col),
   //   (miniMap.width / row) * 0.95,
   //   (miniMap.height / col) * 0.95,
   // );
-  // miniMapSquareToDeletX = Player.posTopX;
-  // miniMapSquareToDeletY = Player.posTopY;
+  // // 4 is to offset the y (hardcoded value).
+  // miniMapSquareToDeletX = Math.floor((Player.x + Player.width / 2) / Player.width);
+  // miniMapSquareToDeletY = Math.floor((Player.y + Player.height - 4) / Player.height);
 }
 // for (let x = 0; x < row; x++) {
 //   for (let y = 0; y < col; y++) {
@@ -328,26 +361,35 @@ function draw() {
   Camera.draw(worldPosX, worldPosY);
   Player.draw(ctx, worldPosX, worldPosY);
   // Draws the player behind/infront of enemies depending on its y;
-  const drewPlayer = false;
-  // for (let i = 0; i < enemyController.enemies.length; i++) {
-  //   const enemy = enemyController.enemies[i];
-  //   if (!drewPlayer) {
-  //     if (Player.y < enemy.y) {
-  //       Player.draw(ctx, worldPosX, worldPosY);
-  //       enemy.draw(ctx, worldPosX, worldPosY);
-  //     } else {
-  //       enemy.draw(ctx, worldPosX, worldPosY);
-  //       Player.draw(ctx, worldPosX, worldPosY);
-  //     }
-  //     drewPlayer = true;
-  //   }
-  // }
-  ctx.fillText(`${worldPosX} ${worldPosX}`, 20, 20);
+  let drewPlayer = false;
+  for (let i = 0; i < enemyController.enemies.length; i++) {
+    const enemy = enemyController.enemies[i];
+    if (!drewPlayer) {
+      if (Player.y < enemy.y) {
+        Player.draw(ctx, worldPosX, worldPosY);
+        enemy.draw(ctx, worldPosX, worldPosY);
+      } else {
+        enemy.draw(ctx, worldPosX, worldPosY);
+        Player.draw(ctx, worldPosX, worldPosY);
+      }
+      drewPlayer = true;
+    }
+  }
+
+  ctx.drawImage(minimap.canvas, minimapPosX, minimapPosY);
+  ctx.fillStyle = 'blue';
+  ctx.fillRect(
+    minimapPosX + Math.floor((Player.x + Player.width / 2) / Player.width) * minimap.canvas.width / mapSize,
+    minimapPosY + Math.floor((Player.y + Player.height - 4) / Player.height) * minimap.canvas.height / mapSize,
+    minimap.canvas.width / mapSize,
+    minimap.canvas.height / mapSize
+  );
+  // ctx.fillText(`${worldPosX} ${worldPosX}`, 20, 20);
   // if (miniMapSquareToDeletX != Player.posTopX || miniMapSquareToDeletY != Player.posTopY) {
   //   drawMiniMap();
   // }
 }
-drawMiniMap();
+// drawMiniMap();
 
 function gameLoop() {
   if (!InThreeD) {
