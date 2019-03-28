@@ -3,7 +3,7 @@
 /* eslint-disable no-undef */
 console.log('FUCKKKKKKKkkkkk !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!');
 const EnemyController = require('./enemyController');
-const EnemyAnxiety = require('./enemies/enemyAnxiety');
+//const EnemyAnxiety = require('./enemies/enemyAnxiety');
 const RecursiveMaze = require('./RecursiveMaze');
 const PlayerCamera = require('./camera');
 const MainCharacter = require('./2DMainChar');
@@ -58,6 +58,7 @@ const Player = new MainCharacter(
   ctx,
   // enemyController.enemies,
 );
+//enemyController.spawnEnemies(mapArray);
 Camera.attachTo(Player);
 
 let InThreeD = false;

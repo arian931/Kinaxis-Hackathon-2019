@@ -51772,7 +51772,7 @@ module.exports = _GLTFLoader;
 /* eslint-disable no-undef */
 console.log('FUCKKKKKKKkkkkk !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!');
 const EnemyController = require('./enemyController');
-const EnemyAnxiety = require('./enemies/enemyAnxiety');
+//const EnemyAnxiety = require('./enemies/enemyAnxiety');
 const RecursiveMaze = require('./RecursiveMaze');
 const PlayerCamera = require('./camera');
 const MainCharacter = require('./2DMainChar');
@@ -51807,7 +51807,7 @@ let worldPosY = 0;
 
 // eslint-disable-next-line no-undef
 const enemyController = new EnemyController();
-enemyController.enemies.push(new EnemyAnxiety(128, 120));
+//enemyController.enemies.push(new EnemyAnxiety(128, 120));
 const Recursive = new RecursiveMaze(mapSize);
 const Camera = new PlayerCamera(ctx);
 Recursive.draw();
@@ -51827,6 +51827,7 @@ const Player = new MainCharacter(
   ctx,
   // enemyController.enemies,
 );
+enemyController.spawnEnemies(mapArray);
 Camera.attachTo(Player);
 
 let InThreeD = false;
@@ -52190,7 +52191,7 @@ function switchToThreeD() {
 }
 window.requestAnimationFrame(gameLoop);
 
-},{"./2DMainChar":4,"./RecursiveMaze":12,"./camera":14,"./enemies/enemyAnxiety":16,"./enemyController":17}],4:[function(require,module,exports){
+},{"./2DMainChar":4,"./RecursiveMaze":12,"./camera":14,"./enemyController":17}],4:[function(require,module,exports){
 /* eslint-disable no-plusplus */
 /* eslint-disable no-param-reassign */
 /* eslint-disable prefer-const */
@@ -53688,9 +53689,10 @@ module.exports = class PlayerCamera {
 
 },{}],15:[function(require,module,exports){
 module.exports = class Enemy {
-  constructor(x, y) {
+  constructor(x, y, dir) {
     this.x = x;
     this.y = y;
+    this.dir = 0; // 0 = right, 1 = down, 2 = left, 3 = up.
     this.width = 128;
     this.height = 128;
     this.xDir = 0;
@@ -53712,10 +53714,9 @@ module.exports = class Enemy {
 const Enemy = require('./enemy');
 
 module.exports = class EnemyAnxiety extends Enemy {
-  constructor(x, y) {
-    super(x, y);
+  constructor(x, y, dir) {
+    super(x, y, dir);
     this.speed = 220;
-    this.xDir = 1;
     this.animationSpeed = 0.18;
     this.sprite = new Image();
     this.sprite.src = '../../Art/2D/enemy_anxiety_spritesheet.png';
@@ -53756,6 +53757,8 @@ module.exports = class EnemyAnxiety extends Enemy {
   }
 }
 },{"./enemy":15}],17:[function(require,module,exports){
+const EnemyAnxiety = require('./enemies/enemyAnxiety');
+
 module.exports = class EnemyController {
   constructor() {
     // this.spriteEnemyAnxiety = new Image();
@@ -53766,9 +53769,22 @@ module.exports = class EnemyController {
     // this.spriteEnemyDepression = '../../Art/2D/enemy_depression_spritesheet.png';
     this.enemies = [];
   }
+
+  // Spawn the enemies randomly.
+  spawnEnemies(mapArray) {
+    for (let x = 0; x < 10; x++) {
+      for (let y = 0; y < 10; y++) {
+        // Check for ground.
+        if (mapArray[y][x] === 0) {
+          this.enemies.push(new EnemyAnxiety(x * 128, y * 128 - 10));
+          console.log('g');
+        }
+      }
+    }
+  }
 }
 
-},{}],18:[function(require,module,exports){
+},{"./enemies/enemyAnxiety":16}],18:[function(require,module,exports){
 (function (global){
 /* eslint-disable eqeqeq */
 /* eslint-disable no-plusplus */
