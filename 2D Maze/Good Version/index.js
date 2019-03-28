@@ -262,8 +262,8 @@ function drawMiniMap() {
   );
   ctxx.fillStyle = 'rgba(0,0,200,0.5)'; // Blue player dot
   ctxx.fillRect( // Draw new player position
-    Player.posTopX * (miniMap.width / row),
-    Player.posTopY * (miniMap.height / col),
+    Math.floor((Player.x + Player.width / 2) / Player.width) * (miniMap.width / row),
+    Math.floor((Player.y + Player.height - 4) / Player.height) * (miniMap.height / col),
     (miniMap.width / row) * 0.95,
     (miniMap.height / col) * 0.95,
   );
