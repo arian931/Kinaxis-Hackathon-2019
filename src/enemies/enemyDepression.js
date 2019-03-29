@@ -1,15 +1,15 @@
 const Enemy = require('./enemy');
 
-module.exports = class EnemyAnxiety extends Enemy {
+module.exports = class EnemyDepression extends Enemy {
   constructor(x, y, dir) {
     super(x, y, dir);
     this.xDir = (dir === 0 ? 1 : 0);
     this.yDir = (dir === 1 ? 1 : 0);
-    this.speed = 220;
-    this.animationSpeed = 0.18;
+    this.speed = 80;
+    this.animationSpeed = 0.07;
     this.sprite = new Image();
-    this.sprite.src = '../../Art/2D/enemy_anxiety_spritesheet.png';
-    this.animationSize = 3;
+    this.sprite.src = '../../Art/2D/enemy_depression_spritesheet.png';
+    this.animationSize = 4;
     this.CWidth = 29;
     this.CHeight = 29;
     this.posX = parseInt(this.x / ((this.CWidth * 128) / this.CWidth));

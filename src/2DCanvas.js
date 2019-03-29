@@ -38,7 +38,7 @@ let worldPosY = 0;
 
 // eslint-disable-next-line no-undef
 const enemyController = new EnemyController();
-enemyController.enemies.push(new EnemyAnxiety(128, 120));
+//enemyController.enemies.push(new EnemyAnxiety(128, 120));
 const Recursive = new RecursiveMaze(mapSize);
 const Camera = new PlayerCamera(ctx);
 Recursive.draw();
@@ -58,7 +58,7 @@ const Player = new MainCharacter(
   ctx,
   // enemyController.enemies,
 );
-//enemyController.spawnEnemies(mapArray);
+enemyController.spawnEnemies(mapArray);
 Camera.attachTo(Player);
 
 let InThreeD = false;
@@ -282,16 +282,14 @@ function update() {
     const enemy = enemyController.enemies[i];
     enemy.update(dt);
     if (
-      mapArray[
-      Math.floor((enemy.x + enemy.width / 2 + (enemy.width / 2) * enemy.xDir) / enemy.width)
-      ][Math.floor((enemy.y + enemy.height / 2) / enemy.height)] === 1
+      mapArray[Math.floor((enemy.x + enemy.width / 2 + (enemy.width / 2) * enemy.xDir) / enemy.width)]
+      [Math.floor((enemy.y + enemy.height / 2) / enemy.height)] === 1
     ) {
       enemy.xDir *= -1;
     }
     if (
-      mapArray[Math.floor((enemy.x + enemy.width / 2) / enemy.width)][
-      Math.floor((enemy.y + enemy.height / 2 + (enemy.height / 2) * enemy.yDir) / enemy.height)
-      ]
+      mapArray[Math.floor((enemy.x + enemy.width / 2) / enemy.width)]
+      [Math.floor((enemy.y + enemy.height / 2 + (enemy.height / 2) * enemy.yDir) / enemy.height)] === 1
     ) {
       enemy.yDir *= -1;
     }
@@ -361,6 +359,16 @@ function draw() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   Camera.draw(worldPosX, worldPosY);
   Player.draw(ctx, worldPosX, worldPosY);
+
+  ctx.drawImage(minimap.canvas, minimapPosX, minimapPosY);
+  ctx.fillStyle = 'blue';
+  ctx.fillRect(
+    minimapPosX + Math.floor((Player.x + Player.width / 2) / Player.width) * minimap.canvas.width / mapSize,
+    minimapPosY + Math.floor((Player.y + Player.height - 4) / Player.height) * minimap.canvas.height / mapSize,
+    minimap.canvas.width / mapSize,
+    minimap.canvas.height / mapSize
+  );
+
   // Draws the player behind/infront of enemies depending on its y;
   let drewPlayer = false;
   for (let i = 0; i < enemyController.enemies.length; i++) {
@@ -375,16 +383,14 @@ function draw() {
       }
       drewPlayer = true;
     }
+    ctx.fillStyle = 'red';
+    ctx.fillRect(
+      minimapPosX + Math.floor((enemy.x + enemy.width / 2) / enemy.width) * minimap.canvas.width / mapSize,
+      minimapPosY + Math.floor((enemy.y + enemy.height / 2) / enemy.height) * minimap.canvas.height / mapSize,
+      minimap.canvas.width / mapSize,
+      minimap.canvas.height / mapSize
+    );
   }
-
-  ctx.drawImage(minimap.canvas, minimapPosX, minimapPosY);
-  ctx.fillStyle = 'blue';
-  ctx.fillRect(
-    minimapPosX + Math.floor((Player.x + Player.width / 2) / Player.width) * minimap.canvas.width / mapSize,
-    minimapPosY + Math.floor((Player.y + Player.height - 4) / Player.height) * minimap.canvas.height / mapSize,
-    minimap.canvas.width / mapSize,
-    minimap.canvas.height / mapSize
-  );
   // ctx.fillText(`${worldPosX} ${worldPosX}`, 20, 20);
   // if (miniMapSquareToDeletX != Player.posTopX || miniMapSquareToDeletY != Player.posTopY) {
   //   drawMiniMap();

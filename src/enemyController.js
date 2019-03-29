@@ -1,4 +1,6 @@
 const EnemyAnxiety = require('./enemies/enemyAnxiety');
+const EnemyBPD = require('./enemies/enemyBPD');
+const EnemyDepression = require('./enemies/enemyDepression');
 
 module.exports = class EnemyController {
   constructor() {
@@ -13,12 +15,22 @@ module.exports = class EnemyController {
 
   // Spawn the enemies randomly.
   spawnEnemies(mapArray) {
-    for (let x = 0; x < 10; x++) {
-      for (let y = 0; y < 10; y++) {
+    const chanceMax = 60;
+    let chance = chanceMax;
+    for (let y = 0; y < mapArray.length; y++) {
+      for (let x = 0; x < mapArray[y].length; x++) {
         // Check for ground.
-        if (mapArray[y][x] === 0) {
-          this.enemies.push(new EnemyAnxiety(x * 128, y * 128 - 10));
-          console.log('g');
+        const rand = Math.floor(Math.random() * chance);
+        if (mapArray[x][y] === 0) {
+          if (rand === 0) {
+            this.enemies.push(new EnemyDepression(
+              x * 128,
+              y * 128 - 10,
+              (mapArray[x][y - 1] === 1 && mapArray[x][y + 1] === 1 ? 0 : 1)
+            ));
+            chance = chanceMax;
+          }
+          chance -= 1;
         }
       }
     }

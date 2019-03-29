@@ -52051,16 +52051,14 @@ function update() {
     const enemy = enemyController.enemies[i];
     enemy.update(dt);
     if (
-      mapArray[
-      Math.floor((enemy.x + enemy.width / 2 + (enemy.width / 2) * enemy.xDir) / enemy.width)
-      ][Math.floor((enemy.y + enemy.height / 2) / enemy.height)] === 1
+      mapArray[Math.floor((enemy.x + enemy.width / 2 + (enemy.width / 2) * enemy.xDir) / enemy.width)]
+      [Math.floor((enemy.y + enemy.height / 2) / enemy.height)] === 1
     ) {
       enemy.xDir *= -1;
     }
     if (
-      mapArray[Math.floor((enemy.x + enemy.width / 2) / enemy.width)][
-      Math.floor((enemy.y + enemy.height / 2 + (enemy.height / 2) * enemy.yDir) / enemy.height)
-      ]
+      mapArray[Math.floor((enemy.x + enemy.width / 2) / enemy.width)]
+      [Math.floor((enemy.y + enemy.height / 2 + (enemy.height / 2) * enemy.yDir) / enemy.height)] === 1
     ) {
       enemy.yDir *= -1;
     }
@@ -52130,6 +52128,16 @@ function draw() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   Camera.draw(worldPosX, worldPosY);
   Player.draw(ctx, worldPosX, worldPosY);
+
+  ctx.drawImage(minimap.canvas, minimapPosX, minimapPosY);
+  ctx.fillStyle = 'blue';
+  ctx.fillRect(
+    minimapPosX + Math.floor((Player.x + Player.width / 2) / Player.width) * minimap.canvas.width / mapSize,
+    minimapPosY + Math.floor((Player.y + Player.height - 4) / Player.height) * minimap.canvas.height / mapSize,
+    minimap.canvas.width / mapSize,
+    minimap.canvas.height / mapSize
+  );
+
   // Draws the player behind/infront of enemies depending on its y;
   let drewPlayer = false;
   for (let i = 0; i < enemyController.enemies.length; i++) {
@@ -52144,16 +52152,14 @@ function draw() {
       }
       drewPlayer = true;
     }
+    ctx.fillStyle = 'red';
+    ctx.fillRect(
+      minimapPosX + Math.floor((enemy.x + enemy.width / 2) / enemy.width) * minimap.canvas.width / mapSize,
+      minimapPosY + Math.floor((enemy.y + enemy.height / 2) / enemy.height) * minimap.canvas.height / mapSize,
+      minimap.canvas.width / mapSize,
+      minimap.canvas.height / mapSize
+    );
   }
-
-  ctx.drawImage(minimap.canvas, minimapPosX, minimapPosY);
-  ctx.fillStyle = 'blue';
-  ctx.fillRect(
-    minimapPosX + Math.floor((Player.x + Player.width / 2) / Player.width) * minimap.canvas.width / mapSize,
-    minimapPosY + Math.floor((Player.y + Player.height - 4) / Player.height) * minimap.canvas.height / mapSize,
-    minimap.canvas.width / mapSize,
-    minimap.canvas.height / mapSize
-  );
   // ctx.fillText(`${worldPosX} ${worldPosX}`, 20, 20);
   // if (miniMapSquareToDeletX != Player.posTopX || miniMapSquareToDeletY != Player.posTopY) {
   //   drawMiniMap();
@@ -52191,7 +52197,7 @@ function switchToThreeD() {
 }
 window.requestAnimationFrame(gameLoop);
 
-},{"./2DMainChar":4,"./RecursiveMaze":12,"./camera":14,"./enemyController":17}],4:[function(require,module,exports){
+},{"./2DMainChar":4,"./RecursiveMaze":12,"./camera":14,"./enemyController":19}],4:[function(require,module,exports){
 /* eslint-disable no-plusplus */
 /* eslint-disable no-param-reassign */
 /* eslint-disable prefer-const */
@@ -53692,7 +53698,7 @@ module.exports = class Enemy {
   constructor(x, y, dir) {
     this.x = x;
     this.y = y;
-    this.dir = 0; // 0 = right, 1 = down, 2 = left, 3 = up.
+    this.dir = 0; // 0 = horizontal, 1 = vertical.
     this.width = 128;
     this.height = 128;
     this.xDir = 0;
@@ -53716,6 +53722,8 @@ const Enemy = require('./enemy');
 module.exports = class EnemyAnxiety extends Enemy {
   constructor(x, y, dir) {
     super(x, y, dir);
+    this.xDir = (dir === 0 ? 1 : 0);
+    this.yDir = (dir === 1 ? 1 : 0);
     this.speed = 220;
     this.animationSpeed = 0.18;
     this.sprite = new Image();
@@ -53737,6 +53745,8 @@ module.exports = class EnemyAnxiety extends Enemy {
 
     if (this.xDir !== 0) {
       this.spriteIndexY = this.xDir === 1 ? 1 : 3;
+    } else {
+      this.spriteIndexY = this.yDir === 1 ? 2 : 4;
     }
     this.posX = parseInt((this.x + 50) / ((this.CWidth * 128) / this.CWidth));
     this.posY = parseInt((this.y + 20) / ((this.CHeight * 128) / this.CHeight));
@@ -53757,7 +53767,109 @@ module.exports = class EnemyAnxiety extends Enemy {
   }
 }
 },{"./enemy":15}],17:[function(require,module,exports){
+const Enemy = require('./enemy');
+
+module.exports = class EnemyBPD extends Enemy {
+  constructor(x, y, dir) {
+    super(x, y, dir);
+    this.xDir = (dir === 0 ? 1 : 0);
+    this.yDir = (dir === 1 ? 1 : 0);
+    this.speed = 220;
+    this.animationSpeed = 0.1;
+    this.sprite = new Image();
+    this.sprite.src = '../../Art/2D/enemy_borderline_personality_disorder_spritesheet.png';
+    this.animationSize = 4;
+    this.CWidth = 29;
+    this.CHeight = 29;
+    this.posX = parseInt(this.x / ((this.CWidth * 128) / this.CWidth));
+    this.posY = parseInt(this.y / ((this.CHeight * 128) / this.CHeight));
+  }
+
+  update(dt) {
+    this.hSpeed = this.speed * this.xDir * dt;
+    this.vSpeed = this.speed * this.yDir * dt;
+    this.x += this.hSpeed;
+    this.y += this.vSpeed;
+
+    this.spriteIndexX = (this.spriteIndexX + this.animationSpeed) % this.animationSize;
+
+    if (this.xDir !== 0) {
+      this.spriteIndexY = this.xDir === 1 ? 1 : 3;
+    } else {
+      this.spriteIndexY = this.yDir === 1 ? 2 : 4;
+    }
+    this.posX = parseInt((this.x + 50) / ((this.CWidth * 128) / this.CWidth));
+    this.posY = parseInt((this.y + 20) / ((this.CHeight * 128) / this.CHeight));
+  }
+
+  draw(ctx, worldPosX, worldPosY) {
+    ctx.drawImage(
+      this.sprite,
+      this.width * Math.floor(this.spriteIndexX),
+      this.height * this.spriteIndexY,
+      this.width,
+      this.height,
+      this.x - worldPosX,
+      this.y - worldPosY,
+      this.width,
+      this.height,
+    );
+  }
+}
+},{"./enemy":15}],18:[function(require,module,exports){
+const Enemy = require('./enemy');
+
+module.exports = class EnemyDepression extends Enemy {
+  constructor(x, y, dir) {
+    super(x, y, dir);
+    this.xDir = (dir === 0 ? 1 : 0);
+    this.yDir = (dir === 1 ? 1 : 0);
+    this.speed = 80;
+    this.animationSpeed = 0.07;
+    this.sprite = new Image();
+    this.sprite.src = '../../Art/2D/enemy_depression_spritesheet.png';
+    this.animationSize = 4;
+    this.CWidth = 29;
+    this.CHeight = 29;
+    this.posX = parseInt(this.x / ((this.CWidth * 128) / this.CWidth));
+    this.posY = parseInt(this.y / ((this.CHeight * 128) / this.CHeight));
+  }
+
+  update(dt) {
+    this.hSpeed = this.speed * this.xDir * dt;
+    this.vSpeed = this.speed * this.yDir * dt;
+    this.x += this.hSpeed;
+    this.y += this.vSpeed;
+
+    this.spriteIndexX = (this.spriteIndexX + this.animationSpeed) % this.animationSize;
+
+    if (this.xDir !== 0) {
+      this.spriteIndexY = this.xDir === 1 ? 1 : 3;
+    } else {
+      this.spriteIndexY = this.yDir === 1 ? 2 : 4;
+    }
+    this.posX = parseInt((this.x + 50) / ((this.CWidth * 128) / this.CWidth));
+    this.posY = parseInt((this.y + 20) / ((this.CHeight * 128) / this.CHeight));
+  }
+
+  draw(ctx, worldPosX, worldPosY) {
+    ctx.drawImage(
+      this.sprite,
+      this.width * Math.floor(this.spriteIndexX),
+      this.height * this.spriteIndexY,
+      this.width,
+      this.height,
+      this.x - worldPosX,
+      this.y - worldPosY,
+      this.width,
+      this.height,
+    );
+  }
+}
+},{"./enemy":15}],19:[function(require,module,exports){
 const EnemyAnxiety = require('./enemies/enemyAnxiety');
+const EnemyBPD = require('./enemies/enemyBPD');
+const EnemyDepression = require('./enemies/enemyDepression');
 
 module.exports = class EnemyController {
   constructor() {
@@ -53772,19 +53884,29 @@ module.exports = class EnemyController {
 
   // Spawn the enemies randomly.
   spawnEnemies(mapArray) {
-    for (let x = 0; x < 10; x++) {
-      for (let y = 0; y < 10; y++) {
+    const chanceMax = 60;
+    let chance = chanceMax;
+    for (let y = 0; y < mapArray.length; y++) {
+      for (let x = 0; x < mapArray[y].length; x++) {
         // Check for ground.
-        if (mapArray[y][x] === 0) {
-          this.enemies.push(new EnemyAnxiety(x * 128, y * 128 - 10));
-          console.log('g');
+        const rand = Math.floor(Math.random() * chance);
+        if (mapArray[x][y] === 0) {
+          if (rand === 0) {
+            this.enemies.push(new EnemyDepression(
+              x * 128,
+              y * 128 - 10,
+              (mapArray[x][y - 1] === 1 && mapArray[x][y + 1] === 1 ? 0 : 1)
+            ));
+            chance = chanceMax;
+          }
+          chance -= 1;
         }
       }
     }
   }
 }
 
-},{"./enemies/enemyAnxiety":16}],18:[function(require,module,exports){
+},{"./enemies/enemyAnxiety":16,"./enemies/enemyBPD":17,"./enemies/enemyDepression":18}],20:[function(require,module,exports){
 (function (global){
 /* eslint-disable eqeqeq */
 /* eslint-disable no-plusplus */
@@ -54073,4 +54195,4 @@ function clearScene() {
 }
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./2DCanvas":3,"./3DControls":5,"./LevelOne":9,"three":2,"three-gltf-loader":1}]},{},[18]);
+},{"./2DCanvas":3,"./3DControls":5,"./LevelOne":9,"three":2,"three-gltf-loader":1}]},{},[20]);
