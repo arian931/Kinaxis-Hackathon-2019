@@ -14,7 +14,7 @@ module.exports = class EnemyController {
   }
 
   // Spawn the enemies randomly.
-  spawnEnemies(mapArray) {
+  spawnEnemies(mapArray, gameObjects) {
     const chanceMax = 100;
     let chance = chanceMax;
     for (let y = 0; y < mapArray.length; y++) {
@@ -25,21 +25,21 @@ module.exports = class EnemyController {
           if (rand === 0) {
             switch (Math.floor(Math.random() * 3)) {
               case 0:
-                this.enemies.push(new EnemyDepression(
+                gameObjects.push(new EnemyDepression(
                   x * 128,
                   y * 128 - 10,
                   (mapArray[x][y - 1] === 1 && mapArray[x][y + 1] === 1 ? 0 : 1)
                 ));
                 break;
               case 1:
-                this.enemies.push(new EnemyAnxiety(
+                gameObjects.push(new EnemyAnxiety(
                   x * 128,
                   y * 128 - 10,
                   (mapArray[x][y - 1] === 1 && mapArray[x][y + 1] === 1 ? 0 : 1)
                 ));
                 break;
               case 2:
-                this.enemies.push(new EnemyBPD(
+                gameObjects.push(new EnemyBPD(
                   x * 128,
                   y * 128 - 10,
                   (mapArray[x][y - 1] === 1 && mapArray[x][y + 1] === 1 ? 0 : 1)

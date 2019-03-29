@@ -1,29 +1,27 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable eqeqeq */
 /* eslint-disable no-undef */
-console.log('FUCKKKKKKKkkkkk !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!');
+const Enemy = require('./enemies/enemy');
+const Key = require('./key');
 const EnemyController = require('./enemyController');
-// const EnemyAnxiety = require('./enemies/enemyAnxiety');
+const KeyController = require('./keyController');
 const RecursiveMaze = require('./RecursiveMaze');
 const PlayerCamera = require('./camera');
 const MainCharacter = require('./2DMainChar');
 
 const canvas = document.getElementById('backgroundCanvas');
 console.log(canvas);
-// const miniMap = document.getElementById('minimapCanvas');
 const ctx = canvas.getContext('2d');
-// const ctxx = miniMap.getContext('2d');
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
-// miniMap.width = window.innerWidth / 7;
-// miniMap.height = window.innerWidth / 7;
+
 
 // Load the tilemap.
 const tilemap = new Image();
 tilemap.src = '../../Art/2D/tilemap.png';
 
 // eslint-disable-next-line no-unused-vars
-const drawOrder = [];
+const gameObjects = [];
 
 let mapArray;
 const mapSize = 29;
@@ -38,7 +36,7 @@ let worldPosY = 0;
 
 // eslint-disable-next-line no-undef
 const enemyController = new EnemyController();
-// enemyController.enemies.push(new EnemyAnxiety(128, 120));
+const keyController = new KeyController();
 const Recursive = new RecursiveMaze(mapSize);
 const Camera = new PlayerCamera(ctx);
 Recursive.draw();
@@ -56,11 +54,13 @@ const Player = new MainCharacter(
   Recursive.MazeSize,
   mapArray,
   ctx,
-  enemyController.enemies,
+  gameObjects,
   switchToThreeD,
   // enemyController.enemies,
 );
-enemyController.spawnEnemies(mapArray);
+gameObjects.push(Player);
+enemyController.spawnEnemies(mapArray, gameObjects);
+keyController.spawnKeys(mapArray, gameObjects);
 Camera.attachTo(Player);
 
 let InThreeD = false;
@@ -229,9 +229,6 @@ document.addEventListener('keyup', (event) => {
   }
 });
 
-const row = mapSize;
-const col = mapSize;
-
 function update() {
   // Calucute delta time.
   const nowTime = Date.now();
@@ -269,117 +266,41 @@ function update() {
   }
 
   // Update the objects.
-  Player.update(dt);
+  // Player.update(dt);
   Camera.update(dt);
 
-  // ctxx.fillStyle = 'rgb(0,0,255)'; // Blue square for player
-  // ctxx.fillRect(
-  //   Player.x * (miniMap.width / row),
-  //   Player.y * (miniMap.height / col),
-  //   miniMap.width / row,
-  //   miniMap.height / col,
-  // );
-
-  for (let i = 0; i < enemyController.enemies.length; i++) {
-    const enemy = enemyController.enemies[i];
-    enemy.update(dt);
-    if (
-      mapArray[
-      Math.floor((enemy.x + enemy.width / 2 + (enemy.width / 2) * enemy.xDir) / enemy.width)
-      ][Math.floor((enemy.y + enemy.height / 2) / enemy.height)] === 1
-    ) {
-      enemy.xDir *= -1;
-    }
-    if (
-      mapArray[Math.floor((enemy.x + enemy.width / 2) / enemy.width)][
-      Math.floor((enemy.y + enemy.height - 16 + (enemy.height / 2) * enemy.yDir) / enemy.height)
-      ] === 1
-    ) {
-      enemy.yDir *= -1;
+  for (let i = 0; i < gameObjects.length; i++) {
+    gameObjects[i].update(dt);
+    if (gameObjects[i] instanceof Enemy) {
+      const enemy = gameObjects[i];
+      if (
+        mapArray[
+        Math.floor((enemy.x + enemy.width / 2 + (enemy.width / 2) * enemy.xDir) / enemy.width)
+        ][Math.floor((enemy.y + enemy.height / 2) / enemy.height)] === 1
+      ) {
+        enemy.xDir *= -1;
+      }
+      if (
+        mapArray[Math.floor((enemy.x + enemy.width / 2) / enemy.width)][
+        Math.floor((enemy.y + enemy.height - 16 + (enemy.height / 2) * enemy.yDir) / enemy.height)
+        ] === 1
+      ) {
+        enemy.yDir *= -1;
+      }
     }
   }
-  // image.src = canvas.toDataURL();
-  // document.getElementById('he').appendChild(image);
-}
-const miniMapSquareToDeletX = 1;
-const miniMapSquareToDeletY = 1;
 
-function drawMiniMap() {
-  // ctxx.clearRect(
-  //   miniMapSquareToDeletX * (miniMap.width / row),
-  //   miniMapSquareToDeletY * (miniMap.height / col),
-  //   (miniMap.width / row) * 0.95,
-  //   (miniMap.height / col) * 0.95,
-  // );
-  // ctxx.fillStyle = 'rgba(0,128,0, 0.65)'; // Green Walls
-  // ctxx.fillRect(
-  //   miniMapSquareToDeletX * (miniMap.width / row),
-  //   miniMapSquareToDeletY * (miniMap.height / col),
-  //   (miniMap.width / row) * 0.95,
-  //   (miniMap.height / col) * 0.95,
-  // );
-  // ctxx.fillStyle = 'rgba(0,0,200,0.5)';
-  // ctxx.fillRect(
-  //   // Don't change this to the commented lines below.
-  //   Math.floor((Player.x + Player.width / 2) / Player.width) * (miniMap.width / row),
-  //   Math.floor((Player.y + Player.height - 4) / Player.height) * (miniMap.height / col),
-  //   // Player.posTopX * (miniMap.width / row),
-  //   // Player.posTopY * (miniMap.height / col),
-  //   (miniMap.width / row) * 0.95,
-  //   (miniMap.height / col) * 0.95,
-  // );
-  // // 4 is to offset the y (hardcoded value).
-  // miniMapSquareToDeletX = Math.floor((Player.x + Player.width / 2) / Player.width);
-  // miniMapSquareToDeletY = Math.floor((Player.y + Player.height - 4) / Player.height);
 }
-// for (let x = 0; x < row; x++) {
-//   for (let y = 0; y < col; y++) {
-//     // eslint-disable-next-line default-case
-//     switch (mapArray[x][y]) {
-//       case 0:
-//         // console.log("No Wall");
-//         ctxx.fillStyle = 'rgba(0,128,0, 0.65)'; // Green Walls
-//         ctxx.fillRect(
-//           x * (miniMap.width / row),
-//           y * (miniMap.height / col),
-//           miniMap.width / row,
-//           miniMap.height / col,
-//         );
-//         break;
-//       case 1:
-//         console.log('Wall');
-//         ctxx.fillStyle = 'rgba(128,128,128,0.65)'; // Grey walls
-//         ctxx.fillRect(
-//           x * (miniMap.width / row),
-//           y * (miniMap.height / col),
-//           miniMap.width / row,
-//           miniMap.height / col,
-//         );
-//         break;
-//     }
-//   }
-// }
+
+
 function draw() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   Camera.draw(worldPosX, worldPosY);
-  Player.draw(ctx, worldPosX, worldPosY);
+  // Player.draw(ctx, worldPosX, worldPosY);
 
-  // Draws the player behind/infront of enemies depending on its y;
-  let drewPlayer = false;
-  for (let i = 0; i < enemyController.enemies.length; i++) {
-    const enemy = enemyController.enemies[i];
-    if (!drewPlayer) {
-      if (Player.y < enemy.y) {
-        Player.draw(ctx, worldPosX, worldPosY);
-        enemy.draw(ctx, worldPosX, worldPosY);
-      } else {
-        enemy.draw(ctx, worldPosX, worldPosY);
-        Player.draw(ctx, worldPosX, worldPosY);
-      }
-      drewPlayer = true;
-    } else {
-      enemy.draw(ctx, worldPosX, worldPosY);
-    }
+  gameObjects.sort((a, b) => (a.y > b.y ? 1 : -1));
+  for (let i = 0; i < gameObjects.length; i++) {
+    gameObjects[i].draw(ctx, worldPosX, worldPosY);
   }
 
   ctx.drawImage(minimap.canvas, minimapPosX, minimapPosY);
@@ -398,7 +319,6 @@ function draw() {
   //   drawMiniMap();
   // }
 }
-// drawMiniMap();
 
 function gameLoop() {
   if (!InThreeD) {

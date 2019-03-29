@@ -5,8 +5,11 @@
 /* eslint-disable eqeqeq */
 /* eslint-disable radix */
 // eslint-disable-next-line no-unused-vars
+const Enemy = require('./enemies/enemy');
+const Key = require('./key');
+
 module.exports = class MainCharacter {
-  constructor(x, y, width, height, mazeSize, mazeArray, context, EnemyArray, functToSwitch) {
+  constructor(x, y, width, height, mazeSize, mazeArray, context, gameObjects, functToSwitch) {
     this.image = new Image();
     this.image.src = '../../Art/2D/male2_spritesheet.png';
     this.camera = undefined;
@@ -37,7 +40,7 @@ module.exports = class MainCharacter {
     this.moveDown = false;
     this.counter = 10;
     this.playerSpeed = 4;
-    this.EnemyArray = EnemyArray;
+    this.gameObjects = gameObjects;
     this.functToSwitch = functToSwitch;
   }
 
@@ -75,10 +78,21 @@ module.exports = class MainCharacter {
       this.spriteDir = this.xDir === 1 ? 0 : 2;
       this.spriteIndexY = this.spriteDir + 1;
     }
-    for (let j = 0; j < this.EnemyArray.length; j++) {
-      if (this.EnemyArray[j].posX == this.posTopX && this.EnemyArray[j].posY == this.posTopY) {
-        this.EnemyArray.splice(j, 1);
-        this.functToSwitch();
+    for (let j = 0; j < this.gameObjects.length; j++) {
+      if (this.gameObjects[j] instanceof Enemy) {
+        // Contact with enemy
+        const enemy = this.gameObjects[j];
+        if (this.x + this.width / 2 > enemy.x + 32
+          && this.x + this.width / 2 < enemy.x + enemy.width - 32
+          && this.y + this.height / 2 > enemy.y + 32
+          && this.y + this.height / 2 < enemy.y + enemy.height - 32) {
+          this.gameObjects.splice(j, 1);
+          this.functToSwitch();
+        }
+      }
+      if (this.gameObjects[j] instanceof Key) {
+        // Contact with key
+        this.gameObjects.splice(j, 1);
       }
     }
   }

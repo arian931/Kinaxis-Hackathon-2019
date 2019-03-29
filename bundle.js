@@ -51770,29 +51770,27 @@ module.exports = _GLTFLoader;
 /* eslint-disable no-unused-vars */
 /* eslint-disable eqeqeq */
 /* eslint-disable no-undef */
-console.log('FUCKKKKKKKkkkkk !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!');
+const Enemy = require('./enemies/enemy');
+const Key = require('./key');
 const EnemyController = require('./enemyController');
-// const EnemyAnxiety = require('./enemies/enemyAnxiety');
+const KeyController = require('./keyController');
 const RecursiveMaze = require('./RecursiveMaze');
 const PlayerCamera = require('./camera');
 const MainCharacter = require('./2DMainChar');
 
 const canvas = document.getElementById('backgroundCanvas');
 console.log(canvas);
-// const miniMap = document.getElementById('minimapCanvas');
 const ctx = canvas.getContext('2d');
-// const ctxx = miniMap.getContext('2d');
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
-// miniMap.width = window.innerWidth / 7;
-// miniMap.height = window.innerWidth / 7;
+
 
 // Load the tilemap.
 const tilemap = new Image();
 tilemap.src = '../../Art/2D/tilemap.png';
 
 // eslint-disable-next-line no-unused-vars
-const drawOrder = [];
+const gameObjects = [];
 
 let mapArray;
 const mapSize = 29;
@@ -51807,7 +51805,7 @@ let worldPosY = 0;
 
 // eslint-disable-next-line no-undef
 const enemyController = new EnemyController();
-// enemyController.enemies.push(new EnemyAnxiety(128, 120));
+const keyController = new KeyController();
 const Recursive = new RecursiveMaze(mapSize);
 const Camera = new PlayerCamera(ctx);
 Recursive.draw();
@@ -51825,11 +51823,13 @@ const Player = new MainCharacter(
   Recursive.MazeSize,
   mapArray,
   ctx,
-  enemyController.enemies,
+  gameObjects,
   switchToThreeD,
   // enemyController.enemies,
 );
-enemyController.spawnEnemies(mapArray);
+gameObjects.push(Player);
+enemyController.spawnEnemies(mapArray, gameObjects);
+keyController.spawnKeys(mapArray, gameObjects);
 Camera.attachTo(Player);
 
 let InThreeD = false;
@@ -51998,9 +51998,6 @@ document.addEventListener('keyup', (event) => {
   }
 });
 
-const row = mapSize;
-const col = mapSize;
-
 function update() {
   // Calucute delta time.
   const nowTime = Date.now();
@@ -52038,126 +52035,41 @@ function update() {
   }
 
   // Update the objects.
-  Player.update(dt);
+  // Player.update(dt);
   Camera.update(dt);
 
-  // ctxx.fillStyle = 'rgb(0,0,255)'; // Blue square for player
-  // ctxx.fillRect(
-  //   Player.x * (miniMap.width / row),
-  //   Player.y * (miniMap.height / col),
-  //   miniMap.width / row,
-  //   miniMap.height / col,
-  // );
-
-  for (let i = 0; i < enemyController.enemies.length; i++) {
-    const enemy = enemyController.enemies[i];
-    enemy.update(dt);
-    if (
-      mapArray[
-      Math.floor((enemy.x + enemy.width / 2 + (enemy.width / 2) * enemy.xDir) / enemy.width)
-      ][Math.floor((enemy.y + enemy.height / 2) / enemy.height)] === 1
-    ) {
-      enemy.xDir *= -1;
-    }
-    if (
-      mapArray[Math.floor((enemy.x + enemy.width / 2) / enemy.width)][
-      Math.floor((enemy.y + enemy.height - 16 + (enemy.height / 2) * enemy.yDir) / enemy.height)
-      ] === 1
-    ) {
-      enemy.yDir *= -1;
+  for (let i = 0; i < gameObjects.length; i++) {
+    gameObjects[i].update(dt);
+    if (gameObjects[i] instanceof Enemy) {
+      const enemy = gameObjects[i];
+      if (
+        mapArray[
+        Math.floor((enemy.x + enemy.width / 2 + (enemy.width / 2) * enemy.xDir) / enemy.width)
+        ][Math.floor((enemy.y + enemy.height / 2) / enemy.height)] === 1
+      ) {
+        enemy.xDir *= -1;
+      }
+      if (
+        mapArray[Math.floor((enemy.x + enemy.width / 2) / enemy.width)][
+        Math.floor((enemy.y + enemy.height - 16 + (enemy.height / 2) * enemy.yDir) / enemy.height)
+        ] === 1
+      ) {
+        enemy.yDir *= -1;
+      }
     }
   }
-  // image.src = canvas.toDataURL();
-  // document.getElementById('he').appendChild(image);
-}
-const miniMapSquareToDeletX = 1;
-const miniMapSquareToDeletY = 1;
 
-function drawMiniMap() {
-  // ctxx.clearRect(
-  //   miniMapSquareToDeletX * (miniMap.width / row),
-  //   miniMapSquareToDeletY * (miniMap.height / col),
-  //   (miniMap.width / row) * 0.95,
-  //   (miniMap.height / col) * 0.95,
-  // );
-  // ctxx.fillStyle = 'rgba(0,128,0, 0.65)'; // Green Walls
-  // ctxx.fillRect(
-  //   miniMapSquareToDeletX * (miniMap.width / row),
-  //   miniMapSquareToDeletY * (miniMap.height / col),
-  //   (miniMap.width / row) * 0.95,
-  //   (miniMap.height / col) * 0.95,
-  // );
-  // ctxx.fillStyle = 'rgba(0,0,200,0.5)';
-  // ctxx.fillRect(
-  //   // Don't change this to the commented lines below.
-  //   Math.floor((Player.x + Player.width / 2) / Player.width) * (miniMap.width / row),
-  //   Math.floor((Player.y + Player.height - 4) / Player.height) * (miniMap.height / col),
-  //   // Player.posTopX * (miniMap.width / row),
-  //   // Player.posTopY * (miniMap.height / col),
-  //   (miniMap.width / row) * 0.95,
-  //   (miniMap.height / col) * 0.95,
-  // );
-  // // 4 is to offset the y (hardcoded value).
-  // miniMapSquareToDeletX = Math.floor((Player.x + Player.width / 2) / Player.width);
-  // miniMapSquareToDeletY = Math.floor((Player.y + Player.height - 4) / Player.height);
 }
-// for (let x = 0; x < row; x++) {
-//   for (let y = 0; y < col; y++) {
-//     // eslint-disable-next-line default-case
-//     switch (mapArray[x][y]) {
-//       case 0:
-//         // console.log("No Wall");
-//         ctxx.fillStyle = 'rgba(0,128,0, 0.65)'; // Green Walls
-//         ctxx.fillRect(
-//           x * (miniMap.width / row),
-//           y * (miniMap.height / col),
-//           miniMap.width / row,
-//           miniMap.height / col,
-//         );
-//         break;
-//       case 1:
-//         console.log('Wall');
-//         ctxx.fillStyle = 'rgba(128,128,128,0.65)'; // Grey walls
-//         ctxx.fillRect(
-//           x * (miniMap.width / row),
-//           y * (miniMap.height / col),
-//           miniMap.width / row,
-//           miniMap.height / col,
-//         );
-//         break;
-//     }
-//   }
-// }
+
+
 function draw() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   Camera.draw(worldPosX, worldPosY);
-  Player.draw(ctx, worldPosX, worldPosY);
+  // Player.draw(ctx, worldPosX, worldPosY);
 
-  // Draws the player behind/infront of enemies depending on its y;
-  let drewPlayer = false;
-  for (let i = 0; i < enemyController.enemies.length; i++) {
-    const enemy = enemyController.enemies[i];
-    if (!drewPlayer) {
-      if (Player.y < enemy.y) {
-        Player.draw(ctx, worldPosX, worldPosY);
-        enemy.draw(ctx, worldPosX, worldPosY);
-      } else {
-        enemy.draw(ctx, worldPosX, worldPosY);
-        Player.draw(ctx, worldPosX, worldPosY);
-      }
-      drewPlayer = true;
-    } else {
-      enemy.draw(ctx, worldPosX, worldPosY);
-    }
-    ctx.fillStyle = 'red';
-    ctx.fillRect(
-      minimapPosX
-      + (Math.floor((enemy.x + enemy.width / 2) / enemy.width) * minimap.canvas.width) / mapSize,
-      minimapPosY
-      + (Math.floor((enemy.y + enemy.height / 2) / enemy.height) * minimap.canvas.height) / mapSize,
-      minimap.canvas.width / mapSize,
-      minimap.canvas.height / mapSize,
-    );
+  gameObjects.sort((a, b) => (a.y > b.y ? 1 : -1));
+  for (let i = 0; i < gameObjects.length; i++) {
+    gameObjects[i].draw(ctx, worldPosX, worldPosY);
   }
 
   ctx.drawImage(minimap.canvas, minimapPosX, minimapPosY);
@@ -52176,7 +52088,6 @@ function draw() {
   //   drawMiniMap();
   // }
 }
-// drawMiniMap();
 
 function gameLoop() {
   if (!InThreeD) {
@@ -52210,7 +52121,7 @@ function switchToThreeD() {
 }
 window.requestAnimationFrame(gameLoop);
 
-},{"./2DMainChar":4,"./RecursiveMaze":12,"./camera":14,"./enemyController":19}],4:[function(require,module,exports){
+},{"./2DMainChar":4,"./RecursiveMaze":12,"./camera":14,"./enemies/enemy":15,"./enemyController":19,"./key":21,"./keyController":22}],4:[function(require,module,exports){
 /* eslint-disable no-plusplus */
 /* eslint-disable no-param-reassign */
 /* eslint-disable prefer-const */
@@ -52218,8 +52129,11 @@ window.requestAnimationFrame(gameLoop);
 /* eslint-disable eqeqeq */
 /* eslint-disable radix */
 // eslint-disable-next-line no-unused-vars
+const Enemy = require('./enemies/enemy');
+const Key = require('./key');
+
 module.exports = class MainCharacter {
-  constructor(x, y, width, height, mazeSize, mazeArray, context, EnemyArray, functToSwitch) {
+  constructor(x, y, width, height, mazeSize, mazeArray, context, gameObjects, functToSwitch) {
     this.image = new Image();
     this.image.src = '../../Art/2D/male2_spritesheet.png';
     this.camera = undefined;
@@ -52250,7 +52164,7 @@ module.exports = class MainCharacter {
     this.moveDown = false;
     this.counter = 10;
     this.playerSpeed = 4;
-    this.EnemyArray = EnemyArray;
+    this.gameObjects = gameObjects;
     this.functToSwitch = functToSwitch;
   }
 
@@ -52288,10 +52202,21 @@ module.exports = class MainCharacter {
       this.spriteDir = this.xDir === 1 ? 0 : 2;
       this.spriteIndexY = this.spriteDir + 1;
     }
-    for (let j = 0; j < this.EnemyArray.length; j++) {
-      if (this.EnemyArray[j].posX == this.posTopX && this.EnemyArray[j].posY == this.posTopY) {
-        this.EnemyArray.splice(j, 1);
-        this.functToSwitch();
+    for (let j = 0; j < this.gameObjects.length; j++) {
+      if (this.gameObjects[j] instanceof Enemy) {
+        // Contact with enemy
+        const enemy = this.gameObjects[j];
+        if (this.x + this.width / 2 > enemy.x + 32
+          && this.x + this.width / 2 < enemy.x + enemy.width - 32
+          && this.y + this.height / 2 > enemy.y + 32
+          && this.y + this.height / 2 < enemy.y + enemy.height - 32) {
+          this.gameObjects.splice(j, 1);
+          this.functToSwitch();
+        }
+      }
+      if (this.gameObjects[j] instanceof Key) {
+        // Contact with key
+        this.gameObjects.splice(j, 1);
       }
     }
   }
@@ -52358,7 +52283,7 @@ module.exports = class MainCharacter {
   }
 };
 
-},{}],5:[function(require,module,exports){
+},{"./enemies/enemy":15,"./key":21}],5:[function(require,module,exports){
 const THREE = require('three');
 /**
  * @author mrdoob / http://mrdoob.com/
@@ -53942,7 +53867,7 @@ module.exports = class EnemyController {
   }
 
   // Spawn the enemies randomly.
-  spawnEnemies(mapArray) {
+  spawnEnemies(mapArray, gameObjects) {
     const chanceMax = 100;
     let chance = chanceMax;
     for (let y = 0; y < mapArray.length; y++) {
@@ -53953,21 +53878,21 @@ module.exports = class EnemyController {
           if (rand === 0) {
             switch (Math.floor(Math.random() * 3)) {
               case 0:
-                this.enemies.push(new EnemyDepression(
+                gameObjects.push(new EnemyDepression(
                   x * 128,
                   y * 128 - 10,
                   (mapArray[x][y - 1] === 1 && mapArray[x][y + 1] === 1 ? 0 : 1)
                 ));
                 break;
               case 1:
-                this.enemies.push(new EnemyAnxiety(
+                gameObjects.push(new EnemyAnxiety(
                   x * 128,
                   y * 128 - 10,
                   (mapArray[x][y - 1] === 1 && mapArray[x][y + 1] === 1 ? 0 : 1)
                 ));
                 break;
               case 2:
-                this.enemies.push(new EnemyBPD(
+                gameObjects.push(new EnemyBPD(
                   x * 128,
                   y * 128 - 10,
                   (mapArray[x][y - 1] === 1 && mapArray[x][y + 1] === 1 ? 0 : 1)
@@ -54241,6 +54166,7 @@ canvas.height = window.innerHeight;
 const image = new Image();
 image.id = 'pic';
 let forTimer = 0;
+let forTimerInverval;
 const timer = () => {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   forTimer++;
@@ -54265,6 +54191,7 @@ const timer = () => {
 const TwoCanvas = document.getElementById('backgroundCanvas');
 function checkFor3dTransation() {
   if (TwoCanvas.style.display == 'none') {
+    forTimerInverval = setInterval(timer, 100);
     isPlaying = true;
     timeLeft = 100;
     clearInterval(checkingThree);
@@ -54290,4 +54217,57 @@ function clearScene() {
 }
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./2DCanvas":3,"./3DControls":5,"./LevelOne":9,"three":2,"three-gltf-loader":1}]},{},[20]);
+},{"./2DCanvas":3,"./3DControls":5,"./LevelOne":9,"three":2,"three-gltf-loader":1}],21:[function(require,module,exports){
+module.exports = class Key {
+  constructor(x, y) {
+    this.x = x;
+    this.y = y;
+    this.sprite = new Image();
+    this.sprite.src = '../../Art/2D/key_spritesheet.png';
+    this.width = 128;
+    this.height = 128;
+    this.spriteIndex = 0;
+    this.animationSpeed = 0.12;
+    this.animationSize = 8;
+  }
+
+  update() {
+    this.spriteIndex = (this.spriteIndex + this.animationSpeed) % this.animationSize;
+  }
+
+  draw(ctx, worldPosX, worldPosY) {
+    ctx.drawImage(
+      this.sprite,
+      Math.floor(this.spriteIndex) * this.width,
+      0,
+      this.width,
+      this.height,
+      this.x - worldPosX,
+      this.y - worldPosY,
+      this.width,
+      this.height
+    );
+  }
+}
+},{}],22:[function(require,module,exports){
+const Key = require('./key');
+
+module.exports = class KeyController {
+  // constructor() {
+  //   // this.keys = [];
+  // }
+
+  spawnKeys(mapArray, gameObjects) {
+    for (let y = 0; y < mapArray.length; y++) {
+      for (let x = 0; x < mapArray[y].length; x++) {
+        // Check for ground.
+        if (mapArray[x][y] === 0) {
+          gameObjects.push(new Key(128, 128));
+          return;
+        }
+      }
+    }
+  }
+
+}
+},{"./key":21}]},{},[20]);
