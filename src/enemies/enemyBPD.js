@@ -5,7 +5,7 @@ module.exports = class EnemyBPD extends Enemy {
     super(x, y, dir);
     this.xDir = (dir === 0 ? 1 : 0);
     this.yDir = (dir === 1 ? 1 : 0);
-    this.speed = 220;
+    this.speed = 150;
     this.animationSpeed = 0.1;
     this.sprite = new Image();
     this.sprite.src = '../../Art/2D/enemy_borderline_personality_disorder_spritesheet.png';

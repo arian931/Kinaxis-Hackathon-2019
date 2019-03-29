@@ -289,7 +289,7 @@ function update() {
     }
     if (
       mapArray[Math.floor((enemy.x + enemy.width / 2) / enemy.width)]
-      [Math.floor((enemy.y + enemy.height / 2 + (enemy.height / 2) * enemy.yDir) / enemy.height)] === 1
+      [Math.floor((enemy.y + enemy.height - 16 + (enemy.height / 2) * enemy.yDir) / enemy.height)] === 1
     ) {
       enemy.yDir *= -1;
     }
@@ -382,6 +382,8 @@ function draw() {
         Player.draw(ctx, worldPosX, worldPosY);
       }
       drewPlayer = true;
+    } else {
+      enemy.draw(ctx, worldPosX, worldPosY);
     }
     ctx.fillStyle = 'red';
     ctx.fillRect(

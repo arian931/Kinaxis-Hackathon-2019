@@ -52058,7 +52058,7 @@ function update() {
     }
     if (
       mapArray[Math.floor((enemy.x + enemy.width / 2) / enemy.width)]
-      [Math.floor((enemy.y + enemy.height / 2 + (enemy.height / 2) * enemy.yDir) / enemy.height)] === 1
+      [Math.floor((enemy.y + enemy.height - 16 + (enemy.height / 2) * enemy.yDir) / enemy.height)] === 1
     ) {
       enemy.yDir *= -1;
     }
@@ -52151,6 +52151,8 @@ function draw() {
         Player.draw(ctx, worldPosX, worldPosY);
       }
       drewPlayer = true;
+    } else {
+      enemy.draw(ctx, worldPosX, worldPosY);
     }
     ctx.fillStyle = 'red';
     ctx.fillRect(
@@ -53774,7 +53776,7 @@ module.exports = class EnemyBPD extends Enemy {
     super(x, y, dir);
     this.xDir = (dir === 0 ? 1 : 0);
     this.yDir = (dir === 1 ? 1 : 0);
-    this.speed = 220;
+    this.speed = 150;
     this.animationSpeed = 0.1;
     this.sprite = new Image();
     this.sprite.src = '../../Art/2D/enemy_borderline_personality_disorder_spritesheet.png';
@@ -53884,7 +53886,7 @@ module.exports = class EnemyController {
 
   // Spawn the enemies randomly.
   spawnEnemies(mapArray) {
-    const chanceMax = 60;
+    const chanceMax = 100;
     let chance = chanceMax;
     for (let y = 0; y < mapArray.length; y++) {
       for (let x = 0; x < mapArray[y].length; x++) {
@@ -53892,11 +53894,30 @@ module.exports = class EnemyController {
         const rand = Math.floor(Math.random() * chance);
         if (mapArray[x][y] === 0) {
           if (rand === 0) {
-            this.enemies.push(new EnemyDepression(
-              x * 128,
-              y * 128 - 10,
-              (mapArray[x][y - 1] === 1 && mapArray[x][y + 1] === 1 ? 0 : 1)
-            ));
+            switch (Math.floor(Math.random() * 3)) {
+              case 0:
+                this.enemies.push(new EnemyDepression(
+                  x * 128,
+                  y * 128 - 10,
+                  (mapArray[x][y - 1] === 1 && mapArray[x][y + 1] === 1 ? 0 : 1)
+                ));
+                break;
+              case 1:
+                this.enemies.push(new EnemyAnxiety(
+                  x * 128,
+                  y * 128 - 10,
+                  (mapArray[x][y - 1] === 1 && mapArray[x][y + 1] === 1 ? 0 : 1)
+                ));
+                break;
+              case 2:
+                this.enemies.push(new EnemyBPD(
+                  x * 128,
+                  y * 128 - 10,
+                  (mapArray[x][y - 1] === 1 && mapArray[x][y + 1] === 1 ? 0 : 1)
+                ));
+                break;
+              default: break;
+            }
             chance = chanceMax;
           }
           chance -= 1;
