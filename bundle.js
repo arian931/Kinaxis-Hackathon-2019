@@ -52067,11 +52067,6 @@ function draw() {
   Camera.draw(worldPosX, worldPosY);
   // Player.draw(ctx, worldPosX, worldPosY);
 
-  gameObjects.sort((a, b) => (a.y > b.y ? 1 : -1));
-  for (let i = 0; i < gameObjects.length; i++) {
-    gameObjects[i].draw(ctx, worldPosX, worldPosY);
-  }
-
   ctx.drawImage(minimap.canvas, minimapPosX, minimapPosY);
   ctx.fillStyle = 'blue';
   ctx.fillRect(
@@ -52083,10 +52078,24 @@ function draw() {
     minimap.canvas.width / mapSize,
     minimap.canvas.height / mapSize,
   );
-  // ctx.fillText(`${worldPosX} ${worldPosX}`, 20, 20);
-  // if (miniMapSquareToDeletX != Player.posTopX || miniMapSquareToDeletY != Player.posTopY) {
-  //   drawMiniMap();
-  // }
+
+  gameObjects.sort((a, b) => (a.y > b.y ? 1 : -1));
+  for (let i = 0; i < gameObjects.length; i++) {
+    gameObjects[i].draw(ctx, worldPosX, worldPosY);
+    if (gameObjects[i] instanceof Key) {
+      const key = gameObjects[i];
+      ctx.fillStyle = 'pink';
+      ctx.fillRect(
+        minimapPosX
+        + (Math.floor((key.x + key.width / 2) / key.width) * minimap.canvas.width) / mapSize,
+        minimapPosY
+        + (Math.floor((key.y + key.height - 4) / key.height) * minimap.canvas.height)
+        / mapSize,
+        minimap.canvas.width / mapSize,
+        minimap.canvas.height / mapSize,
+      );
+    }
+  }
 }
 
 function gameLoop() {
@@ -52216,7 +52225,7 @@ module.exports = class MainCharacter {
       }
       if (this.gameObjects[j] instanceof Key) {
         // Contact with key
-        this.gameObjects.splice(j, 1);
+        // this.gameObjects.splice(j, 1);
       }
     }
   }
@@ -54258,13 +54267,26 @@ module.exports = class KeyController {
   // }
 
   spawnKeys(mapArray, gameObjects) {
+    const maxSpawnKeys = 3;
+    let keysSpawned = 0;
+    const chanceMax = 150;
+    let chance = chanceMax;
     for (let y = 0; y < mapArray.length; y++) {
       for (let x = 0; x < mapArray[y].length; x++) {
         // Check for ground.
         if (mapArray[x][y] === 0) {
-          gameObjects.push(new Key(128, 128));
-          return;
+          if (Math.floor(Math.random() * chance) !== 0) {
+            continue;
+          }
+          gameObjects.push(new Key(x * 128, y * 128));
+          console.log('good');
+          keysSpawned++;
+          if (keysSpawned === maxSpawnKeys) {
+            return;
+          }
+          chance = chanceMax;
         }
+        chance -= 1;
       }
     }
   }

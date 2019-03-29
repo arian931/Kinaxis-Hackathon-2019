@@ -82,17 +82,17 @@ module.exports = class MainCharacter {
       if (this.gameObjects[j] instanceof Enemy) {
         // Contact with enemy
         const enemy = this.gameObjects[j];
-        if (this.x + this.width / 2 > enemy.x + 32
-          && this.x + this.width / 2 < enemy.x + enemy.width - 32
-          && this.y + this.height / 2 > enemy.y + 32
-          && this.y + this.height / 2 < enemy.y + enemy.height - 32) {
+        if (this.x + this.width / 2 > enemy.x + 16
+          && this.x + this.width / 2 < enemy.x + enemy.width - 16
+          && this.y + this.height / 2 > enemy.y + 16
+          && this.y + this.height / 2 < enemy.y + enemy.height - 16) {
           this.gameObjects.splice(j, 1);
           this.functToSwitch();
         }
       }
       if (this.gameObjects[j] instanceof Key) {
         // Contact with key
-        this.gameObjects.splice(j, 1);
+        // this.gameObjects.splice(j, 1);
       }
     }
   }
