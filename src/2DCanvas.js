@@ -3,20 +3,20 @@
 /* eslint-disable no-undef */
 console.log('FUCKKKKKKKkkkkk !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!');
 const EnemyController = require('./enemyController');
-//const EnemyAnxiety = require('./enemies/enemyAnxiety');
+// const EnemyAnxiety = require('./enemies/enemyAnxiety');
 const RecursiveMaze = require('./RecursiveMaze');
 const PlayerCamera = require('./camera');
 const MainCharacter = require('./2DMainChar');
 
 const canvas = document.getElementById('backgroundCanvas');
 console.log(canvas);
-//const miniMap = document.getElementById('minimapCanvas');
+// const miniMap = document.getElementById('minimapCanvas');
 const ctx = canvas.getContext('2d');
-//const ctxx = miniMap.getContext('2d');
+// const ctxx = miniMap.getContext('2d');
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
-//miniMap.width = window.innerWidth / 7;
-//miniMap.height = window.innerWidth / 7;
+// miniMap.width = window.innerWidth / 7;
+// miniMap.height = window.innerWidth / 7;
 
 // Load the tilemap.
 const tilemap = new Image();
@@ -38,7 +38,7 @@ let worldPosY = 0;
 
 // eslint-disable-next-line no-undef
 const enemyController = new EnemyController();
-//enemyController.enemies.push(new EnemyAnxiety(128, 120));
+// enemyController.enemies.push(new EnemyAnxiety(128, 120));
 const Recursive = new RecursiveMaze(mapSize);
 const Camera = new PlayerCamera(ctx);
 Recursive.draw();
@@ -101,10 +101,10 @@ tilemap.onload = () => {
           );
           minimap.fillStyle = `rgba(83, 244, 65, ${minimapAlpha})`;
           minimap.fillRect(
-            x * minimap.canvas.width / mapSize,
-            y * minimap.canvas.height / mapSize,
+            (x * minimap.canvas.width) / mapSize,
+            (y * minimap.canvas.height) / mapSize,
             minimap.canvas.width / mapSize,
-            minimap.canvas.height / mapSize
+            minimap.canvas.height / mapSize,
           );
           break;
         case 1: // Walls
@@ -124,10 +124,10 @@ tilemap.onload = () => {
           }
           minimap.fillStyle = `rgba(56, 56, 56, ${minimapAlpha})`;
           minimap.fillRect(
-            x * minimap.canvas.width / mapSize,
-            y * minimap.canvas.height / mapSize,
+            (x * minimap.canvas.width) / mapSize,
+            (y * minimap.canvas.height) / mapSize,
             minimap.canvas.width / mapSize,
-            minimap.canvas.height / mapSize
+            minimap.canvas.height / mapSize,
           );
           break;
         case 3: // Exit
@@ -146,10 +146,10 @@ tilemap.onload = () => {
           );
           minimap.fillStyle = `rgba(83, 244, 65, ${minimapAlpha})`;
           minimap.fillRect(
-            x * minimap.canvas.width / mapSize,
-            y * minimap.canvas.height / mapSize,
+            (x * minimap.canvas.width) / mapSize,
+            (y * minimap.canvas.height) / mapSize,
             minimap.canvas.width / mapSize,
-            minimap.canvas.height / mapSize
+            minimap.canvas.height / mapSize,
           );
           break;
         default:
@@ -282,14 +282,16 @@ function update() {
     const enemy = enemyController.enemies[i];
     enemy.update(dt);
     if (
-      mapArray[Math.floor((enemy.x + enemy.width / 2 + (enemy.width / 2) * enemy.xDir) / enemy.width)]
-      [Math.floor((enemy.y + enemy.height / 2) / enemy.height)] === 1
+      mapArray[
+        Math.floor((enemy.x + enemy.width / 2 + (enemy.width / 2) * enemy.xDir) / enemy.width)
+      ][Math.floor((enemy.y + enemy.height / 2) / enemy.height)] === 1
     ) {
       enemy.xDir *= -1;
     }
     if (
-      mapArray[Math.floor((enemy.x + enemy.width / 2) / enemy.width)]
-      [Math.floor((enemy.y + enemy.height - 16 + (enemy.height / 2) * enemy.yDir) / enemy.height)] === 1
+      mapArray[Math.floor((enemy.x + enemy.width / 2) / enemy.width)][
+        Math.floor((enemy.y + enemy.height - 16 + (enemy.height / 2) * enemy.yDir) / enemy.height)
+      ] === 1
     ) {
       enemy.yDir *= -1;
     }
@@ -297,8 +299,8 @@ function update() {
   // image.src = canvas.toDataURL();
   // document.getElementById('he').appendChild(image);
 }
-let miniMapSquareToDeletX = 1;
-let miniMapSquareToDeletY = 1;
+const miniMapSquareToDeletX = 1;
+const miniMapSquareToDeletY = 1;
 
 function drawMiniMap() {
   // ctxx.clearRect(
@@ -363,10 +365,13 @@ function draw() {
   ctx.drawImage(minimap.canvas, minimapPosX, minimapPosY);
   ctx.fillStyle = 'blue';
   ctx.fillRect(
-    minimapPosX + Math.floor((Player.x + Player.width / 2) / Player.width) * minimap.canvas.width / mapSize,
-    minimapPosY + Math.floor((Player.y + Player.height - 4) / Player.height) * minimap.canvas.height / mapSize,
+    minimapPosX
+      + (Math.floor((Player.x + Player.width / 2) / Player.width) * minimap.canvas.width) / mapSize,
+    minimapPosY
+      + (Math.floor((Player.y + Player.height - 4) / Player.height) * minimap.canvas.height)
+        / mapSize,
     minimap.canvas.width / mapSize,
-    minimap.canvas.height / mapSize
+    minimap.canvas.height / mapSize,
   );
 
   // Draws the player behind/infront of enemies depending on its y;
@@ -387,10 +392,12 @@ function draw() {
     }
     ctx.fillStyle = 'red';
     ctx.fillRect(
-      minimapPosX + Math.floor((enemy.x + enemy.width / 2) / enemy.width) * minimap.canvas.width / mapSize,
-      minimapPosY + Math.floor((enemy.y + enemy.height / 2) / enemy.height) * minimap.canvas.height / mapSize,
+      minimapPosX
+        + (Math.floor((enemy.x + enemy.width / 2) / enemy.width) * minimap.canvas.width) / mapSize,
+      minimapPosY
+        + (Math.floor((enemy.y + enemy.height / 2) / enemy.height) * minimap.canvas.height) / mapSize,
       minimap.canvas.width / mapSize,
-      minimap.canvas.height / mapSize
+      minimap.canvas.height / mapSize,
     );
   }
   // ctx.fillText(`${worldPosX} ${worldPosX}`, 20, 20);

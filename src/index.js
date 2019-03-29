@@ -22,6 +22,8 @@ const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerH
 const controls = new THREE.PointerLockControls(camera);
 const renderer = new THREE.WebGLRenderer();
 
+let isPlaying = false;
+
 const bottomRaycaster = new THREE.Raycaster(
   new THREE.Vector3(),
   new THREE.Vector3(0, -1, 0),
@@ -66,33 +68,35 @@ controls.addEventListener('unlock', () => {
 });
 scene.add(controls.getObject());
 const onKeyDown = (event) => {
-  switch (event.keyCode) {
-    case 38: // up
-    case 87: // w
-      moveForward = true;
-      break;
-    case 37: // left
-    case 65: // a
-      moveLeft = true;
-      break;
-    case 40: // down
-    case 83: // s
-      moveBackward = true;
-      break;
-    case 39: // right
-    case 68: // d
-      moveRight = true;
-      break;
-    case 32: // space
-      if (canJump) velocity.y += 300;
-      canJump = false;
-      break;
-    case 76:
-      // eslint-disable-next-line no-use-before-define
-      switchBackToTwoD();
-      break;
-    default:
-      break;
+  if (isPlaying) {
+    switch (event.keyCode) {
+      case 38: // up
+      case 87: // w
+        moveForward = true;
+        break;
+      case 37: // left
+      case 65: // a
+        moveLeft = true;
+        break;
+      case 40: // down
+      case 83: // s
+        moveBackward = true;
+        break;
+      case 39: // right
+      case 68: // d
+        moveRight = true;
+        break;
+      case 32: // space
+        if (canJump) velocity.y += 300;
+        canJump = false;
+        break;
+      case 76:
+        // eslint-disable-next-line no-use-before-define
+        switchBackToTwoD();
+        break;
+      default:
+        break;
+    }
   }
 };
 const onKeyUp = (event) => {
@@ -127,8 +131,6 @@ const sizeOfJump = sizeOfPlatforms / 2 + 50;
 console.log(`${sizeOfJump} Size Of Jump`);
 const levelOne = new LevelOne(scene, renderer, camera, sizeOfJump, sizeOfPlatforms);
 let gameLoopOne;
-function loadLevelOne() {}
-// loadLevelOne();
 
 scene.background = white;
 const lightHem = new THREE.HemisphereLight(0xffffbb, 0x080820, 1);
@@ -160,72 +162,74 @@ camera.add(player);
 
 // animate is like gameloop we could probably use setInverval if we wanted to E.X setInterval(animate, 33);
 const animate = () => {
-  requestAnimationFrame(animate);
-  if (controls.isLocked) {
-    const position = new THREE.Vector3().setFromMatrixPosition(player.matrixWorld);
-    // console.log();
-    bottomRaycaster.ray.origin.copy(position);
-    // // bottomRaycaster.ray.origin.y -= 10;
-    // topRaycaster.ray.origin.copy(position);
-    const platforms = levelOne.platFormsClass.map(x => x.cubeFor);
-    const collectibles = levelOne.collectibles.map(x => x.cubeFor);
-    const bottomIntersections = bottomRaycaster.intersectObjects(platforms);
-    // const topIntersections = topRaycaster.intersectObjects(platforms);
-    // const onObject = ;
-    // console.log(bottomIntersections.length);
-    // const headHit = topIntersections.length > 0;
-    time = performance.now();
-    delta = (time - prevTime) / 1000;
-    velocity.x -= velocity.x * 10.0 * delta;
-    velocity.z -= velocity.z * 10.0 * delta;
-    velocity.y -= 9.8 * 100.0 * delta; // 100.0 = mass
-    direction.z = Number(moveForward) - Number(moveBackward);
-    direction.x = Number(moveLeft) - Number(moveRight);
-    direction.normalize(); // this ensures consistent movements in all directions
-    if (moveForward || moveBackward) velocity.z -= direction.z * 1000.0 * delta;
-    if (moveLeft || moveRight) velocity.x -= direction.x * 1000.0 * delta;
-    if (bottomIntersections.length > 0) {
-      velocity.y = Math.max(0, velocity.y);
-      // controls.getObject().position.set(0, bottomIntersections[0].y + 10, 0);
-      canJump = true;
-    }
-    // if (headHit && velocity.y > 0) velocity.y = 0;
-    for (let vertexIndex = 0; vertexIndex < player.geometry.vertices.length; vertexIndex++) {
-      const localVertex = player.geometry.vertices[vertexIndex].clone();
-      const globalVertex = localVertex.applyMatrix4(player.matrixWorld);
-      const directionVector = globalVertex.sub(position);
-      const ray = new THREE.Raycaster(
-        position,
-        directionVector.clone().normalize(),
-        0,
-        directionVector.length(),
-      );
-      const collisionResults = ray.intersectObjects(collectibles);
-      if (collisionResults.length > 0) {
-        // a collision occurred... do something...
-        const { position } = collisionResults[0].object;
-        levelOne.collectibleCollision(position.x, position.y, position.z);
-        console.log('collision');
+  if (isPlaying) {
+    requestAnimationFrame(animate);
+    if (controls.isLocked) {
+      const position = new THREE.Vector3().setFromMatrixPosition(player.matrixWorld);
+      // console.log();
+      bottomRaycaster.ray.origin.copy(position);
+      // // bottomRaycaster.ray.origin.y -= 10;
+      // topRaycaster.ray.origin.copy(position);
+      const platforms = levelOne.platFormsClass.map(x => x.cubeFor);
+      const collectibles = levelOne.collectibles.map(x => x.cubeFor);
+      const bottomIntersections = bottomRaycaster.intersectObjects(platforms);
+      // const topIntersections = topRaycaster.intersectObjects(platforms);
+      // const onObject = ;
+      // console.log(bottomIntersections.length);
+      // const headHit = topIntersections.length > 0;
+      time = performance.now();
+      delta = (time - prevTime) / 1000;
+      velocity.x -= velocity.x * 10.0 * delta;
+      velocity.z -= velocity.z * 10.0 * delta;
+      velocity.y -= 9.8 * 100.0 * delta; // 100.0 = mass
+      direction.z = Number(moveForward) - Number(moveBackward);
+      direction.x = Number(moveLeft) - Number(moveRight);
+      direction.normalize(); // this ensures consistent movements in all directions
+      if (moveForward || moveBackward) velocity.z -= direction.z * 1000.0 * delta;
+      if (moveLeft || moveRight) velocity.x -= direction.x * 1000.0 * delta;
+      if (bottomIntersections.length > 0) {
+        velocity.y = Math.max(0, velocity.y);
+        // controls.getObject().position.set(0, bottomIntersections[0].y + 10, 0);
+        canJump = true;
       }
+      // if (headHit && velocity.y > 0) velocity.y = 0;
+      for (let vertexIndex = 0; vertexIndex < player.geometry.vertices.length; vertexIndex++) {
+        const localVertex = player.geometry.vertices[vertexIndex].clone();
+        const globalVertex = localVertex.applyMatrix4(player.matrixWorld);
+        const directionVector = globalVertex.sub(position);
+        const ray = new THREE.Raycaster(
+          position,
+          directionVector.clone().normalize(),
+          0,
+          directionVector.length(),
+        );
+        const collisionResults = ray.intersectObjects(collectibles);
+        if (collisionResults.length > 0) {
+          // a collision occurred... do something...
+          const { position } = collisionResults[0].object;
+          levelOne.collectibleCollision(position.x, position.y, position.z);
+          console.log('collision');
+        }
+      }
+      controls.getObject().translateX(velocity.x * delta);
+      controls.getObject().translateY(velocity.y * delta);
+      controls.getObject().translateZ(velocity.z * delta);
+      if (
+        bottomIntersections.length > 0
+        && position.y < bottomIntersections[0].object.position.y + 20
+      ) {
+        controls.getObject().position.y = bottomIntersections[0].object.position.y + 20;
+        // controls.getObject().position.set(position.x, bottomIntersections[0].object.y + 10, position.z);
+      }
+      if (position.y < -50) {
+        // velocity.y = 0;
+        controls.getObject().position.set(0, 10, 0);
+        // canJump = true;
+      }
+      prevTime = time;
     }
-    controls.getObject().translateX(velocity.x * delta);
-    controls.getObject().translateY(velocity.y * delta);
-    controls.getObject().translateZ(velocity.z * delta);
-    if (
-      bottomIntersections.length > 0
-      && position.y < bottomIntersections[0].object.position.y + 20
-    ) {
-      controls.getObject().position.y = bottomIntersections[0].object.position.y + 20;
-      // controls.getObject().position.set(position.x, bottomIntersections[0].object.y + 10, position.z);
-    }
-    if (position.y < -50) {
-      // velocity.y = 0;
-      controls.getObject().position.set(0, 10, 0);
-      // canJump = true;
-    }
-    prevTime = time;
+    renderer.render(scene, camera);
   }
-  renderer.render(scene, camera);
 };
 animate(); // to start loop
 let timeLeft = 100;
@@ -263,17 +267,21 @@ const timer = () => {
 const TwoCanvas = document.getElementById('backgroundCanvas');
 function checkFor3dTransation() {
   if (TwoCanvas.style.display == 'none') {
+    isPlaying = true;
+    timeLeft = 100;
     clearInterval(checkingThree);
     console.log('running');
     levelOne.generateScene();
     clearInterval(gameLoopOne);
     gameLoopOne = setInterval(levelOne.gameLoop(), 33);
+    animate();
   }
 }
 let checkingThree = setInterval(checkFor3dTransation, 100);
 
 function switchBackToTwoD() {
   TwoCanvas.style.display = 'block';
+  isPlaying = false;
   console.log(
     'switch back to 2d !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!',
   );

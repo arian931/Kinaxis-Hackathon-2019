@@ -40,6 +40,14 @@ module.exports = class LevelOne {
 
   generateScene() {
     console.log('GENERATING THE SCENE');
+    this.platFormsClass = [];
+    this.platFormConstructor = [];
+    this.collectibles = [];
+    this.collectiblesCurrentIndex = 0;
+    this.currentIndex = 0;
+    this.currentPositionX = 0;
+    this.currentPositionY = 0;
+    this.currentPositionZ = 0;
     let DIR;
     let NOS;
     let LastDirection = 0;
@@ -587,15 +595,16 @@ module.exports = class LevelOne {
       'cleared objects !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!',
     );
     for (let j = 0; j < this.collectibles.length; j++) {
+      console.log('deletingplatforms Col');
       this.scene.remove(this.collectibles[j].cubeFor);
-      this.collectibles = [];
-      this.collectibles.length = 0;
     }
+    this.collectibles = [];
+    this.collectibles.length = 0;
     for (let j = 0; j < this.platFormsClass.length; j++) {
       console.log('deletingplatforms');
       this.scene.remove(this.platFormsClass[j].cubeFor);
-      this.platFormsClass = [];
-      this.platFormsClass.length = 0;
     }
+    this.platFormsClass = [];
+    this.platFormsClass.length = 0;
   }
 };
