@@ -129,7 +129,15 @@ document.addEventListener('keyup', onKeyUp, false);
 const sizeOfPlatforms = 30;
 const sizeOfJump = sizeOfPlatforms / 2 + 50;
 console.log(`${sizeOfJump} Size Of Jump`);
-const levelOne = new LevelOne(scene, renderer, camera, sizeOfJump, sizeOfPlatforms);
+const levelOne = new LevelOne(
+  scene,
+  renderer,
+  camera,
+  sizeOfJump,
+  sizeOfPlatforms,
+  5,
+  switchBackToTwoD,
+);
 let gameLoopOne;
 
 scene.background = white;
@@ -223,7 +231,9 @@ const animate = () => {
       }
       if (position.y < -50) {
         // velocity.y = 0;
-        controls.getObject().position.set(0, 10, 0);
+        controls
+          .getObject()
+          .position.set(levelOne.spawnPointX, levelOne.spawnPointY, levelOne.spawnPointZ);
         // canJump = true;
       }
       prevTime = time;

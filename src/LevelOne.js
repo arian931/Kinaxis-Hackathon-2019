@@ -13,7 +13,15 @@ const LevelOne = require('./LevelOne');
 const Collectible = require('./Collectible');
 
 module.exports = class LevelOne {
-  constructor(scene, renderer, camera, jumpDistance, sizeOfPlatforms) {
+  constructor(
+    scene,
+    renderer,
+    camera,
+    jumpDistance,
+    sizeOfPlatforms,
+    numberOfSections,
+    functToSwitch,
+  ) {
     this.scene = scene;
     this.renderer = renderer;
     this.camera = camera;
@@ -38,6 +46,11 @@ module.exports = class LevelOne {
     this.jumpDistance = jumpDistance;
     this.sizeOfPlatforms = sizeOfPlatforms;
     this.gameLoopInterval;
+    this.spawnPointX = 0;
+    this.spawnPointY = 10;
+    this.spawnPointZ = 10;
+    this.numberOfSection = numberOfSections;
+    this.functToSwitch = functToSwitch;
   }
 
   generateScene() {
@@ -57,7 +70,7 @@ module.exports = class LevelOne {
 
     this.scene.fog = new THREE.FogExp2(this.white, 0.005);
 
-    for (let x = 0; x < 20; x++) {
+    for (let x = 0; x < this.numberOfSection; x++) {
       // console.log(
       //   `X: ${this.currentPositionX} Y: ${this.currentPositionY} Z: ${this.currentPositionZ}`,
       // );
@@ -127,7 +140,14 @@ module.exports = class LevelOne {
       );
       this.platFormsClass[x].addToScene();
     }
-
+    this.collectibles[this.collectiblesCurrentIndex] = new Collectible(
+      this.currentPositionX,
+      this.currentPositionY,
+      this.currentPositionZ + 10,
+      this.scene,
+    );
+    this.collectibles[this.collectiblesCurrentIndex].addToScene();
+    this.collectiblesCurrentIndex++;
     const _this = this;
     this.gameLoopInterval = setInterval(() => {
       _this.gameLoop();
@@ -580,16 +600,26 @@ module.exports = class LevelOne {
   }
 
   collectibleCollision(CX, CY, CZ) {
-    for (let x = 0; x < this.collectibles.length; x++) {
-      if (
-        this.collectibles[x].cubeFor.position.x == CX
-        && this.collectibles[x].cubeFor.position.y == CY
-        && this.collectibles[x].cubeFor.position.z == CZ
-      ) {
-        this.scene.remove(this.collectibles[x].cubeFor);
-        this.collectibles.splice(x, 1);
-        this.score++;
+    console.log(`${this.collectibles.length} collectvles left`);
+    if (this.collectibles.length != 1) {
+      for (let x = 0; x < this.collectibles.length; x++) {
+        if (
+          this.collectibles[x].cubeFor.position.x == CX
+          && this.collectibles[x].cubeFor.position.y == CY
+          && this.collectibles[x].cubeFor.position.z == CZ
+        ) {
+          this.spawnPointX = this.collectibles[x].cubeFor.position.x;
+          this.spawnPointY = this.collectibles[x].cubeFor.position.y + 10;
+          this.spawnPointZ = this.collectibles[x].cubeFor.position.z;
+          this.scene.remove(this.collectibles[x].cubeFor);
+          this.collectibles.splice(x, 1);
+          this.score++;
+        }
       }
+    } else {
+      console.log('finsihed section');
+      console.log('functToSwitch');
+      this.functToSwitch();
     }
   }
 
