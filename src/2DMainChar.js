@@ -77,7 +77,7 @@ module.exports = class MainCharacter {
     }
     for (let j = 0; j < this.EnemyArray.length; j++) {
       if (this.EnemyArray[j].posX == this.posTopX && this.EnemyArray[j].posY == this.posTopY) {
-        console.log('collied with E');
+        this.EnemyArray.splice(j, 1);
         this.functToSwitch();
       }
     }

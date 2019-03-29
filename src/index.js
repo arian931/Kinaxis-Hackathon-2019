@@ -244,7 +244,7 @@ const animate = () => {
 animate(); // to start loop
 let timeLeft = 100;
 
-// const scoreTimer = document.getElementById('scoreAndTimer3d');
+const scoreTimer = document.getElementById('scoreAndTimer3d');
 const canvas = document.getElementById('scoreTimer'); // gets the canvas I want to use
 const ctx = canvas.getContext('2d'); // makes it so anything ctx. will appear on the canvas
 

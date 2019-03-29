@@ -52188,12 +52188,14 @@ function gameLoop() {
   }
 }
 function switchBackTo2D() {
-  // console.log('2d is back');
-  InThreeD = false;
-  gameLoop();
+  console.log('2d is back');
+  if (InThreeD) {
+    InThreeD = false;
+    gameLoop();
+  }
 }
 function funToCheckForSwitchBack() {
-  // console.log('checkingFor3d');
+  console.log('checkingFor3d');
   if (divToDrawTo.style.display == 'block') {
     switchBackTo2D();
     clearInterval(checkForSwitchBackInerval);
@@ -52288,7 +52290,7 @@ module.exports = class MainCharacter {
     }
     for (let j = 0; j < this.EnemyArray.length; j++) {
       if (this.EnemyArray[j].posX == this.posTopX && this.EnemyArray[j].posY == this.posTopY) {
-        console.log('collied with E');
+        this.EnemyArray.splice(j, 1);
         this.functToSwitch();
       }
     }
@@ -54230,7 +54232,7 @@ const animate = () => {
 animate(); // to start loop
 let timeLeft = 100;
 
-// const scoreTimer = document.getElementById('scoreAndTimer3d');
+const scoreTimer = document.getElementById('scoreAndTimer3d');
 const canvas = document.getElementById('scoreTimer'); // gets the canvas I want to use
 const ctx = canvas.getContext('2d'); // makes it so anything ctx. will appear on the canvas
 

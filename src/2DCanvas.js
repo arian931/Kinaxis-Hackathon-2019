@@ -419,12 +419,14 @@ function gameLoop() {
   }
 }
 function switchBackTo2D() {
-  // console.log('2d is back');
-  InThreeD = false;
-  gameLoop();
+  console.log('2d is back');
+  if (InThreeD) {
+    InThreeD = false;
+    gameLoop();
+  }
 }
 function funToCheckForSwitchBack() {
-  // console.log('checkingFor3d');
+  console.log('checkingFor3d');
   if (divToDrawTo.style.display == 'block') {
     switchBackTo2D();
     clearInterval(checkForSwitchBackInerval);
