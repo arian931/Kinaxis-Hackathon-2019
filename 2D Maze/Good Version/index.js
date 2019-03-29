@@ -118,32 +118,32 @@ tilemap.onload = () => {
 
 document.addEventListener('keydown', (event) => {
   switch (event.code) {
-    case 'KeyRight':
-    case rightArrowPressed:
+    case 'KeyD':
+    case "ArrowRight":
       Player.xDir = 1;
       Player.moveRight = true;
       Player.moveLeft = false;
       Player.moveDown = false;
       Player.moveUp = false;
       break;
-    case 'KeyLeft':
-    case leftArrowPressed:
+    case 'KeyA':
+    case "ArrowLeft":
       Player.xDir = -1;
       Player.moveLeft = true;
       Player.moveRight = false;
       Player.moveDown = false;
       Player.moveUp = false;
       break;
-    case 'KeyUp':
-    case upArrowPressed:
+    case 'KeyW':
+    case "ArrowUp":
       Player.yDir = -1;
       Player.moveUp = true;
       Player.moveRight = false;
       Player.moveDown = false;
       Player.moveLeft = false;
       break;
-    case 'KeyDown':
-    case downArrowPressed:
+    case 'KeyS':
+    case "ArrowDown":
       Player.yDir = 1;
       Player.moveDown = true;
       Player.moveRight = false;
@@ -157,23 +157,23 @@ document.addEventListener('keydown', (event) => {
 
 document.addEventListener('keyup', (event) => {
   switch (event.code) {
-    case 'KeyRight':
-    case rightArrowPressed:
+    case 'KeyD':
+    case "ArrowRight":
       Player.xDir = 0;
       Player.moveRight = false;
       break;
-    case 'KeyLeft':
-    case leftArrowPressed:
+    case 'KeyA':
+    case "ArrowLeft":
       Player.xDir = 0;
       Player.moveLeft = false;
       break;
-    case 'KeyUp':
-    case upArrowPressed:
+    case 'KeyW':
+    case "ArrowUp":
       Player.yDir = 0;
       Player.moveUp = false;
       break;
-    case 'KeyDown':
-    case downArrowPressed:
+    case 'KeyS':
+    case "ArrowLeft":
       Player.yDir = 0;
       Player.moveDown = false;
       break;
