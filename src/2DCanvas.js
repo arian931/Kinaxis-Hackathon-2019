@@ -56,6 +56,8 @@ const Player = new MainCharacter(
   Recursive.MazeSize,
   mapArray,
   ctx,
+  enemyController.enemies,
+  switchToThreeD,
   // enemyController.enemies,
 );
 enemyController.spawnEnemies(mapArray);

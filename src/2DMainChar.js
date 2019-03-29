@@ -6,7 +6,7 @@
 /* eslint-disable radix */
 // eslint-disable-next-line no-unused-vars
 module.exports = class MainCharacter {
-  constructor(x, y, width, height, mazeSize, mazeArray, context, EnemyArray) {
+  constructor(x, y, width, height, mazeSize, mazeArray, context, EnemyArray, functToSwitch) {
     this.image = new Image();
     this.image.src = '../../Art/2D/male2_spritesheet.png';
     this.camera = undefined;
@@ -38,6 +38,7 @@ module.exports = class MainCharacter {
     this.counter = 10;
     this.playerSpeed = 4;
     this.EnemyArray = EnemyArray;
+    this.functToSwitch = functToSwitch;
   }
 
   update() {
@@ -74,11 +75,12 @@ module.exports = class MainCharacter {
       this.spriteDir = this.xDir === 1 ? 0 : 2;
       this.spriteIndexY = this.spriteDir + 1;
     }
-    // for (let j = 0; j < this.EnemyArray.length; j++) {
-    //   if (this.EnemyArray[j].posX == this.posTopX && this.EnemyArray[j].posY == this.posTopY) {
-    //     console.log('collied with E');
-    //   }
-    // }
+    for (let j = 0; j < this.EnemyArray.length; j++) {
+      if (this.EnemyArray[j].posX == this.posTopX && this.EnemyArray[j].posY == this.posTopY) {
+        console.log('collied with E');
+        this.functToSwitch();
+      }
+    }
   }
 
   draw(context, worldPosX, worldPosY) {
