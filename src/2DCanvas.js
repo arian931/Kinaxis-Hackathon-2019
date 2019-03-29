@@ -285,14 +285,14 @@ function update() {
     enemy.update(dt);
     if (
       mapArray[
-        Math.floor((enemy.x + enemy.width / 2 + (enemy.width / 2) * enemy.xDir) / enemy.width)
+      Math.floor((enemy.x + enemy.width / 2 + (enemy.width / 2) * enemy.xDir) / enemy.width)
       ][Math.floor((enemy.y + enemy.height / 2) / enemy.height)] === 1
     ) {
       enemy.xDir *= -1;
     }
     if (
       mapArray[Math.floor((enemy.x + enemy.width / 2) / enemy.width)][
-        Math.floor((enemy.y + enemy.height - 16 + (enemy.height / 2) * enemy.yDir) / enemy.height)
+      Math.floor((enemy.y + enemy.height - 16 + (enemy.height / 2) * enemy.yDir) / enemy.height)
       ] === 1
     ) {
       enemy.yDir *= -1;
@@ -364,18 +364,6 @@ function draw() {
   Camera.draw(worldPosX, worldPosY);
   Player.draw(ctx, worldPosX, worldPosY);
 
-  ctx.drawImage(minimap.canvas, minimapPosX, minimapPosY);
-  ctx.fillStyle = 'blue';
-  ctx.fillRect(
-    minimapPosX
-      + (Math.floor((Player.x + Player.width / 2) / Player.width) * minimap.canvas.width) / mapSize,
-    minimapPosY
-      + (Math.floor((Player.y + Player.height - 4) / Player.height) * minimap.canvas.height)
-        / mapSize,
-    minimap.canvas.width / mapSize,
-    minimap.canvas.height / mapSize,
-  );
-
   // Draws the player behind/infront of enemies depending on its y;
   let drewPlayer = false;
   for (let i = 0; i < enemyController.enemies.length; i++) {
@@ -392,16 +380,19 @@ function draw() {
     } else {
       enemy.draw(ctx, worldPosX, worldPosY);
     }
-    ctx.fillStyle = 'red';
-    ctx.fillRect(
-      minimapPosX
-        + (Math.floor((enemy.x + enemy.width / 2) / enemy.width) * minimap.canvas.width) / mapSize,
-      minimapPosY
-        + (Math.floor((enemy.y + enemy.height / 2) / enemy.height) * minimap.canvas.height) / mapSize,
-      minimap.canvas.width / mapSize,
-      minimap.canvas.height / mapSize,
-    );
   }
+
+  ctx.drawImage(minimap.canvas, minimapPosX, minimapPosY);
+  ctx.fillStyle = 'blue';
+  ctx.fillRect(
+    minimapPosX
+    + (Math.floor((Player.x + Player.width / 2) / Player.width) * minimap.canvas.width) / mapSize,
+    minimapPosY
+    + (Math.floor((Player.y + Player.height - 4) / Player.height) * minimap.canvas.height)
+    / mapSize,
+    minimap.canvas.width / mapSize,
+    minimap.canvas.height / mapSize,
+  );
   // ctx.fillText(`${worldPosX} ${worldPosX}`, 20, 20);
   // if (miniMapSquareToDeletX != Player.posTopX || miniMapSquareToDeletY != Player.posTopY) {
   //   drawMiniMap();
