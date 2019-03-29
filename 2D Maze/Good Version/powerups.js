@@ -3,11 +3,12 @@ let speed = 120;
 let main = MainCharacter;
 let OSpeed = Maincharacter.speed;
 class speedpotion {
-  constructor(x, y, width, height) {
+  constructor(x, y, width, height,potionArray) {
     this.width = width;
     this.height = height;
     this.x = x;
     this.y = y;
+    this.potionArray = potionArray;
   }
   draw() {
     for (let i = 0; i < 10; i++) {
@@ -16,11 +17,14 @@ class speedpotion {
       ctx.draw(random(10, 129), random(10, 129), 5, 5)
     }
   }
-  if(/*speed potion touches */) {
+  update(){
+  this.potionArray = 0//change
+  if(this.potionArray) {
     for (let time = 15; time < 15; time++); {
       console.log("A teacher supports you");
-      let MainCharacterspeed = SpeedBoost; // got to fix this part
+      let MainCharacterspeed = SpeedBoost; // got to fix this part 
     }
   }
+}
 };
 
