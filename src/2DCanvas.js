@@ -1,7 +1,6 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable eqeqeq */
 /* eslint-disable no-undef */
-console.log('FUCKKKKKKKkkkkk !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!');
 const EnemyController = require('./enemyController');
 // const EnemyAnxiety = require('./enemies/enemyAnxiety');
 const RecursiveMaze = require('./RecursiveMaze');
@@ -10,13 +9,10 @@ const MainCharacter = require('./2DMainChar');
 
 const canvas = document.getElementById('backgroundCanvas');
 console.log(canvas);
-// const miniMap = document.getElementById('minimapCanvas');
 const ctx = canvas.getContext('2d');
-// const ctxx = miniMap.getContext('2d');
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
-// miniMap.width = window.innerWidth / 7;
-// miniMap.height = window.innerWidth / 7;
+
 
 // Load the tilemap.
 const tilemap = new Image();
@@ -229,9 +225,6 @@ document.addEventListener('keyup', (event) => {
   }
 });
 
-const row = mapSize;
-const col = mapSize;
-
 function update() {
   // Calucute delta time.
   const nowTime = Date.now();
@@ -272,14 +265,6 @@ function update() {
   Player.update(dt);
   Camera.update(dt);
 
-  // ctxx.fillStyle = 'rgb(0,0,255)'; // Blue square for player
-  // ctxx.fillRect(
-  //   Player.x * (miniMap.width / row),
-  //   Player.y * (miniMap.height / col),
-  //   miniMap.width / row,
-  //   miniMap.height / col,
-  // );
-
   for (let i = 0; i < enemyController.enemies.length; i++) {
     const enemy = enemyController.enemies[i];
     enemy.update(dt);
@@ -301,64 +286,8 @@ function update() {
   // image.src = canvas.toDataURL();
   // document.getElementById('he').appendChild(image);
 }
-const miniMapSquareToDeletX = 1;
-const miniMapSquareToDeletY = 1;
 
-function drawMiniMap() {
-  // ctxx.clearRect(
-  //   miniMapSquareToDeletX * (miniMap.width / row),
-  //   miniMapSquareToDeletY * (miniMap.height / col),
-  //   (miniMap.width / row) * 0.95,
-  //   (miniMap.height / col) * 0.95,
-  // );
-  // ctxx.fillStyle = 'rgba(0,128,0, 0.65)'; // Green Walls
-  // ctxx.fillRect(
-  //   miniMapSquareToDeletX * (miniMap.width / row),
-  //   miniMapSquareToDeletY * (miniMap.height / col),
-  //   (miniMap.width / row) * 0.95,
-  //   (miniMap.height / col) * 0.95,
-  // );
-  // ctxx.fillStyle = 'rgba(0,0,200,0.5)';
-  // ctxx.fillRect(
-  //   // Don't change this to the commented lines below.
-  //   Math.floor((Player.x + Player.width / 2) / Player.width) * (miniMap.width / row),
-  //   Math.floor((Player.y + Player.height - 4) / Player.height) * (miniMap.height / col),
-  //   // Player.posTopX * (miniMap.width / row),
-  //   // Player.posTopY * (miniMap.height / col),
-  //   (miniMap.width / row) * 0.95,
-  //   (miniMap.height / col) * 0.95,
-  // );
-  // // 4 is to offset the y (hardcoded value).
-  // miniMapSquareToDeletX = Math.floor((Player.x + Player.width / 2) / Player.width);
-  // miniMapSquareToDeletY = Math.floor((Player.y + Player.height - 4) / Player.height);
-}
-// for (let x = 0; x < row; x++) {
-//   for (let y = 0; y < col; y++) {
-//     // eslint-disable-next-line default-case
-//     switch (mapArray[x][y]) {
-//       case 0:
-//         // console.log("No Wall");
-//         ctxx.fillStyle = 'rgba(0,128,0, 0.65)'; // Green Walls
-//         ctxx.fillRect(
-//           x * (miniMap.width / row),
-//           y * (miniMap.height / col),
-//           miniMap.width / row,
-//           miniMap.height / col,
-//         );
-//         break;
-//       case 1:
-//         console.log('Wall');
-//         ctxx.fillStyle = 'rgba(128,128,128,0.65)'; // Grey walls
-//         ctxx.fillRect(
-//           x * (miniMap.width / row),
-//           y * (miniMap.height / col),
-//           miniMap.width / row,
-//           miniMap.height / col,
-//         );
-//         break;
-//     }
-//   }
-// }
+
 function draw() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   Camera.draw(worldPosX, worldPosY);
@@ -402,12 +331,7 @@ function draw() {
       minimap.canvas.height / mapSize,
     );
   }
-  // ctx.fillText(`${worldPosX} ${worldPosX}`, 20, 20);
-  // if (miniMapSquareToDeletX != Player.posTopX || miniMapSquareToDeletY != Player.posTopY) {
-  //   drawMiniMap();
-  // }
 }
-// drawMiniMap();
 
 function gameLoop() {
   if (!InThreeD) {
