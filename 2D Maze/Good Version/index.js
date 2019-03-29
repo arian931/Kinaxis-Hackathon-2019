@@ -115,10 +115,11 @@ tilemap.onload = () => {
     }
   }
 };
+
 document.addEventListener('keydown', (event) => {
   switch (event.code) {
     case 'KeyRight':
-    case 'KeyD':
+    case rightArrowPressed:
       Player.xDir = 1;
       Player.moveRight = true;
       Player.moveLeft = false;
@@ -126,7 +127,7 @@ document.addEventListener('keydown', (event) => {
       Player.moveUp = false;
       break;
     case 'KeyLeft':
-    case 'KeyA':
+    case leftArrowPressed:
       Player.xDir = -1;
       Player.moveLeft = true;
       Player.moveRight = false;
@@ -134,7 +135,7 @@ document.addEventListener('keydown', (event) => {
       Player.moveUp = false;
       break;
     case 'KeyUp':
-    case 'KeyW':
+    case upArrowPressed:
       Player.yDir = -1;
       Player.moveUp = true;
       Player.moveRight = false;
@@ -142,7 +143,7 @@ document.addEventListener('keydown', (event) => {
       Player.moveLeft = false;
       break;
     case 'KeyDown':
-    case 'KeyS':
+    case downArrowPressed:
       Player.yDir = 1;
       Player.moveDown = true;
       Player.moveRight = false;
@@ -157,22 +158,22 @@ document.addEventListener('keydown', (event) => {
 document.addEventListener('keyup', (event) => {
   switch (event.code) {
     case 'KeyRight':
-    case 'KeyD':
+    case rightArrowPressed:
       Player.xDir = 0;
       Player.moveRight = false;
       break;
     case 'KeyLeft':
-    case 'KeyA':
+    case leftArrowPressed:
       Player.xDir = 0;
       Player.moveLeft = false;
       break;
     case 'KeyUp':
-    case 'KeyW':
+    case upArrowPressed:
       Player.yDir = 0;
       Player.moveUp = false;
       break;
     case 'KeyDown':
-    case 'KeyS':
+    case downArrowPressed:
       Player.yDir = 0;
       Player.moveDown = false;
       break;
