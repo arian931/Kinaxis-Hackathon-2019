@@ -54241,6 +54241,7 @@ canvas.height = window.innerHeight;
 const image = new Image();
 image.id = 'pic';
 let forTimer = 0;
+let forTimerInverval;
 const timer = () => {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   forTimer++;
@@ -54265,6 +54266,7 @@ const timer = () => {
 const TwoCanvas = document.getElementById('backgroundCanvas');
 function checkFor3dTransation() {
   if (TwoCanvas.style.display == 'none') {
+    forTimerInverval = setInterval(timer, 100);
     isPlaying = true;
     timeLeft = 100;
     clearInterval(checkingThree);
