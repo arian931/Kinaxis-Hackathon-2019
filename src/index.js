@@ -273,7 +273,6 @@ function checkFor3dTransation() {
     console.log('running');
     levelOne.generateScene();
     clearInterval(gameLoopOne);
-    gameLoopOne = setInterval(levelOne.gameLoop(), 33);
     animate();
   }
 }

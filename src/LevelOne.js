@@ -36,6 +36,7 @@ module.exports = class LevelOne {
     this.score = 0;
     this.jumpDistance = jumpDistance;
     this.sizeOfPlatforms = sizeOfPlatforms;
+    this.gameLoopInterval;
   }
 
   generateScene() {
@@ -127,7 +128,7 @@ module.exports = class LevelOne {
     }
 
     const _this = this;
-    setInterval(() => {
+    this.gameLoopInterval = setInterval(() => {
       _this.gameLoop();
     }, 33);
   }
@@ -202,14 +203,15 @@ module.exports = class LevelOne {
   }
 
   gameLoop() {
+    console.log('3d gameLoop');
     if (this.camera.position.y <= -2000) {
       this.camera.position.x = 0;
       this.camera.position.z = 0;
       this.camera.position.y = 10;
     }
-    // for (let x = 0; x < this.collectibles.length; x++) {
-    //   this.collectibles[x].rotate();
-    // }
+    for (let x = 0; x < this.collectibles.length; x++) {
+      this.collectibles[x].rotate();
+    }
 
     for (let x = 0; x < this.platFormsClass.length; x++) {
       if (this.platFormsClass[x].movingHor) {
@@ -591,6 +593,8 @@ module.exports = class LevelOne {
   }
 
   clearObjects() {
+    console.log(`${this.gameLoopInterval}seeing what it is clearing`);
+    clearInterval(this.gameLoopInterval);
     console.log(
       'cleared objects !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!',
     );
