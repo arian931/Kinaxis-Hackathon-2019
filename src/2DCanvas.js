@@ -17,7 +17,8 @@ const RecursiveMaze = require('./RecursiveMaze');
 const PlayerCamera = require('./camera');
 const MainCharacter = require('./2DMainChar');
 
-
+const blurb = document.getElementById('blurb');
+const cxx = blurb.getContext('2d');
 
 
 console.log(canvas);
@@ -405,7 +406,8 @@ function draw() {
 }
 
 function callBlurb() {
-  console.log('Blurrb working!')
+  console.log('BLURB');
+  // blurb.style.display = 'block';
 }
 
 function gameLoop() {
@@ -421,7 +423,7 @@ function switchBackTo2D() {
   // console.log('2d is back');
   if (InThreeD) {
     InThreeD = false;
-    gameLoop();
+    gameLoop();s
   }
 }
 function funToCheckForSwitchBack() {
