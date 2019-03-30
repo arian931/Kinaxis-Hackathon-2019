@@ -18,8 +18,6 @@ const PlayerCamera = require('./camera');
 const MainCharacter = require('./2DMainChar');
 
 
-
-
 console.log(canvas);
 
 // Load the tilemap.
@@ -43,7 +41,6 @@ let lastTime = Date.now();
 let worldPosX = 0;
 let worldPosY = 0;
 
-// eslint-disable-next-line no-undef
 const enemyController = new EnemyController();
 const trapController = new TrapController();
 const keyController = new KeyController();
@@ -54,7 +51,6 @@ const divToDrawTo = document.getElementById('backgroundCanvas');
 const image = new Image();
 image.id = 'pic';
 
-// eslint-disable-next-line prefer-const
 mapArray = Recursive.array;
 const Player = new MainCharacter(
   130,

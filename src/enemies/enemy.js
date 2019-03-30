@@ -5,8 +5,6 @@ module.exports = class Enemy {
     this.dir = 0; // 0 = horizontal, 1 = vertical.
     this.width = 128;
     this.height = 128;
-    this.xDir = 0;
-    this.yDir = 0;
     this.speed = 0;
     this.hSpeed = 0;
     this.vSpeed = 0;
@@ -35,9 +33,12 @@ module.exports = class Enemy {
     this.spriteIndexX = (this.spriteIndexX + this.animationSpeed) % this.animationSize;
 
     if (this.xDir !== 0) {
-      // If the enemy is moving horizontally, 
+      // If the enemy is moving horizontally(not idle), change its sprite y
+      // index to either row 1 or row 3 of the sprite sheet.
       this.spriteIndexY = this.xDir === 1 ? 1 : 3;
     } else {
+      // If the enemy is moving vertically(not idle), change its sprite y
+      // index to either row 2 or row 4 of the sprite sheet.
       this.spriteIndexY = this.yDir === 1 ? 2 : 4;
     }
     this.posX = parseInt((this.x + 50) / ((this.CWidth * 128) / this.CWidth), 10);
