@@ -51787,6 +51787,9 @@ const RecursiveMaze = require('./RecursiveMaze');
 const PlayerCamera = require('./camera');
 const MainCharacter = require('./2DMainChar');
 
+
+
+
 console.log(canvas);
 
 // Load the tilemap.
@@ -51832,8 +51835,10 @@ const Player = new MainCharacter(
   mapArray,
   ctx,
   gameObjects,
+  // eslint-disable-next-line no-use-before-define
   switchToThreeD,
   // enemyController.enemies,
+  callBlurb,
 );
 gameObjects.push(Player);
 enemyController.spawnEnemies(mapArray, gameObjects);
@@ -52094,9 +52099,7 @@ function update() {
       }
     }
   }
-
 }
-
 
 function draw() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -52171,6 +52174,10 @@ function draw() {
   }
 }
 
+function callBlurb() {
+  console.log('Blurrb working!');
+}
+
 function gameLoop() {
   if (!InThreeD) {
     window.requestAnimationFrame(gameLoop);
@@ -52217,7 +52224,7 @@ const Key = require('./key');
 const SpikeTrap = require('./spikeTrap');
 
 module.exports = class MainCharacter {
-  constructor(x, y, width, height, mazeSize, mazeArray, context, gameObjects, functToSwitch) {
+  constructor(x, y, width, height, mazeSize, mazeArray, context, gameObjects, functToSwitch, callBlurb) {
     this.image = new Image();
     this.image.src = '../../Art/2D/female2_spritesheet.png';
     this.camera = undefined;
@@ -52251,6 +52258,7 @@ module.exports = class MainCharacter {
     this.keysCollected = 0;
     this.gameObjects = gameObjects;
     this.functToSwitch = functToSwitch;
+    this.callBlurb = callBlurb;
   }
 
   update() {
@@ -52308,6 +52316,7 @@ module.exports = class MainCharacter {
           && this.y + this.height < key.y + key.height / 2 + 32) {
           this.gameObjects.splice(j, 1);
           this.keysCollected++;
+          this.callBlurb();
         }
       }
       if (this.gameObjects[j] instanceof SpikeTrap) {
@@ -53807,14 +53816,19 @@ module.exports = class Enemy {
   }
 
   update(dt) {
+    // set the horizontal and vertical speed.
     this.hSpeed = this.speed * this.xDir * dt;
     this.vSpeed = this.speed * this.yDir * dt;
+
+    // Add the horizontal and vertical speed to enemy's position.
     this.x += this.hSpeed;
     this.y += this.vSpeed;
 
+    // Increase the sprite's frame position.
     this.spriteIndexX = (this.spriteIndexX + this.animationSpeed) % this.animationSize;
 
     if (this.xDir !== 0) {
+      // If the enemy is moving horizontally, 
       this.spriteIndexY = this.xDir === 1 ? 1 : 3;
     } else {
       this.spriteIndexY = this.yDir === 1 ? 2 : 4;
