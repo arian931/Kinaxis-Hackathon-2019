@@ -17,8 +17,8 @@ const RecursiveMaze = require('./RecursiveMaze');
 const PlayerCamera = require('./camera');
 const MainCharacter = require('./2DMainChar');
 
-const blurb = document.getElementById('blurb');
-const cxx = blurb.getContext('2d');
+// const blurb = document.getElementById('blurb');
+// const cxx = blurb.getContext('2d');
 
 console.log(canvas);
 

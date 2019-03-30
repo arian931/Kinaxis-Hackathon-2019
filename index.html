@@ -27,29 +27,16 @@
 
       #instructions {
         width: 40%;
-        height: 75%;
-        display: -webkit-box;
-        display: -moz-box;
-        display: box;
-        -webkit-box-orient: horizontal;
-        -moz-box-orient: horizontal;
-        box-orient: horizontal;
-        -webkit-box-pack: center;
-        -moz-box-pack: center;
-        ‰box-pack: center;
-        -webkit-box-align: center;
-        -moz-box-align: center;
-        box-align: center;
-        color: #000000;
+        height: 60%;
         text-align: center;
         cursor: pointer;
         margin: auto;
-        margin-top: 5%;
+        margin-top: 8%;
         background-color: rgba(60, 63, 60, 0.5);
         border-radius: 10px;
-        padding-right: 1%;
-        padding-left: 1%;
+        padding: 1%;
         font-family: "Times New Roman", Times, serif;
+        padding-bottom: 0%;
       }
 
       #scoreAndTimer3d {
@@ -62,12 +49,7 @@
       #backgroundCanvas {
         display: block;
       }
-      #after3d {
-        display: hidden;
-        position: absolute;
-        width: 100%;
-        height: 100%;
-      }
+
       .forResult {
         width: 40%;
         height: 75%;
@@ -79,6 +61,46 @@
         padding-right: 1%;
         padding-left: 1%;
         font-family: "Times New Roman", Times, serif;
+        display: hidden;
+      }
+      #blurb {
+        position: absolute;
+        display: none;
+        background-color: red;
+        width: 300px;
+        height: 300px;
+      }
+      .forResult {
+        display: hidden;
+      }
+      #after3dPos {
+        display: none;
+        position: absolute;
+        width: 100%;
+        height: 100%;
+      }
+      #after3dNeg {
+        display: none;
+        position: absolute;
+        width: 100%;
+        height: 100%;
+      }
+      .after3dStyle {
+        width: 40%;
+        height: 75%;
+        color: #000000;
+        text-align: center;
+        margin: auto;
+        margin-top: 7%;
+        border-radius: 10px;
+        padding-right: 1%;
+        padding-left: 1%;
+        font-family: "Times New Roman", Times, serif;
+        display: hidden;
+        background-color: rgba(60, 63, 60, 0.5);
+        border-radius: 10px;
+        padding-right: 1%;
+        padding-left: 1%;
       }
     </style>
   </head>
@@ -88,9 +110,21 @@
     <canvas style="display: none" class="hello" id="scoreTimer"></canvas>
     <div id="he" class="hello"></div>
     <div id="scoreAndTimer3d" class="scoreAndTimer"></div>
-    <div id="after3d">
-      <div class="forResult">
-        <h1 id="resultOf3D"></h1>
+    <div id="blurb"></div>
+    <div id="after3dPos">
+      <div class="after3dStyle">
+        <h1>
+          You Have Collected all the cubes of self care, and are now strong
+          enough to defeat the beast.
+        </h1>
+      </div>
+    </div>
+    <div id="after3dNeg">
+      <div class="after3dStyle">
+        <h1>
+          You Have Collected all the cubes of self care, and are now strong
+          enough to defeat the beast.
+        </h1>
       </div>
     </div>
 

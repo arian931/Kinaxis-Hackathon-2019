@@ -48380,9 +48380,8 @@ const RecursiveMaze = require('./RecursiveMaze');
 const PlayerCamera = require('./camera');
 const MainCharacter = require('./2DMainChar');
 
-const blurb = document.getElementById('blurb');
-const cxx = blurb.getContext('2d');
-
+// const blurb = document.getElementById('blurb');
+// const cxx = blurb.getContext('2d');
 
 console.log(canvas);
 
@@ -48681,15 +48680,21 @@ function update() {
       // x collision
       if (enemy.xDir === 1) {
         // Right collision
-        if (mapArray[Math.floor((enemy.x + enemy.width / 2 + enemy.width / 4) / enemy.width)]
-        [Math.floor((enemy.y + enemy.height / 2) / enemy.height)] !== 0) {
+        if (
+          mapArray[Math.floor((enemy.x + enemy.width / 2 + enemy.width / 4) / enemy.width)][
+            Math.floor((enemy.y + enemy.height / 2) / enemy.height)
+          ] !== 0
+        ) {
           // The 4 is to make sure the enemy collides close enough to the wall.
           enemy.xDir = -1;
         }
       } else if (enemy.xDir === -1) {
         // Left collision
-        if (mapArray[Math.floor((enemy.x + enemy.width / 2 - enemy.width / 4) / enemy.width)]
-        [Math.floor((enemy.y + enemy.height / 2) / enemy.height)] !== 0) {
+        if (
+          mapArray[Math.floor((enemy.x + enemy.width / 2 - enemy.width / 4) / enemy.width)][
+            Math.floor((enemy.y + enemy.height / 2) / enemy.height)
+          ] !== 0
+        ) {
           // The 4 is to make sure the enemy collides close enough to the wall.
           enemy.xDir = 1;
         }
@@ -48698,16 +48703,22 @@ function update() {
       // y collision
       if (enemy.yDir === 1) {
         // Down collision
-        if (mapArray[Math.floor((enemy.x + enemy.width / 2) / enemy.width)]
-        [Math.floor(((enemy.y + enemy.height - 24) + enemy.height / 4) / enemy.height)] !== 0) {
+        if (
+          mapArray[Math.floor((enemy.x + enemy.width / 2) / enemy.width)][
+            Math.floor((enemy.y + enemy.height - 24 + enemy.height / 4) / enemy.height)
+          ] !== 0
+        ) {
           // The 24 is to make sure the enemy collides close enough to the bottom wall.
           // The 4 is to make sure the enemy collides close enough to the wall.
           enemy.yDir *= -1;
         }
       } else if (enemy.yDir === -1) {
         // Up collision
-        if (mapArray[Math.floor((enemy.x + enemy.width / 2) / enemy.width)]
-        [Math.floor(((enemy.y + enemy.height) - enemy.height / 4) / enemy.height)] !== 0) {
+        if (
+          mapArray[Math.floor((enemy.x + enemy.width / 2) / enemy.width)][
+            Math.floor((enemy.y + enemy.height - enemy.height / 4) / enemy.height)
+          ] !== 0
+        ) {
           // The 4 is to make sure the enemy collides close enough to the wall.
           enemy.yDir *= -1;
         }
@@ -48829,10 +48840,10 @@ function draw() {
       ctx.fillStyle = 'red';
       ctx.fillRect(
         minimapPosX
-        + (Math.floor((enemy.x + enemy.width / 2) / enemy.width) * minimap.canvas.width) / mapSize,
+          + (Math.floor((enemy.x + enemy.width / 2) / enemy.width) * minimap.canvas.width) / mapSize,
         minimapPosY
-        + (Math.floor((enemy.y + enemy.height - 4) / enemy.height) * minimap.canvas.height)
-        / mapSize,
+          + (Math.floor((enemy.y + enemy.height - 4) / enemy.height) * minimap.canvas.height)
+            / mapSize,
         minimap.canvas.width / mapSize,
         minimap.canvas.height / mapSize,
       );
@@ -49493,7 +49504,6 @@ module.exports = class LevelOne {
   }
 
   gameLoop() {
-    console.log('3d gameLoop');
     if (this.camera.position.y <= -2000) {
       this.camera.position.x = 0;
       this.camera.position.z = 0;
@@ -49893,19 +49903,19 @@ module.exports = class LevelOne {
   }
 
   clearObjects() {
-    console.log(`${this.gameLoopInterval}seeing what it is clearing`);
-    clearInterval(this.gameLoopInterval);
-    console.log(
-      'cleared objects !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!',
-    );
+    // console.log(`${this.gameLoopInterval}seeing what it is clearing`);
+    // clearInterval(this.gameLoopInterval);
+    // console.log(
+    //   'cleared objects !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!',
+    // );
     for (let j = 0; j < this.collectibles.length; j++) {
-      console.log('deletingplatforms Col');
+      // console.log('deletingplatforms Col');
       this.scene.remove(this.collectibles[j].cubeFor);
     }
     this.collectibles = [];
     this.collectibles.length = 0;
     for (let j = 0; j < this.platFormsClass.length; j++) {
-      console.log('deletingplatforms');
+      // console.log('deletingplatforms');
       this.scene.remove(this.platFormsClass[j].cubeFor);
     }
     this.platFormsClass = [];
@@ -50729,7 +50739,7 @@ const onKeyDown = (event) => {
         break;
       case 76:
         // eslint-disable-next-line no-use-before-define
-        switchBackToTwoD();
+        showResultOf3D(true);
         break;
       default:
         break;
@@ -50837,7 +50847,7 @@ const animate = () => {
         velocity.y = Math.max(0, velocity.y);
         // controls.getObject().position.set(0, bottomIntersections[0].y + 10, 0);
         canJump = true;
-        console.log(true);
+        // console.log(true);
       } else canJump = false;
       // if (headHit && velocity.y > 0) velocity.y = 0;
       for (let vertexIndex = 0; vertexIndex < player.geometry.vertices.length; vertexIndex++) {
@@ -50936,9 +50946,9 @@ let checkingThree = setInterval(checkFor3dTransation, 100);
 function switchBackToTwoD() {
   TwoCanvas.style.display = 'block';
   isPlaying = false;
-  console.log(
-    'switch back to 2d !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!',
-  );
+  // console.log(
+  //   'switch back to 2d !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!',
+  // );
   checkingThree = setInterval(checkFor3dTransation, 100);
   clearScene();
 }
@@ -50947,24 +50957,35 @@ function clearScene() {
 }
 
 let showResultsInterval;
-const divForThreeResult = document.getElementById('after3d');
+let timeLeftForResult = 5;
+const divForThreeResultPos = document.getElementById('after3dPos');
+const divForThreeResultNeg = document.getElementById('after3dNeg');
 function showResultOf3D(good) {
   if (good) {
+    timeLeftForResult = 5;
     console.log('Good');
-    divForThreeResult.innerHTML = 'good ending';
+    divForThreeResultPos.style.display = 'block';
     showResultsInterval = setInterval(showingResultsOf3DPositive, 1000);
+    isPlaying = false;
   } else {
+    timeLeftForResult = 5;
     console.log('Good');
-    divForThreeResult.innerHTML = 'bad ending';
+    divForThreeResultNeg.style.display = 'block';
     showResultsInterval = setInterval(showingResultsOf3DPositive, 1000);
   }
 }
-let timeLeftForResult = 10;
 function showingResultsOf3DPositive() {
+  console.log(timeLeftForResult);
+  console.log('timeLeftFor3d');
   if (timeLeftForResult == 0) {
-    timeLeftForResult--;
-  } else {
+    divForThreeResultPos.style.display = 'none';
+    divForThreeResultNeg.style.display = 'none';
+    clearInterval(showResultsInterval);
+    console.log('else');
     switchBackToTwoD();
+  } else {
+    console.log(`${timeLeftForResult} 3dTimeLeft !!!!!!!!!!!!`);
+    timeLeftForResult--;
   }
 }
 
