@@ -48369,7 +48369,7 @@ global.ctx = canvas.getContext('2d');
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
 console.log('FUCKKKKKKKkkkkk !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!');
-// require('./menu.js');
+const Menu = require('./menu.js');
 const Enemy = require('./enemies/enemy');
 const Key = require('./key');
 const SpikeTrap = require('./spikeTrap');
@@ -48382,7 +48382,8 @@ const MainCharacter = require('./2DMainChar');
 
 const blurb = document.getElementById('blurb');
 // const cxx = blurb.getContext('2d');
-
+const menu = new Menu(switchBackTo2D);
+menu.start();
 console.log(canvas);
 
 // Load the tilemap.
@@ -48911,8 +48912,8 @@ function switchBackTo2D() {
   // console.log('2d is back');
   if (InThreeD) {
     InThreeD = false;
-    gameLoop();
   }
+  gameLoop();
 }
 function funToCheckForSwitchBack() {
   // console.log('checkingFor3d');
@@ -48928,10 +48929,10 @@ function switchToThreeD() {
   InThreeD = true;
   checkForSwitchBackInerval = setInterval(funToCheckForSwitchBack, 33);
 }
-window.requestAnimationFrame(gameLoop);
+// window.requestAnimationFrame(gameLoop);
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./2DMainChar":3,"./RecursiveMaze":11,"./camera":13,"./enemies/enemy":14,"./enemyController":18,"./key":20,"./keyController":21,"./spikeTrap":22,"./trapController":23}],3:[function(require,module,exports){
+},{"./2DMainChar":3,"./RecursiveMaze":11,"./camera":13,"./enemies/enemy":14,"./enemyController":18,"./key":20,"./keyController":21,"./menu.js":22,"./spikeTrap":23,"./trapController":24}],3:[function(require,module,exports){
 /* eslint-disable no-plusplus */
 /* eslint-disable no-param-reassign */
 /* eslint-disable prefer-const */
@@ -49139,7 +49140,7 @@ module.exports = class MainCharacter {
   }
 };
 
-},{"./enemies/enemy":14,"./key":20,"./spikeTrap":22}],4:[function(require,module,exports){
+},{"./enemies/enemy":14,"./key":20,"./spikeTrap":23}],4:[function(require,module,exports){
 const THREE = require('three');
 /**
  * @author mrdoob / http://mrdoob.com/
@@ -51099,6 +51100,79 @@ module.exports = class KeyController {
 
 }
 },{"./key":20}],22:[function(require,module,exports){
+module.exports = class Menu {
+  constructor(switchBackTo2D) {
+    this.menuMusic = new Audio('./mp3/rain.mp3');
+    this.RADIUS = 50;
+    this.handleEvent = (e) => {
+      switch (e.type) {
+        case 'click':
+          if (Math.sqrt((e.clientX - canvas.width / 2) * (e.clientX - canvas.width / 2) + (e.clientY - canvas.height / 2) * (e.clientY - canvas.height / 2)) < this.RADIUS) {
+            canvas.removeEventListener('mousemove', this);
+            canvas.style.cursor = 'auto';
+            let timer = 0;
+            const circleBigger = setInterval(() => {
+              timer += 5;
+              ctx.fillStyle = 'white';
+              ctx.beginPath();
+              ctx.arc(canvas.width / 2, canvas.height / 2, timer, 0, 2 * Math.PI);
+              ctx.fill();
+              if (timer >= canvas.width / 1.5) {
+                clearInterval(circleBigger);
+                canvas.removeEventListener('click', this);
+                this.menuMusic.pause();
+                switchBackTo2D();
+                // console.log('test');
+              }
+            }, 20);
+          }
+          break;
+        case 'mousemove':
+          if (Math.sqrt((e.clientX - canvas.width / 2) * (e.clientX - canvas.width / 2) + (e.clientY - canvas.height / 2) * (e.clientY - canvas.height / 2)) < this.RADIUS) {
+            ctx.fillStyle = 'white';
+            ctx.beginPath();
+            ctx.arc(canvas.width / 2, canvas.height / 2, this.RADIUS - 1, 0, 2 * Math.PI);
+            ctx.fill();
+            canvas.style.cursor = 'pointer';
+          } else {
+            ctx.fillStyle = 'black';
+            ctx.beginPath();
+            ctx.arc(canvas.width / 2, canvas.height / 2, this.RADIUS - 1, 0, 2 * Math.PI);
+            ctx.fill();
+            canvas.style.cursor = 'auto';
+          }
+          break;
+        default:
+          break;
+      }
+    };
+  }
+
+
+  // handleMouseMove(e) {
+
+  // }
+
+  // handleMouseClick(e) {
+  // }
+
+  start() {
+    this.menuMusic.play();
+    ctx.fillStyle = 'black';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    ctx.fillStyle = 'white';
+    ctx.font = '50px Arial';
+    ctx.fillText("Let's talk about mental health!", canvas.width / 10, canvas.height / 3);
+    ctx.strokeStyle = 'white';
+    ctx.beginPath();
+    ctx.arc(canvas.width / 2, canvas.height / 2, this.RADIUS, 0, 2 * Math.PI);
+    ctx.stroke();
+    canvas.addEventListener('mousemove', this);
+    canvas.addEventListener('click', this);
+  }
+};
+
+},{}],23:[function(require,module,exports){
 module.exports = class SpikeTrap {
   constructor(x, y) {
     this.x = x;
@@ -51130,7 +51204,7 @@ module.exports = class SpikeTrap {
     );
   }
 }
-},{}],23:[function(require,module,exports){
+},{}],24:[function(require,module,exports){
 const SpikeTrap = require('./spikeTrap');
 
 module.exports = class TrapController {
@@ -51154,4 +51228,4 @@ module.exports = class TrapController {
     }
   }
 }
-},{"./spikeTrap":22}]},{},[19]);
+},{"./spikeTrap":23}]},{},[19]);

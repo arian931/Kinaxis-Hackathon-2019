@@ -6,7 +6,7 @@ global.ctx = canvas.getContext('2d');
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
 console.log('FUCKKKKKKKkkkkk !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!');
-// require('./menu.js');
+const Menu = require('./menu.js');
 const Enemy = require('./enemies/enemy');
 const Key = require('./key');
 const SpikeTrap = require('./spikeTrap');
@@ -19,7 +19,8 @@ const MainCharacter = require('./2DMainChar');
 
 const blurb = document.getElementById('blurb');
 // const cxx = blurb.getContext('2d');
-
+const menu = new Menu(switchBackTo2D);
+menu.start();
 console.log(canvas);
 
 // Load the tilemap.
@@ -548,8 +549,8 @@ function switchBackTo2D() {
   // console.log('2d is back');
   if (InThreeD) {
     InThreeD = false;
-    gameLoop();
   }
+  gameLoop();
 }
 function funToCheckForSwitchBack() {
   // console.log('checkingFor3d');
@@ -565,4 +566,4 @@ function switchToThreeD() {
   InThreeD = true;
   checkForSwitchBackInerval = setInterval(funToCheckForSwitchBack, 33);
 }
-window.requestAnimationFrame(gameLoop);
+// window.requestAnimationFrame(gameLoop);
