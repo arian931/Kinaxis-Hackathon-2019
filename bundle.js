@@ -50539,7 +50539,7 @@ module.exports = class PlayerCamera {
 
 },{}],14:[function(require,module,exports){
 module.exports = class Enemy {
-  constructor(x, y, dir) {
+  constructor(x, y, dir, mapArray) {
     this.x = x;
     this.y = y;
     this.dir = 0; // 0 = horizontal, 1 = vertical.
@@ -50556,8 +50556,17 @@ module.exports = class Enemy {
     this.CHeight = 29;
     this.posX = parseInt(this.x / ((this.CWidth * 128) / this.CWidth), 10);
     this.posY = parseInt(this.y / ((this.CHeight * 128) / this.CHeight), 10);
-    this.xDir = (dir === 0 ? 1 : 0);
-    this.yDir = (dir === 1 ? 1 : 0);
+    this.xDir = 0;
+    this.yDir = 0;
+    this.mapArray = mapArray;
+    this.vis = [[]];
+    for (let i = 0; i < this.mapArray.length; i++) {
+      this.vis[i] = [];
+      for (let j = 0; j < this.mapArray[i].length; j++) {
+        this.vis[i][j] = false;
+      }
+    }
+    this.move(Math.floor((this.x + this.width / 2) / 128), Math.floor((this.y + this.height / 2) / 128));
   }
 
   update(dt) {
@@ -50585,6 +50594,83 @@ module.exports = class Enemy {
     this.posY = parseInt((this.y + 20) / ((this.CHeight * 128) / this.CHeight), 10);
   }
 
+  // x and y are tile positions.
+  move(x, y) {
+    console.log(x);
+    const currentPosX = Math.floor((this.x + this.width / 2) / 128);
+    const currentPosY = Math.floor((this.y + this.height / 2) / 128);
+    this.x += this.speed * (x - currentPosX);
+    this.y += this.speed * (y - currentPosY);
+    if (currentPosX === x && currentPosY === y) {
+      console.log('test');
+      const dirs = []; // 0 = right, 1 = down, 2 = left, 3 = up.
+      if (
+        !this.vis[Math.floor((this.x + this.width / 2) / 128) + 1][Math.floor((this.y + this.height / 2) / 128)]
+        && this.mapArray[Math.floor((this.x + this.width / 2) / 128) + 1][Math.floor((this.y + this.height / 2) / 128)] === 0
+      ) {
+        // Right collision
+        dirs.push(0);
+        this.vis.push(Math.floor((this.x + this.width / 2) / 128));
+        this.vis[Math.floor((this.x + this.width / 2) / 128) + 1][Math.floor((this.y + this.height / 2) / 128)] = true;
+      }
+      if (
+        !this.vis[Math.floor((this.x + this.width / 2) / 128) - 1][Math.floor((this.y + this.height / 2) / 128)]
+        && this.mapArray[Math.floor((this.x + this.width / 2) / 128) - 1][Math.floor((this.y + this.height / 2) / 128)] === 0) {
+        // Leftcollision
+        dirs.push(2);
+        this.vis.push(Math.floor((this.x + this.width / 2) / 128 - 1));
+        this.vis[Math.floor((this.x + this.width / 2) / 128)][Math.floor((this.y + this.height / 2) / 128)] = true;
+      }
+      if (
+        !this.vis[Math.floor((this.x + this.width / 2) / 128)][Math.floor((this.y + this.height / 2) / 128) + 1]
+        && this.mapArray[Math.floor((this.x + this.width / 2) / 128)][Math.floor((this.y + this.height / 2) / 128) + 1] === 0) {
+        // Down collision
+        dirs.push(1);
+        this.vis.push(Math.floor((this.x + this.width / 2) / 128));
+        this.vis[Math.floor((this.x + this.width / 2) / 128)][Math.floor((this.y + this.height / 2) / 128) + 1] = true;
+      }
+      if (
+        !this.vis[Math.floor((this.x + this.width / 2) / 128)][Math.floor((this.y + this.height / 2) / 128) - 1]
+        && this.mapArray[Math.floor((this.x + this.width / 2) / 128)][Math.floor((this.y + this.height / 2) / 128) - 1] === 0) {
+        // Up collision
+        dirs.push(3);
+        this.vis.push(Math.floor((this.x + this.width / 2) / 128));
+        this.vis[Math.floor((this.x + this.width / 2) / 128)][Math.floor((this.y + this.height / 2) / 128) - 1] = true;
+      }
+      console.log(dirs);
+      if (!dirs) {
+        for (let k = 0; k < this.mapArray.length; k++) {
+          for (let j = 0; j < this.mapArray[k].length; j++) {
+            this.vis[k][j] = false;
+          }
+        }
+      }
+      // this.move(10, 10);
+      // this.move(2, 2);
+      const randDir = Math.floor(Math.random() * dirs.length);
+      switch (dirs[randDir]) {
+        case 0:
+          console.log('move right');
+          this.move(Math.floor((this.x + this.width / 2) / 128) + 1, Math.floor((this.y + this.height / 2) / 128));
+          break;
+        case 1:
+          console.log('move down');
+          this.move(Math.floor((this.x + this.width / 2) / 128), Math.floor((this.y + this.height / 2) / 128) + 1);
+          break;
+        case 2:
+          console.log('move left');
+          this.move(Math.floor((this.x + this.width / 2) / 128) - 1, Math.floor((this.y + this.height / 2) / 128));
+          break;
+        case 3:
+          console.log('move up');
+          this.move(Math.floor((this.x + this.width / 2) / 128), Math.floor((this.y + this.height / 2) / 128) - 1);
+          break;
+        default:
+          break;
+      }
+    }
+  }
+
   draw(ctx, worldPosX, worldPosY) {
     ctx.drawImage(
       this.sprite,
@@ -50604,8 +50690,8 @@ module.exports = class Enemy {
 const Enemy = require('./enemy');
 
 module.exports = class EnemyAnxiety extends Enemy {
-  constructor(x, y, dir) {
-    super(x, y, dir);
+  constructor(x, y, dir, mapArray) {
+    super(x, y, dir, mapArray);
     this.speed = 220;
     this.animationSpeed = 0.18;
     this.sprite.src = '../../Art/2D/enemy_anxiety_spritesheet.png';
@@ -50617,8 +50703,8 @@ module.exports = class EnemyAnxiety extends Enemy {
 const Enemy = require('./enemy');
 
 module.exports = class EnemyBPD extends Enemy {
-  constructor(x, y, dir) {
-    super(x, y, dir);
+  constructor(x, y, dir, mapArray) {
+    super(x, y, dir, mapArray);
     this.speed = 150;
     this.animationSpeed = 0.1;
     this.sprite.src = '../../Art/2D/enemy_borderline_personality_disorder_spritesheet.png';
@@ -50630,8 +50716,8 @@ module.exports = class EnemyBPD extends Enemy {
 const Enemy = require('./enemy');
 
 module.exports = class EnemyDepression extends Enemy {
-  constructor(x, y, dir) {
-    super(x, y, dir);
+  constructor(x, y, dir, mapArray) {
+    super(x, y, dir, mapArray);
     this.speed = 80;
     this.animationSpeed = 0.07;
     this.sprite.src = '../../Art/2D/enemy_depression_spritesheet.png';
@@ -50670,21 +50756,24 @@ module.exports = class EnemyController {
                 gameObjects.push(new EnemyDepression(
                   x * 128,
                   y * 128 - 24,
-                  (mapArray[x][y - 1] === 1 && mapArray[x][y + 1] === 1 ? 0 : 1)
+                  (mapArray[x][y - 1] === 1 && mapArray[x][y + 1] === 1 ? 0 : 1),
+                  mapArray
                 ));
                 break;
               case 1:
                 gameObjects.push(new EnemyAnxiety(
                   x * 128,
                   y * 128 - 24,
-                  (mapArray[x][y - 1] === 1 && mapArray[x][y + 1] === 1 ? 0 : 1)
+                  (mapArray[x][y - 1] === 1 && mapArray[x][y + 1] === 1 ? 0 : 1),
+                  mapArray
                 ));
                 break;
               case 2:
                 gameObjects.push(new EnemyBPD(
                   x * 128,
                   y * 128 - 24,
-                  (mapArray[x][y - 1] === 1 && mapArray[x][y + 1] === 1 ? 0 : 1)
+                  (mapArray[x][y - 1] === 1 && mapArray[x][y + 1] === 1 ? 0 : 1),
+                  mapArray
                 ));
                 break;
               default: break;
