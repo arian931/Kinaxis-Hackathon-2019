@@ -83,10 +83,10 @@ module.exports = class MainCharacter {
       if (this.gameObjects[j] instanceof Enemy) {
         // Contact with enemy
         const enemy = this.gameObjects[j];
-        if (this.x + this.width / 2 > enemy.x + 16
-          && this.x + this.width / 2 < enemy.x + enemy.width - 16
-          && this.y + this.height / 2 > enemy.y + 16
-          && this.y + this.height / 2 < enemy.y + enemy.height - 16) {
+        if (this.x + this.width / 2 > enemy.x
+          && this.x + this.width / 2 < enemy.x + enemy.width
+          && this.y + this.height - 4 > enemy.y
+          && this.y + this.height - 4 < enemy.y + enemy.height) {
           this.gameObjects.splice(j, 1);
           this.functToSwitch();
         }

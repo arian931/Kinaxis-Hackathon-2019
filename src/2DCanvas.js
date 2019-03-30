@@ -312,6 +312,13 @@ function draw() {
     ctx.drawImage(doorTilemap, 0, 128, 128, 128, 128 * (mapSize - 1) - worldPosX, 128 * (mapSize - 2) - worldPosY, 128, 128);
   }
 
+  // Sort the game objects based on its y.
+  gameObjects.sort((a, b) => (a.y > b.y ? 1 : -1));
+  for (let i = 0; i < gameObjects.length; i++) {
+    gameObjects[i].draw(ctx, worldPosX, worldPosY);
+  }
+
+  // Draw minimap and player.
   ctx.drawImage(minimap.canvas, minimapPosX, minimapPosY);
   ctx.fillStyle = 'blue';
   ctx.fillRect(
@@ -323,25 +330,6 @@ function draw() {
     minimap.canvas.width / mapSize,
     minimap.canvas.height / mapSize,
   );
-
-  // Sort the game objects based on its y.
-  gameObjects.sort((a, b) => (a.y > b.y ? 1 : -1));
-  for (let i = 0; i < gameObjects.length; i++) {
-    gameObjects[i].draw(ctx, worldPosX, worldPosY);
-    if (gameObjects[i] instanceof Key) {
-      const key = gameObjects[i];
-      ctx.fillStyle = 'pink';
-      ctx.fillRect(
-        minimapPosX
-        + (Math.floor((key.x + key.width / 2) / key.width) * minimap.canvas.width) / mapSize,
-        minimapPosY
-        + (Math.floor((key.y + key.height - 4) / key.height) * minimap.canvas.height)
-        / mapSize,
-        minimap.canvas.width / mapSize,
-        minimap.canvas.height / mapSize,
-      );
-    }
-  }
 }
 
 function gameLoop() {
