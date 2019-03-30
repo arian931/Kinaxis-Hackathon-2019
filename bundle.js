@@ -51779,6 +51779,8 @@ console.log('FUCKKKKKKKkkkkk !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 // require('./menu.js');
 const Enemy = require('./enemies/enemy');
 const Key = require('./key');
+const SpikeTrap = require('./spikeTrap');
+const TrapController = require('./trapController');
 const EnemyController = require('./enemyController');
 const KeyController = require('./keyController');
 const RecursiveMaze = require('./RecursiveMaze');
@@ -51810,6 +51812,7 @@ let worldPosY = 0;
 
 // eslint-disable-next-line no-undef
 const enemyController = new EnemyController();
+const trapController = new TrapController();
 const keyController = new KeyController();
 const Recursive = new RecursiveMaze(mapSize);
 const Camera = new PlayerCamera(ctx);
@@ -51834,6 +51837,7 @@ const Player = new MainCharacter(
 );
 gameObjects.push(Player);
 enemyController.spawnEnemies(mapArray, gameObjects);
+trapController.spawnTraps(mapArray, gameObjects);
 keyController.spawnKeys(mapArray, gameObjects);
 Camera.attachTo(Player);
 
@@ -52050,14 +52054,14 @@ function update() {
       if (
         mapArray[
         Math.floor((enemy.x + enemy.width / 2 + (enemy.width / 2) * enemy.xDir) / enemy.width)
-        ][Math.floor((enemy.y + enemy.height / 2) / enemy.height)] === 1
+        ][Math.floor((enemy.y + enemy.height / 2) / enemy.height)] !== 0
       ) {
         enemy.xDir *= -1;
       }
       if (
         mapArray[Math.floor((enemy.x + enemy.width / 2) / enemy.width)][
         Math.floor((enemy.y + enemy.height - 16 + (enemy.height / 2) * enemy.yDir) / enemy.height)
-        ] === 1
+        ] !== 0
       ) {
         enemy.yDir *= -1;
       }
@@ -52084,7 +52088,30 @@ function draw() {
   }
 
   // Sort the game objects based on its y.
-  gameObjects.sort((a, b) => (a.y > b.y ? 1 : -1));
+  gameObjects.sort((a, b) => {
+    if (a instanceof SpikeTrap) {
+      return -1;
+    }
+    if (b instanceof SpikeTrap) {
+      return 1;
+    }
+    if (a instanceof Key) {
+      if (a.y - a.height / 2 > b.y) {
+        return 1;
+      }
+      return -1;
+    }
+    if (b instanceof Key) {
+      if (b.y - b.height / 2 > a.y) {
+        return -1;
+      }
+      return 1;
+    }
+    if (a.y > b.y) {
+      return 1;
+    }
+    return -1;
+  });
   for (let i = 0; i < gameObjects.length; i++) {
     gameObjects[i].draw(ctx, worldPosX, worldPosY);
   }
@@ -52136,7 +52163,7 @@ function switchToThreeD() {
 window.requestAnimationFrame(gameLoop);
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./2DMainChar":4,"./RecursiveMaze":12,"./camera":14,"./enemies/enemy":15,"./enemyController":19,"./key":21,"./keyController":22}],4:[function(require,module,exports){
+},{"./2DMainChar":4,"./RecursiveMaze":12,"./camera":14,"./enemies/enemy":15,"./enemyController":19,"./key":21,"./keyController":22,"./spikeTrap":23,"./trapController":24}],4:[function(require,module,exports){
 /* eslint-disable no-plusplus */
 /* eslint-disable no-param-reassign */
 /* eslint-disable prefer-const */
@@ -52146,6 +52173,7 @@ window.requestAnimationFrame(gameLoop);
 // eslint-disable-next-line no-unused-vars
 const Enemy = require('./enemies/enemy');
 const Key = require('./key');
+const SpikeTrap = require('./spikeTrap');
 
 module.exports = class MainCharacter {
   constructor(x, y, width, height, mazeSize, mazeArray, context, gameObjects, functToSwitch) {
@@ -52241,6 +52269,18 @@ module.exports = class MainCharacter {
           this.keysCollected++;
         }
       }
+      if (this.gameObjects[j] instanceof SpikeTrap) {
+        // Contect with spike trap.
+        const trap = this.gameObjects[j];
+        if (trap.spriteIndex >= 1.1) {
+          if (this.x + this.width / 2 > trap.x
+            && this.x + this.width / 2 < trap.x + trap.width
+            && this.y + this.height > trap.y
+            && this.y + this.height < trap.y + trap.height) {
+            this.functToSwitch();
+          }
+        }
+      }
     }
   }
 
@@ -52306,7 +52346,7 @@ module.exports = class MainCharacter {
   }
 };
 
-},{"./enemies/enemy":15,"./key":21}],5:[function(require,module,exports){
+},{"./enemies/enemy":15,"./key":21,"./spikeTrap":23}],5:[function(require,module,exports){
 const THREE = require('three');
 /**
  * @author mrdoob / http://mrdoob.com/
@@ -54286,6 +54326,7 @@ module.exports = class KeyController {
     let keysSpawned = 0;
     const chanceMax = 150;
     let chance = chanceMax;
+    //gameObjects.push(new Key(128, 128));
     for (let y = 0; y < mapArray.length; y++) {
       for (let x = 0; x < mapArray[y].length; x++) {
         // Check for ground.
@@ -54307,4 +54348,60 @@ module.exports = class KeyController {
   }
 
 }
-},{"./key":21}]},{},[20]);
+},{"./key":21}],23:[function(require,module,exports){
+module.exports = class SpikeTrap {
+  constructor(x, y) {
+    this.x = x;
+    this.y = y;
+    this.width = 128;
+    this.height = 128;
+    this.sprite = new Image();
+    this.sprite.src = '../../Art/2D/spiketrap_spritesheet.png';
+    this.animationSize = 2;
+    this.spriteIndex = 0;
+    this.animationSpeed = 0.01;
+  }
+
+  update(dt) {
+    this.spriteIndex = (this.spriteIndex + this.animationSpeed) % this.animationSize;
+  }
+
+  draw(ctx, worldPosX, worldPosY) {
+    ctx.drawImage(
+      this.sprite,
+      this.width * Math.floor(this.spriteIndex),
+      0,
+      this.width,
+      this.height,
+      this.x - worldPosX,
+      this.y - worldPosY,
+      this.width,
+      this.height
+    );
+  }
+}
+},{}],24:[function(require,module,exports){
+const SpikeTrap = require('./spikeTrap');
+
+module.exports = class TrapController {
+  constructor() {
+    this.chanceMax = 100;
+    this.chance = this.chanceMax;
+  }
+
+  spawnTraps(mapArray, gameObjects) {
+    for (let y = 0; y < mapArray.length; y++) {
+      for (let x = 0; x < mapArray[y].length; x++) {
+        // Check for ground.
+        if (mapArray[x][y] === 0) {
+          if (Math.floor(Math.random() * this.chance) === 0) {
+            gameObjects.push(new SpikeTrap(x * 128, y * 128));
+            this.chance = this.chanceMax;
+          }
+          this.chance--;
+        }
+      }
+    }
+  }
+}
+},{"./spikeTrap":23}]},{},[20]);

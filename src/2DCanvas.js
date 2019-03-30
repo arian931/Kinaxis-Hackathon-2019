@@ -9,6 +9,8 @@ console.log('FUCKKKKKKKkkkkk !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 // require('./menu.js');
 const Enemy = require('./enemies/enemy');
 const Key = require('./key');
+const SpikeTrap = require('./spikeTrap');
+const TrapController = require('./trapController');
 const EnemyController = require('./enemyController');
 const KeyController = require('./keyController');
 const RecursiveMaze = require('./RecursiveMaze');
@@ -40,6 +42,7 @@ let worldPosY = 0;
 
 // eslint-disable-next-line no-undef
 const enemyController = new EnemyController();
+const trapController = new TrapController();
 const keyController = new KeyController();
 const Recursive = new RecursiveMaze(mapSize);
 const Camera = new PlayerCamera(ctx);
@@ -64,6 +67,7 @@ const Player = new MainCharacter(
 );
 gameObjects.push(Player);
 enemyController.spawnEnemies(mapArray, gameObjects);
+trapController.spawnTraps(mapArray, gameObjects);
 keyController.spawnKeys(mapArray, gameObjects);
 Camera.attachTo(Player);
 
@@ -280,14 +284,14 @@ function update() {
       if (
         mapArray[
         Math.floor((enemy.x + enemy.width / 2 + (enemy.width / 2) * enemy.xDir) / enemy.width)
-        ][Math.floor((enemy.y + enemy.height / 2) / enemy.height)] === 1
+        ][Math.floor((enemy.y + enemy.height / 2) / enemy.height)] !== 0
       ) {
         enemy.xDir *= -1;
       }
       if (
         mapArray[Math.floor((enemy.x + enemy.width / 2) / enemy.width)][
         Math.floor((enemy.y + enemy.height - 16 + (enemy.height / 2) * enemy.yDir) / enemy.height)
-        ] === 1
+        ] !== 0
       ) {
         enemy.yDir *= -1;
       }
@@ -314,7 +318,30 @@ function draw() {
   }
 
   // Sort the game objects based on its y.
-  gameObjects.sort((a, b) => (a.y > b.y ? 1 : -1));
+  gameObjects.sort((a, b) => {
+    if (a instanceof SpikeTrap) {
+      return -1;
+    }
+    if (b instanceof SpikeTrap) {
+      return 1;
+    }
+    if (a instanceof Key) {
+      if (a.y - a.height / 2 > b.y) {
+        return 1;
+      }
+      return -1;
+    }
+    if (b instanceof Key) {
+      if (b.y - b.height / 2 > a.y) {
+        return -1;
+      }
+      return 1;
+    }
+    if (a.y > b.y) {
+      return 1;
+    }
+    return -1;
+  });
   for (let i = 0; i < gameObjects.length; i++) {
     gameObjects[i].draw(ctx, worldPosX, worldPosY);
   }
