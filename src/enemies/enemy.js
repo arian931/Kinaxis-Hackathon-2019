@@ -5,8 +5,6 @@ module.exports = class Enemy {
     this.dir = 0; // 0 = horizontal, 1 = vertical.
     this.width = 128;
     this.height = 128;
-    this.xDir = 0;
-    this.yDir = 0;
     this.speed = 0;
     this.hSpeed = 0;
     this.vSpeed = 0;
