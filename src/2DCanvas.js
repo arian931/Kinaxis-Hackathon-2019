@@ -316,16 +316,50 @@ function update() {
       }
 
       // x collision
-      if (mapArray[Math.floor((enemy.x + enemy.width / 2 + (enemy.width / 4 * enemy.xDir)) / enemy.width)]
-      [Math.floor((enemy.y + enemy.height / 2) / enemy.height)] !== 0) {
-        enemy.xDir *= -1;
+      if (enemy.xDir === 1) {
+        // Right collision
+        if (mapArray[Math.floor((enemy.x + enemy.width / 2 + enemy.width / 4) / enemy.width)]
+        [Math.floor((enemy.y + enemy.height / 2) / enemy.height)] !== 0) {
+          // The 4 is to make sure the enemy collides close enough to the wall.
+          enemy.xDir = -1;
+        }
+      } else if (enemy.xDir === -1) {
+        // Left collision
+        if (mapArray[Math.floor((enemy.x + enemy.width / 2 - enemy.width / 4) / enemy.width)]
+        [Math.floor((enemy.y + enemy.height / 2) / enemy.height)] !== 0) {
+          // The 4 is to make sure the enemy collides close enough to the wall.
+          enemy.xDir = 1;
+        }
       }
 
-      // y collision.
-      if (mapArray[Math.floor((enemy.x + enemy.width / 2) / enemy.width)]
-      [Math.floor((enemy.y + enemy.height - (enemy.yDir === 1 ? 24 : 0) + (enemy.height / 4 * enemy.yDir)) / enemy.height)] !== 0) {
-        enemy.yDir *= -1;
+      // y collision
+      if (enemy.yDir === 1) {
+        // Down collision
+        if (mapArray[Math.floor((enemy.x + enemy.width / 2) / enemy.width)]
+        [Math.floor(((enemy.y + enemy.height - 24) + enemy.height / 4) / enemy.height)] !== 0) {
+          // The 24 is to make sure the enemy collides close enough to the bottom wall.
+          // The 4 is to make sure the enemy collides close enough to the wall.
+          enemy.yDir *= -1;
+        }
+      } else if (enemy.yDir === -1) {
+        // Up collision
+        if (mapArray[Math.floor((enemy.x + enemy.width / 2) / enemy.width)]
+        [Math.floor(((enemy.y + enemy.height) - enemy.height / 4) / enemy.height)] !== 0) {
+          // The 4 is to make sure the enemy collides close enough to the wall.
+          enemy.yDir *= -1;
+        }
       }
+
+      // if (mapArray[Math.floor((enemy.x + enemy.width / 2 + (enemy.width / 4 * enemy.xDir)) / enemy.width)]
+      // [Math.floor((enemy.y + enemy.height / 2) / enemy.height)] !== 0) {
+      //   enemy.xDir *= -1;
+      // }
+
+      // // y collision.
+      // if (mapArray[Math.floor((enemy.x + enemy.width / 2) / enemy.width)]
+      // [Math.floor((enemy.y + enemy.height - (enemy.yDir === 1 ? 24 : 0) + (enemy.height / 4 * enemy.yDir)) / enemy.height)] !== 0) {
+      //   enemy.yDir *= -1;
+      // }
     }
   }
 }
@@ -421,7 +455,7 @@ function switchBackTo2D() {
   // console.log('2d is back');
   if (InThreeD) {
     InThreeD = false;
-    gameLoop(); s
+    gameLoop();
   }
 }
 function funToCheckForSwitchBack() {

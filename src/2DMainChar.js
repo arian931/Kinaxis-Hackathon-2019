@@ -167,6 +167,13 @@ module.exports = class MainCharacter {
       this.vSpeed = this.playerSpeed;
       this.y += this.vSpeed;
     }
+    // this.posTopX = parseInt((this.x + 50) / ((this.CWidth * 128) / this.CWidth));
+    // if (this.mazeArray[this.posTopX][Math.floor((this.y + 50) / this.height)] === 0
+    //   || this.mazeArray[this.posTopX][Math.floor((this.y + this.height - 50) / this.height)] === 0) {
+    //   this.vSpeed = this.playerSpeed;
+    //   this.y += this.vSpeed;
+    // }
+
   }
 
   checkMoveNegY() {
@@ -179,5 +186,11 @@ module.exports = class MainCharacter {
       this.vSpeed = -this.playerSpeed;
       this.y += this.vSpeed;
     }
+    // this.posTopX = parseInt((this.x + 50) / ((this.CWidth * 128) / this.CWidth));
+    // if (this.mazeArray[this.posTopX][Math.floor(this.y / this.height)] === 0
+    //   || this.mazeArray[this.posTopX][Math.floor((this.y + this.height - 64) / this.height)] === 0) {
+    //   this.vSpeed = -this.playerSpeed;
+    //   this.y += this.vSpeed;
+    // }
   }
 };
