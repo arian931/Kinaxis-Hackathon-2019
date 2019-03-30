@@ -52051,22 +52051,47 @@ function update() {
     gameObjects[i].update(dt);
     if (gameObjects[i] instanceof Enemy) {
       const enemy = gameObjects[i];
-      if (
-        mapArray[
-        Math.floor((enemy.x + enemy.width / 2 + (enemy.width / 2) * enemy.xDir) / enemy.width)
-        ][Math.floor((enemy.y + enemy.height / 2) / enemy.height)] !== 0
-      ) {
+      // if (
+      //   mapArray[
+      //   Math.floor((enemy.x + enemy.width / 2 + (enemy.width / 2) * enemy.xDir) / enemy.width)
+      //   ][Math.floor((enemy.y + enemy.height / 2) / enemy.height)] !== 0
+      // ) {
+      //   enemy.xDir *= -1;
+      // }
+      // if (
+      //   mapArray[Math.floor((enemy.x + enemy.width / 2) / enemy.width)][
+      //   Math.floor((enemy.y + enemy.height - 16 + (enemy.height / 2) * enemy.yDir) / enemy.height)
+      //   ] !== 0
+      // ) {
+      //   enemy.yDir *= -1;
+      // }
+
+      // Sometimes the enemies spawn outside the maze.
+      // This prevents them from doing so.
+      while (enemy.y <= 0) {
+        enemy.y += 2;
+      }
+      while (enemy.y >= (mapSize - 1) * 128) {
+        enemy.y -= 2;
+      }
+      while (enemy.x <= 0) {
+        enemy.x += 2;
+      }
+      while (enemy.x >= (mapSize - 1) * 128) {
+        enemy.x -= 2;
+      }
+
+      // x collision
+      if (mapArray[Math.floor((enemy.x + enemy.width / 2 + (enemy.width / 4 * enemy.xDir)) / enemy.width)]
+      [Math.floor((enemy.y + enemy.height / 2) / enemy.height)] !== 0) {
         enemy.xDir *= -1;
       }
-      if (
-        mapArray[Math.floor((enemy.x + enemy.width / 2) / enemy.width)][
-        Math.floor((enemy.y + enemy.height - 16 + (enemy.height / 2) * enemy.yDir) / enemy.height)
-        ] !== 0
-      ) {
+
+      // y collision.
+      if (mapArray[Math.floor((enemy.x + enemy.width / 2) / enemy.width)]
+      [Math.floor((enemy.y + enemy.height - (enemy.yDir === 1 ? 24 : 0) + (enemy.height / 4 * enemy.yDir)) / enemy.height)] !== 0) {
         enemy.yDir *= -1;
       }
-      // x collision
-      // if (mapArray[enemy.x + enemy.width / 2 + (enemy.width / 2 * enemy.xDir)])
     }
   }
 
@@ -52263,17 +52288,17 @@ module.exports = class MainCharacter {
       this.spriteIndexY = this.spriteDir + 1;
     }
     for (let j = 0; j < this.gameObjects.length; j++) {
-      // if (this.gameObjects[j] instanceof Enemy) {
-      //   // Contact with enemy
-      //   const enemy = this.gameObjects[j];
-      //   if (this.x + this.width / 2 > enemy.x
-      //     && this.x + this.width / 2 < enemy.x + enemy.width
-      //     && this.y + this.height / 2 > enemy.y
-      //     && this.y + this.height / 2 < enemy.y + enemy.height) {
-      //     this.gameObjects.splice(j, 1);
-      //     this.functToSwitch();
-      //   }
-      // }
+      if (this.gameObjects[j] instanceof Enemy) {
+        // Contact with enemy
+        const enemy = this.gameObjects[j];
+        if (this.x + this.width / 2 > enemy.x
+          && this.x + this.width / 2 < enemy.x + enemy.width
+          && this.y + this.height / 2 > enemy.y
+          && this.y + this.height / 2 < enemy.y + enemy.height) {
+          this.gameObjects.splice(j, 1);
+          this.functToSwitch();
+        }
+      }
       if (this.gameObjects[j] instanceof Key) {
         // Contact with key
         const key = this.gameObjects[j];
@@ -53772,12 +53797,46 @@ module.exports = class Enemy {
     this.spriteIndexX = 0;
     this.spriteIndexY = 1;
     this.animationSpeed = 0;
+    this.sprite = new Image();
+    this.CWidth = 29;
+    this.CHeight = 29;
+    this.posX = parseInt(this.x / ((this.CWidth * 128) / this.CWidth), 10);
+    this.posY = parseInt(this.y / ((this.CHeight * 128) / this.CHeight), 10);
+    this.xDir = (dir === 0 ? 1 : 0);
+    this.yDir = (dir === 1 ? 1 : 0);
   }
 
-  update() { }
+  update(dt) {
+    this.hSpeed = this.speed * this.xDir * dt;
+    this.vSpeed = this.speed * this.yDir * dt;
+    this.x += this.hSpeed;
+    this.y += this.vSpeed;
 
-  draw(ctx) { }
-}
+    this.spriteIndexX = (this.spriteIndexX + this.animationSpeed) % this.animationSize;
+
+    if (this.xDir !== 0) {
+      this.spriteIndexY = this.xDir === 1 ? 1 : 3;
+    } else {
+      this.spriteIndexY = this.yDir === 1 ? 2 : 4;
+    }
+    this.posX = parseInt((this.x + 50) / ((this.CWidth * 128) / this.CWidth), 10);
+    this.posY = parseInt((this.y + 20) / ((this.CHeight * 128) / this.CHeight), 10);
+  }
+
+  draw(ctx, worldPosX, worldPosY) {
+    ctx.drawImage(
+      this.sprite,
+      this.width * Math.floor(this.spriteIndexX),
+      this.height * this.spriteIndexY,
+      this.width,
+      this.height,
+      this.x - worldPosX,
+      this.y - worldPosY,
+      this.width,
+      this.height,
+    );
+  }
+};
 
 },{}],16:[function(require,module,exports){
 const Enemy = require('./enemy');
@@ -53785,150 +53844,39 @@ const Enemy = require('./enemy');
 module.exports = class EnemyAnxiety extends Enemy {
   constructor(x, y, dir) {
     super(x, y, dir);
-    this.xDir = (dir === 0 ? 1 : 0);
-    this.yDir = (dir === 1 ? 1 : 0);
     this.speed = 220;
     this.animationSpeed = 0.18;
-    this.sprite = new Image();
     this.sprite.src = '../../Art/2D/enemy_anxiety_spritesheet.png';
     this.animationSize = 3;
-    this.CWidth = 29;
-    this.CHeight = 29;
-    this.posX = parseInt(this.x / ((this.CWidth * 128) / this.CWidth));
-    this.posY = parseInt(this.y / ((this.CHeight * 128) / this.CHeight));
   }
+};
 
-  update(dt) {
-    this.hSpeed = this.speed * this.xDir * dt;
-    this.vSpeed = this.speed * this.yDir * dt;
-    this.x += this.hSpeed;
-    this.y += this.vSpeed;
-
-    this.spriteIndexX = (this.spriteIndexX + this.animationSpeed) % this.animationSize;
-
-    if (this.xDir !== 0) {
-      this.spriteIndexY = this.xDir === 1 ? 1 : 3;
-    } else {
-      this.spriteIndexY = this.yDir === 1 ? 2 : 4;
-    }
-    this.posX = parseInt((this.x + 50) / ((this.CWidth * 128) / this.CWidth));
-    this.posY = parseInt((this.y + 20) / ((this.CHeight * 128) / this.CHeight));
-  }
-
-  draw(ctx, worldPosX, worldPosY) {
-    ctx.drawImage(
-      this.sprite,
-      this.width * Math.floor(this.spriteIndexX),
-      this.height * this.spriteIndexY,
-      this.width,
-      this.height,
-      this.x - worldPosX,
-      this.y - worldPosY,
-      this.width,
-      this.height,
-    );
-  }
-}
 },{"./enemy":15}],17:[function(require,module,exports){
 const Enemy = require('./enemy');
 
 module.exports = class EnemyBPD extends Enemy {
   constructor(x, y, dir) {
     super(x, y, dir);
-    this.xDir = (dir === 0 ? 1 : 0);
-    this.yDir = (dir === 1 ? 1 : 0);
     this.speed = 150;
     this.animationSpeed = 0.1;
-    this.sprite = new Image();
     this.sprite.src = '../../Art/2D/enemy_borderline_personality_disorder_spritesheet.png';
     this.animationSize = 4;
-    this.CWidth = 29;
-    this.CHeight = 29;
-    this.posX = parseInt(this.x / ((this.CWidth * 128) / this.CWidth));
-    this.posY = parseInt(this.y / ((this.CHeight * 128) / this.CHeight));
   }
+};
 
-  update(dt) {
-    this.hSpeed = this.speed * this.xDir * dt;
-    this.vSpeed = this.speed * this.yDir * dt;
-    this.x += this.hSpeed;
-    this.y += this.vSpeed;
-
-    this.spriteIndexX = (this.spriteIndexX + this.animationSpeed) % this.animationSize;
-
-    if (this.xDir !== 0) {
-      this.spriteIndexY = this.xDir === 1 ? 1 : 3;
-    } else {
-      this.spriteIndexY = this.yDir === 1 ? 2 : 4;
-    }
-    this.posX = parseInt((this.x + 50) / ((this.CWidth * 128) / this.CWidth));
-    this.posY = parseInt((this.y + 20) / ((this.CHeight * 128) / this.CHeight));
-  }
-
-  draw(ctx, worldPosX, worldPosY) {
-    ctx.drawImage(
-      this.sprite,
-      this.width * Math.floor(this.spriteIndexX),
-      this.height * this.spriteIndexY,
-      this.width,
-      this.height,
-      this.x - worldPosX,
-      this.y - worldPosY,
-      this.width,
-      this.height,
-    );
-  }
-}
 },{"./enemy":15}],18:[function(require,module,exports){
 const Enemy = require('./enemy');
 
 module.exports = class EnemyDepression extends Enemy {
   constructor(x, y, dir) {
     super(x, y, dir);
-    this.xDir = (dir === 0 ? 1 : 0);
-    this.yDir = (dir === 1 ? 1 : 0);
     this.speed = 80;
     this.animationSpeed = 0.07;
-    this.sprite = new Image();
     this.sprite.src = '../../Art/2D/enemy_depression_spritesheet.png';
     this.animationSize = 4;
-    this.CWidth = 29;
-    this.CHeight = 29;
-    this.posX = parseInt(this.x / ((this.CWidth * 128) / this.CWidth));
-    this.posY = parseInt(this.y / ((this.CHeight * 128) / this.CHeight));
   }
+};
 
-  update(dt) {
-    this.hSpeed = this.speed * this.xDir * dt;
-    this.vSpeed = this.speed * this.yDir * dt;
-    this.x += this.hSpeed;
-    this.y += this.vSpeed;
-
-    this.spriteIndexX = (this.spriteIndexX + this.animationSpeed) % this.animationSize;
-
-    if (this.xDir !== 0) {
-      this.spriteIndexY = this.xDir === 1 ? 1 : 3;
-    } else {
-      this.spriteIndexY = this.yDir === 1 ? 2 : 4;
-    }
-    this.posX = parseInt((this.x + 50) / ((this.CWidth * 128) / this.CWidth));
-    this.posY = parseInt((this.y + 20) / ((this.CHeight * 128) / this.CHeight));
-  }
-
-  draw(ctx, worldPosX, worldPosY) {
-    ctx.drawImage(
-      this.sprite,
-      this.width * Math.floor(this.spriteIndexX),
-      this.height * this.spriteIndexY,
-      this.width,
-      this.height,
-      this.x - worldPosX,
-      this.y - worldPosY,
-      this.width,
-      this.height,
-    );
-  }
-}
 },{"./enemy":15}],19:[function(require,module,exports){
 const EnemyAnxiety = require('./enemies/enemyAnxiety');
 const EnemyBPD = require('./enemies/enemyBPD');
@@ -53959,21 +53907,21 @@ module.exports = class EnemyController {
               case 0:
                 gameObjects.push(new EnemyDepression(
                   x * 128,
-                  y * 128 - 10,
+                  y * 128 - 24,
                   (mapArray[x][y - 1] === 1 && mapArray[x][y + 1] === 1 ? 0 : 1)
                 ));
                 break;
               case 1:
                 gameObjects.push(new EnemyAnxiety(
                   x * 128,
-                  y * 128 - 10,
+                  y * 128 - 24,
                   (mapArray[x][y - 1] === 1 && mapArray[x][y + 1] === 1 ? 0 : 1)
                 ));
                 break;
               case 2:
                 gameObjects.push(new EnemyBPD(
                   x * 128,
-                  y * 128 - 10,
+                  y * 128 - 24,
                   (mapArray[x][y - 1] === 1 && mapArray[x][y + 1] === 1 ? 0 : 1)
                 ));
                 break;

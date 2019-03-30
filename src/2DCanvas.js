@@ -286,22 +286,47 @@ function update() {
     gameObjects[i].update(dt);
     if (gameObjects[i] instanceof Enemy) {
       const enemy = gameObjects[i];
-      if (
-        mapArray[
-        Math.floor((enemy.x + enemy.width / 2 + (enemy.width / 2) * enemy.xDir) / enemy.width)
-        ][Math.floor((enemy.y + enemy.height / 2) / enemy.height)] !== 0
-      ) {
+      // if (
+      //   mapArray[
+      //   Math.floor((enemy.x + enemy.width / 2 + (enemy.width / 2) * enemy.xDir) / enemy.width)
+      //   ][Math.floor((enemy.y + enemy.height / 2) / enemy.height)] !== 0
+      // ) {
+      //   enemy.xDir *= -1;
+      // }
+      // if (
+      //   mapArray[Math.floor((enemy.x + enemy.width / 2) / enemy.width)][
+      //   Math.floor((enemy.y + enemy.height - 16 + (enemy.height / 2) * enemy.yDir) / enemy.height)
+      //   ] !== 0
+      // ) {
+      //   enemy.yDir *= -1;
+      // }
+
+      // Sometimes the enemies spawn outside the maze.
+      // This prevents them from doing so.
+      while (enemy.y <= 0) {
+        enemy.y += 2;
+      }
+      while (enemy.y >= (mapSize - 1) * 128) {
+        enemy.y -= 2;
+      }
+      while (enemy.x <= 0) {
+        enemy.x += 2;
+      }
+      while (enemy.x >= (mapSize - 1) * 128) {
+        enemy.x -= 2;
+      }
+
+      // x collision
+      if (mapArray[Math.floor((enemy.x + enemy.width / 2 + (enemy.width / 4 * enemy.xDir)) / enemy.width)]
+      [Math.floor((enemy.y + enemy.height / 2) / enemy.height)] !== 0) {
         enemy.xDir *= -1;
       }
-      if (
-        mapArray[Math.floor((enemy.x + enemy.width / 2) / enemy.width)][
-        Math.floor((enemy.y + enemy.height - 16 + (enemy.height / 2) * enemy.yDir) / enemy.height)
-        ] !== 0
-      ) {
+
+      // y collision.
+      if (mapArray[Math.floor((enemy.x + enemy.width / 2) / enemy.width)]
+      [Math.floor((enemy.y + enemy.height - (enemy.yDir === 1 ? 24 : 0) + (enemy.height / 4 * enemy.yDir)) / enemy.height)] !== 0) {
         enemy.yDir *= -1;
       }
-      // x collision
-      // if (mapArray[enemy.x + enemy.width / 2 + (enemy.width / 2 * enemy.xDir)])
     }
   }
 }
