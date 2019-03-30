@@ -20,6 +20,9 @@ canvas.height = window.innerHeight;
 const tilemap = new Image();
 tilemap.src = '../../Art/2D/tilemap.png';
 
+const doorTilemap = new Image();
+doorTilemap.src = '../../Art/2D/door_spritesheet.png';
+
 // eslint-disable-next-line no-unused-vars
 const gameObjects = [];
 
@@ -298,6 +301,17 @@ function draw() {
   Camera.draw(worldPosX, worldPosY);
   // Player.draw(ctx, worldPosX, worldPosY);
 
+  // draw door.
+  if (Player.keysCollected === keyController.maxSpawnKeys) {
+    // Opened doors.
+    ctx.drawImage(doorTilemap, 128, 0, 128, 128, 128 * (mapSize - 1) - worldPosX, 128 * (mapSize - 3) - worldPosY, 128, 128);
+    ctx.drawImage(doorTilemap, 128, 128, 128, 128, 128 * (mapSize - 1) - worldPosX, 128 * (mapSize - 2) - worldPosY, 128, 128);
+  } else {
+    // Closed doors.
+    ctx.drawImage(doorTilemap, 0, 0, 128, 128, 128 * (mapSize - 1) - worldPosX, 128 * (mapSize - 3) - worldPosY, 128, 128);
+    ctx.drawImage(doorTilemap, 0, 128, 128, 128, 128 * (mapSize - 1) - worldPosX, 128 * (mapSize - 2) - worldPosY, 128, 128);
+  }
+
   ctx.drawImage(minimap.canvas, minimapPosX, minimapPosY);
   ctx.fillStyle = 'blue';
   ctx.fillRect(
@@ -310,6 +324,7 @@ function draw() {
     minimap.canvas.height / mapSize,
   );
 
+  // Sort the game objects based on its y.
   gameObjects.sort((a, b) => (a.y > b.y ? 1 : -1));
   for (let i = 0; i < gameObjects.length; i++) {
     gameObjects[i].draw(ctx, worldPosX, worldPosY);

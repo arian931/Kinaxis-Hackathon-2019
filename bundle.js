@@ -51789,6 +51789,9 @@ canvas.height = window.innerHeight;
 const tilemap = new Image();
 tilemap.src = '../../Art/2D/tilemap.png';
 
+const doorTilemap = new Image();
+doorTilemap.src = '../../Art/2D/door_spritesheet.png';
+
 // eslint-disable-next-line no-unused-vars
 const gameObjects = [];
 
@@ -52067,6 +52070,17 @@ function draw() {
   Camera.draw(worldPosX, worldPosY);
   // Player.draw(ctx, worldPosX, worldPosY);
 
+  // draw door.
+  if (Player.keysCollected === keyController.maxSpawnKeys) {
+    // Opened doors.
+    ctx.drawImage(doorTilemap, 128, 0, 128, 128, 128 * (mapSize - 1) - worldPosX, 128 * (mapSize - 3) - worldPosY, 128, 128);
+    ctx.drawImage(doorTilemap, 128, 128, 128, 128, 128 * (mapSize - 1) - worldPosX, 128 * (mapSize - 2) - worldPosY, 128, 128);
+  } else {
+    // Closed doors.
+    ctx.drawImage(doorTilemap, 0, 0, 128, 128, 128 * (mapSize - 1) - worldPosX, 128 * (mapSize - 3) - worldPosY, 128, 128);
+    ctx.drawImage(doorTilemap, 0, 128, 128, 128, 128 * (mapSize - 1) - worldPosX, 128 * (mapSize - 2) - worldPosY, 128, 128);
+  }
+
   ctx.drawImage(minimap.canvas, minimapPosX, minimapPosY);
   ctx.fillStyle = 'blue';
   ctx.fillRect(
@@ -52079,6 +52093,7 @@ function draw() {
     minimap.canvas.height / mapSize,
   );
 
+  // Sort the game objects based on its y.
   gameObjects.sort((a, b) => (a.y > b.y ? 1 : -1));
   for (let i = 0; i < gameObjects.length; i++) {
     gameObjects[i].draw(ctx, worldPosX, worldPosY);
@@ -52173,6 +52188,7 @@ module.exports = class MainCharacter {
     this.moveDown = false;
     this.counter = 10;
     this.playerSpeed = 4;
+    this.keysCollected = 0;
     this.gameObjects = gameObjects;
     this.functToSwitch = functToSwitch;
   }
@@ -52215,17 +52231,24 @@ module.exports = class MainCharacter {
       if (this.gameObjects[j] instanceof Enemy) {
         // Contact with enemy
         const enemy = this.gameObjects[j];
-        if (this.x + this.width / 2 > enemy.x + 32
-          && this.x + this.width / 2 < enemy.x + enemy.width - 32
-          && this.y + this.height / 2 > enemy.y + 32
-          && this.y + this.height / 2 < enemy.y + enemy.height - 32) {
+        if (this.x + this.width / 2 > enemy.x + 16
+          && this.x + this.width / 2 < enemy.x + enemy.width - 16
+          && this.y + this.height / 2 > enemy.y + 16
+          && this.y + this.height / 2 < enemy.y + enemy.height - 16) {
           this.gameObjects.splice(j, 1);
           this.functToSwitch();
         }
       }
       if (this.gameObjects[j] instanceof Key) {
         // Contact with key
-        // this.gameObjects.splice(j, 1);
+        const key = this.gameObjects[j];
+        if (this.x + this.width / 2 > key.x + 32
+          && this.x + this.width / 2 < key.x + key.width - 32
+          && this.y + this.height > key.y + key.height / 2 - 32
+          && this.y + this.height < key.y + key.height / 2 + 32) {
+          this.gameObjects.splice(j, 1);
+          this.keysCollected++;
+        }
       }
     }
   }
@@ -54262,12 +54285,11 @@ module.exports = class Key {
 const Key = require('./key');
 
 module.exports = class KeyController {
-  // constructor() {
-  //   // this.keys = [];
-  // }
+  constructor() {
+    this.maxSpawnKeys = 3;
+  }
 
   spawnKeys(mapArray, gameObjects) {
-    const maxSpawnKeys = 3;
     let keysSpawned = 0;
     const chanceMax = 150;
     let chance = chanceMax;
@@ -54281,7 +54303,7 @@ module.exports = class KeyController {
           gameObjects.push(new Key(x * 128, y * 128));
           console.log('good');
           keysSpawned++;
-          if (keysSpawned === maxSpawnKeys) {
+          if (keysSpawned === this.maxSpawnKeys) {
             return;
           }
           chance = chanceMax;

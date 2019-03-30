@@ -1,12 +1,11 @@
 const Key = require('./key');
 
 module.exports = class KeyController {
-  // constructor() {
-  //   // this.keys = [];
-  // }
+  constructor() {
+    this.maxSpawnKeys = 3;
+  }
 
   spawnKeys(mapArray, gameObjects) {
-    const maxSpawnKeys = 3;
     let keysSpawned = 0;
     const chanceMax = 150;
     let chance = chanceMax;
@@ -20,7 +19,7 @@ module.exports = class KeyController {
           gameObjects.push(new Key(x * 128, y * 128));
           console.log('good');
           keysSpawned++;
-          if (keysSpawned === maxSpawnKeys) {
+          if (keysSpawned === this.maxSpawnKeys) {
             return;
           }
           chance = chanceMax;

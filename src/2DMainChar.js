@@ -40,6 +40,7 @@ module.exports = class MainCharacter {
     this.moveDown = false;
     this.counter = 10;
     this.playerSpeed = 4;
+    this.keysCollected = 0;
     this.gameObjects = gameObjects;
     this.functToSwitch = functToSwitch;
   }
@@ -92,7 +93,14 @@ module.exports = class MainCharacter {
       }
       if (this.gameObjects[j] instanceof Key) {
         // Contact with key
-        // this.gameObjects.splice(j, 1);
+        const key = this.gameObjects[j];
+        if (this.x + this.width / 2 > key.x + 32
+          && this.x + this.width / 2 < key.x + key.width - 32
+          && this.y + this.height > key.y + key.height / 2 - 32
+          && this.y + this.height < key.y + key.height / 2 + 32) {
+          this.gameObjects.splice(j, 1);
+          this.keysCollected++;
+        }
       }
     }
   }
