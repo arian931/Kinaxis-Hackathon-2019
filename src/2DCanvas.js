@@ -17,12 +17,9 @@ const RecursiveMaze = require('./RecursiveMaze');
 const PlayerCamera = require('./camera');
 const MainCharacter = require('./2DMainChar');
 
-<<<<<<< HEAD
 const blurb = document.getElementById('blurb');
 const cxx = blurb.getContext('2d');
 
-=======
->>>>>>> c3f6aea0bd3e0f1d577a370fffb968ba018a2700
 
 console.log(canvas);
 
@@ -424,7 +421,7 @@ function switchBackTo2D() {
   // console.log('2d is back');
   if (InThreeD) {
     InThreeD = false;
-    gameLoop();s
+    gameLoop(); s
   }
 }
 function funToCheckForSwitchBack() {
