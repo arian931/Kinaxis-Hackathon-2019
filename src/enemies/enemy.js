@@ -5,7 +5,7 @@ module.exports = class Enemy {
     this.dir = 0; // 0 = horizontal, 1 = vertical.
     this.width = 128;
     this.height = 128;
-    this.speed = 0;
+    this.speed = 20;
     this.hSpeed = 0;
     this.vSpeed = 0;
     this.spriteIndexX = 0;
@@ -35,8 +35,8 @@ module.exports = class Enemy {
     this.vSpeed = this.speed * this.yDir * dt;
 
     // Add the horizontal and vertical speed to enemy's position.
-    this.x += this.hSpeed;
-    this.y += this.vSpeed;
+    // this.x += this.hSpeed;
+    // this.y += this.vSpeed;
 
     // Increase the sprite's frame position.
     this.spriteIndexX = (this.spriteIndexX + this.animationSpeed) % this.animationSize;
@@ -59,8 +59,8 @@ module.exports = class Enemy {
     console.log(x);
     const currentPosX = Math.floor((this.x + this.width / 2) / 128);
     const currentPosY = Math.floor((this.y + this.height / 2) / 128);
-    this.x += this.speed * (x - currentPosX);
-    this.y += this.speed * (y - currentPosY);
+    this.x += this.speed * (x - currentPosX > 0 ? 1 : -1);
+    this.y += this.speed * (y - currentPosY > 0 ? 1 : -1);
     if (currentPosX === x && currentPosY === y) {
       console.log('test');
       const dirs = []; // 0 = right, 1 = down, 2 = left, 3 = up.
