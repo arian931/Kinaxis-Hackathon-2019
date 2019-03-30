@@ -48381,8 +48381,7 @@ const PlayerCamera = require('./camera');
 const MainCharacter = require('./2DMainChar');
 
 const blurb = document.getElementById('blurb');
-const cxx = blurb.getContext('2d');
-
+// const cxx = blurb.getContext('2d');
 
 console.log(canvas);
 
@@ -48681,15 +48680,21 @@ function update() {
       // x collision
       if (enemy.xDir === 1) {
         // Right collision
-        if (mapArray[Math.floor((enemy.x + enemy.width / 2 + enemy.width / 4) / enemy.width)]
-        [Math.floor((enemy.y + enemy.height / 2) / enemy.height)] !== 0) {
+        if (
+          mapArray[Math.floor((enemy.x + enemy.width / 2 + enemy.width / 4) / enemy.width)][
+          Math.floor((enemy.y + enemy.height / 2) / enemy.height)
+          ] !== 0
+        ) {
           // The 4 is to make sure the enemy collides close enough to the wall.
           enemy.xDir = -1;
         }
       } else if (enemy.xDir === -1) {
         // Left collision
-        if (mapArray[Math.floor((enemy.x + enemy.width / 2 - enemy.width / 4) / enemy.width)]
-        [Math.floor((enemy.y + enemy.height / 2) / enemy.height)] !== 0) {
+        if (
+          mapArray[Math.floor((enemy.x + enemy.width / 2 - enemy.width / 4) / enemy.width)][
+          Math.floor((enemy.y + enemy.height / 2) / enemy.height)
+          ] !== 0
+        ) {
           // The 4 is to make sure the enemy collides close enough to the wall.
           enemy.xDir = 1;
         }
@@ -48698,16 +48703,22 @@ function update() {
       // y collision
       if (enemy.yDir === 1) {
         // Down collision
-        if (mapArray[Math.floor((enemy.x + enemy.width / 2) / enemy.width)]
-        [Math.floor(((enemy.y + enemy.height - 24) + enemy.height / 4) / enemy.height)] !== 0) {
+        if (
+          mapArray[Math.floor((enemy.x + enemy.width / 2) / enemy.width)][
+          Math.floor((enemy.y + enemy.height - 24 + enemy.height / 4) / enemy.height)
+          ] !== 0
+        ) {
           // The 24 is to make sure the enemy collides close enough to the bottom wall.
           // The 4 is to make sure the enemy collides close enough to the wall.
           enemy.yDir *= -1;
         }
       } else if (enemy.yDir === -1) {
         // Up collision
-        if (mapArray[Math.floor((enemy.x + enemy.width / 2) / enemy.width)]
-        [Math.floor(((enemy.y + enemy.height) - enemy.height / 4) / enemy.height)] !== 0) {
+        if (
+          mapArray[Math.floor((enemy.x + enemy.width / 2) / enemy.width)][
+          Math.floor((enemy.y + enemy.height - enemy.height / 4) / enemy.height)
+          ] !== 0
+        ) {
           // The 4 is to make sure the enemy collides close enough to the wall.
           enemy.yDir *= -1;
         }
@@ -48814,10 +48825,10 @@ function draw() {
   ctx.fillStyle = 'blue';
   ctx.fillRect(
     minimapPosX
-      + (Math.floor((Player.x + Player.width / 2) / Player.width) * minimap.canvas.width) / mapSize,
+    + (Math.floor((Player.x + Player.width / 2) / Player.width) * minimap.canvas.width) / mapSize,
     minimapPosY
-      + (Math.floor((Player.y + Player.height - 4) / Player.height) * minimap.canvas.height)
-        / mapSize,
+    + (Math.floor((Player.y + Player.height - 4) / Player.height) * minimap.canvas.height)
+    / mapSize,
     minimap.canvas.width / mapSize,
     minimap.canvas.height / mapSize,
   );
@@ -48839,6 +48850,7 @@ function draw() {
     }
   }
 
+  // Draw the walls over the player.
   if (mapArray[Math.floor((Player.x + Player.width / 2) / Player.width) - 1][Math.floor((Player.y + Player.height) / Player.height)] === 1) {
     ctx.drawImage(
       buffer.canvas,
@@ -48852,7 +48864,6 @@ function draw() {
       Player.height
     );
   }
-
   if (mapArray[Math.floor((Player.x + Player.width / 2) / Player.width)][Math.floor((Player.y + Player.height) / Player.height)] === 1) {
     ctx.drawImage(
       buffer.canvas,
@@ -48866,7 +48877,6 @@ function draw() {
       Player.height
     );
   }
-
   if (mapArray[Math.floor((Player.x + Player.width / 2) / Player.width) + 1][Math.floor((Player.y + Player.height) / Player.height)] === 1) {
     ctx.drawImage(
       buffer.canvas,
