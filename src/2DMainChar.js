@@ -81,17 +81,17 @@ module.exports = class MainCharacter {
       this.spriteIndexY = this.spriteDir + 1;
     }
     for (let j = 0; j < this.gameObjects.length; j++) {
-      // if (this.gameObjects[j] instanceof Enemy) {
-      //   // Contact with enemy
-      //   const enemy = this.gameObjects[j];
-      //   if (this.x + this.width / 2 > enemy.x
-      //     && this.x + this.width / 2 < enemy.x + enemy.width
-      //     && this.y + this.height / 2 > enemy.y
-      //     && this.y + this.height / 2 < enemy.y + enemy.height) {
-      //     this.gameObjects.splice(j, 1);
-      //     this.functToSwitch();
-      //   }
-      // }
+      if (this.gameObjects[j] instanceof Enemy) {
+        // Contact with enemy
+        const enemy = this.gameObjects[j];
+        if (this.x + this.width / 2 > enemy.x
+          && this.x + this.width / 2 < enemy.x + enemy.width
+          && this.y + this.height / 2 > enemy.y
+          && this.y + this.height / 2 < enemy.y + enemy.height) {
+          this.gameObjects.splice(j, 1);
+          this.functToSwitch();
+        }
+      }
       if (this.gameObjects[j] instanceof Key) {
         // Contact with key
         const key = this.gameObjects[j];
