@@ -279,23 +279,21 @@ function update() {
       const enemy = gameObjects[i];
       if (
         mapArray[
-        Math.floor((enemy.x + enemy.width / 2 + (enemy.width / 2) * enemy.xDir) / enemy.width)
+          Math.floor((enemy.x + enemy.width / 2 + (enemy.width / 2) * enemy.xDir) / enemy.width)
         ][Math.floor((enemy.y + enemy.height / 2) / enemy.height)] === 1
       ) {
         enemy.xDir *= -1;
       }
       if (
         mapArray[Math.floor((enemy.x + enemy.width / 2) / enemy.width)][
-        Math.floor((enemy.y + enemy.height - 16 + (enemy.height / 2) * enemy.yDir) / enemy.height)
+          Math.floor((enemy.y + enemy.height - 16 + (enemy.height / 2) * enemy.yDir) / enemy.height)
         ] === 1
       ) {
         enemy.yDir *= -1;
       }
     }
   }
-
 }
-
 
 function draw() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -305,12 +303,52 @@ function draw() {
   // draw door.
   if (Player.keysCollected === keyController.maxSpawnKeys) {
     // Opened doors.
-    ctx.drawImage(doorTilemap, 128, 0, 128, 128, 128 * (mapSize - 1) - worldPosX, 128 * (mapSize - 3) - worldPosY, 128, 128);
-    ctx.drawImage(doorTilemap, 128, 128, 128, 128, 128 * (mapSize - 1) - worldPosX, 128 * (mapSize - 2) - worldPosY, 128, 128);
+    ctx.drawImage(
+      doorTilemap,
+      128,
+      0,
+      128,
+      128,
+      128 * (mapSize - 1) - worldPosX,
+      128 * (mapSize - 3) - worldPosY,
+      128,
+      128,
+    );
+    ctx.drawImage(
+      doorTilemap,
+      128,
+      128,
+      128,
+      128,
+      128 * (mapSize - 1) - worldPosX,
+      128 * (mapSize - 2) - worldPosY,
+      128,
+      128,
+    );
   } else {
     // Closed doors.
-    ctx.drawImage(doorTilemap, 0, 0, 128, 128, 128 * (mapSize - 1) - worldPosX, 128 * (mapSize - 3) - worldPosY, 128, 128);
-    ctx.drawImage(doorTilemap, 0, 128, 128, 128, 128 * (mapSize - 1) - worldPosX, 128 * (mapSize - 2) - worldPosY, 128, 128);
+    ctx.drawImage(
+      doorTilemap,
+      0,
+      0,
+      128,
+      128,
+      128 * (mapSize - 1) - worldPosX,
+      128 * (mapSize - 3) - worldPosY,
+      128,
+      128,
+    );
+    ctx.drawImage(
+      doorTilemap,
+      0,
+      128,
+      128,
+      128,
+      128 * (mapSize - 1) - worldPosX,
+      128 * (mapSize - 2) - worldPosY,
+      128,
+      128,
+    );
   }
 
   // Sort the game objects based on its y.
@@ -324,10 +362,10 @@ function draw() {
   ctx.fillStyle = 'blue';
   ctx.fillRect(
     minimapPosX
-    + (Math.floor((Player.x + Player.width / 2) / Player.width) * minimap.canvas.width) / mapSize,
+      + (Math.floor((Player.x + Player.width / 2) / Player.width) * minimap.canvas.width) / mapSize,
     minimapPosY
-    + (Math.floor((Player.y + Player.height - 4) / Player.height) * minimap.canvas.height)
-    / mapSize,
+      + (Math.floor((Player.y + Player.height - 4) / Player.height) * minimap.canvas.height)
+        / mapSize,
     minimap.canvas.width / mapSize,
     minimap.canvas.height / mapSize,
   );
