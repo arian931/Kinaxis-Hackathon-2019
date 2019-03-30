@@ -21,16 +21,24 @@ module.exports = class Enemy {
   }
 
   update(dt) {
+    // set the horizontal and vertical speed.
     this.hSpeed = this.speed * this.xDir * dt;
     this.vSpeed = this.speed * this.yDir * dt;
+
+    // Add the horizontal and vertical speed to enemy's position.
     this.x += this.hSpeed;
     this.y += this.vSpeed;
 
+    // Increase the sprite's frame position.
     this.spriteIndexX = (this.spriteIndexX + this.animationSpeed) % this.animationSize;
 
     if (this.xDir !== 0) {
+      // If the enemy is moving horizontally(not idle), change its sprite y
+      // index to either row 1 or row 3 of the sprite sheet.
       this.spriteIndexY = this.xDir === 1 ? 1 : 3;
     } else {
+      // If the enemy is moving vertically(not idle), change its sprite y
+      // index to either row 2 or row 4 of the sprite sheet.
       this.spriteIndexY = this.yDir === 1 ? 2 : 4;
     }
     this.posX = parseInt((this.x + 50) / ((this.CWidth * 128) / this.CWidth), 10);
