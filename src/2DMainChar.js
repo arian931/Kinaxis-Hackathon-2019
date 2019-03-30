@@ -7,9 +7,10 @@
 // eslint-disable-next-line no-unused-vars
 const Enemy = require('./enemies/enemy');
 const Key = require('./key');
+const SpikeTrap = require('./spikeTrap');
 
 module.exports = class MainCharacter {
-  constructor(x, y, width, height, mazeSize, mazeArray, context, gameObjects, functToSwitch) {
+  constructor(x, y, width, height, mazeSize, mazeArray, context, gameObjects, functToSwitch, callBlurb) {
     this.image = new Image();
     this.image.src = '../../Art/2D/female2_spritesheet.png';
     this.camera = undefined;
@@ -43,6 +44,7 @@ module.exports = class MainCharacter {
     this.keysCollected = 0;
     this.gameObjects = gameObjects;
     this.functToSwitch = functToSwitch;
+    this.callBlurb = callBlurb;
   }
 
   update() {
@@ -100,6 +102,19 @@ module.exports = class MainCharacter {
           && this.y + this.height < key.y + key.height / 2 + 32) {
           this.gameObjects.splice(j, 1);
           this.keysCollected++;
+          this.callBlurb();
+        }
+      }
+      if (this.gameObjects[j] instanceof SpikeTrap) {
+        // Contect with spike trap.
+        const trap = this.gameObjects[j];
+        if (trap.spriteIndex >= 1.1) {
+          if (this.x + this.width / 2 > trap.x
+            && this.x + this.width / 2 < trap.x + trap.width
+            && this.y + this.height > trap.y
+            && this.y + this.height < trap.y + trap.height) {
+            this.functToSwitch();
+          }
         }
       }
     }
@@ -152,6 +167,13 @@ module.exports = class MainCharacter {
       this.vSpeed = this.playerSpeed;
       this.y += this.vSpeed;
     }
+    // this.posTopX = parseInt((this.x + 50) / ((this.CWidth * 128) / this.CWidth));
+    // if (this.mazeArray[this.posTopX][Math.floor((this.y + 50) / this.height)] === 0
+    //   || this.mazeArray[this.posTopX][Math.floor((this.y + this.height - 50) / this.height)] === 0) {
+    //   this.vSpeed = this.playerSpeed;
+    //   this.y += this.vSpeed;
+    // }
+
   }
 
   checkMoveNegY() {
@@ -164,5 +186,11 @@ module.exports = class MainCharacter {
       this.vSpeed = -this.playerSpeed;
       this.y += this.vSpeed;
     }
+    // this.posTopX = parseInt((this.x + 50) / ((this.CWidth * 128) / this.CWidth));
+    // if (this.mazeArray[this.posTopX][Math.floor(this.y / this.height)] === 0
+    //   || this.mazeArray[this.posTopX][Math.floor((this.y + this.height - 64) / this.height)] === 0) {
+    //   this.vSpeed = -this.playerSpeed;
+    //   this.y += this.vSpeed;
+    // }
   }
 };

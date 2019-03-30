@@ -27,21 +27,21 @@ module.exports = class EnemyController {
               case 0:
                 gameObjects.push(new EnemyDepression(
                   x * 128,
-                  y * 128 - 10,
+                  y * 128 - 24,
                   (mapArray[x][y - 1] === 1 && mapArray[x][y + 1] === 1 ? 0 : 1)
                 ));
                 break;
               case 1:
                 gameObjects.push(new EnemyAnxiety(
                   x * 128,
-                  y * 128 - 10,
+                  y * 128 - 24,
                   (mapArray[x][y - 1] === 1 && mapArray[x][y + 1] === 1 ? 0 : 1)
                 ));
                 break;
               case 2:
                 gameObjects.push(new EnemyBPD(
                   x * 128,
-                  y * 128 - 10,
+                  y * 128 - 24,
                   (mapArray[x][y - 1] === 1 && mapArray[x][y + 1] === 1 ? 0 : 1)
                 ));
                 break;

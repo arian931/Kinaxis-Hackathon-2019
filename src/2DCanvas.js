@@ -9,11 +9,16 @@ console.log('FUCKKKKKKKkkkkk !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 // require('./menu.js');
 const Enemy = require('./enemies/enemy');
 const Key = require('./key');
+const SpikeTrap = require('./spikeTrap');
+const TrapController = require('./trapController');
 const EnemyController = require('./enemyController');
 const KeyController = require('./keyController');
 const RecursiveMaze = require('./RecursiveMaze');
 const PlayerCamera = require('./camera');
 const MainCharacter = require('./2DMainChar');
+
+const blurb = document.getElementById('blurb');
+const cxx = blurb.getContext('2d');
 
 console.log(canvas);
 
@@ -38,8 +43,8 @@ let lastTime = Date.now();
 let worldPosX = 0;
 let worldPosY = 0;
 
-// eslint-disable-next-line no-undef
 const enemyController = new EnemyController();
+const trapController = new TrapController();
 const keyController = new KeyController();
 const Recursive = new RecursiveMaze(mapSize);
 const Camera = new PlayerCamera(ctx);
@@ -48,7 +53,6 @@ const divToDrawTo = document.getElementById('backgroundCanvas');
 const image = new Image();
 image.id = 'pic';
 
-// eslint-disable-next-line prefer-const
 mapArray = Recursive.array;
 const Player = new MainCharacter(
   130,
@@ -59,11 +63,14 @@ const Player = new MainCharacter(
   mapArray,
   ctx,
   gameObjects,
+  // eslint-disable-next-line no-use-before-define
   switchToThreeD,
   // enemyController.enemies,
+  callBlurb,
 );
 gameObjects.push(Player);
 enemyController.spawnEnemies(mapArray, gameObjects);
+trapController.spawnTraps(mapArray, gameObjects);
 keyController.spawnKeys(mapArray, gameObjects);
 Camera.attachTo(Player);
 
@@ -277,20 +284,93 @@ function update() {
     gameObjects[i].update(dt);
     if (gameObjects[i] instanceof Enemy) {
       const enemy = gameObjects[i];
-      if (
-        mapArray[
-          Math.floor((enemy.x + enemy.width / 2 + (enemy.width / 2) * enemy.xDir) / enemy.width)
-        ][Math.floor((enemy.y + enemy.height / 2) / enemy.height)] === 1
-      ) {
-        enemy.xDir *= -1;
+      // if (
+      //   mapArray[
+      //   Math.floor((enemy.x + enemy.width / 2 + (enemy.width / 2) * enemy.xDir) / enemy.width)
+      //   ][Math.floor((enemy.y + enemy.height / 2) / enemy.height)] !== 0
+      // ) {
+      //   enemy.xDir *= -1;
+      // }
+      // if (
+      //   mapArray[Math.floor((enemy.x + enemy.width / 2) / enemy.width)][
+      //   Math.floor((enemy.y + enemy.height - 16 + (enemy.height / 2) * enemy.yDir) / enemy.height)
+      //   ] !== 0
+      // ) {
+      //   enemy.yDir *= -1;
+      // }
+
+      // Sometimes the enemies spawn outside the maze.
+      // This prevents them from doing so.
+      while (enemy.y <= 0) {
+        enemy.y += 2;
       }
-      if (
-        mapArray[Math.floor((enemy.x + enemy.width / 2) / enemy.width)][
-          Math.floor((enemy.y + enemy.height - 16 + (enemy.height / 2) * enemy.yDir) / enemy.height)
-        ] === 1
-      ) {
-        enemy.yDir *= -1;
+      while (enemy.y >= (mapSize - 1) * 128) {
+        enemy.y -= 2;
       }
+      while (enemy.x <= 0) {
+        enemy.x += 2;
+      }
+      while (enemy.x >= (mapSize - 1) * 128) {
+        enemy.x -= 2;
+      }
+
+      // x collision
+      if (enemy.xDir === 1) {
+        // Right collision
+        if (
+          mapArray[Math.floor((enemy.x + enemy.width / 2 + enemy.width / 4) / enemy.width)][
+            Math.floor((enemy.y + enemy.height / 2) / enemy.height)
+          ] !== 0
+        ) {
+          // The 4 is to make sure the enemy collides close enough to the wall.
+          enemy.xDir = -1;
+        }
+      } else if (enemy.xDir === -1) {
+        // Left collision
+        if (
+          mapArray[Math.floor((enemy.x + enemy.width / 2 - enemy.width / 4) / enemy.width)][
+            Math.floor((enemy.y + enemy.height / 2) / enemy.height)
+          ] !== 0
+        ) {
+          // The 4 is to make sure the enemy collides close enough to the wall.
+          enemy.xDir = 1;
+        }
+      }
+
+      // y collision
+      if (enemy.yDir === 1) {
+        // Down collision
+        if (
+          mapArray[Math.floor((enemy.x + enemy.width / 2) / enemy.width)][
+            Math.floor((enemy.y + enemy.height - 24 + enemy.height / 4) / enemy.height)
+          ] !== 0
+        ) {
+          // The 24 is to make sure the enemy collides close enough to the bottom wall.
+          // The 4 is to make sure the enemy collides close enough to the wall.
+          enemy.yDir *= -1;
+        }
+      } else if (enemy.yDir === -1) {
+        // Up collision
+        if (
+          mapArray[Math.floor((enemy.x + enemy.width / 2) / enemy.width)][
+            Math.floor((enemy.y + enemy.height - enemy.height / 4) / enemy.height)
+          ] !== 0
+        ) {
+          // The 4 is to make sure the enemy collides close enough to the wall.
+          enemy.yDir *= -1;
+        }
+      }
+
+      // if (mapArray[Math.floor((enemy.x + enemy.width / 2 + (enemy.width / 4 * enemy.xDir)) / enemy.width)]
+      // [Math.floor((enemy.y + enemy.height / 2) / enemy.height)] !== 0) {
+      //   enemy.xDir *= -1;
+      // }
+
+      // // y collision.
+      // if (mapArray[Math.floor((enemy.x + enemy.width / 2) / enemy.width)]
+      // [Math.floor((enemy.y + enemy.height - (enemy.yDir === 1 ? 24 : 0) + (enemy.height / 4 * enemy.yDir)) / enemy.height)] !== 0) {
+      //   enemy.yDir *= -1;
+      // }
     }
   }
 }
@@ -352,10 +432,30 @@ function draw() {
   }
 
   // Sort the game objects based on its y.
-  gameObjects.sort((a, b) => (a.y > b.y ? 1 : -1));
-  for (let i = 0; i < gameObjects.length; i++) {
-    gameObjects[i].draw(ctx, worldPosX, worldPosY);
-  }
+  gameObjects.sort((a, b) => {
+    if (a instanceof SpikeTrap) {
+      return -1;
+    }
+    if (b instanceof SpikeTrap) {
+      return 1;
+    }
+    if (a instanceof Key) {
+      if (a.y - a.height / 2 > b.y) {
+        return 1;
+      }
+      return -1;
+    }
+    if (b instanceof Key) {
+      if (b.y - b.height / 2 > a.y) {
+        return -1;
+      }
+      return 1;
+    }
+    if (a.y > b.y) {
+      return 1;
+    }
+    return -1;
+  });
 
   // Draw minimap and player.
   ctx.drawImage(minimap.canvas, minimapPosX, minimapPosY);
@@ -369,6 +469,28 @@ function draw() {
     minimap.canvas.width / mapSize,
     minimap.canvas.height / mapSize,
   );
+
+  for (let i = 0; i < gameObjects.length; i++) {
+    gameObjects[i].draw(ctx, worldPosX, worldPosY);
+    if (gameObjects[i] instanceof Enemy) {
+      const enemy = gameObjects[i];
+      ctx.fillStyle = 'red';
+      ctx.fillRect(
+        minimapPosX
+          + (Math.floor((enemy.x + enemy.width / 2) / enemy.width) * minimap.canvas.width) / mapSize,
+        minimapPosY
+          + (Math.floor((enemy.y + enemy.height - 4) / enemy.height) * minimap.canvas.height)
+            / mapSize,
+        minimap.canvas.width / mapSize,
+        minimap.canvas.height / mapSize,
+      );
+    }
+  }
+}
+
+function callBlurb() {
+  console.log('BLURB');
+  // blurb.style.display = 'block';
 }
 
 function gameLoop() {

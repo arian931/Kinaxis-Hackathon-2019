@@ -9,6 +9,7 @@ module.exports = class KeyController {
     let keysSpawned = 0;
     const chanceMax = 150;
     let chance = chanceMax;
+    //gameObjects.push(new Key(128, 128));
     for (let y = 0; y < mapArray.length; y++) {
       for (let x = 0; x < mapArray[y].length; x++) {
         // Check for ground.
