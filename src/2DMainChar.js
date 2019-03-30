@@ -11,7 +11,7 @@ const Key = require('./key');
 module.exports = class MainCharacter {
   constructor(x, y, width, height, mazeSize, mazeArray, context, gameObjects, functToSwitch) {
     this.image = new Image();
-    this.image.src = '../../Art/2D/male2_spritesheet.png';
+    this.image.src = '../../Art/2D/female2_spritesheet.png';
     this.camera = undefined;
     this.x = x;
     this.y = y;
@@ -85,8 +85,8 @@ module.exports = class MainCharacter {
         const enemy = this.gameObjects[j];
         if (this.x + this.width / 2 > enemy.x
           && this.x + this.width / 2 < enemy.x + enemy.width
-          && this.y + this.height - 4 > enemy.y
-          && this.y + this.height - 4 < enemy.y + enemy.height) {
+          && this.y + this.height / 2 > enemy.y
+          && this.y + this.height / 2 < enemy.y + enemy.height) {
           this.gameObjects.splice(j, 1);
           this.functToSwitch();
         }
