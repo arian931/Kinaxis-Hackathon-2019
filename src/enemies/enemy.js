@@ -104,6 +104,7 @@ module.exports = class Enemy {
             this.vis[k][j] = false;
           }
         }
+        this.move(x, y);
       }
       // this.move(10, 10);
       // this.move(2, 2);
