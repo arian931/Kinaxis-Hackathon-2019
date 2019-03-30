@@ -295,6 +295,8 @@ function update() {
       ) {
         enemy.yDir *= -1;
       }
+      // x collision
+      // if (mapArray[enemy.x + enemy.width / 2 + (enemy.width / 2 * enemy.xDir)])
     }
   }
 
@@ -342,9 +344,6 @@ function draw() {
     }
     return -1;
   });
-  for (let i = 0; i < gameObjects.length; i++) {
-    gameObjects[i].draw(ctx, worldPosX, worldPosY);
-  }
 
   // Draw minimap and player.
   ctx.drawImage(minimap.canvas, minimapPosX, minimapPosY);
@@ -358,6 +357,23 @@ function draw() {
     minimap.canvas.width / mapSize,
     minimap.canvas.height / mapSize,
   );
+
+  for (let i = 0; i < gameObjects.length; i++) {
+    gameObjects[i].draw(ctx, worldPosX, worldPosY);
+    if (gameObjects[i] instanceof Enemy) {
+      const enemy = gameObjects[i];
+      ctx.fillStyle = 'red';
+      ctx.fillRect(
+        minimapPosX
+        + (Math.floor((enemy.x + enemy.width / 2) / enemy.width) * minimap.canvas.width) / mapSize,
+        minimapPosY
+        + (Math.floor((enemy.y + enemy.height - 4) / enemy.height) * minimap.canvas.height)
+        / mapSize,
+        minimap.canvas.width / mapSize,
+        minimap.canvas.height / mapSize,
+      );
+    }
+  }
 }
 
 function gameLoop() {
