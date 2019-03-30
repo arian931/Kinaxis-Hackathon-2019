@@ -20,7 +20,6 @@ const MainCharacter = require('./2DMainChar');
 const blurb = document.getElementById('blurb');
 const cxx = blurb.getContext('2d');
 
-
 console.log(canvas);
 
 // Load the tilemap.
@@ -318,15 +317,21 @@ function update() {
       // x collision
       if (enemy.xDir === 1) {
         // Right collision
-        if (mapArray[Math.floor((enemy.x + enemy.width / 2 + enemy.width / 4) / enemy.width)]
-        [Math.floor((enemy.y + enemy.height / 2) / enemy.height)] !== 0) {
+        if (
+          mapArray[Math.floor((enemy.x + enemy.width / 2 + enemy.width / 4) / enemy.width)][
+            Math.floor((enemy.y + enemy.height / 2) / enemy.height)
+          ] !== 0
+        ) {
           // The 4 is to make sure the enemy collides close enough to the wall.
           enemy.xDir = -1;
         }
       } else if (enemy.xDir === -1) {
         // Left collision
-        if (mapArray[Math.floor((enemy.x + enemy.width / 2 - enemy.width / 4) / enemy.width)]
-        [Math.floor((enemy.y + enemy.height / 2) / enemy.height)] !== 0) {
+        if (
+          mapArray[Math.floor((enemy.x + enemy.width / 2 - enemy.width / 4) / enemy.width)][
+            Math.floor((enemy.y + enemy.height / 2) / enemy.height)
+          ] !== 0
+        ) {
           // The 4 is to make sure the enemy collides close enough to the wall.
           enemy.xDir = 1;
         }
@@ -335,16 +340,22 @@ function update() {
       // y collision
       if (enemy.yDir === 1) {
         // Down collision
-        if (mapArray[Math.floor((enemy.x + enemy.width / 2) / enemy.width)]
-        [Math.floor(((enemy.y + enemy.height - 24) + enemy.height / 4) / enemy.height)] !== 0) {
+        if (
+          mapArray[Math.floor((enemy.x + enemy.width / 2) / enemy.width)][
+            Math.floor((enemy.y + enemy.height - 24 + enemy.height / 4) / enemy.height)
+          ] !== 0
+        ) {
           // The 24 is to make sure the enemy collides close enough to the bottom wall.
           // The 4 is to make sure the enemy collides close enough to the wall.
           enemy.yDir *= -1;
         }
       } else if (enemy.yDir === -1) {
         // Up collision
-        if (mapArray[Math.floor((enemy.x + enemy.width / 2) / enemy.width)]
-        [Math.floor(((enemy.y + enemy.height) - enemy.height / 4) / enemy.height)] !== 0) {
+        if (
+          mapArray[Math.floor((enemy.x + enemy.width / 2) / enemy.width)][
+            Math.floor((enemy.y + enemy.height - enemy.height / 4) / enemy.height)
+          ] !== 0
+        ) {
           // The 4 is to make sure the enemy collides close enough to the wall.
           enemy.yDir *= -1;
         }
@@ -372,12 +383,52 @@ function draw() {
   // draw door.
   if (Player.keysCollected === keyController.maxSpawnKeys) {
     // Opened doors.
-    ctx.drawImage(doorTilemap, 128, 0, 128, 128, 128 * (mapSize - 1) - worldPosX, 128 * (mapSize - 3) - worldPosY, 128, 128);
-    ctx.drawImage(doorTilemap, 128, 128, 128, 128, 128 * (mapSize - 1) - worldPosX, 128 * (mapSize - 2) - worldPosY, 128, 128);
+    ctx.drawImage(
+      doorTilemap,
+      128,
+      0,
+      128,
+      128,
+      128 * (mapSize - 1) - worldPosX,
+      128 * (mapSize - 3) - worldPosY,
+      128,
+      128,
+    );
+    ctx.drawImage(
+      doorTilemap,
+      128,
+      128,
+      128,
+      128,
+      128 * (mapSize - 1) - worldPosX,
+      128 * (mapSize - 2) - worldPosY,
+      128,
+      128,
+    );
   } else {
     // Closed doors.
-    ctx.drawImage(doorTilemap, 0, 0, 128, 128, 128 * (mapSize - 1) - worldPosX, 128 * (mapSize - 3) - worldPosY, 128, 128);
-    ctx.drawImage(doorTilemap, 0, 128, 128, 128, 128 * (mapSize - 1) - worldPosX, 128 * (mapSize - 2) - worldPosY, 128, 128);
+    ctx.drawImage(
+      doorTilemap,
+      0,
+      0,
+      128,
+      128,
+      128 * (mapSize - 1) - worldPosX,
+      128 * (mapSize - 3) - worldPosY,
+      128,
+      128,
+    );
+    ctx.drawImage(
+      doorTilemap,
+      0,
+      128,
+      128,
+      128,
+      128 * (mapSize - 1) - worldPosX,
+      128 * (mapSize - 2) - worldPosY,
+      128,
+      128,
+    );
   }
 
   // Sort the game objects based on its y.
@@ -411,10 +462,10 @@ function draw() {
   ctx.fillStyle = 'blue';
   ctx.fillRect(
     minimapPosX
-    + (Math.floor((Player.x + Player.width / 2) / Player.width) * minimap.canvas.width) / mapSize,
+      + (Math.floor((Player.x + Player.width / 2) / Player.width) * minimap.canvas.width) / mapSize,
     minimapPosY
-    + (Math.floor((Player.y + Player.height - 4) / Player.height) * minimap.canvas.height)
-    / mapSize,
+      + (Math.floor((Player.y + Player.height - 4) / Player.height) * minimap.canvas.height)
+        / mapSize,
     minimap.canvas.width / mapSize,
     minimap.canvas.height / mapSize,
   );
@@ -426,10 +477,10 @@ function draw() {
       ctx.fillStyle = 'red';
       ctx.fillRect(
         minimapPosX
-        + (Math.floor((enemy.x + enemy.width / 2) / enemy.width) * minimap.canvas.width) / mapSize,
+          + (Math.floor((enemy.x + enemy.width / 2) / enemy.width) * minimap.canvas.width) / mapSize,
         minimapPosY
-        + (Math.floor((enemy.y + enemy.height - 4) / enemy.height) * minimap.canvas.height)
-        / mapSize,
+          + (Math.floor((enemy.y + enemy.height - 4) / enemy.height) * minimap.canvas.height)
+            / mapSize,
         minimap.canvas.width / mapSize,
         minimap.canvas.height / mapSize,
       );

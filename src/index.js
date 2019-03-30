@@ -136,6 +136,7 @@ const levelOne = new LevelOne(
   sizeOfPlatforms,
   5,
   switchBackToTwoD,
+  showResultOf3D,
 );
 let gameLoopOne;
 
@@ -254,25 +255,29 @@ const image = new Image();
 image.id = 'pic';
 let forTimer = 0;
 let forTimerInverval;
+const ThreeDExplaniton = document.getElementById('blocker');
 const timer = () => {
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
-  forTimer++;
-  if (forTimer == 10) {
-    forTimer = 0;
-    timeLeft -= 1;
-    if (timeLeft <= 0) {
-      console.log('TIME LEFT IS ZERO GO BACK TO THE 2D Cavnas');
-      switchBackToTwoD();
+  if (ThreeDExplaniton.style.display == 'none') {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    forTimer++;
+    if (forTimer == 10) {
+      forTimer = 0;
+      timeLeft -= 1;
+      if (timeLeft <= 0) {
+        console.log('TIME LEFT IS ZERO GO BACK TO THE 2D Cavnas');
+        clearInterval(forTimerInverval);
+        showResultOf3D(false);
+      }
     }
+    ctx.font = '75px TimesNewRoman';
+    ctx.fillStyle = 'black';
+    ctx.fillText(timeLeft, canvas.width / 2 - 10, 100);
+    ctx.fillStyle = 'white';
+    ctx.fillText(levelOne.score, canvas.width - 100, canvas.height - 10);
+    image.src = canvas.toDataURL();
+    image.src = canvas.toDataURL();
+    document.getElementById('scoreAndTimer3d').appendChild(image);
   }
-  ctx.font = '75px TimesNewRoman';
-  ctx.fillStyle = 'black';
-  ctx.fillText(timeLeft, canvas.width / 2 - 10, 100);
-  ctx.fillStyle = 'white';
-  ctx.fillText(levelOne.score, canvas.width - 100, canvas.height - 10);
-  image.src = canvas.toDataURL();
-  image.src = canvas.toDataURL();
-  document.getElementById('scoreAndTimer3d').appendChild(image);
 };
 // setInterval(timer, 100);
 const TwoCanvas = document.getElementById('backgroundCanvas');
@@ -301,4 +306,26 @@ function switchBackToTwoD() {
 }
 function clearScene() {
   levelOne.clearObjects();
+}
+
+let showResultsInterval;
+const divForThreeResult = document.getElementById('after3d');
+function showResultOf3D(good) {
+  if (good) {
+    console.log('Good');
+    divForThreeResult.innerHTML = 'good ending';
+    showResultsInterval = setInterval(showingResultsOf3DPositive, 1000);
+  } else {
+    console.log('Good');
+    divForThreeResult.innerHTML = 'bad ending';
+    showResultsInterval = setInterval(showingResultsOf3DPositive, 1000);
+  }
+}
+let timeLeftForResult = 10;
+function showingResultsOf3DPositive() {
+  if (timeLeftForResult == 0) {
+    timeLeftForResult--;
+  } else {
+    switchBackToTwoD();
+  }
 }

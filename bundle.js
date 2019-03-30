@@ -48735,12 +48735,52 @@ function draw() {
   // draw door.
   if (Player.keysCollected === keyController.maxSpawnKeys) {
     // Opened doors.
-    ctx.drawImage(doorTilemap, 128, 0, 128, 128, 128 * (mapSize - 1) - worldPosX, 128 * (mapSize - 3) - worldPosY, 128, 128);
-    ctx.drawImage(doorTilemap, 128, 128, 128, 128, 128 * (mapSize - 1) - worldPosX, 128 * (mapSize - 2) - worldPosY, 128, 128);
+    ctx.drawImage(
+      doorTilemap,
+      128,
+      0,
+      128,
+      128,
+      128 * (mapSize - 1) - worldPosX,
+      128 * (mapSize - 3) - worldPosY,
+      128,
+      128,
+    );
+    ctx.drawImage(
+      doorTilemap,
+      128,
+      128,
+      128,
+      128,
+      128 * (mapSize - 1) - worldPosX,
+      128 * (mapSize - 2) - worldPosY,
+      128,
+      128,
+    );
   } else {
     // Closed doors.
-    ctx.drawImage(doorTilemap, 0, 0, 128, 128, 128 * (mapSize - 1) - worldPosX, 128 * (mapSize - 3) - worldPosY, 128, 128);
-    ctx.drawImage(doorTilemap, 0, 128, 128, 128, 128 * (mapSize - 1) - worldPosX, 128 * (mapSize - 2) - worldPosY, 128, 128);
+    ctx.drawImage(
+      doorTilemap,
+      0,
+      0,
+      128,
+      128,
+      128 * (mapSize - 1) - worldPosX,
+      128 * (mapSize - 3) - worldPosY,
+      128,
+      128,
+    );
+    ctx.drawImage(
+      doorTilemap,
+      0,
+      128,
+      128,
+      128,
+      128 * (mapSize - 1) - worldPosX,
+      128 * (mapSize - 2) - worldPosY,
+      128,
+      128,
+    );
   }
 
   // Sort the game objects based on its y.
@@ -48774,10 +48814,10 @@ function draw() {
   ctx.fillStyle = 'blue';
   ctx.fillRect(
     minimapPosX
-    + (Math.floor((Player.x + Player.width / 2) / Player.width) * minimap.canvas.width) / mapSize,
+      + (Math.floor((Player.x + Player.width / 2) / Player.width) * minimap.canvas.width) / mapSize,
     minimapPosY
-    + (Math.floor((Player.y + Player.height - 4) / Player.height) * minimap.canvas.height)
-    / mapSize,
+      + (Math.floor((Player.y + Player.height - 4) / Player.height) * minimap.canvas.height)
+        / mapSize,
     minimap.canvas.width / mapSize,
     minimap.canvas.height / mapSize,
   );
@@ -49300,6 +49340,7 @@ module.exports = class LevelOne {
     sizeOfPlatforms,
     numberOfSections,
     functToSwitch,
+    showResult,
   ) {
     this.scene = scene;
     this.renderer = renderer;
@@ -49330,6 +49371,8 @@ module.exports = class LevelOne {
     this.spawnPointZ = 10;
     this.numberOfSection = numberOfSections;
     this.functToSwitch = functToSwitch;
+    this.timeLeft = 100;
+    this.showResult = showResult;
   }
 
   generateScene() {
@@ -49898,7 +49941,7 @@ module.exports = class LevelOne {
     } else {
       console.log('finsihed section');
       console.log('functToSwitch');
-      this.functToSwitch();
+      this.showResult(true);
     }
   }
 
@@ -50784,6 +50827,7 @@ const levelOne = new LevelOne(
   sizeOfPlatforms,
   5,
   switchBackToTwoD,
+  showResultOf3D,
 );
 let gameLoopOne;
 
@@ -50902,25 +50946,29 @@ const image = new Image();
 image.id = 'pic';
 let forTimer = 0;
 let forTimerInverval;
+const ThreeDExplaniton = document.getElementById('blocker');
 const timer = () => {
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
-  forTimer++;
-  if (forTimer == 10) {
-    forTimer = 0;
-    timeLeft -= 1;
-    if (timeLeft <= 0) {
-      console.log('TIME LEFT IS ZERO GO BACK TO THE 2D Cavnas');
-      switchBackToTwoD();
+  if (ThreeDExplaniton.style.display == 'none') {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    forTimer++;
+    if (forTimer == 10) {
+      forTimer = 0;
+      timeLeft -= 1;
+      if (timeLeft <= 0) {
+        console.log('TIME LEFT IS ZERO GO BACK TO THE 2D Cavnas');
+        clearInterval(forTimerInverval);
+        showResultOf3D(false);
+      }
     }
+    ctx.font = '75px TimesNewRoman';
+    ctx.fillStyle = 'black';
+    ctx.fillText(timeLeft, canvas.width / 2 - 10, 100);
+    ctx.fillStyle = 'white';
+    ctx.fillText(levelOne.score, canvas.width - 100, canvas.height - 10);
+    image.src = canvas.toDataURL();
+    image.src = canvas.toDataURL();
+    document.getElementById('scoreAndTimer3d').appendChild(image);
   }
-  ctx.font = '75px TimesNewRoman';
-  ctx.fillStyle = 'black';
-  ctx.fillText(timeLeft, canvas.width / 2 - 10, 100);
-  ctx.fillStyle = 'white';
-  ctx.fillText(levelOne.score, canvas.width - 100, canvas.height - 10);
-  image.src = canvas.toDataURL();
-  image.src = canvas.toDataURL();
-  document.getElementById('scoreAndTimer3d').appendChild(image);
 };
 // setInterval(timer, 100);
 const TwoCanvas = document.getElementById('backgroundCanvas');
@@ -50949,6 +50997,28 @@ function switchBackToTwoD() {
 }
 function clearScene() {
   levelOne.clearObjects();
+}
+
+let showResultsInterval;
+const divForThreeResult = document.getElementById('after3d');
+function showResultOf3D(good) {
+  if (good) {
+    console.log('Good');
+    divForThreeResult.innerHTML = 'good ending';
+    showResultsInterval = setInterval(showingResultsOf3DPositive, 1000);
+  } else {
+    console.log('Good');
+    divForThreeResult.innerHTML = 'bad ending';
+    showResultsInterval = setInterval(showingResultsOf3DPositive, 1000);
+  }
+}
+let timeLeftForResult = 10;
+function showingResultsOf3DPositive() {
+  if (timeLeftForResult == 0) {
+    timeLeftForResult--;
+  } else {
+    switchBackToTwoD();
+  }
 }
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
