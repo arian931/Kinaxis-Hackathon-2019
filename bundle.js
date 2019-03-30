@@ -52120,7 +52120,7 @@ function switchBackTo2D() {
   }
 }
 function funToCheckForSwitchBack() {
-  // console.log('checkingFor3d');
+  console.log('checkingFor3d');
   if (divToDrawTo.style.display == 'block') {
     switchBackTo2D();
     clearInterval(checkForSwitchBackInerval);
