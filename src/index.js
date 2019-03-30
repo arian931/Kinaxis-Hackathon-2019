@@ -2,7 +2,6 @@
 /* eslint-disable no-plusplus */
 /* eslint-disable no-shadow */
 global.THREE = require('three');
-global.GLTFLoader = require('three-gltf-loader');
 
 require('./2DCanvas');
 require('./3DControls');
@@ -17,7 +16,6 @@ const white = new THREE.Color('rgb(255, 255, 255)');
 
 const scene = new THREE.Scene();
 scene.background = white;
-const loader = new GLTFLoader();
 const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 800);
 const controls = new THREE.PointerLockControls(camera);
 const renderer = new THREE.WebGLRenderer();
