@@ -17,7 +17,7 @@ const RecursiveMaze = require('./RecursiveMaze');
 const PlayerCamera = require('./camera');
 const MainCharacter = require('./2DMainChar');
 
-// const blurb = document.getElementById('blurb');
+const blurb = document.getElementById('blurb');
 // const cxx = blurb.getContext('2d');
 
 console.log(canvas);
@@ -485,6 +485,59 @@ function draw() {
         minimap.canvas.height / mapSize,
       );
     }
+  }
+
+  // Draw the walls over the player.
+  if (
+    mapArray[Math.floor((Player.x + Player.width / 2) / Player.width) - 1][
+      Math.floor((Player.y + Player.height) / Player.height)
+    ] === 1
+  ) {
+    ctx.drawImage(
+      buffer.canvas,
+      (Math.floor((Player.x + Player.width / 2) / Player.width) - 1) * Player.width,
+      Math.floor((Player.y + Player.height) / Player.height) * Player.height,
+      Player.width,
+      Player.height,
+      (Math.floor((Player.x + Player.width / 2) / Player.width) - 1) * Player.width - worldPosX,
+      Math.floor((Player.y + Player.height) / Player.height) * Player.height - worldPosY,
+      Player.width,
+      Player.height,
+    );
+  }
+  if (
+    mapArray[Math.floor((Player.x + Player.width / 2) / Player.width)][
+      Math.floor((Player.y + Player.height) / Player.height)
+    ] === 1
+  ) {
+    ctx.drawImage(
+      buffer.canvas,
+      Math.floor((Player.x + Player.width / 2) / Player.width) * Player.width,
+      Math.floor((Player.y + Player.height) / Player.height) * Player.height,
+      Player.width,
+      Player.height,
+      Math.floor((Player.x + Player.width / 2) / Player.width) * Player.width - worldPosX,
+      Math.floor((Player.y + Player.height) / Player.height) * Player.height - worldPosY,
+      Player.width,
+      Player.height,
+    );
+  }
+  if (
+    mapArray[Math.floor((Player.x + Player.width / 2) / Player.width) + 1][
+      Math.floor((Player.y + Player.height) / Player.height)
+    ] === 1
+  ) {
+    ctx.drawImage(
+      buffer.canvas,
+      (Math.floor((Player.x + Player.width / 2) / Player.width) + 1) * Player.width,
+      Math.floor((Player.y + Player.height) / Player.height) * Player.height,
+      Player.width,
+      Player.height,
+      (Math.floor((Player.x + Player.width / 2) / Player.width) + 1) * Player.width - worldPosX,
+      Math.floor((Player.y + Player.height) / Player.height) * Player.height - worldPosY,
+      Player.width,
+      Player.height,
+    );
   }
 }
 

@@ -48380,7 +48380,7 @@ const RecursiveMaze = require('./RecursiveMaze');
 const PlayerCamera = require('./camera');
 const MainCharacter = require('./2DMainChar');
 
-// const blurb = document.getElementById('blurb');
+const blurb = document.getElementById('blurb');
 // const cxx = blurb.getContext('2d');
 
 console.log(canvas);
@@ -48849,6 +48849,59 @@ function draw() {
       );
     }
   }
+
+  // Draw the walls over the player.
+  if (
+    mapArray[Math.floor((Player.x + Player.width / 2) / Player.width) - 1][
+      Math.floor((Player.y + Player.height) / Player.height)
+    ] === 1
+  ) {
+    ctx.drawImage(
+      buffer.canvas,
+      (Math.floor((Player.x + Player.width / 2) / Player.width) - 1) * Player.width,
+      Math.floor((Player.y + Player.height) / Player.height) * Player.height,
+      Player.width,
+      Player.height,
+      (Math.floor((Player.x + Player.width / 2) / Player.width) - 1) * Player.width - worldPosX,
+      Math.floor((Player.y + Player.height) / Player.height) * Player.height - worldPosY,
+      Player.width,
+      Player.height,
+    );
+  }
+  if (
+    mapArray[Math.floor((Player.x + Player.width / 2) / Player.width)][
+      Math.floor((Player.y + Player.height) / Player.height)
+    ] === 1
+  ) {
+    ctx.drawImage(
+      buffer.canvas,
+      Math.floor((Player.x + Player.width / 2) / Player.width) * Player.width,
+      Math.floor((Player.y + Player.height) / Player.height) * Player.height,
+      Player.width,
+      Player.height,
+      Math.floor((Player.x + Player.width / 2) / Player.width) * Player.width - worldPosX,
+      Math.floor((Player.y + Player.height) / Player.height) * Player.height - worldPosY,
+      Player.width,
+      Player.height,
+    );
+  }
+  if (
+    mapArray[Math.floor((Player.x + Player.width / 2) / Player.width) + 1][
+      Math.floor((Player.y + Player.height) / Player.height)
+    ] === 1
+  ) {
+    ctx.drawImage(
+      buffer.canvas,
+      (Math.floor((Player.x + Player.width / 2) / Player.width) + 1) * Player.width,
+      Math.floor((Player.y + Player.height) / Player.height) * Player.height,
+      Player.width,
+      Player.height,
+      (Math.floor((Player.x + Player.width / 2) / Player.width) + 1) * Player.width - worldPosX,
+      Math.floor((Player.y + Player.height) / Player.height) * Player.height - worldPosY,
+      Player.width,
+      Player.height,
+    );
+  }
 }
 
 function callBlurb() {
@@ -49030,20 +49083,30 @@ module.exports = class MainCharacter {
   }
 
   checkMovePosX() {
-    this.posTopY = parseInt((this.y + this.height) / ((this.CHeight * 128) / this.CHeight));
-    this.posTopX = parseInt((this.x + 76 + this.playerSpeed) / ((this.CWidth * 128) / this.CWidth));
-    // console.log(`${this.posTopX} posTopY ${this.posTopY}`);
-    if (this.mazeArray[this.posTopX][this.posTopY] == 0) {
+    // this.posTopY = parseInt((this.y + this.height) / ((this.CHeight * 128) / this.CHeight));
+    // this.posTopX = parseInt((this.x + 76 + this.playerSpeed) / ((this.CWidth * 128) / this.CWidth));
+    // // console.log(`${this.posTopX} posTopY ${this.posTopY}`);
+    // if (this.mazeArray[this.posTopX][this.posTopY] == 0) {
+    //   this.hSpeed = this.playerSpeed;
+    //   this.x += this.hSpeed;
+    // }
+    if (this.mazeArray[Math.floor((this.x + 76 + this.playerSpeed) / this.width)][Math.floor((this.y + 32) / this.height)] === 0
+      || this.mazeArray[Math.floor((this.x + 76 + this.playerSpeed) / this.width)][Math.floor((this.y + this.height - 20) / this.height)] === 0) {
       this.hSpeed = this.playerSpeed;
       this.x += this.hSpeed;
     }
   }
 
   checkMoveNegX() {
-    this.posTopY = parseInt((this.y + this.height) / ((this.CHeight * 128) / this.CHeight));
-    this.posTopX = parseInt((this.x + 52 - this.playerSpeed) / ((this.CWidth * 128) / this.CWidth));
-    // console.log(`${this.posTopX} posTopY ${this.posTopY}`);
-    if (this.mazeArray[this.posTopX][this.posTopY] == 0) {
+    // this.posTopY = parseInt((this.y + this.height) / ((this.CHeight * 128) / this.CHeight));
+    // this.posTopX = parseInt((this.x + 52 - this.playerSpeed) / ((this.CWidth * 128) / this.CWidth));
+    // // console.log(`${this.posTopX} posTopY ${this.posTopY}`);
+    // if (this.mazeArray[this.posTopX][this.posTopY] == 0) {
+    //   this.hSpeed = -this.playerSpeed;
+    //   this.x += this.hSpeed;
+    // }
+    if (this.mazeArray[Math.floor((this.x + 52 - this.playerSpeed) / this.width)][Math.floor((this.y + 32) / this.height)] === 0
+      || this.mazeArray[Math.floor((this.x + 52 - this.playerSpeed) / this.width)][Math.floor((this.y + this.height - 20) / this.height)] === 0) {
       this.hSpeed = -this.playerSpeed;
       this.x += this.hSpeed;
     }
@@ -49051,39 +49114,39 @@ module.exports = class MainCharacter {
 
   checkMovePosY() {
     // console.log('hello');
-    this.posTopY = parseInt(
-      (this.y + this.height + this.playerSpeed) / ((this.CHeight * 128) / this.CHeight),
-    );
-    this.posTopX = parseInt((this.x + 50) / ((this.CWidth * 128) / this.CWidth));
-    if (this.mazeArray[this.posTopX][this.posTopY] == 0) {
-      this.vSpeed = this.playerSpeed;
-      this.y += this.vSpeed;
-    }
+    // this.posTopY = parseInt(
+    //   (this.y + this.height + this.playerSpeed) / ((this.CHeight * 128) / this.CHeight),
+    // );
     // this.posTopX = parseInt((this.x + 50) / ((this.CWidth * 128) / this.CWidth));
-    // if (this.mazeArray[this.posTopX][Math.floor((this.y + 50) / this.height)] === 0
-    //   || this.mazeArray[this.posTopX][Math.floor((this.y + this.height - 50) / this.height)] === 0) {
+    // if (this.mazeArray[this.posTopX][this.posTopY] == 0) {
     //   this.vSpeed = this.playerSpeed;
     //   this.y += this.vSpeed;
     // }
+    this.posTopX = parseInt((this.x + 50) / ((this.CWidth * 128) / this.CWidth));
+    if (this.mazeArray[this.posTopX][Math.floor((this.y + 50) / this.height)] === 0
+      || this.mazeArray[this.posTopX][Math.floor((this.y + this.height) / this.height)] === 0) {
+      this.vSpeed = this.playerSpeed;
+      this.y += this.vSpeed;
+    }
 
   }
 
   checkMoveNegY() {
     // console.log('hello');
-    this.posTopY = parseInt(
-      (this.y + this.height - 20 - this.playerSpeed) / ((this.CHeight * 128) / this.CHeight),
-    );
-    this.posTopX = parseInt((this.x + 50) / ((this.CWidth * 128) / this.CWidth));
-    if (this.mazeArray[this.posTopX][this.posTopY] == 0) {
-      this.vSpeed = -this.playerSpeed;
-      this.y += this.vSpeed;
-    }
+    // this.posTopY = parseInt(
+    //   (this.y + this.height - 20 - this.playerSpeed) / ((this.CHeight * 128) / this.CHeight),
+    // );
     // this.posTopX = parseInt((this.x + 50) / ((this.CWidth * 128) / this.CWidth));
-    // if (this.mazeArray[this.posTopX][Math.floor(this.y / this.height)] === 0
-    //   || this.mazeArray[this.posTopX][Math.floor((this.y + this.height - 64) / this.height)] === 0) {
+    // if (this.mazeArray[this.posTopX][this.posTopY] == 0) {
     //   this.vSpeed = -this.playerSpeed;
     //   this.y += this.vSpeed;
     // }
+    this.posTopX = parseInt((this.x + 50) / ((this.CWidth * 128) / this.CWidth));
+    if (this.mazeArray[this.posTopX][Math.floor(this.y / this.height)] === 0
+      || this.mazeArray[this.posTopX][Math.floor((this.y + this.height - 24) / this.height)] === 0) {
+      this.vSpeed = -this.playerSpeed;
+      this.y += this.vSpeed;
+    }
   }
 };
 
@@ -51038,7 +51101,7 @@ module.exports = class KeyController {
     for (let y = 0; y < mapArray.length; y++) {
       for (let x = 0; x < mapArray[y].length; x++) {
         // Check for ground.
-        if (mapArray[x][y] === 0) {
+        if (mapArray[x][y] === 0 && x !== 1 && y !== 1) {
           if (Math.floor(Math.random() * chance) !== 0) {
             continue;
           }
