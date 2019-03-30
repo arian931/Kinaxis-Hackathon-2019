@@ -51767,32 +51767,35 @@ module.exports = _GLTFLoader;
 }));
 
 },{}],3:[function(require,module,exports){
+(function (global){
 /* eslint-disable no-unused-vars */
 /* eslint-disable eqeqeq */
 /* eslint-disable no-undef */
+global.canvas = document.getElementById('backgroundCanvas');
+global.ctx = canvas.getContext('2d');
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
 console.log('FUCKKKKKKKkkkkk !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!');
-const EnemyController = require('./enemy');
-const EnemyAnxiety = require('./enemy');
+// require('./menu.js');
+const Enemy = require('./enemies/enemy');
+const Key = require('./key');
+const EnemyController = require('./enemyController');
+const KeyController = require('./keyController');
 const RecursiveMaze = require('./RecursiveMaze');
 const PlayerCamera = require('./camera');
 const MainCharacter = require('./2DMainChar');
 
-const canvas = document.getElementById('backgroundCanvas');
 console.log(canvas);
-// const miniMap = document.getElementById('miniMap');
-const ctx = canvas.getContext('2d');
-// const ctxx = miniMap.getContext('2d');
-canvas.width = window.innerWidth;
-canvas.height = window.innerHeight;
-// miniMap.width = window.innerWidth / 7;
-// miniMap.height = window.innerWidth / 7;
 
 // Load the tilemap.
 const tilemap = new Image();
 tilemap.src = '../../Art/2D/tilemap.png';
 
+const doorTilemap = new Image();
+doorTilemap.src = '../../Art/2D/door_spritesheet.png';
+
 // eslint-disable-next-line no-unused-vars
-const drawOrder = [];
+const gameObjects = [];
 
 let mapArray;
 const mapSize = 29;
@@ -51807,7 +51810,7 @@ let worldPosY = 0;
 
 // eslint-disable-next-line no-undef
 const enemyController = new EnemyController();
-enemyController.enemies.push(new EnemyAnxiety(128, 120));
+const keyController = new KeyController();
 const Recursive = new RecursiveMaze(mapSize);
 const Camera = new PlayerCamera(ctx);
 Recursive.draw();
@@ -51825,13 +51828,26 @@ const Player = new MainCharacter(
   Recursive.MazeSize,
   mapArray,
   ctx,
+  gameObjects,
+  switchToThreeD,
   // enemyController.enemies,
 );
+gameObjects.push(Player);
+enemyController.spawnEnemies(mapArray, gameObjects);
+keyController.spawnKeys(mapArray, gameObjects);
 Camera.attachTo(Player);
 
 let InThreeD = false;
 
 // eslint-disable-next-line prefer-const
+
+// create minimap
+const minimap = document.createElement('canvas').getContext('2d');
+minimap.canvas.width = window.innerWidth / 7.2;
+minimap.canvas.height = minimap.canvas.width;
+const minimapPosX = canvas.width - minimap.canvas.width - 32;
+const minimapPosY = 32;
+const minimapAlpha = 0.7;
 
 // Create the buffer image of the map.
 const buffer = document.createElement('CANVAS').getContext('2d');
@@ -51859,6 +51875,13 @@ tilemap.onload = () => {
             128,
             128,
           );
+          minimap.fillStyle = `rgba(83, 244, 65, ${minimapAlpha})`;
+          minimap.fillRect(
+            (x * minimap.canvas.width) / mapSize,
+            (y * minimap.canvas.height) / mapSize,
+            minimap.canvas.width / mapSize,
+            minimap.canvas.height / mapSize,
+          );
           break;
         case 1: // Walls
           if (y - 1 < 0) {
@@ -51875,6 +51898,13 @@ tilemap.onload = () => {
           } else {
             buffer.drawImage(tilemap, 128, 0, 128, 128, 128 * x, 128 * y, 128, 128);
           }
+          minimap.fillStyle = `rgba(56, 56, 56, ${minimapAlpha})`;
+          minimap.fillRect(
+            (x * minimap.canvas.width) / mapSize,
+            (y * minimap.canvas.height) / mapSize,
+            minimap.canvas.width / mapSize,
+            minimap.canvas.height / mapSize,
+          );
           break;
         case 3: // Exit
           // 3 different ground tiles(2, 3, 4).
@@ -51889,6 +51919,13 @@ tilemap.onload = () => {
             128 * y,
             128,
             128,
+          );
+          minimap.fillStyle = `rgba(83, 244, 65, ${minimapAlpha})`;
+          minimap.fillRect(
+            (x * minimap.canvas.width) / mapSize,
+            (y * minimap.canvas.height) / mapSize,
+            minimap.canvas.width / mapSize,
+            minimap.canvas.height / mapSize,
           );
           break;
         default:
@@ -51966,9 +52003,6 @@ document.addEventListener('keyup', (event) => {
   }
 });
 
-const row = mapSize;
-const col = mapSize;
-
 function update() {
   // Calucute delta time.
   const nowTime = Date.now();
@@ -51985,13 +52019,13 @@ function update() {
     Player.x + Player.width / 2 > Camera.vWidth / 2
     && Player.x + Player.width / 2 < buffer.canvas.width - Camera.vWidth / 2
   ) {
-    worldPosX += Player.hSpeed;
+    worldPosX = Player.x + Player.width / 2 - Camera.vWidth / 2;
   }
   if (
     Player.y + Player.height / 2 > Camera.vHeight / 2
     && Player.y + Player.height / 2 < buffer.canvas.height - Camera.vHeight / 2
   ) {
-    worldPosY += Player.vSpeed;
+    worldPosY = Player.y + Player.height / 2 - Camera.vHeight / 2;
   }
   // Lock the world position
   if (worldPosX <= 0) {
@@ -52006,117 +52040,68 @@ function update() {
   }
 
   // Update the objects.
-  Player.update(dt);
+  // Player.update(dt);
   Camera.update(dt);
 
-  // ctxx.fillStyle = 'rgb(0,0,255)'; // Blue square for player
-  // ctxx.fillRect(
-  //   player.x * (miniMap.width / row),
-  //   player.y * (miniMap.height / col),
-  //   miniMap.width / row,
-  //   miniMap.height / col,
-  // );
+  for (let i = 0; i < gameObjects.length; i++) {
+    gameObjects[i].update(dt);
+    if (gameObjects[i] instanceof Enemy) {
+      const enemy = gameObjects[i];
+      if (
+        mapArray[
+        Math.floor((enemy.x + enemy.width / 2 + (enemy.width / 2) * enemy.xDir) / enemy.width)
+        ][Math.floor((enemy.y + enemy.height / 2) / enemy.height)] === 1
+      ) {
+        enemy.xDir *= -1;
+      }
+      if (
+        mapArray[Math.floor((enemy.x + enemy.width / 2) / enemy.width)][
+        Math.floor((enemy.y + enemy.height - 16 + (enemy.height / 2) * enemy.yDir) / enemy.height)
+        ] === 1
+      ) {
+        enemy.yDir *= -1;
+      }
+    }
+  }
 
-  // for (let i = 0; i < enemyController.enemies.length; i++) {
-  //   const enemy = enemyController.enemies[i];
-  //   enemy.update(dt);
-  //   if (
-  //     mapArray[
-  //       Math.floor((enemy.x + enemy.width / 2 + (enemy.width / 2) * enemy.xDir) / enemy.width)
-  //     ][Math.floor((enemy.y + enemy.height / 2) / enemy.height)] === 1
-  //   ) {
-  //     enemy.xDir *= -1;
-  //   }
-  //   if (
-  //     mapArray[Math.floor((enemy.x + enemy.width / 2) / enemy.width)][
-  //       Math.floor((enemy.y + enemy.height / 2 + (enemy.height / 2) * enemy.yDir) / enemy.height)
-  //     ]
-  //   ) {
-  //     enemy.yDir *= -1;
-  //   }
-  // }
-  // image.src = canvas.toDataURL();
-  // document.getElementById('he').appendChild(image);
 }
-const miniMapSquareToDeletX = 1;
-const miniMapSquareToDeletY = 1;
 
-function drawMiniMap() {
-  // ctxx.clearRect(
-  //   miniMapSquareToDeletX * (miniMap.width / row),
-  //   miniMapSquareToDeletY * (miniMap.height / col),
-  //   (miniMap.width / row) * 0.95,
-  //   (miniMap.height / col) * 0.95,
-  // );
-  // ctxx.fillStyle = 'rgba(0,128,0, 0.65)'; // Green Walls
-  // ctxx.fillRect(
-  //   miniMapSquareToDeletX * (miniMap.width / row),
-  //   miniMapSquareToDeletY * (miniMap.height / col),
-  //   (miniMap.width / row) * 0.95,
-  //   (miniMap.height / col) * 0.95,
-  // );
-  // ctxx.fillStyle = 'rgba(0,0,200,0.5)';
-  // ctxx.fillRect(
-  //   Player.posTopX * (miniMap.width / row),
-  //   Player.posTopY * (miniMap.height / col),
-  //   (miniMap.width / row) * 0.95,
-  //   (miniMap.height / col) * 0.95,
-  // );
-  // miniMapSquareToDeletX = Player.posTopX;
-  // miniMapSquareToDeletY = Player.posTopY;
-}
-// for (let x = 0; x < row; x++) {
-//   for (let y = 0; y < col; y++) {
-//     // eslint-disable-next-line default-case
-//     switch (mapArray[x][y]) {
-//       case 0:
-//         // console.log("No Wall");
-//         ctxx.fillStyle = 'rgba(0,128,0, 0.65)'; // Green Walls
-//         ctxx.fillRect(
-//           x * (miniMap.width / row),
-//           y * (miniMap.height / col),
-//           miniMap.width / row,
-//           miniMap.height / col,
-//         );
-//         break;
-//       case 1:
-//         console.log('Wall');
-//         ctxx.fillStyle = 'rgba(128,128,128,0.65)'; // Grey walls
-//         ctxx.fillRect(
-//           x * (miniMap.width / row),
-//           y * (miniMap.height / col),
-//           miniMap.width / row,
-//           miniMap.height / col,
-//         );
-//         break;
-//     }
-//   }
-// }
+
 function draw() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   Camera.draw(worldPosX, worldPosY);
-  Player.draw(ctx, worldPosX, worldPosY);
-  // Draws the player behind/infront of enemies depending on its y;
-  const drewPlayer = false;
-  // for (let i = 0; i < enemyController.enemies.length; i++) {
-  //   const enemy = enemyController.enemies[i];
-  //   if (!drewPlayer) {
-  //     if (Player.y < enemy.y) {
-  //       Player.draw(ctx, worldPosX, worldPosY);
-  //       enemy.draw(ctx, worldPosX, worldPosY);
-  //     } else {
-  //       enemy.draw(ctx, worldPosX, worldPosY);
-  //       Player.draw(ctx, worldPosX, worldPosY);
-  //     }
-  //     drewPlayer = true;
-  //   }
-  // }
-  ctx.fillText(`${worldPosX} ${worldPosX}`, 20, 20);
-  // if (miniMapSquareToDeletX != Player.posTopX || miniMapSquareToDeletY != Player.posTopY) {
-  //   drawMiniMap();
-  // }
+  // Player.draw(ctx, worldPosX, worldPosY);
+
+  // draw door.
+  if (Player.keysCollected === keyController.maxSpawnKeys) {
+    // Opened doors.
+    ctx.drawImage(doorTilemap, 128, 0, 128, 128, 128 * (mapSize - 1) - worldPosX, 128 * (mapSize - 3) - worldPosY, 128, 128);
+    ctx.drawImage(doorTilemap, 128, 128, 128, 128, 128 * (mapSize - 1) - worldPosX, 128 * (mapSize - 2) - worldPosY, 128, 128);
+  } else {
+    // Closed doors.
+    ctx.drawImage(doorTilemap, 0, 0, 128, 128, 128 * (mapSize - 1) - worldPosX, 128 * (mapSize - 3) - worldPosY, 128, 128);
+    ctx.drawImage(doorTilemap, 0, 128, 128, 128, 128 * (mapSize - 1) - worldPosX, 128 * (mapSize - 2) - worldPosY, 128, 128);
+  }
+
+  // Sort the game objects based on its y.
+  gameObjects.sort((a, b) => (a.y > b.y ? 1 : -1));
+  for (let i = 0; i < gameObjects.length; i++) {
+    gameObjects[i].draw(ctx, worldPosX, worldPosY);
+  }
+
+  // Draw minimap and player.
+  ctx.drawImage(minimap.canvas, minimapPosX, minimapPosY);
+  ctx.fillStyle = 'blue';
+  ctx.fillRect(
+    minimapPosX
+    + (Math.floor((Player.x + Player.width / 2) / Player.width) * minimap.canvas.width) / mapSize,
+    minimapPosY
+    + (Math.floor((Player.y + Player.height - 4) / Player.height) * minimap.canvas.height)
+    / mapSize,
+    minimap.canvas.width / mapSize,
+    minimap.canvas.height / mapSize,
+  );
 }
-drawMiniMap();
 
 function gameLoop() {
   if (!InThreeD) {
@@ -52128,9 +52113,11 @@ function gameLoop() {
   }
 }
 function switchBackTo2D() {
-  // console.log('2d is back');
-  InThreeD = false;
-  gameLoop();
+  console.log('2d is back');
+  if (InThreeD) {
+    InThreeD = false;
+    gameLoop();
+  }
 }
 function funToCheckForSwitchBack() {
   // console.log('checkingFor3d');
@@ -52148,7 +52135,8 @@ function switchToThreeD() {
 }
 window.requestAnimationFrame(gameLoop);
 
-},{"./2DMainChar":4,"./RecursiveMaze":12,"./camera":14,"./enemy":15}],4:[function(require,module,exports){
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{"./2DMainChar":4,"./RecursiveMaze":12,"./camera":14,"./enemies/enemy":15,"./enemyController":19,"./key":21,"./keyController":22}],4:[function(require,module,exports){
 /* eslint-disable no-plusplus */
 /* eslint-disable no-param-reassign */
 /* eslint-disable prefer-const */
@@ -52156,10 +52144,13 @@ window.requestAnimationFrame(gameLoop);
 /* eslint-disable eqeqeq */
 /* eslint-disable radix */
 // eslint-disable-next-line no-unused-vars
+const Enemy = require('./enemies/enemy');
+const Key = require('./key');
+
 module.exports = class MainCharacter {
-  constructor(x, y, width, height, mazeSize, mazeArray, context, EnemyArray) {
+  constructor(x, y, width, height, mazeSize, mazeArray, context, gameObjects, functToSwitch) {
     this.image = new Image();
-    this.image.src = '../../Art/2D/male2_spritesheet.png';
+    this.image.src = '../../Art/2D/female2_spritesheet.png';
     this.camera = undefined;
     this.x = x;
     this.y = y;
@@ -52188,7 +52179,9 @@ module.exports = class MainCharacter {
     this.moveDown = false;
     this.counter = 10;
     this.playerSpeed = 4;
-    this.EnemyArray = EnemyArray;
+    this.keysCollected = 0;
+    this.gameObjects = gameObjects;
+    this.functToSwitch = functToSwitch;
   }
 
   update() {
@@ -52225,11 +52218,30 @@ module.exports = class MainCharacter {
       this.spriteDir = this.xDir === 1 ? 0 : 2;
       this.spriteIndexY = this.spriteDir + 1;
     }
-    // for (let j = 0; j < this.EnemyArray.length; j++) {
-    //   if (this.EnemyArray[j].posX == this.posTopX && this.EnemyArray[j].posY == this.posTopY) {
-    //     console.log('collied with E');
-    //   }
-    // }
+    for (let j = 0; j < this.gameObjects.length; j++) {
+      if (this.gameObjects[j] instanceof Enemy) {
+        // Contact with enemy
+        const enemy = this.gameObjects[j];
+        if (this.x + this.width / 2 > enemy.x
+          && this.x + this.width / 2 < enemy.x + enemy.width
+          && this.y + this.height / 2 > enemy.y
+          && this.y + this.height / 2 < enemy.y + enemy.height) {
+          this.gameObjects.splice(j, 1);
+          this.functToSwitch();
+        }
+      }
+      if (this.gameObjects[j] instanceof Key) {
+        // Contact with key
+        const key = this.gameObjects[j];
+        if (this.x + this.width / 2 > key.x + 32
+          && this.x + this.width / 2 < key.x + key.width - 32
+          && this.y + this.height > key.y + key.height / 2 - 32
+          && this.y + this.height < key.y + key.height / 2 + 32) {
+          this.gameObjects.splice(j, 1);
+          this.keysCollected++;
+        }
+      }
+    }
   }
 
   draw(context, worldPosX, worldPosY) {
@@ -52294,7 +52306,7 @@ module.exports = class MainCharacter {
   }
 };
 
-},{}],5:[function(require,module,exports){
+},{"./enemies/enemy":15,"./key":21}],5:[function(require,module,exports){
 const THREE = require('three');
 /**
  * @author mrdoob / http://mrdoob.com/
@@ -52482,6 +52494,7 @@ module.exports = class insideWallsMaze {
 };
 
 },{}],9:[function(require,module,exports){
+/* eslint-disable no-unused-expressions */
 /* eslint-disable no-underscore-dangle */
 /* eslint-disable eqeqeq */
 /* eslint-disable no-plusplus */
@@ -52496,7 +52509,15 @@ const LevelOne = require('./LevelOne');
 const Collectible = require('./Collectible');
 
 module.exports = class LevelOne {
-  constructor(scene, renderer, camera, jumpDistance, sizeOfPlatforms) {
+  constructor(
+    scene,
+    renderer,
+    camera,
+    jumpDistance,
+    sizeOfPlatforms,
+    numberOfSections,
+    functToSwitch,
+  ) {
     this.scene = scene;
     this.renderer = renderer;
     this.camera = camera;
@@ -52520,10 +52541,24 @@ module.exports = class LevelOne {
     this.score = 0;
     this.jumpDistance = jumpDistance;
     this.sizeOfPlatforms = sizeOfPlatforms;
+    this.gameLoopInterval;
+    this.spawnPointX = 0;
+    this.spawnPointY = 10;
+    this.spawnPointZ = 10;
+    this.numberOfSection = numberOfSections;
+    this.functToSwitch = functToSwitch;
   }
 
   generateScene() {
     console.log('GENERATING THE SCENE');
+    this.platFormsClass = [];
+    this.platFormConstructor = [];
+    this.collectibles = [];
+    this.collectiblesCurrentIndex = 0;
+    this.currentIndex = 0;
+    this.currentPositionX = 0;
+    this.currentPositionY = 0;
+    this.currentPositionZ = 0;
     let DIR;
     let NOS;
     let LastDirection = 0;
@@ -52531,7 +52566,7 @@ module.exports = class LevelOne {
 
     this.scene.fog = new THREE.FogExp2(this.white, 0.005);
 
-    for (let x = 0; x < 20; x++) {
+    for (let x = 0; x < this.numberOfSection; x++) {
       // console.log(
       //   `X: ${this.currentPositionX} Y: ${this.currentPositionY} Z: ${this.currentPositionZ}`,
       // );
@@ -52601,9 +52636,16 @@ module.exports = class LevelOne {
       );
       this.platFormsClass[x].addToScene();
     }
-
+    this.collectibles[this.collectiblesCurrentIndex] = new Collectible(
+      this.currentPositionX,
+      this.currentPositionY,
+      this.currentPositionZ + 10,
+      this.scene,
+    );
+    this.collectibles[this.collectiblesCurrentIndex].addToScene();
+    this.collectiblesCurrentIndex++;
     const _this = this;
-    setInterval(() => {
+    this.gameLoopInterval = setInterval(() => {
       _this.gameLoop();
     }, 33);
   }
@@ -52678,14 +52720,15 @@ module.exports = class LevelOne {
   }
 
   gameLoop() {
+    console.log('3d gameLoop');
     if (this.camera.position.y <= -2000) {
       this.camera.position.x = 0;
       this.camera.position.z = 0;
       this.camera.position.y = 10;
     }
-    // for (let x = 0; x < this.collectibles.length; x++) {
-    //   this.collectibles[x].rotate();
-    // }
+    for (let x = 0; x < this.collectibles.length; x++) {
+      this.collectibles[x].rotate();
+    }
 
     for (let x = 0; x < this.platFormsClass.length; x++) {
       if (this.platFormsClass[x].movingHor) {
@@ -53053,34 +53096,47 @@ module.exports = class LevelOne {
   }
 
   collectibleCollision(CX, CY, CZ) {
-    for (let x = 0; x < this.collectibles.length; x++) {
-      if (
-        this.collectibles[x].cubeFor.position.x == CX
-        && this.collectibles[x].cubeFor.position.y == CY
-        && this.collectibles[x].cubeFor.position.z == CZ
-      ) {
-        this.scene.remove(this.collectibles[x].cubeFor);
-        this.collectibles.splice(x, 1);
-        this.score++;
+    console.log(`${this.collectibles.length} collectvles left`);
+    if (this.collectibles.length != 1) {
+      for (let x = 0; x < this.collectibles.length; x++) {
+        if (
+          this.collectibles[x].cubeFor.position.x == CX
+          && this.collectibles[x].cubeFor.position.y == CY
+          && this.collectibles[x].cubeFor.position.z == CZ
+        ) {
+          this.spawnPointX = this.collectibles[x].cubeFor.position.x;
+          this.spawnPointY = this.collectibles[x].cubeFor.position.y + 10;
+          this.spawnPointZ = this.collectibles[x].cubeFor.position.z;
+          this.scene.remove(this.collectibles[x].cubeFor);
+          this.collectibles.splice(x, 1);
+          this.score++;
+        }
       }
+    } else {
+      console.log('finsihed section');
+      console.log('functToSwitch');
+      this.functToSwitch();
     }
   }
 
   clearObjects() {
+    console.log(`${this.gameLoopInterval}seeing what it is clearing`);
+    clearInterval(this.gameLoopInterval);
     console.log(
       'cleared objects !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!',
     );
     for (let j = 0; j < this.collectibles.length; j++) {
+      console.log('deletingplatforms Col');
       this.scene.remove(this.collectibles[j].cubeFor);
-      this.collectibles = [];
-      this.collectibles.length = 0;
     }
+    this.collectibles = [];
+    this.collectibles.length = 0;
     for (let j = 0; j < this.platFormsClass.length; j++) {
       console.log('deletingplatforms');
       this.scene.remove(this.platFormsClass[j].cubeFor);
-      this.platFormsClass = [];
-      this.platFormsClass.length = 0;
     }
+    this.platFormsClass = [];
+    this.platFormsClass.length = 0;
   }
 };
 
@@ -53645,31 +53701,11 @@ module.exports = class PlayerCamera {
 };
 
 },{}],15:[function(require,module,exports){
-/* eslint-disable radix */
-// Load the sprite sheets.
-const spriteEnemyAnxiety = new Image();
-spriteEnemyAnxiety.src = '../../Art/2D/enemy_anxiety_spritesheet.png';
-const spriteEnemyBPD = new Image();
-spriteEnemyBPD.src = '../../Art/2D/enemy_borderline_personality_disorderanxiety_spritesheet.png';
-const spriteEnemyDepression = new Image();
-spriteEnemyDepression.src = '../../Art/2D/enemy_depression_spritesheet.png';
-
-module.exports = class EnemyController {
-  constructor() {
-    // this.spriteEnemyAnxiety = new Image();
-    // this.spriteEnemyAnxiety.src = '../../Art/2D/enemy_anxiety_spritesheet.png';
-    // this.spriteEnemyBPD = new Image();
-    // this.spriteEnemyBPD.src = '../../Art/2D/enemy_borderline_personality_disorderanxiety_spritesheet.png';
-    // this.spriteEnemyDepression = new Image();
-    // this.spriteEnemyDepression = '../../Art/2D/enemy_depression_spritesheet.png';
-    this.enemies = [];
-  }
-};
-
-class Enemy {
-  constructor(x, y) {
+module.exports = class Enemy {
+  constructor(x, y, dir) {
     this.x = x;
     this.y = y;
+    this.dir = 0; // 0 = horizontal, 1 = vertical.
     this.width = 128;
     this.height = 128;
     this.xDir = 0;
@@ -53682,18 +53718,23 @@ class Enemy {
     this.animationSpeed = 0;
   }
 
-  update() {}
+  update() { }
 
-  draw(ctx) {}
+  draw(ctx) { }
 }
 
-class EnemyAnxiety extends Enemy {
-  constructor(x, y) {
-    super(x, y);
+},{}],16:[function(require,module,exports){
+const Enemy = require('./enemy');
+
+module.exports = class EnemyAnxiety extends Enemy {
+  constructor(x, y, dir) {
+    super(x, y, dir);
+    this.xDir = (dir === 0 ? 1 : 0);
+    this.yDir = (dir === 1 ? 1 : 0);
     this.speed = 220;
-    this.xDir = 1;
     this.animationSpeed = 0.18;
-    this.sprite = spriteEnemyAnxiety;
+    this.sprite = new Image();
+    this.sprite.src = '../../Art/2D/enemy_anxiety_spritesheet.png';
     this.animationSize = 3;
     this.CWidth = 29;
     this.CHeight = 29;
@@ -53711,6 +53752,8 @@ class EnemyAnxiety extends Enemy {
 
     if (this.xDir !== 0) {
       this.spriteIndexY = this.xDir === 1 ? 1 : 3;
+    } else {
+      this.spriteIndexY = this.yDir === 1 ? 2 : 4;
     }
     this.posX = parseInt((this.x + 50) / ((this.CWidth * 128) / this.CWidth));
     this.posY = parseInt((this.y + 20) / ((this.CHeight * 128) / this.CHeight));
@@ -53730,8 +53773,166 @@ class EnemyAnxiety extends Enemy {
     );
   }
 }
+},{"./enemy":15}],17:[function(require,module,exports){
+const Enemy = require('./enemy');
 
-},{}],16:[function(require,module,exports){
+module.exports = class EnemyBPD extends Enemy {
+  constructor(x, y, dir) {
+    super(x, y, dir);
+    this.xDir = (dir === 0 ? 1 : 0);
+    this.yDir = (dir === 1 ? 1 : 0);
+    this.speed = 150;
+    this.animationSpeed = 0.1;
+    this.sprite = new Image();
+    this.sprite.src = '../../Art/2D/enemy_borderline_personality_disorder_spritesheet.png';
+    this.animationSize = 4;
+    this.CWidth = 29;
+    this.CHeight = 29;
+    this.posX = parseInt(this.x / ((this.CWidth * 128) / this.CWidth));
+    this.posY = parseInt(this.y / ((this.CHeight * 128) / this.CHeight));
+  }
+
+  update(dt) {
+    this.hSpeed = this.speed * this.xDir * dt;
+    this.vSpeed = this.speed * this.yDir * dt;
+    this.x += this.hSpeed;
+    this.y += this.vSpeed;
+
+    this.spriteIndexX = (this.spriteIndexX + this.animationSpeed) % this.animationSize;
+
+    if (this.xDir !== 0) {
+      this.spriteIndexY = this.xDir === 1 ? 1 : 3;
+    } else {
+      this.spriteIndexY = this.yDir === 1 ? 2 : 4;
+    }
+    this.posX = parseInt((this.x + 50) / ((this.CWidth * 128) / this.CWidth));
+    this.posY = parseInt((this.y + 20) / ((this.CHeight * 128) / this.CHeight));
+  }
+
+  draw(ctx, worldPosX, worldPosY) {
+    ctx.drawImage(
+      this.sprite,
+      this.width * Math.floor(this.spriteIndexX),
+      this.height * this.spriteIndexY,
+      this.width,
+      this.height,
+      this.x - worldPosX,
+      this.y - worldPosY,
+      this.width,
+      this.height,
+    );
+  }
+}
+},{"./enemy":15}],18:[function(require,module,exports){
+const Enemy = require('./enemy');
+
+module.exports = class EnemyDepression extends Enemy {
+  constructor(x, y, dir) {
+    super(x, y, dir);
+    this.xDir = (dir === 0 ? 1 : 0);
+    this.yDir = (dir === 1 ? 1 : 0);
+    this.speed = 80;
+    this.animationSpeed = 0.07;
+    this.sprite = new Image();
+    this.sprite.src = '../../Art/2D/enemy_depression_spritesheet.png';
+    this.animationSize = 4;
+    this.CWidth = 29;
+    this.CHeight = 29;
+    this.posX = parseInt(this.x / ((this.CWidth * 128) / this.CWidth));
+    this.posY = parseInt(this.y / ((this.CHeight * 128) / this.CHeight));
+  }
+
+  update(dt) {
+    this.hSpeed = this.speed * this.xDir * dt;
+    this.vSpeed = this.speed * this.yDir * dt;
+    this.x += this.hSpeed;
+    this.y += this.vSpeed;
+
+    this.spriteIndexX = (this.spriteIndexX + this.animationSpeed) % this.animationSize;
+
+    if (this.xDir !== 0) {
+      this.spriteIndexY = this.xDir === 1 ? 1 : 3;
+    } else {
+      this.spriteIndexY = this.yDir === 1 ? 2 : 4;
+    }
+    this.posX = parseInt((this.x + 50) / ((this.CWidth * 128) / this.CWidth));
+    this.posY = parseInt((this.y + 20) / ((this.CHeight * 128) / this.CHeight));
+  }
+
+  draw(ctx, worldPosX, worldPosY) {
+    ctx.drawImage(
+      this.sprite,
+      this.width * Math.floor(this.spriteIndexX),
+      this.height * this.spriteIndexY,
+      this.width,
+      this.height,
+      this.x - worldPosX,
+      this.y - worldPosY,
+      this.width,
+      this.height,
+    );
+  }
+}
+},{"./enemy":15}],19:[function(require,module,exports){
+const EnemyAnxiety = require('./enemies/enemyAnxiety');
+const EnemyBPD = require('./enemies/enemyBPD');
+const EnemyDepression = require('./enemies/enemyDepression');
+
+module.exports = class EnemyController {
+  constructor() {
+    // this.spriteEnemyAnxiety = new Image();
+    // this.spriteEnemyAnxiety.src = '../../Art/2D/enemy_anxiety_spritesheet.png';
+    // this.spriteEnemyBPD = new Image();
+    // this.spriteEnemyBPD.src = '../../Art/2D/enemy_borderline_personality_disorderanxiety_spritesheet.png';
+    // this.spriteEnemyDepression = new Image();
+    // this.spriteEnemyDepression = '../../Art/2D/enemy_depression_spritesheet.png';
+    this.enemies = [];
+  }
+
+  // Spawn the enemies randomly.
+  spawnEnemies(mapArray, gameObjects) {
+    const chanceMax = 100;
+    let chance = chanceMax;
+    for (let y = 0; y < mapArray.length; y++) {
+      for (let x = 0; x < mapArray[y].length; x++) {
+        // Check for ground.
+        const rand = Math.floor(Math.random() * chance);
+        if (mapArray[x][y] === 0) {
+          if (rand === 0) {
+            switch (Math.floor(Math.random() * 3)) {
+              case 0:
+                gameObjects.push(new EnemyDepression(
+                  x * 128,
+                  y * 128 - 10,
+                  (mapArray[x][y - 1] === 1 && mapArray[x][y + 1] === 1 ? 0 : 1)
+                ));
+                break;
+              case 1:
+                gameObjects.push(new EnemyAnxiety(
+                  x * 128,
+                  y * 128 - 10,
+                  (mapArray[x][y - 1] === 1 && mapArray[x][y + 1] === 1 ? 0 : 1)
+                ));
+                break;
+              case 2:
+                gameObjects.push(new EnemyBPD(
+                  x * 128,
+                  y * 128 - 10,
+                  (mapArray[x][y - 1] === 1 && mapArray[x][y + 1] === 1 ? 0 : 1)
+                ));
+                break;
+              default: break;
+            }
+            chance = chanceMax;
+          }
+          chance -= 1;
+        }
+      }
+    }
+  }
+}
+
+},{"./enemies/enemyAnxiety":16,"./enemies/enemyBPD":17,"./enemies/enemyDepression":18}],20:[function(require,module,exports){
 (function (global){
 /* eslint-disable eqeqeq */
 /* eslint-disable no-plusplus */
@@ -53741,7 +53942,7 @@ global.GLTFLoader = require('three-gltf-loader');
 
 require('./2DCanvas');
 require('./3DControls');
-const LevelOne = require('./LevelOne');
+const LevelOne = require('../src/LevelOne');
 
 const white = new THREE.Color('rgb(255, 255, 255)');
 // const black = new THREE.Color("rgb(0, 0, 0)");
@@ -53756,6 +53957,8 @@ const loader = new GLTFLoader();
 const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 800);
 const controls = new THREE.PointerLockControls(camera);
 const renderer = new THREE.WebGLRenderer();
+
+let isPlaying = false;
 
 const bottomRaycaster = new THREE.Raycaster(
   new THREE.Vector3(),
@@ -53801,33 +54004,36 @@ controls.addEventListener('unlock', () => {
 });
 scene.add(controls.getObject());
 const onKeyDown = (event) => {
-  switch (event.keyCode) {
-    case 38: // up
-    case 87: // w
-      moveForward = true;
-      break;
-    case 37: // left
-    case 65: // a
-      moveLeft = true;
-      break;
-    case 40: // down
-    case 83: // s
-      moveBackward = true;
-      break;
-    case 39: // right
-    case 68: // d
-      moveRight = true;
-      break;
-    case 32: // space
-      if (canJump) velocity.y += 300;
-      canJump = false;
-      break;
-    case 76:
-      // eslint-disable-next-line no-use-before-define
-      switchBackToTwoD();
-      break;
-    default:
-      break;
+  if (isPlaying) {
+    switch (event.keyCode) {
+      case 38: // up
+      case 87: // w
+        moveForward = true;
+        break;
+      case 37: // left
+      case 65: // a
+        moveLeft = true;
+        break;
+      case 40: // down
+      case 83: // s
+        moveBackward = true;
+        break;
+      case 39: // right
+      case 68: // d
+        moveRight = true;
+        break;
+      case 32: // space
+        if (canJump) velocity.y += 300;
+        canJump = false;
+        // console.log(canJump);
+        break;
+      case 76:
+        // eslint-disable-next-line no-use-before-define
+        switchBackToTwoD();
+        break;
+      default:
+        break;
+    }
   }
 };
 const onKeyUp = (event) => {
@@ -53860,33 +54066,39 @@ document.addEventListener('keyup', onKeyUp, false);
 const sizeOfPlatforms = 30;
 const sizeOfJump = sizeOfPlatforms / 2 + 50;
 console.log(`${sizeOfJump} Size Of Jump`);
-const levelOne = new LevelOne(scene, renderer, camera, sizeOfJump, sizeOfPlatforms);
+const levelOne = new LevelOne(
+  scene,
+  renderer,
+  camera,
+  sizeOfJump,
+  sizeOfPlatforms,
+  5,
+  switchBackToTwoD,
+);
 let gameLoopOne;
-function loadLevelOne() {}
-// loadLevelOne();
 
 scene.background = white;
 const lightHem = new THREE.HemisphereLight(0xffffbb, 0x080820, 1);
 scene.add(lightHem);
 
-loader.load(
-  '../Art/3D/player_arm.glb',
-  (gltf) => {
-    // called when the resource is loaded
-    gltf.scene.scale.set(0.5, 0.5, 0.5);
-    camera.add(gltf.scene);
-    gltf.scene.rotateY(Math.PI / 2);
-    gltf.scene.position.set(5, -8, -7);
-  },
-  (xhr) => {
-    // called while loading is progressing
-    console.log(`${(xhr.loaded / xhr.total) * 100}% loaded`);
-  },
-  (error) => {
-    // called when loading has errors
-    console.error('An error happened', error);
-  },
-);
+// loader.load(
+//   '../Art/3D/player_arm.glb',
+//   (gltf) => {
+//     // called when the resource is loaded
+//     gltf.scene.scale.set(0.5, 0.5, 0.5);
+//     camera.add(gltf.scene);
+//     gltf.scene.rotateY(Math.PI / 2);
+//     gltf.scene.position.set(5, -8, -7);
+//   },
+//   (xhr) => {
+//     // called while loading is progressing
+//     console.log(`${(xhr.loaded / xhr.total) * 100}% loaded`);
+//   },
+//   (error) => {
+//     // called when loading has errors
+//     console.error('An error happened', error);
+//   },
+// );
 
 const geometry = new THREE.BoxGeometry(10, 30, 10);
 const material = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
@@ -53895,77 +54107,82 @@ camera.add(player);
 
 // animate is like gameloop we could probably use setInverval if we wanted to E.X setInterval(animate, 33);
 const animate = () => {
-  requestAnimationFrame(animate);
-  if (controls.isLocked) {
-    const position = new THREE.Vector3().setFromMatrixPosition(player.matrixWorld);
-    // console.log();
-    bottomRaycaster.ray.origin.copy(position);
-    // // bottomRaycaster.ray.origin.y -= 10;
-    // topRaycaster.ray.origin.copy(position);
-    const platforms = levelOne.platFormsClass.map(x => x.cubeFor);
-    const collectibles = levelOne.collectibles.map(x => x.cubeFor);
-    const bottomIntersections = bottomRaycaster.intersectObjects(platforms);
-    // const topIntersections = topRaycaster.intersectObjects(platforms);
-    // const onObject = ;
-    // console.log(bottomIntersections.length);
-    // const headHit = topIntersections.length > 0;
-    time = performance.now();
-    delta = (time - prevTime) / 1000;
-    velocity.x -= velocity.x * 10.0 * delta;
-    velocity.z -= velocity.z * 10.0 * delta;
-    velocity.y -= 9.8 * 100.0 * delta; // 100.0 = mass
-    direction.z = Number(moveForward) - Number(moveBackward);
-    direction.x = Number(moveLeft) - Number(moveRight);
-    direction.normalize(); // this ensures consistent movements in all directions
-    if (moveForward || moveBackward) velocity.z -= direction.z * 1000.0 * delta;
-    if (moveLeft || moveRight) velocity.x -= direction.x * 1000.0 * delta;
-    if (bottomIntersections.length > 0) {
-      velocity.y = Math.max(0, velocity.y);
-      // controls.getObject().position.set(0, bottomIntersections[0].y + 10, 0);
-      canJump = true;
-    }
-    // if (headHit && velocity.y > 0) velocity.y = 0;
-    for (let vertexIndex = 0; vertexIndex < player.geometry.vertices.length; vertexIndex++) {
-      const localVertex = player.geometry.vertices[vertexIndex].clone();
-      const globalVertex = localVertex.applyMatrix4(player.matrixWorld);
-      const directionVector = globalVertex.sub(position);
-      const ray = new THREE.Raycaster(
-        position,
-        directionVector.clone().normalize(),
-        0,
-        directionVector.length(),
-      );
-      const collisionResults = ray.intersectObjects(collectibles);
-      if (collisionResults.length > 0) {
-        // a collision occurred... do something...
-        const { position } = collisionResults[0].object;
-        levelOne.collectibleCollision(position.x, position.y, position.z);
-        console.log('collision');
+  if (isPlaying) {
+    requestAnimationFrame(animate);
+    if (controls.isLocked) {
+      const position = new THREE.Vector3().setFromMatrixPosition(player.matrixWorld);
+      // console.log();
+      bottomRaycaster.ray.origin.copy(position);
+      // // bottomRaycaster.ray.origin.y -= 10;
+      // topRaycaster.ray.origin.copy(position);
+      const platforms = levelOne.platFormsClass.map(x => x.cubeFor);
+      const collectibles = levelOne.collectibles.map(x => x.cubeFor);
+      const bottomIntersections = bottomRaycaster.intersectObjects(platforms);
+      // const topIntersections = topRaycaster.intersectObjects(platforms);
+      // const onObject = ;
+      // console.log(bottomIntersections.length);
+      // const headHit = topIntersections.length > 0;
+      time = performance.now();
+      delta = (time - prevTime) / 1000;
+      velocity.x -= velocity.x * 10.0 * delta;
+      velocity.z -= velocity.z * 10.0 * delta;
+      velocity.y -= 9.8 * 100.0 * delta; // 100.0 = mass
+      direction.z = Number(moveForward) - Number(moveBackward);
+      direction.x = Number(moveLeft) - Number(moveRight);
+      direction.normalize(); // this ensures consistent movements in all directions
+      if (moveForward || moveBackward) velocity.z -= direction.z * 1000.0 * delta;
+      if (moveLeft || moveRight) velocity.x -= direction.x * 1000.0 * delta;
+      if (bottomIntersections.length > 0) {
+        velocity.y = Math.max(0, velocity.y);
+        // controls.getObject().position.set(0, bottomIntersections[0].y + 10, 0);
+        canJump = true;
+        console.log(true);
+      } else canJump = false;
+      // if (headHit && velocity.y > 0) velocity.y = 0;
+      for (let vertexIndex = 0; vertexIndex < player.geometry.vertices.length; vertexIndex++) {
+        const localVertex = player.geometry.vertices[vertexIndex].clone();
+        const globalVertex = localVertex.applyMatrix4(player.matrixWorld);
+        const directionVector = globalVertex.sub(position);
+        const ray = new THREE.Raycaster(
+          position,
+          directionVector.clone().normalize(),
+          0,
+          directionVector.length(),
+        );
+        const collisionResults = ray.intersectObjects(collectibles);
+        if (collisionResults.length > 0) {
+          // a collision occurred... do something...
+          const { position } = collisionResults[0].object;
+          levelOne.collectibleCollision(position.x, position.y, position.z);
+          console.log('collision');
+        }
       }
+      controls.getObject().translateX(velocity.x * delta);
+      controls.getObject().translateY(velocity.y * delta);
+      controls.getObject().translateZ(velocity.z * delta);
+      if (
+        bottomIntersections.length > 0
+        && position.y < bottomIntersections[0].object.position.y + 20
+      ) {
+        controls.getObject().position.y = bottomIntersections[0].object.position.y + 20;
+        // controls.getObject().position.set(position.x, bottomIntersections[0].object.y + 10, position.z);
+      }
+      if (position.y < -50) {
+        // velocity.y = 0;
+        controls
+          .getObject()
+          .position.set(levelOne.spawnPointX, levelOne.spawnPointY, levelOne.spawnPointZ);
+        // canJump = true;
+      }
+      prevTime = time;
     }
-    controls.getObject().translateX(velocity.x * delta);
-    controls.getObject().translateY(velocity.y * delta);
-    controls.getObject().translateZ(velocity.z * delta);
-    if (
-      bottomIntersections.length > 0
-      && position.y < bottomIntersections[0].object.position.y + 20
-    ) {
-      controls.getObject().position.y = bottomIntersections[0].object.position.y + 20;
-      // controls.getObject().position.set(position.x, bottomIntersections[0].object.y + 10, position.z);
-    }
-    if (position.y < -50) {
-      // velocity.y = 0;
-      controls.getObject().position.set(0, 10, 0);
-      // canJump = true;
-    }
-    prevTime = time;
+    renderer.render(scene, camera);
   }
-  renderer.render(scene, camera);
 };
 animate(); // to start loop
 let timeLeft = 100;
 
-// const scoreTimer = document.getElementById('scoreAndTimer3d');
+const scoreTimer = document.getElementById('scoreAndTimer3d');
 const canvas = document.getElementById('scoreTimer'); // gets the canvas I want to use
 const ctx = canvas.getContext('2d'); // makes it so anything ctx. will appear on the canvas
 
@@ -53974,6 +54191,7 @@ canvas.height = window.innerHeight;
 const image = new Image();
 image.id = 'pic';
 let forTimer = 0;
+let forTimerInverval;
 const timer = () => {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   forTimer++;
@@ -53998,17 +54216,21 @@ const timer = () => {
 const TwoCanvas = document.getElementById('backgroundCanvas');
 function checkFor3dTransation() {
   if (TwoCanvas.style.display == 'none') {
+    forTimerInverval = setInterval(timer, 100);
+    isPlaying = true;
+    timeLeft = 100;
     clearInterval(checkingThree);
     console.log('running');
     levelOne.generateScene();
     clearInterval(gameLoopOne);
-    gameLoopOne = setInterval(levelOne.gameLoop(), 33);
+    animate();
   }
 }
 let checkingThree = setInterval(checkFor3dTransation, 100);
 
 function switchBackToTwoD() {
   TwoCanvas.style.display = 'block';
+  isPlaying = false;
   console.log(
     'switch back to 2d !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!',
   );
@@ -54020,4 +54242,69 @@ function clearScene() {
 }
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./2DCanvas":3,"./3DControls":5,"./LevelOne":9,"three":2,"three-gltf-loader":1}]},{},[16]);
+},{"../src/LevelOne":9,"./2DCanvas":3,"./3DControls":5,"three":2,"three-gltf-loader":1}],21:[function(require,module,exports){
+module.exports = class Key {
+  constructor(x, y) {
+    this.x = x;
+    this.y = y;
+    this.sprite = new Image();
+    this.sprite.src = '../../Art/2D/key_spritesheet.png';
+    this.width = 128;
+    this.height = 128;
+    this.spriteIndex = 0;
+    this.animationSpeed = 0.12;
+    this.animationSize = 8;
+  }
+
+  update() {
+    this.spriteIndex = (this.spriteIndex + this.animationSpeed) % this.animationSize;
+  }
+
+  draw(ctx, worldPosX, worldPosY) {
+    ctx.drawImage(
+      this.sprite,
+      Math.floor(this.spriteIndex) * this.width,
+      0,
+      this.width,
+      this.height,
+      this.x - worldPosX,
+      this.y - worldPosY,
+      this.width,
+      this.height
+    );
+  }
+}
+},{}],22:[function(require,module,exports){
+const Key = require('./key');
+
+module.exports = class KeyController {
+  constructor() {
+    this.maxSpawnKeys = 3;
+  }
+
+  spawnKeys(mapArray, gameObjects) {
+    let keysSpawned = 0;
+    const chanceMax = 150;
+    let chance = chanceMax;
+    for (let y = 0; y < mapArray.length; y++) {
+      for (let x = 0; x < mapArray[y].length; x++) {
+        // Check for ground.
+        if (mapArray[x][y] === 0) {
+          if (Math.floor(Math.random() * chance) !== 0) {
+            continue;
+          }
+          gameObjects.push(new Key(x * 128, y * 128));
+          console.log('good');
+          keysSpawned++;
+          if (keysSpawned === this.maxSpawnKeys) {
+            return;
+          }
+          chance = chanceMax;
+        }
+        chance -= 1;
+      }
+    }
+  }
+
+}
+},{"./key":21}]},{},[20]);

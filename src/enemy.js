@@ -1,5 +1,6 @@
 /* eslint-disable radix */
 // Load the sprite sheets.
+/*
 const spriteEnemyAnxiety = new Image();
 spriteEnemyAnxiety.src = '../../Art/2D/enemy_anxiety_spritesheet.png';
 const spriteEnemyBPD = new Image();
@@ -35,9 +36,9 @@ class Enemy {
     this.animationSpeed = 0;
   }
 
-  update() {}
+  update() { }
 
-  draw(ctx) {}
+  draw(ctx) { }
 }
 
 class EnemyAnxiety extends Enemy {
@@ -83,3 +84,4 @@ class EnemyAnxiety extends Enemy {
     );
   }
 }
+*/

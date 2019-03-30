@@ -5,10 +5,13 @@
 /* eslint-disable eqeqeq */
 /* eslint-disable radix */
 // eslint-disable-next-line no-unused-vars
+const Enemy = require('./enemies/enemy');
+const Key = require('./key');
+
 module.exports = class MainCharacter {
-  constructor(x, y, width, height, mazeSize, mazeArray, context, EnemyArray) {
+  constructor(x, y, width, height, mazeSize, mazeArray, context, gameObjects, functToSwitch) {
     this.image = new Image();
-    this.image.src = '../../Art/2D/male2_spritesheet.png';
+    this.image.src = '../../Art/2D/female2_spritesheet.png';
     this.camera = undefined;
     this.x = x;
     this.y = y;
@@ -37,7 +40,9 @@ module.exports = class MainCharacter {
     this.moveDown = false;
     this.counter = 10;
     this.playerSpeed = 4;
-    this.EnemyArray = EnemyArray;
+    this.keysCollected = 0;
+    this.gameObjects = gameObjects;
+    this.functToSwitch = functToSwitch;
   }
 
   update() {
@@ -74,11 +79,30 @@ module.exports = class MainCharacter {
       this.spriteDir = this.xDir === 1 ? 0 : 2;
       this.spriteIndexY = this.spriteDir + 1;
     }
-    // for (let j = 0; j < this.EnemyArray.length; j++) {
-    //   if (this.EnemyArray[j].posX == this.posTopX && this.EnemyArray[j].posY == this.posTopY) {
-    //     console.log('collied with E');
-    //   }
-    // }
+    for (let j = 0; j < this.gameObjects.length; j++) {
+      if (this.gameObjects[j] instanceof Enemy) {
+        // Contact with enemy
+        const enemy = this.gameObjects[j];
+        if (this.x + this.width / 2 > enemy.x
+          && this.x + this.width / 2 < enemy.x + enemy.width
+          && this.y + this.height / 2 > enemy.y
+          && this.y + this.height / 2 < enemy.y + enemy.height) {
+          this.gameObjects.splice(j, 1);
+          this.functToSwitch();
+        }
+      }
+      if (this.gameObjects[j] instanceof Key) {
+        // Contact with key
+        const key = this.gameObjects[j];
+        if (this.x + this.width / 2 > key.x + 32
+          && this.x + this.width / 2 < key.x + key.width - 32
+          && this.y + this.height > key.y + key.height / 2 - 32
+          && this.y + this.height < key.y + key.height / 2 + 32) {
+          this.gameObjects.splice(j, 1);
+          this.keysCollected++;
+        }
+      }
+    }
   }
 
   draw(context, worldPosX, worldPosY) {
