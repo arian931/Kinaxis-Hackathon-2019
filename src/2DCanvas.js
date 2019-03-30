@@ -17,6 +17,9 @@ const RecursiveMaze = require('./RecursiveMaze');
 const PlayerCamera = require('./camera');
 const MainCharacter = require('./2DMainChar');
 
+
+
+
 console.log(canvas);
 
 // Load the tilemap.
@@ -62,8 +65,10 @@ const Player = new MainCharacter(
   mapArray,
   ctx,
   gameObjects,
+  // eslint-disable-next-line no-use-before-define
   switchToThreeD,
   // enemyController.enemies,
+  callBlurb,
 );
 gameObjects.push(Player);
 enemyController.spawnEnemies(mapArray, gameObjects);
@@ -324,9 +329,7 @@ function update() {
       }
     }
   }
-
 }
-
 
 function draw() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -399,6 +402,10 @@ function draw() {
       );
     }
   }
+}
+
+function callBlurb() {
+  console.log('Blurrb working!')
 }
 
 function gameLoop() {

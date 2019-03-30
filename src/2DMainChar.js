@@ -10,7 +10,7 @@ const Key = require('./key');
 const SpikeTrap = require('./spikeTrap');
 
 module.exports = class MainCharacter {
-  constructor(x, y, width, height, mazeSize, mazeArray, context, gameObjects, functToSwitch) {
+  constructor(x, y, width, height, mazeSize, mazeArray, context, gameObjects, functToSwitch, callBlurb) {
     this.image = new Image();
     this.image.src = '../../Art/2D/female2_spritesheet.png';
     this.camera = undefined;
@@ -44,6 +44,7 @@ module.exports = class MainCharacter {
     this.keysCollected = 0;
     this.gameObjects = gameObjects;
     this.functToSwitch = functToSwitch;
+    this.callBlurb = callBlurb;
   }
 
   update() {
@@ -101,6 +102,7 @@ module.exports = class MainCharacter {
           && this.y + this.height < key.y + key.height / 2 + 32) {
           this.gameObjects.splice(j, 1);
           this.keysCollected++;
+          this.callBlurb();
         }
       }
       if (this.gameObjects[j] instanceof SpikeTrap) {
