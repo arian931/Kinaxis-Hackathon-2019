@@ -48369,7 +48369,7 @@ global.ctx = canvas.getContext('2d');
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
 console.log('FUCKKKKKKKkkkkk !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!');
-const Menu = require('./menu.js');
+// const Menu = require('./menu.js');
 const Enemy = require('./enemies/enemy');
 const Key = require('./key');
 const SpikeTrap = require('./spikeTrap');
@@ -48382,8 +48382,8 @@ const MainCharacter = require('./2DMainChar');
 
 const blurb = document.getElementById('blurb');
 // const cxx = blurb.getContext('2d');
-const menu = new Menu(switchBackTo2D);
-menu.start();
+// const menu = new Menu(switchBackTo2D);
+// menu.start();
 console.log(canvas);
 
 // Load the tilemap.
@@ -48679,51 +48679,51 @@ function update() {
       }
 
       // x collision
-      if (enemy.xDir === 1) {
-        // Right collision
-        if (
-          mapArray[Math.floor((enemy.x + enemy.width / 2 + enemy.width / 4) / enemy.width)][
-          Math.floor((enemy.y + enemy.height / 2) / enemy.height)
-          ] !== 0
-        ) {
-          // The 4 is to make sure the enemy collides close enough to the wall.
-          enemy.xDir = -1;
-        }
-      } else if (enemy.xDir === -1) {
-        // Left collision
-        if (
-          mapArray[Math.floor((enemy.x + enemy.width / 2 - enemy.width / 4) / enemy.width)][
-          Math.floor((enemy.y + enemy.height / 2) / enemy.height)
-          ] !== 0
-        ) {
-          // The 4 is to make sure the enemy collides close enough to the wall.
-          enemy.xDir = 1;
-        }
-      }
+      // if (enemy.xDir === 1) {
+      //   // Right collision
+      //   if (
+      //     mapArray[Math.floor((enemy.x + enemy.width / 2 + enemy.width / 4) / enemy.width)][
+      //     Math.floor((enemy.y + enemy.height / 2) / enemy.height)
+      //     ] !== 0
+      //   ) {
+      //     // The 4 is to make sure the enemy collides close enough to the wall.
+      //     enemy.xDir = -1;
+      //   }
+      // } else if (enemy.xDir === -1) {
+      //   // Left collision
+      //   if (
+      //     mapArray[Math.floor((enemy.x + enemy.width / 2 - enemy.width / 4) / enemy.width)][
+      //     Math.floor((enemy.y + enemy.height / 2) / enemy.height)
+      //     ] !== 0
+      //   ) {
+      //     // The 4 is to make sure the enemy collides close enough to the wall.
+      //     enemy.xDir = 1;
+      //   }
+      // }
 
-      // y collision
-      if (enemy.yDir === 1) {
-        // Down collision
-        if (
-          mapArray[Math.floor((enemy.x + enemy.width / 2) / enemy.width)][
-          Math.floor((enemy.y + enemy.height - 24 + enemy.height / 4) / enemy.height)
-          ] !== 0
-        ) {
-          // The 24 is to make sure the enemy collides close enough to the bottom wall.
-          // The 4 is to make sure the enemy collides close enough to the wall.
-          enemy.yDir *= -1;
-        }
-      } else if (enemy.yDir === -1) {
-        // Up collision
-        if (
-          mapArray[Math.floor((enemy.x + enemy.width / 2) / enemy.width)][
-          Math.floor((enemy.y + enemy.height - enemy.height / 4) / enemy.height)
-          ] !== 0
-        ) {
-          // The 4 is to make sure the enemy collides close enough to the wall.
-          enemy.yDir *= -1;
-        }
-      }
+      // // y collision
+      // if (enemy.yDir === 1) {
+      //   // Down collision
+      //   if (
+      //     mapArray[Math.floor((enemy.x + enemy.width / 2) / enemy.width)][
+      //     Math.floor((enemy.y + enemy.height - 24 + enemy.height / 4) / enemy.height)
+      //     ] !== 0
+      //   ) {
+      //     // The 24 is to make sure the enemy collides close enough to the bottom wall.
+      //     // The 4 is to make sure the enemy collides close enough to the wall.
+      //     enemy.yDir *= -1;
+      //   }
+      // } else if (enemy.yDir === -1) {
+      //   // Up collision
+      //   if (
+      //     mapArray[Math.floor((enemy.x + enemy.width / 2) / enemy.width)][
+      //     Math.floor((enemy.y + enemy.height - enemy.height / 4) / enemy.height)
+      //     ] !== 0
+      //   ) {
+      //     // The 4 is to make sure the enemy collides close enough to the wall.
+      //     enemy.yDir *= -1;
+      //   }
+      // }
 
       // if (mapArray[Math.floor((enemy.x + enemy.width / 2 + (enemy.width / 4 * enemy.xDir)) / enemy.width)]
       // [Math.floor((enemy.y + enemy.height / 2) / enemy.height)] !== 0) {
@@ -48929,10 +48929,10 @@ function switchToThreeD() {
   InThreeD = true;
   checkForSwitchBackInerval = setInterval(funToCheckForSwitchBack, 33);
 }
-// window.requestAnimationFrame(gameLoop);
+window.requestAnimationFrame(gameLoop);
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./2DMainChar":3,"./RecursiveMaze":11,"./camera":13,"./enemies/enemy":14,"./enemyController":18,"./key":20,"./keyController":21,"./menu.js":22,"./spikeTrap":23,"./trapController":24}],3:[function(require,module,exports){
+},{"./2DMainChar":3,"./RecursiveMaze":11,"./camera":13,"./enemies/enemy":14,"./enemyController":18,"./key":20,"./keyController":21,"./spikeTrap":22,"./trapController":23}],3:[function(require,module,exports){
 /* eslint-disable no-plusplus */
 /* eslint-disable no-param-reassign */
 /* eslint-disable prefer-const */
@@ -49140,7 +49140,7 @@ module.exports = class MainCharacter {
   }
 };
 
-},{"./enemies/enemy":14,"./key":20,"./spikeTrap":23}],4:[function(require,module,exports){
+},{"./enemies/enemy":14,"./key":20,"./spikeTrap":22}],4:[function(require,module,exports){
 const THREE = require('three');
 /**
  * @author mrdoob / http://mrdoob.com/
@@ -50545,7 +50545,7 @@ module.exports = class Enemy {
     this.dir = 0; // 0 = horizontal, 1 = vertical.
     this.width = 128;
     this.height = 128;
-    this.speed = 0;
+    this.speed = 200;
     this.hSpeed = 0;
     this.vSpeed = 0;
     this.spriteIndexX = 0;
@@ -50596,10 +50596,13 @@ module.exports = class Enemy {
 
   // x and y are tile positions.
   move(x, y) {
-    console.log(x);
+    // console.log(x);
     const currentPosX = Math.floor((this.x + this.width / 2) / 128);
     const currentPosY = Math.floor((this.y + this.height / 2) / 128);
+    console.log(this.speed);
+    console.log(x - currentPosX);
     this.x += this.speed * (x - currentPosX);
+    // console.log(this.x);
     this.y += this.speed * (y - currentPosY);
     if (currentPosX === x && currentPosY === y) {
       console.log('test');
@@ -50744,7 +50747,7 @@ module.exports = class EnemyController {
 
   // Spawn the enemies randomly.
   spawnEnemies(mapArray, gameObjects) {
-    const chanceMax = 100;
+    const chanceMax = 2;
     let chance = chanceMax;
     for (let y = 0; y < mapArray.length; y++) {
       for (let x = 0; x < mapArray[y].length; x++) {
@@ -50779,7 +50782,7 @@ module.exports = class EnemyController {
                 break;
               default: break;
             }
-            chance = chanceMax;
+            // chance = chanceMax;
           }
           chance -= 1;
         }
@@ -51190,79 +51193,6 @@ module.exports = class KeyController {
 
 }
 },{"./key":20}],22:[function(require,module,exports){
-module.exports = class Menu {
-  constructor(switchBackTo2D) {
-    this.menuMusic = new Audio('./mp3/rain.mp3');
-    this.RADIUS = 50;
-    this.handleEvent = (e) => {
-      switch (e.type) {
-        case 'click':
-          if (Math.sqrt((e.clientX - canvas.width / 2) * (e.clientX - canvas.width / 2) + (e.clientY - canvas.height / 2) * (e.clientY - canvas.height / 2)) < this.RADIUS) {
-            canvas.removeEventListener('mousemove', this);
-            canvas.style.cursor = 'auto';
-            let timer = 0;
-            const circleBigger = setInterval(() => {
-              timer += 5;
-              ctx.fillStyle = 'white';
-              ctx.beginPath();
-              ctx.arc(canvas.width / 2, canvas.height / 2, timer, 0, 2 * Math.PI);
-              ctx.fill();
-              if (timer >= canvas.width / 1.5) {
-                clearInterval(circleBigger);
-                canvas.removeEventListener('click', this);
-                this.menuMusic.pause();
-                switchBackTo2D();
-                // console.log('test');
-              }
-            }, 20);
-          }
-          break;
-        case 'mousemove':
-          if (Math.sqrt((e.clientX - canvas.width / 2) * (e.clientX - canvas.width / 2) + (e.clientY - canvas.height / 2) * (e.clientY - canvas.height / 2)) < this.RADIUS) {
-            ctx.fillStyle = 'white';
-            ctx.beginPath();
-            ctx.arc(canvas.width / 2, canvas.height / 2, this.RADIUS - 1, 0, 2 * Math.PI);
-            ctx.fill();
-            canvas.style.cursor = 'pointer';
-          } else {
-            ctx.fillStyle = 'black';
-            ctx.beginPath();
-            ctx.arc(canvas.width / 2, canvas.height / 2, this.RADIUS - 1, 0, 2 * Math.PI);
-            ctx.fill();
-            canvas.style.cursor = 'auto';
-          }
-          break;
-        default:
-          break;
-      }
-    };
-  }
-
-
-  // handleMouseMove(e) {
-
-  // }
-
-  // handleMouseClick(e) {
-  // }
-
-  start() {
-    this.menuMusic.play();
-    ctx.fillStyle = 'black';
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
-    ctx.fillStyle = 'white';
-    ctx.font = '50px Arial';
-    ctx.fillText("Let's talk about mental health!", canvas.width / 10, canvas.height / 3);
-    ctx.strokeStyle = 'white';
-    ctx.beginPath();
-    ctx.arc(canvas.width / 2, canvas.height / 2, this.RADIUS, 0, 2 * Math.PI);
-    ctx.stroke();
-    canvas.addEventListener('mousemove', this);
-    canvas.addEventListener('click', this);
-  }
-};
-
-},{}],23:[function(require,module,exports){
 module.exports = class SpikeTrap {
   constructor(x, y) {
     this.x = x;
@@ -51294,7 +51224,7 @@ module.exports = class SpikeTrap {
     );
   }
 }
-},{}],24:[function(require,module,exports){
+},{}],23:[function(require,module,exports){
 const SpikeTrap = require('./spikeTrap');
 
 module.exports = class TrapController {
@@ -51318,4 +51248,4 @@ module.exports = class TrapController {
     }
   }
 }
-},{"./spikeTrap":23}]},{},[19]);
+},{"./spikeTrap":22}]},{},[19]);
