@@ -5,7 +5,8 @@ global.canvas = document.getElementById('backgroundCanvas');
 global.ctx = canvas.getContext('2d');
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
-// const Menu = require('./menu.js');
+console.log('FUCKKKKKKKkkkkk !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!');
+const Menu = require('./menu.js');
 const MiniGame = require('./Hindex');
 const Enemy = require('./enemies/enemy');
 const Key = require('./key');
@@ -18,10 +19,12 @@ const PlayerCamera = require('./camera');
 const MainCharacter = require('./2DMainChar');
 
 const blurb = document.getElementById('blurb');
+
+const music = new Audio('./mp3/Ivarelli - Fast and Sad.mp3');
 // const cxx = blurb.getContext('2d');
 
-// const menu = new Menu(switchBackTo2D);
-// menu.start();
+const menu = new Menu(switchBackTo2D);
+menu.start();
 
 console.log(canvas);
 
@@ -514,11 +517,12 @@ function gameLoop() {
   }
 }
 function switchBackTo2D() {
+  music.play();
   console.log('2d is back');
   if (InThreeD) {
     InThreeD = false;
-    gameLoop();
   }
+  gameLoop();
 }
 function funToCheckForSwitchBack() {
   // console.log('checkingFor3d');
@@ -536,4 +540,4 @@ function switchToThreeD() {
   checkForSwitchBackInerval = setInterval(funToCheckForSwitchBack, 33);
 }
 
-window.requestAnimationFrame(gameLoop);
+// window.requestAnimationFrame(gameLoop);
