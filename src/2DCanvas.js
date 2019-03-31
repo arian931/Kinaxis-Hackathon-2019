@@ -465,7 +465,7 @@ function draw() {
     minimapPosX
     + (Math.floor((Player.x + Player.width / 2) / Player.width) * minimap.canvas.width) / mapSize,
     minimapPosY
-    + (Math.floor((Player.y + Player.height - 4) / Player.height) * minimap.canvas.height)
+    + (Math.floor((Player.y + Player.height / 2) / Player.height) * minimap.canvas.height)
     / mapSize,
     minimap.canvas.width / mapSize,
     minimap.canvas.height / mapSize,
@@ -487,48 +487,6 @@ function draw() {
       );
     }
   }
-
-  // Draw the walls over the player.
-  if (mapArray[Math.floor((Player.x + Player.width / 2) / Player.width) - 1][Math.floor((Player.y + Player.height) / Player.height)] === 1) {
-    ctx.drawImage(
-      buffer.canvas,
-      (Math.floor((Player.x + Player.width / 2) / Player.width) - 1) * Player.width,
-      Math.floor((Player.y + Player.height) / Player.height) * Player.height,
-      Player.width,
-      Player.height,
-      (Math.floor((Player.x + Player.width / 2) / Player.width) - 1) * Player.width - worldPosX,
-      Math.floor((Player.y + Player.height) / Player.height) * Player.height - worldPosY,
-      Player.width,
-      Player.height
-    );
-  }
-  if (mapArray[Math.floor((Player.x + Player.width / 2) / Player.width)][Math.floor((Player.y + Player.height) / Player.height)] === 1) {
-    ctx.drawImage(
-      buffer.canvas,
-      Math.floor((Player.x + Player.width / 2) / Player.width) * Player.width,
-      Math.floor((Player.y + Player.height) / Player.height) * Player.height,
-      Player.width,
-      Player.height,
-      Math.floor((Player.x + Player.width / 2) / Player.width) * Player.width - worldPosX,
-      Math.floor((Player.y + Player.height) / Player.height) * Player.height - worldPosY,
-      Player.width,
-      Player.height
-    );
-  }
-  if (mapArray[Math.floor((Player.x + Player.width / 2) / Player.width) + 1][Math.floor((Player.y + Player.height) / Player.height)] === 1) {
-    ctx.drawImage(
-      buffer.canvas,
-      (Math.floor((Player.x + Player.width / 2) / Player.width) + 1) * Player.width,
-      Math.floor((Player.y + Player.height) / Player.height) * Player.height,
-      Player.width,
-      Player.height,
-      (Math.floor((Player.x + Player.width / 2) / Player.width) + 1) * Player.width - worldPosX,
-      Math.floor((Player.y + Player.height) / Player.height) * Player.height - worldPosY,
-      Player.width,
-      Player.height
-    );
-  }
-
 }
 
 function callBlurb() {
