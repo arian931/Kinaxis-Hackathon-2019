@@ -49323,6 +49323,17 @@ module.exports = class miniGame {
     this.canvas.width = window.innerWidth;
     this.canvas.height = window.innerHeight;
 
+    this.scene = {
+      background: new Image(),
+      ground: new Image(),
+      foreground: new Image(),
+    };
+
+    this.scene.background.src = '../../Art/2D/minigame/background.png';
+    this.scene.ground.src = '../../Art/2D/minigame/ground.png';
+    this.scene.foreground.src = '../../Art/2D/minigame/foreground_detail.png';
+
+
     this.player = new Player(300, this.canvas.height / 2 + 100, 30, 90, this.ctx);
     this.floorHeight = this.player.y + this.player.H;
     // this.block = new Block(canvas.width, floorHeight - 80, 40, 80, 50, ctx);
@@ -49411,10 +49422,13 @@ module.exports = class miniGame {
 
   gameLoop() {
     this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-    this.ctx.fillStyle = 'rgb(0,0,0)';
-    this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
-    this.ctx.fillStyle = 'rgb(0,0,200)';
-    this.ctx.fillRect(0, this.floorHeight, this.canvas.width, 20);
+    // this.ctx.fillStyle = 'rgb(0,0,0)';
+    // this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+    // this.ctx.fillStyle = 'rgb(0,0,200)';
+    // this.ctx.fillRect(0, this.floorHeight, this.canvas.width, 20);
+
+    this.ctx.drawImage(this.scene.background, this.ctx.canvas.width / 2 - 1600 / 2, this.ctx.canvas.height / 2 - 720 / 2);
+    this.ctx.drawImage(this.scene.ground, this.ctx.canvas.width / 2 - 1032 / 2, this.floorHeight);
     /*
      */
     if (this.counterForSpawn >= this.randomSpawn) {
@@ -49479,6 +49493,7 @@ module.exports = class miniGame {
     /*
      */
     this.player.draw();
+    this.ctx.drawImage(this.scene.foreground, this.ctx.canvas.width / 2 - 1600 / 2, this.ctx.canvas.height / 2 - 720 / 2);
   }
 
   addBlock() {
