@@ -18,7 +18,6 @@
       position: absolute;
       display: block;
     }
-
       #instructions {
         width: 40%;
         height: 60%;
@@ -32,34 +31,6 @@
         font-family: "Times New Roman", Times, serif;
         padding-bottom: 0%;
       }
-
-    #instructions {
-      width: 40%;
-      height: 75%;
-      display: -webkit-box;
-      display: -moz-box;
-      display: box;
-      -webkit-box-orient: horizontal;
-      -moz-box-orient: horizontal;
-      box-orient: horizontal;
-      -webkit-box-pack: center;
-      -moz-box-pack: center;
-      ‰box-pack: center;
-      -webkit-box-align: center;
-      -moz-box-align: center;
-      box-align: center;
-      color: #000000;
-      text-align: center;
-      cursor: pointer;
-      margin: auto;
-      margin-top: 5%;
-      background-color: rgba(60, 63, 60, 0.5);
-      border-radius: 10px;
-      padding-right: 1%;
-      padding-left: 1%;
-      font-family: "Times New Roman", Times, serif;
-    }
-
       #backgroundCanvas {
         display: block;
       }
@@ -116,6 +87,9 @@
         padding-right: 1%;
         padding-left: 1%;
       }
+      #scoreAndTimer3d {
+        display: none;
+      }
     </style>
   </head>
 
@@ -125,7 +99,7 @@
     <canvas id="transitionFor3d" style="display: none"></canvas>
     <div id="he" class="hello"></div>
     <div id="scoreAndTimer3d" class="scoreAndTimer"></div>
-    <div id="blurb"></div>
+    <!-- <div id="blurb"></div> -->
     <div id="after3dPos">
       <div class="after3dStyle">
         <h1>

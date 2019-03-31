@@ -48870,14 +48870,11 @@ function gameLoop() {
   }
 }
 function switchBackTo2D() {
-  // console.log('2d is back');
+  console.log('2d is back');
   if (InThreeD) {
     InThreeD = false;
-
     gameLoop();
-    s;
   }
-  gameLoop();
 }
 function funToCheckForSwitchBack() {
   // console.log('checkingFor3d');
@@ -48889,6 +48886,7 @@ function funToCheckForSwitchBack() {
 }
 let checkForSwitchBackInerval;
 function switchToThreeD() {
+  console.log('switched back to 3d');
   divToDrawTo.style.display = 'none';
   InThreeD = true;
   checkForSwitchBackInerval = setInterval(funToCheckForSwitchBack, 33);
@@ -49012,7 +49010,8 @@ module.exports = class MainCharacter {
           this.x + this.width / 2 > key.x + 32
           && this.x + this.width / 2 < key.x + key.width - 32
           && this.y + this.height / 2 > key.y + key.height / 2 - 32
-          && this.y + this.height / 2 + 32 < key.y + key.height / 2 + 32) {
+          && this.y + this.height / 2 + 32 < key.y + key.height / 2 + 32
+        ) {
           this.gameObjects.splice(j, 1);
           this.keysCollected++;
           this.callBlurb();
@@ -49062,10 +49061,10 @@ module.exports = class MainCharacter {
     // }
     if (
       this.mazeArray[Math.floor((this.x + 76 + this.playerSpeed) / this.width)][
-      Math.floor((this.y + 20) / this.height)
+        Math.floor((this.y + 20) / this.height)
       ] === 0
       && this.mazeArray[Math.floor((this.x + 76 + this.playerSpeed) / this.width)][
-      Math.floor((this.y + this.height) / this.height)
+        Math.floor((this.y + this.height) / this.height)
       ] === 0
     ) {
       this.hSpeed = this.playerSpeed;
@@ -49083,10 +49082,10 @@ module.exports = class MainCharacter {
     // }
     if (
       this.mazeArray[Math.floor((this.x + 50 - this.playerSpeed) / this.width)][
-      Math.floor((this.y + 20) / this.height)
+        Math.floor((this.y + 20) / this.height)
       ] === 0
       && this.mazeArray[Math.floor((this.x + 50 - this.playerSpeed) / this.width)][
-      Math.floor((this.y + this.height) / this.height)
+        Math.floor((this.y + this.height) / this.height)
       ] === 0
     ) {
       this.hSpeed = -this.playerSpeed;
@@ -49107,10 +49106,10 @@ module.exports = class MainCharacter {
     // this.posTopX = parseInt((this.x + 50) / ((this.CWidth * 128) / this.CWidth));
     if (
       this.mazeArray[Math.floor((this.x + 50) / this.width)][
-      Math.floor((this.y + this.height + this.playerSpeed) / this.height)
+        Math.floor((this.y + this.height + this.playerSpeed) / this.height)
       ] === 0
       && this.mazeArray[Math.floor((this.x + 76) / this.width)][
-      Math.floor((this.y + this.height + this.playerSpeed) / this.height)
+        Math.floor((this.y + this.height + this.playerSpeed) / this.height)
       ] === 0
     ) {
       this.vSpeed = this.playerSpeed;
@@ -49131,10 +49130,10 @@ module.exports = class MainCharacter {
     this.posTopX = parseInt((this.x + 50) / ((this.CWidth * 128) / this.CWidth));
     if (
       this.mazeArray[Math.floor((this.x + 50) / this.width)][
-      Math.floor((this.y + 20 - this.playerSpeed) / this.height)
+        Math.floor((this.y + 20 - this.playerSpeed) / this.height)
       ] === 0
       && this.mazeArray[Math.floor((this.x + 76) / this.width)][
-      Math.floor((this.y + 20 - this.playerSpeed) / this.height)
+        Math.floor((this.y + 20 - this.playerSpeed) / this.height)
       ] === 0
     ) {
       this.vSpeed = -this.playerSpeed;
@@ -50500,6 +50499,8 @@ module.exports = class WallGenerator {
 // eslint-disable-next-line no-unused-vars
 module.exports = class PlayerCamera {
   constructor(ctx) {
+    this.spriteKeysCollected = new Image();
+    this.spriteKeysCollected.src = '../../Art/2D/keys_collected.png';
     this.player = undefined;
     this.ctx = ctx;
     this.vWidth = ctx.canvas.width;
@@ -50536,6 +50537,20 @@ module.exports = class PlayerCamera {
       this.ctx.canvas.width,
       this.ctx.canvas.height,
     );
+
+    if (this.player !== undefined) {
+      this.ctx.drawImage(
+        this.spriteKeysCollected,
+        0,
+        this.player.keysCollected * 384 / 4,
+        288,
+        384 / 4,
+        20,
+        20,
+        288,
+        384 / 4
+      );
+    }
   }
 };
 
@@ -51116,9 +51131,9 @@ let checkingThree = setInterval(checkFor3dTransation, 100);
 function switchBackToTwoD() {
   TwoCanvas.style.display = 'block';
   isPlaying = false;
-  // console.log(
-  //   'switch back to 2d !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!',
-  // );
+  console.log(
+    'switch back to 2d !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!',
+  );
   checkingThree = setInterval(checkFor3dTransation, 100);
   clearScene();
 }

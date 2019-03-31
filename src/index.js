@@ -298,9 +298,9 @@ let checkingThree = setInterval(checkFor3dTransation, 100);
 function switchBackToTwoD() {
   TwoCanvas.style.display = 'block';
   isPlaying = false;
-  // console.log(
-  //   'switch back to 2d !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!',
-  // );
+  console.log(
+    'switch back to 2d !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!',
+  );
   checkingThree = setInterval(checkFor3dTransation, 100);
   clearScene();
 }
