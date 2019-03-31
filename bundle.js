@@ -48420,7 +48420,12 @@ const divToDrawTo = document.getElementById('backgroundCanvas');
 const miniGameCanvas = document.getElementById('minigameCanvas');
 const image = new Image();
 image.id = 'pic';
-
+const switchToMiniGame = () => {
+  miniGameCanvas.style.display = 'block';
+  divToDrawTo.style.display = 'none';
+  const minigame = new MiniGame();
+  minigame.start();
+};
 mapArray = Recursive.array;
 const Player = new MainCharacter(
   130,
@@ -48432,7 +48437,7 @@ const Player = new MainCharacter(
   ctx,
   gameObjects,
   // eslint-disable-next-line no-use-before-define
-  switchToThreeD,
+  switchToMiniGame,
   // enemyController.enemies,
   callBlurb,
 );
@@ -48832,10 +48837,10 @@ function draw() {
   ctx.fillStyle = 'blue';
   ctx.fillRect(
     minimapPosX
-    + (Math.floor((Player.x + Player.width / 2) / Player.width) * minimap.canvas.width) / mapSize,
+      + (Math.floor((Player.x + Player.width / 2) / Player.width) * minimap.canvas.width) / mapSize,
     minimapPosY
-    + (Math.floor((Player.y + Player.height / 2) / Player.height) * minimap.canvas.height)
-    / mapSize,
+      + (Math.floor((Player.y + Player.height / 2) / Player.height) * minimap.canvas.height)
+        / mapSize,
     minimap.canvas.width / mapSize,
     minimap.canvas.height / mapSize,
   );
@@ -48847,10 +48852,10 @@ function draw() {
       ctx.fillStyle = 'red';
       ctx.fillRect(
         minimapPosX
-        + (Math.floor((enemy.x + enemy.width / 2) / enemy.width) * minimap.canvas.width) / mapSize,
+          + (Math.floor((enemy.x + enemy.width / 2) / enemy.width) * minimap.canvas.width) / mapSize,
         minimapPosY
-        + (Math.floor((enemy.y + enemy.height - 4) / enemy.height) * minimap.canvas.height)
-        / mapSize,
+          + (Math.floor((enemy.y + enemy.height - 4) / enemy.height) * minimap.canvas.height)
+            / mapSize,
         minimap.canvas.width / mapSize,
         minimap.canvas.height / mapSize,
       );
@@ -48894,13 +48899,6 @@ function switchToThreeD() {
   InThreeD = true;
   checkForSwitchBackInerval = setInterval(funToCheckForSwitchBack, 33);
 }
-
-const switchToMiniGame = () => {
-  miniGameCanvas.style.display = 'block';
-  divToDrawTo.style.display = 'none';
-  const minigame = new MiniGame();
-  minigame.start();
-};
 
 window.requestAnimationFrame(gameLoop);
 
@@ -49333,10 +49331,11 @@ module.exports = class miniGame {
     console.log(this.blockArray);
     this.playerInput = false;
     this.jumping = false;
-    this.jumpPower = 25;
+    this.jumpPower = 35;
     this.jumpDuration = 8;
     this.jumpCounter = 0;
     this.gravity = 20;
+    this.gravityIsStrong = false;
     this.jumpingMultiplier = 1;
     this.falling = false;
     this.isJumping = false;
@@ -49365,6 +49364,14 @@ module.exports = class miniGame {
                 console.log('not alloud to jump');
               }
               break;
+            case 'KeyS':
+            case 'ArrowDown':
+              if (!this.gravityIsStrong) {
+                console.log('strong gravity');
+                this.gravityIsStrong = true;
+                this.gravity = this.gravity * 4;
+              }
+              break;
             default:
           }
           break;
@@ -49373,6 +49380,13 @@ module.exports = class miniGame {
             case 'KeyW':
             case 'ArrowUp':
               this.playerInput = false;
+              break;
+            case 'KeyS':
+            case 'ArrowDown':
+              if (this.gravityIsStrong) {
+                this.gravityIsStrong = false;
+                this.gravity = this.gravity / 4;
+              }
               break;
             default:
           }
@@ -49419,8 +49433,8 @@ module.exports = class miniGame {
       }
       this.blockArray[x].draw();
       if (
-        this.player.x + this.player.W >= this.blockArray[x].x
-        && this.player.x <= this.blockArray[x].x + this.blockArray[x].w
+        this.player.x + this.player.W - 5 >= this.blockArray[x].x
+        && this.player.x + 5 <= this.blockArray[x].x + this.blockArray[x].w
         && this.player.y + this.player.H >= this.blockArray[x].y
       ) {
         document.removeEventListener('keydown', this);
@@ -49480,10 +49494,7 @@ module.exports = class miniGame {
   }
 };
 
-
 // const block = new Block(canvas.width, floorHeight - 80, 40, 80, 50, ctx);
-
-
 
 },{"./PlayerClass":12,"./block":15}],8:[function(require,module,exports){
 module.exports = class insideWallsMaze {

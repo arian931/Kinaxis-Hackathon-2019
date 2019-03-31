@@ -25,10 +25,11 @@ module.exports = class miniGame {
     console.log(this.blockArray);
     this.playerInput = false;
     this.jumping = false;
-    this.jumpPower = 25;
+    this.jumpPower = 35;
     this.jumpDuration = 8;
     this.jumpCounter = 0;
     this.gravity = 20;
+    this.gravityIsStrong = false;
     this.jumpingMultiplier = 1;
     this.falling = false;
     this.isJumping = false;
@@ -57,6 +58,14 @@ module.exports = class miniGame {
                 console.log('not alloud to jump');
               }
               break;
+            case 'KeyS':
+            case 'ArrowDown':
+              if (!this.gravityIsStrong) {
+                console.log('strong gravity');
+                this.gravityIsStrong = true;
+                this.gravity = this.gravity * 2;
+              }
+              break;
             default:
           }
           break;
@@ -65,6 +74,13 @@ module.exports = class miniGame {
             case 'KeyW':
             case 'ArrowUp':
               this.playerInput = false;
+              break;
+            case 'KeyS':
+            case 'ArrowDown':
+              if (this.gravityIsStrong) {
+                this.gravityIsStrong = false;
+                this.gravity = this.gravity / 2;
+              }
               break;
             default:
           }
@@ -111,8 +127,8 @@ module.exports = class miniGame {
       }
       this.blockArray[x].draw();
       if (
-        this.player.x + this.player.W >= this.blockArray[x].x
-        && this.player.x <= this.blockArray[x].x + this.blockArray[x].w
+        this.player.x + this.player.W - 5 >= this.blockArray[x].x
+        && this.player.x + 5 <= this.blockArray[x].x + this.blockArray[x].w
         && this.player.y + this.player.H >= this.blockArray[x].y
       ) {
         document.removeEventListener('keydown', this);

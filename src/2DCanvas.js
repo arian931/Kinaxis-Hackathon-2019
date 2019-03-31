@@ -57,7 +57,12 @@ const divToDrawTo = document.getElementById('backgroundCanvas');
 const miniGameCanvas = document.getElementById('minigameCanvas');
 const image = new Image();
 image.id = 'pic';
-
+const switchToMiniGame = () => {
+  miniGameCanvas.style.display = 'block';
+  divToDrawTo.style.display = 'none';
+  const minigame = new MiniGame();
+  minigame.start();
+};
 mapArray = Recursive.array;
 const Player = new MainCharacter(
   130,
@@ -69,7 +74,7 @@ const Player = new MainCharacter(
   ctx,
   gameObjects,
   // eslint-disable-next-line no-use-before-define
-  switchToThreeD,
+  switchToMiniGame,
   // enemyController.enemies,
   callBlurb,
 );
@@ -469,10 +474,10 @@ function draw() {
   ctx.fillStyle = 'blue';
   ctx.fillRect(
     minimapPosX
-    + (Math.floor((Player.x + Player.width / 2) / Player.width) * minimap.canvas.width) / mapSize,
+      + (Math.floor((Player.x + Player.width / 2) / Player.width) * minimap.canvas.width) / mapSize,
     minimapPosY
-    + (Math.floor((Player.y + Player.height / 2) / Player.height) * minimap.canvas.height)
-    / mapSize,
+      + (Math.floor((Player.y + Player.height / 2) / Player.height) * minimap.canvas.height)
+        / mapSize,
     minimap.canvas.width / mapSize,
     minimap.canvas.height / mapSize,
   );
@@ -484,10 +489,10 @@ function draw() {
       ctx.fillStyle = 'red';
       ctx.fillRect(
         minimapPosX
-        + (Math.floor((enemy.x + enemy.width / 2) / enemy.width) * minimap.canvas.width) / mapSize,
+          + (Math.floor((enemy.x + enemy.width / 2) / enemy.width) * minimap.canvas.width) / mapSize,
         minimapPosY
-        + (Math.floor((enemy.y + enemy.height - 4) / enemy.height) * minimap.canvas.height)
-        / mapSize,
+          + (Math.floor((enemy.y + enemy.height - 4) / enemy.height) * minimap.canvas.height)
+            / mapSize,
         minimap.canvas.width / mapSize,
         minimap.canvas.height / mapSize,
       );
@@ -531,12 +536,5 @@ function switchToThreeD() {
   InThreeD = true;
   checkForSwitchBackInerval = setInterval(funToCheckForSwitchBack, 33);
 }
-
-const switchToMiniGame = () => {
-  miniGameCanvas.style.display = 'block';
-  divToDrawTo.style.display = 'none';
-  const minigame = new MiniGame();
-  minigame.start();
-};
 
 window.requestAnimationFrame(gameLoop);
