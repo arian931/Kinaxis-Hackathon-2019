@@ -21,11 +21,15 @@ let jumping = false;
 const jumpPower = 20;
 const jumpDuration = 10;
 let jumpCounter = 0;
-const gravity = 4;
+const gravity = 8;
 let jumpingMultiplier = 1;
 const falling = false;
 const isJumping = false;
 console.log(floorHeight);
+
+const randomAmountOfTimeForSpawn = 20;
+let randomSpawn = 0;
+let counterForSpawn = 0;
 // addBlock();
 setInterval(gameLoop, 33);
 function gameLoop() {
@@ -36,9 +40,18 @@ function gameLoop() {
   ctx.fillRect(0, floorHeight, canvas.width, 10);
   /*
    */
+  if (counterForSpawn >= randomAmountOfTimeForSpawn + randomSpawn) {
+    console.log('spawn');
+    randomSpawn = Math.floor(Math.random() * 50 + 1);
+    counterForSpawn = 0;
+    addBlock();
+  } else {
+    counterForSpawn++;
+  }
+  /*
+   */
   for (let x = 0; x < blockArray.length; x++) {
     if (!blockArray[x].update()) {
-      addBlock();
       blockArray.shift();
     }
     blockArray[x].draw();
@@ -50,7 +63,6 @@ function gameLoop() {
       console.log('collision');
     }
   }
-
   /*
    */
   if (jumping) {

@@ -16,7 +16,6 @@ class Player {
     // this.ctx.fillStyle = 'rgb(255,255,255)';
     // this.ctx.fillRect(this.x, this.y, this.W, this.H);
     this.spriteIndex = (this.spriteIndex + this.animationSpeed) % this.animationSize;
-
     this.ctx.drawImage(
       this.sprite,
       128 * Math.floor(this.spriteIndex),
@@ -24,9 +23,9 @@ class Player {
       128,
       128,
       this.x,
-      this.y,
+      this.y - 40,
       128,
-      128
+      128,
     );
   }
 }
