@@ -5,7 +5,7 @@ module.exports = class Enemy {
     this.dir = 0; // 0 = horizontal, 1 = vertical.
     this.width = 128;
     this.height = 128;
-    this.speed = 200;
+    this.speed = 0;
     this.hSpeed = 0;
     this.vSpeed = 0;
     this.spriteIndexX = 0;
@@ -26,7 +26,9 @@ module.exports = class Enemy {
         this.vis[i][j] = false;
       }
     }
-    this.move(Math.floor((this.x + this.width / 2) / 128), Math.floor((this.y + this.height / 2) / 128));
+    this.moveX = Math.floor(this.x / 128);
+    this.moveY = Math.floor(this.y / 128);
+    // this.move(, );
   }
 
   update(dt) {
@@ -37,6 +39,90 @@ module.exports = class Enemy {
     // Add the horizontal and vertical speed to enemy's position.
     // this.x += this.hSpeed;
     // this.y += this.vSpeed;
+
+    let currentPosX = Math.floor((this.x) / 128);
+    let currentPosY = Math.floor((this.y) / 128);
+    if (currentPosX !== this.moveX || currentPosY !== this.moveY) {
+      currentPosX = Math.floor((this.x) / 128);
+      currentPosY = Math.floor((this.y) / 128);
+      // console.log(this.speed);
+      // console.log(this.moveX - currentPosX);
+      this.x += this.speed * (this.moveX - currentPosX);
+      // console.log(this.x);
+      this.y += this.speed * (this.moveY - currentPosY);
+    }
+    if (currentPosX === this.moveX && currentPosY === this.moveY) {
+      // console.log('test');
+      const dirs = []; // 0 = right, 1 = down, 2 = left, 3 = up.
+      if (
+        !this.vis[Math.floor(this.x / 128) + 1][Math.floor(this.y / 128)]
+        && this.mapArray[Math.floor(this.x / 128) + 1][Math.floor(this.y / 128)] === 0
+      ) {
+        // Right collision
+        dirs.push(0);
+        this.vis.push(Math.floor(this.x / 128));
+        this.vis[Math.floor(this.x / 128) + 1][Math.floor(this.y / 128)] = true;
+      }
+      if (
+        !this.vis[Math.floor(this.x / 128) - 1][Math.floor(this.y / 128)]
+        && this.mapArray[Math.floor(this.x / 128) - 1][Math.floor(this.y / 128)] === 0) {
+        // Leftcollision
+        dirs.push(2);
+        this.vis.push(Math.floor(this.x / 128 - 1));
+        this.vis[Math.floor(this.x / 128)][Math.floor(this.y / 128)] = true;
+      }
+      if (
+        !this.vis[Math.floor(this.x / 128)][Math.floor(this.y / 128) + 1]
+        && this.mapArray[Math.floor(this.x / 128)][Math.floor(this.y / 128) + 1] === 0) {
+        // Down collision
+        dirs.push(1);
+        this.vis.push(Math.floor(this.x / 128));
+        this.vis[Math.floor(this.x / 128)][Math.floor(this.y / 128) + 1] = true;
+      }
+      if (
+        !this.vis[Math.floor(this.x / 128)][Math.floor(this.y / 128) - 1]
+        && this.mapArray[Math.floor(this.x / 128)][Math.floor(this.y / 128) - 1] === 0) {
+        // Up collision
+        dirs.push(3);
+        this.vis.push(Math.floor(this.x / 128));
+        this.vis[Math.floor(this.x / 128)][Math.floor(this.y / 128) - 1] = true;
+      }
+      console.log(dirs);
+      if (dirs.length === 0) {
+        for (let k = 0; k < this.mapArray.length; k++) {
+          for (let j = 0; j < this.mapArray[k].length; j++) {
+            this.vis[k][j] = false;
+          }
+        }
+      }
+      // this.move(10, 10);
+      // this.move(2, 2);
+      const randDir = Math.floor(Math.random() * dirs.length);
+      switch (dirs[randDir]) {
+        case 0:
+          console.log('move right');
+          this.moveX = Math.floor(this.x / 128) + 1;
+          this.moveY = Math.floor(this.y / 128);
+          break;
+        case 1:
+          console.log('move down');
+          this.moveX = Math.floor(this.x / 128);
+          this.moveY = Math.floor(this.y / 128) + 1;
+          break;
+        case 2:
+          console.log('move left');
+          this.moveX = Math.floor(this.x / 128) - 1;
+          this.moveY = Math.floor(this.y / 128);
+          break;
+        case 3:
+          console.log('move up');
+          this.moveX = Math.floor(this.x / 128);
+          this.moveY = Math.floor(this.y / 128) - 1;
+          break;
+        default:
+          break;
+      }
+    }
 
     // Increase the sprite's frame position.
     this.spriteIndexX = (this.spriteIndexX + this.animationSpeed) % this.animationSize;
@@ -55,85 +141,9 @@ module.exports = class Enemy {
   }
 
   // x and y are tile positions.
-  move(x, y) {
-    // console.log(x);
-    const currentPosX = Math.floor((this.x + this.width / 2) / 128);
-    const currentPosY = Math.floor((this.y + this.height / 2) / 128);
-    console.log(this.speed);
-    console.log(x - currentPosX);
-    this.x += this.speed * (x - currentPosX);
-    // console.log(this.x);
-    this.y += this.speed * (y - currentPosY);
-    if (currentPosX === x && currentPosY === y) {
-      console.log('test');
-      const dirs = []; // 0 = right, 1 = down, 2 = left, 3 = up.
-      if (
-        !this.vis[Math.floor((this.x + this.width / 2) / 128) + 1][Math.floor((this.y + this.height / 2) / 128)]
-        && this.mapArray[Math.floor((this.x + this.width / 2) / 128) + 1][Math.floor((this.y + this.height / 2) / 128)] === 0
-      ) {
-        // Right collision
-        dirs.push(0);
-        this.vis.push(Math.floor((this.x + this.width / 2) / 128));
-        this.vis[Math.floor((this.x + this.width / 2) / 128) + 1][Math.floor((this.y + this.height / 2) / 128)] = true;
-      }
-      if (
-        !this.vis[Math.floor((this.x + this.width / 2) / 128) - 1][Math.floor((this.y + this.height / 2) / 128)]
-        && this.mapArray[Math.floor((this.x + this.width / 2) / 128) - 1][Math.floor((this.y + this.height / 2) / 128)] === 0) {
-        // Leftcollision
-        dirs.push(2);
-        this.vis.push(Math.floor((this.x + this.width / 2) / 128 - 1));
-        this.vis[Math.floor((this.x + this.width / 2) / 128)][Math.floor((this.y + this.height / 2) / 128)] = true;
-      }
-      if (
-        !this.vis[Math.floor((this.x + this.width / 2) / 128)][Math.floor((this.y + this.height / 2) / 128) + 1]
-        && this.mapArray[Math.floor((this.x + this.width / 2) / 128)][Math.floor((this.y + this.height / 2) / 128) + 1] === 0) {
-        // Down collision
-        dirs.push(1);
-        this.vis.push(Math.floor((this.x + this.width / 2) / 128));
-        this.vis[Math.floor((this.x + this.width / 2) / 128)][Math.floor((this.y + this.height / 2) / 128) + 1] = true;
-      }
-      if (
-        !this.vis[Math.floor((this.x + this.width / 2) / 128)][Math.floor((this.y + this.height / 2) / 128) - 1]
-        && this.mapArray[Math.floor((this.x + this.width / 2) / 128)][Math.floor((this.y + this.height / 2) / 128) - 1] === 0) {
-        // Up collision
-        dirs.push(3);
-        this.vis.push(Math.floor((this.x + this.width / 2) / 128));
-        this.vis[Math.floor((this.x + this.width / 2) / 128)][Math.floor((this.y + this.height / 2) / 128) - 1] = true;
-      }
-      console.log(dirs);
-      if (!dirs) {
-        for (let k = 0; k < this.mapArray.length; k++) {
-          for (let j = 0; j < this.mapArray[k].length; j++) {
-            this.vis[k][j] = false;
-          }
-        }
-        this.move(x, y);
-      }
-      // this.move(10, 10);
-      // this.move(2, 2);
-      const randDir = Math.floor(Math.random() * dirs.length);
-      switch (dirs[randDir]) {
-        case 0:
-          console.log('move right');
-          this.move(Math.floor((this.x + this.width / 2) / 128) + 1, Math.floor((this.y + this.height / 2) / 128));
-          break;
-        case 1:
-          console.log('move down');
-          this.move(Math.floor((this.x + this.width / 2) / 128), Math.floor((this.y + this.height / 2) / 128) + 1);
-          break;
-        case 2:
-          console.log('move left');
-          this.move(Math.floor((this.x + this.width / 2) / 128) - 1, Math.floor((this.y + this.height / 2) / 128));
-          break;
-        case 3:
-          console.log('move up');
-          this.move(Math.floor((this.x + this.width / 2) / 128), Math.floor((this.y + this.height / 2) / 128) - 1);
-          break;
-        default:
-          break;
-      }
-    }
-  }
+  // move(x, y) {
+  //   // console.log(x);
+  // }
 
   draw(ctx, worldPosX, worldPosY) {
     ctx.drawImage(
