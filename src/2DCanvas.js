@@ -189,15 +189,15 @@ tilemap.onload = () => {
 };
 document.addEventListener('keydown', (event) => {
   switch (event.code) {
-    case 'KeyRight':
     case 'KeyD':
+    case 'ArrowRight':
       Player.xDir = 1;
       Player.moveRight = true;
       Player.moveLeft = false;
       Player.moveDown = false;
       Player.moveUp = false;
       break;
-    case 'KeyLeft':
+    case 'ArrowLeft':
     case 'KeyA':
       Player.xDir = -1;
       Player.moveLeft = true;
@@ -205,7 +205,7 @@ document.addEventListener('keydown', (event) => {
       Player.moveDown = false;
       Player.moveUp = false;
       break;
-    case 'KeyUp':
+    case 'ArrowUp':
     case 'KeyW':
       Player.yDir = -1;
       Player.moveUp = true;
@@ -213,7 +213,7 @@ document.addEventListener('keydown', (event) => {
       Player.moveDown = false;
       Player.moveLeft = false;
       break;
-    case 'KeyDown':
+    case 'ArrowDown':
     case 'KeyS':
       Player.yDir = 1;
       Player.moveDown = true;
@@ -232,22 +232,22 @@ document.addEventListener('keydown', (event) => {
 
 document.addEventListener('keyup', (event) => {
   switch (event.code) {
-    case 'KeyRight':
+    case 'ArrowRight':
     case 'KeyD':
       Player.xDir = 0;
       Player.moveRight = false;
       break;
-    case 'KeyLeft':
+    case 'ArrowLeft':
     case 'KeyA':
       Player.xDir = 0;
       Player.moveLeft = false;
       break;
-    case 'KeyUp':
+    case 'ArrowUp':
     case 'KeyW':
       Player.yDir = 0;
       Player.moveUp = false;
       break;
-    case 'KeyDown':
+    case 'ArrowDown':
     case 'KeyS':
       Player.yDir = 0;
       Player.moveDown = false;
@@ -480,10 +480,10 @@ function draw() {
   ctx.fillStyle = 'blue';
   ctx.fillRect(
     minimapPosX
-      + (Math.floor((Player.x + Player.width / 2) / Player.width) * minimap.canvas.width) / mapSize,
+    + (Math.floor((Player.x + Player.width / 2) / Player.width) * minimap.canvas.width) / mapSize,
     minimapPosY
-      + (Math.floor((Player.y + Player.height / 2) / Player.height) * minimap.canvas.height)
-        / mapSize,
+    + (Math.floor((Player.y + Player.height / 2) / Player.height) * minimap.canvas.height)
+    / mapSize,
     minimap.canvas.width / mapSize,
     minimap.canvas.height / mapSize,
   );
@@ -495,10 +495,10 @@ function draw() {
       ctx.fillStyle = 'red';
       ctx.fillRect(
         minimapPosX
-          + (Math.floor((enemy.x + enemy.width / 2) / enemy.width) * minimap.canvas.width) / mapSize,
+        + (Math.floor((enemy.x + enemy.width / 2) / enemy.width) * minimap.canvas.width) / mapSize,
         minimapPosY
-          + (Math.floor((enemy.y + enemy.height - 4) / enemy.height) * minimap.canvas.height)
-            / mapSize,
+        + (Math.floor((enemy.y + enemy.height - 4) / enemy.height) * minimap.canvas.height)
+        / mapSize,
         minimap.canvas.width / mapSize,
         minimap.canvas.height / mapSize,
       );
