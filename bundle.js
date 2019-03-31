@@ -48370,6 +48370,7 @@ canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
 console.log('FUCKKKKKKKkkkkk !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!');
 // const Menu = require('./menu.js');
+const miniLoop = require('./Hindex');
 const Enemy = require('./enemies/enemy');
 const Key = require('./key');
 const SpikeTrap = require('./spikeTrap');
@@ -48416,6 +48417,7 @@ const Recursive = new RecursiveMaze(mapSize);
 const Camera = new PlayerCamera(ctx);
 Recursive.draw();
 const divToDrawTo = document.getElementById('backgroundCanvas');
+const miniGameCanvas = document.getElementById('minigameCanvas');
 const image = new Image();
 image.id = 'pic';
 
@@ -48573,7 +48575,10 @@ document.addEventListener('keydown', (event) => {
       Player.moveLeft = false;
       break;
     case 'Space':
-      switchToThreeD();
+      // switchToThreeD();
+      miniGameCanvas.style.display = 'block';
+      divToDrawTo.style.display = 'none';
+      miniLoop();
       break;
     default:
       break;
@@ -48894,7 +48899,7 @@ function switchToThreeD() {
 window.requestAnimationFrame(gameLoop);
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./2DMainChar":3,"./RecursiveMaze":11,"./camera":13,"./enemies/enemy":14,"./enemyController":18,"./key":20,"./keyController":21,"./spikeTrap":22,"./trapController":23}],3:[function(require,module,exports){
+},{"./2DMainChar":3,"./Hindex":7,"./RecursiveMaze":13,"./camera":16,"./enemies/enemy":17,"./enemyController":21,"./key":23,"./keyController":24,"./spikeTrap":25,"./trapController":26}],3:[function(require,module,exports){
 /* eslint-disable no-plusplus */
 /* eslint-disable no-param-reassign */
 /* eslint-disable prefer-const */
@@ -49142,7 +49147,7 @@ module.exports = class MainCharacter {
   }
 };
 
-},{"./enemies/enemy":14,"./key":20,"./spikeTrap":22}],4:[function(require,module,exports){
+},{"./enemies/enemy":17,"./key":23,"./spikeTrap":25}],4:[function(require,module,exports){
 const THREE = require('three');
 /**
  * @author mrdoob / http://mrdoob.com/
@@ -49295,6 +49300,139 @@ module.exports = class Floor {
 };
 
 },{}],7:[function(require,module,exports){
+/* eslint-disable no-plusplus */
+/* eslint-disable no-undef */
+/* eslint-disable no-use-before-define */
+/* eslint-disable no-unused-vars */
+const Player = require('./PlayerClass');
+const Block = require('./block');
+const canvas = document.getElementById('minigameCanvas');
+const ctx = canvas.getContext('2d');
+
+// canvas.width = window.innerWidth;
+// canvas.height = window.innerHeight;
+
+const player = new Player(300, canvas.height / 2 + 100, 30, 90, ctx);
+const floorHeight = player.y + player.H;
+const blockArray = [];
+const blockArrayI = 0;
+blockArray[0] = new Block(canvas.width, floorHeight - 80, 40, 80, 50, ctx, blockArray, addBlock);
+addBlock();
+let playerInput = false;
+let jumping = false;
+const jumpPower = 20;
+const jumpDuration = 10;
+let jumpCounter = 0;
+const gravity = 8;
+let jumpingMultiplier = 1;
+const falling = false;
+const isJumping = false;
+console.log(floorHeight);
+
+const randomAmountOfTimeForSpawn = 20;
+let randomSpawn = 0;
+let counterForSpawn = 0;
+module.exports = () => {
+  // addBlock();
+  setInterval(gameLoop, 33);
+  document.addEventListener('keydown', (event) => {
+    switch (event.code) {
+      case 'KeyW':
+      case 'ArrowUp':
+      case 'Space':
+        if (!jumping) {
+          // console.log("can jump");
+          jumping = true;
+          jumpCounter = 0;
+          jumpingMultiplier = 1;
+        } else {
+          console.log('not alloud to jump');
+        }
+        break;
+      default:
+    }
+  });
+  document.addEventListener('keyup', (event) => {
+    console.log(event.code);
+    switch (event.code) {
+      case 'KeyW':
+      case 'ArrowUp':
+      case 'Space':
+        playerInput = false;
+        break;
+      default:
+    }
+  });
+};
+
+
+// const block = new Block(canvas.width, floorHeight - 80, 40, 80, 50, ctx);
+
+
+function gameLoop() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  ctx.fillStyle = 'rgb(0,0,0)';
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+  ctx.fillStyle = 'rgb(0,0,200)';
+  ctx.fillRect(0, floorHeight, canvas.width, 10);
+  /*
+   */
+  if (counterForSpawn >= randomAmountOfTimeForSpawn + randomSpawn) {
+    console.log('spawn');
+    randomSpawn = Math.floor(Math.random() * 50 + 1);
+    counterForSpawn = 0;
+    addBlock();
+  } else {
+    counterForSpawn++;
+  }
+  /*
+   */
+  for (let x = 0; x < blockArray.length; x++) {
+    if (!blockArray[x].update()) {
+      blockArray.shift();
+    }
+    blockArray[x].draw();
+    if (
+      player.x + player.W >= blockArray[x].x
+      && player.x <= blockArray[x].x + blockArray[x].w
+      && player.y + player.H >= blockArray[x].y
+    ) {
+      console.log('collision');
+    }
+  }
+  /*
+   */
+  if (jumping) {
+    /*
+     */
+    jumpCounter++;
+    // console.log(jumpCounter + " jumpCounter");
+    if (jumpCounter >= jumpDuration) {
+      // console.log("jumping is false;");
+      // console.log(jumping);
+      if (player.y + player.H <= floorHeight - gravity) {
+        // console.log("gravity");
+        player.y += gravity;
+      } else {
+        jumping = false;
+      }
+    } else {
+      player.y -= jumpPower * jumpingMultiplier;
+      jumpingMultiplier *= 0.9;
+    }
+  }
+  /*
+   */
+  player.draw();
+}
+
+function addBlock() {
+  console.log(blockArray);
+  blockArray.push(new Block(canvas.width, floorHeight - 80, 40, 80, 20, blockArray, ctx));
+}
+
+
+},{"./PlayerClass":12,"./block":15}],8:[function(require,module,exports){
 module.exports = class insideWallsMaze {
   constructor(x, z, w, endBlock, scene) {
     this.x = x;
@@ -49329,7 +49467,7 @@ module.exports = class insideWallsMaze {
   }
 };
 
-},{}],8:[function(require,module,exports){
+},{}],9:[function(require,module,exports){
 /* eslint-disable no-unused-expressions */
 /* eslint-disable no-underscore-dangle */
 /* eslint-disable eqeqeq */
@@ -49978,7 +50116,7 @@ module.exports = class LevelOne {
   }
 };
 
-},{"./2DCanvas":2,"./Collectible":5,"./Floor.js":6,"./InsideWallsMaze.js":7,"./LevelOne":8,"./Map.js":9,"./Platform":10,"./RecursiveMaze":11,"./WallGenerator.js":12}],9:[function(require,module,exports){
+},{"./2DCanvas":2,"./Collectible":5,"./Floor.js":6,"./InsideWallsMaze.js":8,"./LevelOne":9,"./Map.js":10,"./Platform":11,"./RecursiveMaze":13,"./WallGenerator.js":14}],10:[function(require,module,exports){
 
 
 
@@ -50198,7 +50336,7 @@ module.exports = class Map {
     }
   }
 }
-},{}],10:[function(require,module,exports){
+},{}],11:[function(require,module,exports){
 /* eslint-disable no-plusplus */
 module.exports = class Platform {
   constructor(x, z, y, w, d, color, scene, movingVer, movingHor, movingZ) {
@@ -50281,7 +50419,40 @@ module.exports = class Platform {
   }
 };
 
-},{}],11:[function(require,module,exports){
+},{}],12:[function(require,module,exports){
+module.exports = class Player {
+  constructor(x, y, w, h, ctx) {
+    this.x = x;
+    this.y = y;
+    this.H = h;
+    this.W = w;
+    this.ctx = ctx;
+    this.sprite = new Image();
+    this.sprite.src = '../../Art/2D/female2_spritesheet.png';
+    this.spriteIndex = 0;
+    this.animationSize = 8;
+    this.animationSpeed = 0.54;
+  }
+
+  draw() {
+    // this.ctx.fillStyle = 'rgb(255,255,255)';
+    // this.ctx.fillRect(this.x, this.y, this.W, this.H);
+    this.spriteIndex = (this.spriteIndex + this.animationSpeed) % this.animationSize;
+    this.ctx.drawImage(
+      this.sprite,
+      128 * Math.floor(this.spriteIndex),
+      128,
+      128,
+      128,
+      this.x,
+      this.y - 40,
+      128,
+      128,
+    );
+  }
+}
+
+},{}],13:[function(require,module,exports){
 // eslint-disable-next-line no-unused-vars
 module.exports = class RecursiveMaze {
   constructor(size) {
@@ -50454,7 +50625,7 @@ module.exports = class RecursiveMaze {
   }
 };
 
-},{}],12:[function(require,module,exports){
+},{}],14:[function(require,module,exports){
 
 
 
@@ -50495,7 +50666,33 @@ module.exports = class WallGenerator {
   }
 };
 
-},{}],13:[function(require,module,exports){
+},{}],15:[function(require,module,exports){
+module.exports = class Block {
+  constructor(x, y, w, h, speed, array, ctx) {
+    this.x = x;
+    this.y = y;
+    this.w = w;
+    this.h = h;
+    this.ctx = ctx;
+    this.speed = speed;
+    this.array = array;
+  }
+
+  draw() {
+    ctx.fillStyle = 'rgb(255,0,0)';
+    ctx.fillRect(this.x, this.y, this.w, this.h);
+  }
+
+  update() {
+    this.x -= this.speed;
+    if (this.x <= 0) {
+      return false;
+    }
+    return true;
+  }
+};
+
+},{}],16:[function(require,module,exports){
 // eslint-disable-next-line no-unused-vars
 module.exports = class PlayerCamera {
   constructor(ctx) {
@@ -50554,7 +50751,7 @@ module.exports = class PlayerCamera {
   }
 };
 
-},{}],14:[function(require,module,exports){
+},{}],17:[function(require,module,exports){
 module.exports = class Enemy {
   constructor(x, y, dir, mapArray) {
     this.x = x;
@@ -50608,8 +50805,7 @@ module.exports = class Enemy {
     this.y += this.speed * (this.moveY - currentPosY);
     // }
     if (currentPosX === this.moveX && currentPosY === this.moveY) {
-      this.cntr += 1;
-      console.log(this.cntr);
+      // console.log(this.cntr);
       if (
         !this.vis[currentPosX + 1][currentPosY]
         && this.mapArray[currentPosX + 1][currentPosY] === 0
@@ -50643,7 +50839,6 @@ module.exports = class Enemy {
         // this.vis.push(currentPosX);
         this.vis[currentPosX][currentPosY - 1] = true;
       }
-      console.log(dirs);
       if (dirs.length === 0) {
         for (let k = 0; k < this.mapArray.length; k++) {
           for (let j = 0; j < this.mapArray[k].length; j++) {
@@ -50656,28 +50851,24 @@ module.exports = class Enemy {
       const randDir = Math.floor(Math.random() * dirs.length);
       switch (dirs[randDir]) {
         case 0:
-          console.log('move right');
           this.moveX = currentPosX + 1;
           this.moveY = currentPosY;
           this.xDir = 1;
           this.yDir = 0;
           break;
         case 1:
-          console.log('move down');
           this.moveX = currentPosX;
           this.moveY = currentPosY + 1;
           this.yDir = 1;
           this.xDir = 0;
           break;
         case 2:
-          console.log('move left');
           this.moveX = currentPosX - 1;
           this.moveY = currentPosY;
           this.xDir = -1;
           this.yDir = 0;
           break;
         case 3:
-          console.log('move up');
           this.moveX = currentPosX;
           this.moveY = currentPosY - 1;
           this.yDir = -1;
@@ -50726,7 +50917,7 @@ module.exports = class Enemy {
   }
 };
 
-},{}],15:[function(require,module,exports){
+},{}],18:[function(require,module,exports){
 const Enemy = require('./enemy');
 
 module.exports = class EnemyAnxiety extends Enemy {
@@ -50739,7 +50930,7 @@ module.exports = class EnemyAnxiety extends Enemy {
   }
 };
 
-},{"./enemy":14}],16:[function(require,module,exports){
+},{"./enemy":17}],19:[function(require,module,exports){
 const Enemy = require('./enemy');
 
 module.exports = class EnemyBPD extends Enemy {
@@ -50752,7 +50943,7 @@ module.exports = class EnemyBPD extends Enemy {
   }
 };
 
-},{"./enemy":14}],17:[function(require,module,exports){
+},{"./enemy":17}],20:[function(require,module,exports){
 const Enemy = require('./enemy');
 
 module.exports = class EnemyDepression extends Enemy {
@@ -50765,7 +50956,7 @@ module.exports = class EnemyDepression extends Enemy {
   }
 };
 
-},{"./enemy":14}],18:[function(require,module,exports){
+},{"./enemy":17}],21:[function(require,module,exports){
 const EnemyAnxiety = require('./enemies/enemyAnxiety');
 const EnemyBPD = require('./enemies/enemyBPD');
 const EnemyDepression = require('./enemies/enemyDepression');
@@ -50783,7 +50974,7 @@ module.exports = class EnemyController {
 
   // Spawn the enemies randomly.
   spawnEnemies(mapArray, gameObjects) {
-    const chanceMax = 2;
+    const chanceMax = 100;
     let chance = chanceMax;
     for (let y = 0; y < mapArray.length; y++) {
       for (let x = 0; x < mapArray[y].length; x++) {
@@ -50818,18 +51009,16 @@ module.exports = class EnemyController {
                 break;
               default: break;
             }
-            // chance = chanceMax;
+            chance = chanceMax;
           }
           chance -= 1;
         }
-        if (chance === 0)
-          break;
       }
     }
   }
-}
+};
 
-},{"./enemies/enemyAnxiety":15,"./enemies/enemyBPD":16,"./enemies/enemyDepression":17}],19:[function(require,module,exports){
+},{"./enemies/enemyAnxiety":18,"./enemies/enemyBPD":19,"./enemies/enemyDepression":20}],22:[function(require,module,exports){
 (function (global){
 /* eslint-disable eqeqeq */
 /* eslint-disable no-plusplus */
@@ -51175,7 +51364,7 @@ function showingResultsOf3DPositive() {
 }
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../src/LevelOne":8,"./2DCanvas":2,"./3DControls":4,"three":1}],20:[function(require,module,exports){
+},{"../src/LevelOne":9,"./2DCanvas":2,"./3DControls":4,"three":1}],23:[function(require,module,exports){
 module.exports = class Key {
   constructor(x, y) {
     this.x = x;
@@ -51207,7 +51396,7 @@ module.exports = class Key {
     );
   }
 }
-},{}],21:[function(require,module,exports){
+},{}],24:[function(require,module,exports){
 const Key = require('./key');
 
 module.exports = class KeyController {
@@ -51241,7 +51430,7 @@ module.exports = class KeyController {
   }
 
 }
-},{"./key":20}],22:[function(require,module,exports){
+},{"./key":23}],25:[function(require,module,exports){
 module.exports = class SpikeTrap {
   constructor(x, y) {
     this.x = x;
@@ -51273,7 +51462,7 @@ module.exports = class SpikeTrap {
     );
   }
 }
-},{}],23:[function(require,module,exports){
+},{}],26:[function(require,module,exports){
 const SpikeTrap = require('./spikeTrap');
 
 module.exports = class TrapController {
@@ -51297,4 +51486,4 @@ module.exports = class TrapController {
     }
   }
 }
-},{"./spikeTrap":22}]},{},[19]);
+},{"./spikeTrap":25}]},{},[22]);

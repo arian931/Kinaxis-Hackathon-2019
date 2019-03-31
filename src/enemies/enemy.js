@@ -51,8 +51,7 @@ module.exports = class Enemy {
     this.y += this.speed * (this.moveY - currentPosY);
     // }
     if (currentPosX === this.moveX && currentPosY === this.moveY) {
-      this.cntr += 1;
-      console.log(this.cntr);
+      // console.log(this.cntr);
       if (
         !this.vis[currentPosX + 1][currentPosY]
         && this.mapArray[currentPosX + 1][currentPosY] === 0
@@ -86,7 +85,6 @@ module.exports = class Enemy {
         // this.vis.push(currentPosX);
         this.vis[currentPosX][currentPosY - 1] = true;
       }
-      console.log(dirs);
       if (dirs.length === 0) {
         for (let k = 0; k < this.mapArray.length; k++) {
           for (let j = 0; j < this.mapArray[k].length; j++) {
@@ -99,28 +97,24 @@ module.exports = class Enemy {
       const randDir = Math.floor(Math.random() * dirs.length);
       switch (dirs[randDir]) {
         case 0:
-          console.log('move right');
           this.moveX = currentPosX + 1;
           this.moveY = currentPosY;
           this.xDir = 1;
           this.yDir = 0;
           break;
         case 1:
-          console.log('move down');
           this.moveX = currentPosX;
           this.moveY = currentPosY + 1;
           this.yDir = 1;
           this.xDir = 0;
           break;
         case 2:
-          console.log('move left');
           this.moveX = currentPosX - 1;
           this.moveY = currentPosY;
           this.xDir = -1;
           this.yDir = 0;
           break;
         case 3:
-          console.log('move up');
           this.moveX = currentPosX;
           this.moveY = currentPosY - 1;
           this.yDir = -1;
