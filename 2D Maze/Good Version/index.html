@@ -1,28 +1,37 @@
 <!DOCTYPE html>
 <html>
+  <head>
+    <title>Central 2D Maze</title>
+    <link rel="stylesheet" type="text/css" href="style.css" />
+  </head>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      overflow: hidden;
+    }
+  </style>
 
-<head>
-  <title>Central 2D Maze</title>
-  <link rel="stylesheet" type="text/css" href="style.css" />
-</head>
-<style>
-  body {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    overflow: hidden;
-  }
-</style>
-
-<body>
-  <canvas id="2DMaze"></canvas>
-  <canvas id="miniMap" background-color:blue></canvas>
-  <!-- <script src="RecursiveMaze.js" type="text/javascript"></script>
+  <body>
+    <canvas id="2DMaze"></canvas>
+    <canvas id="miniMap" background-color:blue></canvas>
+    <script
+      language="JavaScript"
+      type="text/javascript"
+      src="./PlayerClass.js"
+    ></script>
+    <script
+      language="JavaScript"
+      type="text/javascript"
+      src="./block.js"
+    ></script>
+    <script src="./Hindex.js"></script>
+    <!-- <script src="RecursiveMaze.js" type="text/javascript"></script>
   <script type="text/javascript" src="2DMainChar.js"></script>
   <script type="text/javascript" src="./camera.js"></script>
   <script type="text/javascript" src="./enemy.js"></script> -->
-  <script type="text/javascript" src="./menu.js"></script>
-  <!-- <script type="module" src="index.js"></script> -->
-</body>
-
+    <!-- <script type="text/javascript" src="./menu.js"></script> -->
+    <!-- <script type="module" src="index.js"></script> -->
+  </body>
 </html>

@@ -227,7 +227,6 @@ module.exports = class LevelOne {
   }
 
   gameLoop() {
-    console.log('3d gameLoop');
     if (this.camera.position.y <= -2000) {
       this.camera.position.x = 0;
       this.camera.position.z = 0;
@@ -627,19 +626,19 @@ module.exports = class LevelOne {
   }
 
   clearObjects() {
-    console.log(`${this.gameLoopInterval}seeing what it is clearing`);
-    clearInterval(this.gameLoopInterval);
-    console.log(
-      'cleared objects !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!',
-    );
+    // console.log(`${this.gameLoopInterval}seeing what it is clearing`);
+    // clearInterval(this.gameLoopInterval);
+    // console.log(
+    //   'cleared objects !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!',
+    // );
     for (let j = 0; j < this.collectibles.length; j++) {
-      console.log('deletingplatforms Col');
+      // console.log('deletingplatforms Col');
       this.scene.remove(this.collectibles[j].cubeFor);
     }
     this.collectibles = [];
     this.collectibles.length = 0;
     for (let j = 0; j < this.platFormsClass.length; j++) {
-      console.log('deletingplatforms');
+      // console.log('deletingplatforms');
       this.scene.remove(this.platFormsClass[j].cubeFor);
     }
     this.platFormsClass = [];

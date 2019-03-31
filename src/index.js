@@ -91,7 +91,7 @@ const onKeyDown = (event) => {
         break;
       case 76:
         // eslint-disable-next-line no-use-before-define
-        switchBackToTwoD();
+        showResultOf3D(true);
         break;
       default:
         break;
@@ -199,7 +199,7 @@ const animate = () => {
         velocity.y = Math.max(0, velocity.y);
         // controls.getObject().position.set(0, bottomIntersections[0].y + 10, 0);
         canJump = true;
-        console.log(true);
+        // console.log(true);
       } else canJump = false;
       // if (headHit && velocity.y > 0) velocity.y = 0;
       for (let vertexIndex = 0; vertexIndex < player.geometry.vertices.length; vertexIndex++) {
@@ -298,9 +298,9 @@ let checkingThree = setInterval(checkFor3dTransation, 100);
 function switchBackToTwoD() {
   TwoCanvas.style.display = 'block';
   isPlaying = false;
-  console.log(
-    'switch back to 2d !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!',
-  );
+  // console.log(
+  //   'switch back to 2d !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!',
+  // );
   checkingThree = setInterval(checkFor3dTransation, 100);
   clearScene();
 }
@@ -309,23 +309,34 @@ function clearScene() {
 }
 
 let showResultsInterval;
-const divForThreeResult = document.getElementById('after3d');
+let timeLeftForResult = 5;
+const divForThreeResultPos = document.getElementById('after3dPos');
+const divForThreeResultNeg = document.getElementById('after3dNeg');
 function showResultOf3D(good) {
   if (good) {
+    timeLeftForResult = 3;
     console.log('Good');
-    divForThreeResult.innerHTML = 'good ending';
+    divForThreeResultPos.style.display = 'block';
     showResultsInterval = setInterval(showingResultsOf3DPositive, 1000);
+    isPlaying = false;
   } else {
+    timeLeftForResult = 3;
     console.log('Good');
-    divForThreeResult.innerHTML = 'bad ending';
+    divForThreeResultNeg.style.display = 'block';
     showResultsInterval = setInterval(showingResultsOf3DPositive, 1000);
   }
 }
-let timeLeftForResult = 10;
 function showingResultsOf3DPositive() {
+  console.log(timeLeftForResult);
+  console.log('timeLeftFor3d');
   if (timeLeftForResult == 0) {
-    timeLeftForResult--;
-  } else {
+    divForThreeResultPos.style.display = 'none';
+    divForThreeResultNeg.style.display = 'none';
+    clearInterval(showResultsInterval);
+    console.log('else');
     switchBackToTwoD();
+  } else {
+    console.log(`${timeLeftForResult} 3dTimeLeft !!!!!!!!!!!!`);
+    timeLeftForResult--;
   }
 }

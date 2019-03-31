@@ -48830,7 +48830,7 @@ function draw() {
   ctx.fillStyle = 'blue';
   ctx.fillRect(
     minimapPosX
-    + (Math.floor((Player.x + Player.width / 2) / Player.width) * minimap.canvas.width) / mapSize,
+      + (Math.floor((Player.x + Player.width / 2) / Player.width) * minimap.canvas.width) / mapSize,
     minimapPosY
     + (Math.floor((Player.y + Player.height / 2) / Player.height) * minimap.canvas.height)
     / mapSize,
@@ -48845,10 +48845,10 @@ function draw() {
       ctx.fillStyle = 'red';
       ctx.fillRect(
         minimapPosX
-        + (Math.floor((enemy.x + enemy.width / 2) / enemy.width) * minimap.canvas.width) / mapSize,
+          + (Math.floor((enemy.x + enemy.width / 2) / enemy.width) * minimap.canvas.width) / mapSize,
         minimapPosY
-        + (Math.floor((enemy.y + enemy.height - 4) / enemy.height) * minimap.canvas.height)
-        / mapSize,
+          + (Math.floor((enemy.y + enemy.height - 4) / enemy.height) * minimap.canvas.height)
+            / mapSize,
         minimap.canvas.width / mapSize,
         minimap.canvas.height / mapSize,
       );
@@ -48910,7 +48910,18 @@ const Key = require('./key');
 const SpikeTrap = require('./spikeTrap');
 
 module.exports = class MainCharacter {
-  constructor(x, y, width, height, mazeSize, mazeArray, context, gameObjects, functToSwitch, callBlurb) {
+  constructor(
+    x,
+    y,
+    width,
+    height,
+    mazeSize,
+    mazeArray,
+    context,
+    gameObjects,
+    functToSwitch,
+    callBlurb,
+  ) {
     this.image = new Image();
     this.image.src = '../../Art/2D/female2_spritesheet.png';
     this.camera = undefined;
@@ -48985,10 +48996,12 @@ module.exports = class MainCharacter {
       if (this.gameObjects[j] instanceof Enemy) {
         // Contact with enemy
         const enemy = this.gameObjects[j];
-        if (this.x + this.width / 2 > enemy.x
+        if (
+          this.x + this.width / 2 > enemy.x
           && this.x + this.width / 2 < enemy.x + enemy.width
           && this.y + this.height / 2 > enemy.y
-          && this.y + this.height / 2 < enemy.y + enemy.height) {
+          && this.y + this.height / 2 < enemy.y + enemy.height
+        ) {
           this.gameObjects.splice(j, 1);
           this.functToSwitch();
         }
@@ -48996,7 +49009,8 @@ module.exports = class MainCharacter {
       if (this.gameObjects[j] instanceof Key) {
         // Contact with key
         const key = this.gameObjects[j];
-        if (this.x + this.width / 2 > key.x + 32
+        if (
+          this.x + this.width / 2 > key.x + 32
           && this.x + this.width / 2 < key.x + key.width - 32
           && this.y + this.height / 2 > key.y + key.height / 2 - 32
           && this.y + this.height / 2 < key.y + key.height / 2 + 32) {
@@ -49009,17 +49023,18 @@ module.exports = class MainCharacter {
         // Contect with spike trap.
         const trap = this.gameObjects[j];
         if (trap.spriteIndex >= 1.1) {
-          if (this.x + this.width / 2 > trap.x
+          if (
+            this.x + this.width / 2 > trap.x
             && this.x + this.width / 2 < trap.x + trap.width
-            && this.y + this.height / 2 > trap.y
-            && this.y + this.height / 2 < trap.y + trap.height) {
-            this.functToSwitch();
-          }
-        }
+<<<<<<< HEAD
+            && this.y + this.height > trap.y
+            && this.y + this.height < trap.y + trap.height
+          ) {
+            this.x = 130;
+            this.y = 120;
       }
     }
   }
-
   draw(context, worldPosX, worldPosY) {
     // console.log('draw');
     context.drawImage(
@@ -49083,7 +49098,6 @@ module.exports = class MainCharacter {
       this.vSpeed = this.playerSpeed;
       this.y += this.vSpeed;
     }
-
   }
 
   checkMoveNegY() {
@@ -49522,7 +49536,6 @@ module.exports = class LevelOne {
   }
 
   gameLoop() {
-    console.log('3d gameLoop');
     if (this.camera.position.y <= -2000) {
       this.camera.position.x = 0;
       this.camera.position.z = 0;
@@ -49922,19 +49935,19 @@ module.exports = class LevelOne {
   }
 
   clearObjects() {
-    console.log(`${this.gameLoopInterval}seeing what it is clearing`);
-    clearInterval(this.gameLoopInterval);
-    console.log(
-      'cleared objects !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!',
-    );
+    // console.log(`${this.gameLoopInterval}seeing what it is clearing`);
+    // clearInterval(this.gameLoopInterval);
+    // console.log(
+    //   'cleared objects !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!',
+    // );
     for (let j = 0; j < this.collectibles.length; j++) {
-      console.log('deletingplatforms Col');
+      // console.log('deletingplatforms Col');
       this.scene.remove(this.collectibles[j].cubeFor);
     }
     this.collectibles = [];
     this.collectibles.length = 0;
     for (let j = 0; j < this.platFormsClass.length; j++) {
-      console.log('deletingplatforms');
+      // console.log('deletingplatforms');
       this.scene.remove(this.platFormsClass[j].cubeFor);
     }
     this.platFormsClass = [];
@@ -50862,7 +50875,7 @@ const onKeyDown = (event) => {
         break;
       case 76:
         // eslint-disable-next-line no-use-before-define
-        switchBackToTwoD();
+        showResultOf3D(true);
         break;
       default:
         break;
@@ -50970,7 +50983,7 @@ const animate = () => {
         velocity.y = Math.max(0, velocity.y);
         // controls.getObject().position.set(0, bottomIntersections[0].y + 10, 0);
         canJump = true;
-        console.log(true);
+        // console.log(true);
       } else canJump = false;
       // if (headHit && velocity.y > 0) velocity.y = 0;
       for (let vertexIndex = 0; vertexIndex < player.geometry.vertices.length; vertexIndex++) {
@@ -51069,9 +51082,9 @@ let checkingThree = setInterval(checkFor3dTransation, 100);
 function switchBackToTwoD() {
   TwoCanvas.style.display = 'block';
   isPlaying = false;
-  console.log(
-    'switch back to 2d !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!',
-  );
+  // console.log(
+  //   'switch back to 2d !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!',
+  // );
   checkingThree = setInterval(checkFor3dTransation, 100);
   clearScene();
 }
@@ -51080,24 +51093,35 @@ function clearScene() {
 }
 
 let showResultsInterval;
-const divForThreeResult = document.getElementById('after3d');
+let timeLeftForResult = 5;
+const divForThreeResultPos = document.getElementById('after3dPos');
+const divForThreeResultNeg = document.getElementById('after3dNeg');
 function showResultOf3D(good) {
   if (good) {
+    timeLeftForResult = 3;
     console.log('Good');
-    divForThreeResult.innerHTML = 'good ending';
+    divForThreeResultPos.style.display = 'block';
     showResultsInterval = setInterval(showingResultsOf3DPositive, 1000);
+    isPlaying = false;
   } else {
+    timeLeftForResult = 3;
     console.log('Good');
-    divForThreeResult.innerHTML = 'bad ending';
+    divForThreeResultNeg.style.display = 'block';
     showResultsInterval = setInterval(showingResultsOf3DPositive, 1000);
   }
 }
-let timeLeftForResult = 10;
 function showingResultsOf3DPositive() {
+  console.log(timeLeftForResult);
+  console.log('timeLeftFor3d');
   if (timeLeftForResult == 0) {
-    timeLeftForResult--;
-  } else {
+    divForThreeResultPos.style.display = 'none';
+    divForThreeResultNeg.style.display = 'none';
+    clearInterval(showResultsInterval);
+    console.log('else');
     switchBackToTwoD();
+  } else {
+    console.log(`${timeLeftForResult} 3dTimeLeft !!!!!!!!!!!!`);
+    timeLeftForResult--;
   }
 }
 
