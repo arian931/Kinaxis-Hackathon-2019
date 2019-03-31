@@ -31,7 +31,7 @@ class speedPotion {
       for (let time = 15; time < 15; time++); {
         //boost last for 15 sec
         //check if correct check if the random is right
-      let ; new mainSpeed = SpeedBoost + mainSpeed;  
+     // let ; new mainSpeed = SpeedBoost + mainSpeed;  
       }
     }
   }
