@@ -21,6 +21,9 @@ const MainCharacter = require('./2DMainChar');
 const blurb = document.getElementById('blurb');
 
 const music = new Audio('./mp3/Ivarelli - Fast and Sad.mp3');
+music.volume = 0.5;
+
+const doorOpenSound = new Audio('./mp3/doorOpen.mp3');
 // const cxx = blurb.getContext('2d');
 
 const menu = new Menu(switchBackTo2D);
@@ -397,6 +400,7 @@ function draw() {
   // draw door.
   if (Player.keysCollected === keyController.maxSpawnKeys) {
     // Opened doors.
+    doorOpenSound.play();
     ctx.drawImage(
       doorTilemap,
       128,
@@ -508,6 +512,9 @@ function callBlurb() {
 }
 
 function gameLoop() {
+  if (music.paused) {
+    music.play();
+  }
   if (!InThreeD) {
     window.requestAnimationFrame(gameLoop);
     update();
@@ -517,7 +524,6 @@ function gameLoop() {
   }
 }
 function switchBackTo2D() {
-  music.play();
   console.log('2d is back');
   if (InThreeD) {
     InThreeD = false;

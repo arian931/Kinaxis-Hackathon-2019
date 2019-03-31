@@ -56,6 +56,9 @@ module.exports = class MainCharacter {
     this.gameObjects = gameObjects;
     this.functToSwitch = functToSwitch;
     this.callBlurb = callBlurb;
+    this.walkingSound = new Audio('./mp3/walking.wav');
+    this.keySound = new Audio('./mp3/key.mp3');
+    // this.walkingSound.volume = 1.5;
   }
 
   update() {
@@ -92,6 +95,15 @@ module.exports = class MainCharacter {
       this.spriteDir = this.xDir === 1 ? 0 : 2;
       this.spriteIndexY = this.spriteDir + 1;
     }
+
+    if (this.xDir || this.yDir) {
+      if (this.walkingSound.paused) {
+        this.walkingSound.play();
+      }
+    } else {
+      this.walkingSound.pause();
+    }
+
     for (let j = 0; j < this.gameObjects.length; j++) {
       if (this.gameObjects[j] instanceof Enemy) {
         // Contact with enemy
@@ -115,6 +127,7 @@ module.exports = class MainCharacter {
           && this.y + this.height / 2 > key.y + key.height / 2 - 32
           && this.y + this.height / 2 + 32 < key.y + key.height / 2 + 32
         ) {
+          this.keySound.play();
           this.gameObjects.splice(j, 1);
           this.keysCollected++;
           this.callBlurb();
@@ -164,10 +177,10 @@ module.exports = class MainCharacter {
     // }
     if (
       this.mazeArray[Math.floor((this.x + 76 + this.playerSpeed) / this.width)][
-        Math.floor((this.y + 20) / this.height)
+      Math.floor((this.y + 20) / this.height)
       ] === 0
       && this.mazeArray[Math.floor((this.x + 76 + this.playerSpeed) / this.width)][
-        Math.floor((this.y + this.height) / this.height)
+      Math.floor((this.y + this.height) / this.height)
       ] === 0
     ) {
       this.hSpeed = this.playerSpeed;
@@ -185,10 +198,10 @@ module.exports = class MainCharacter {
     // }
     if (
       this.mazeArray[Math.floor((this.x + 50 - this.playerSpeed) / this.width)][
-        Math.floor((this.y + 20) / this.height)
+      Math.floor((this.y + 20) / this.height)
       ] === 0
       && this.mazeArray[Math.floor((this.x + 50 - this.playerSpeed) / this.width)][
-        Math.floor((this.y + this.height) / this.height)
+      Math.floor((this.y + this.height) / this.height)
       ] === 0
     ) {
       this.hSpeed = -this.playerSpeed;
@@ -209,10 +222,10 @@ module.exports = class MainCharacter {
     // this.posTopX = parseInt((this.x + 50) / ((this.CWidth * 128) / this.CWidth));
     if (
       this.mazeArray[Math.floor((this.x + 50) / this.width)][
-        Math.floor((this.y + this.height + this.playerSpeed) / this.height)
+      Math.floor((this.y + this.height + this.playerSpeed) / this.height)
       ] === 0
       && this.mazeArray[Math.floor((this.x + 76) / this.width)][
-        Math.floor((this.y + this.height + this.playerSpeed) / this.height)
+      Math.floor((this.y + this.height + this.playerSpeed) / this.height)
       ] === 0
     ) {
       this.vSpeed = this.playerSpeed;
@@ -233,10 +246,10 @@ module.exports = class MainCharacter {
     this.posTopX = parseInt((this.x + 50) / ((this.CWidth * 128) / this.CWidth));
     if (
       this.mazeArray[Math.floor((this.x + 50) / this.width)][
-        Math.floor((this.y + 20 - this.playerSpeed) / this.height)
+      Math.floor((this.y + 20 - this.playerSpeed) / this.height)
       ] === 0
       && this.mazeArray[Math.floor((this.x + 76) / this.width)][
-        Math.floor((this.y + 20 - this.playerSpeed) / this.height)
+      Math.floor((this.y + 20 - this.playerSpeed) / this.height)
       ] === 0
     ) {
       this.vSpeed = -this.playerSpeed;
