@@ -54,6 +54,8 @@ module.exports = class EnemyController {
           }
           chance -= 1;
         }
+        if (chance === 0)
+          break;
       }
     }
   }

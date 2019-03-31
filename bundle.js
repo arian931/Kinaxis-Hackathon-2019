@@ -50531,6 +50531,7 @@ module.exports = class Enemy {
         this.vis[i][j] = false;
       }
     }
+    this.cntr = 0;
     this.moveX = Math.floor(this.x / 128);
     this.moveY = Math.floor(this.y / 128);
     // this.move(, );
@@ -50544,19 +50545,19 @@ module.exports = class Enemy {
     // Add the horizontal and vertical speed to enemy's position.
     // this.x += this.hSpeed;
     // this.y += this.vSpeed;
-
+    const dirs = []; // 0 = right, 1 = down, 2 = left, 3 = up.
     const currentPosX = Math.floor((this.x) / 128);
     const currentPosY = Math.floor((this.y) / 128);
-    if (currentPosX !== this.moveX || currentPosY !== this.moveY) {
-      // console.log(this.speed);
-      // console.log(this.moveX - currentPosX);
-      this.x += this.speed * (this.moveX - currentPosX);
-      // console.log(this.x);
-      this.y += this.speed * (this.moveY - currentPosY);
-    }
+    // if (currentPosX !== this.moveX || currentPosY !== this.moveY) {
+    // console.log(this.speed);
+    // console.log(this.moveX - currentPosX);
+    this.x += this.speed * (this.moveX - currentPosX);
+    // console.log(this.x);
+    this.y += this.speed * (this.moveY - currentPosY);
+    // }
     if (currentPosX === this.moveX && currentPosY === this.moveY) {
-      // console.log('test');
-      const dirs = []; // 0 = right, 1 = down, 2 = left, 3 = up.
+      this.cntr += 1;
+      console.log(this.cntr);
       if (
         !this.vis[currentPosX + 1][currentPosY]
         && this.mapArray[currentPosX + 1][currentPosY] === 0
@@ -50604,23 +50605,23 @@ module.exports = class Enemy {
       switch (dirs[randDir]) {
         case 0:
           console.log('move right');
-          this.moveX = Math.floor(this.x / 128) + 1;
-          this.moveY = Math.floor(this.y / 128);
+          this.moveX = currentPosX + 1;
+          this.moveY = currentPosY;
           break;
         case 1:
           console.log('move down');
-          this.moveX = Math.floor(this.x / 128);
-          this.moveY = Math.floor(this.y / 128) + 1;
+          this.moveX = currentPosX;
+          this.moveY = currentPosY + 1;
           break;
         case 2:
           console.log('move left');
-          this.moveX = Math.floor(this.x / 128) - 1;
-          this.moveY = Math.floor(this.y / 128);
+          this.moveX = currentPosX - 1;
+          this.moveY = currentPosY;
           break;
         case 3:
           console.log('move up');
-          this.moveX = Math.floor(this.x / 128);
-          this.moveY = Math.floor(this.y / 128) - 1;
+          this.moveX = currentPosX;
+          this.moveY = currentPosY - 1;
           break;
         default:
           break;
@@ -50759,6 +50760,8 @@ module.exports = class EnemyController {
           }
           chance -= 1;
         }
+        if (chance === 0)
+          break;
       }
     }
   }
