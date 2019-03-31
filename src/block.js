@@ -1,17 +1,16 @@
 module.exports = class Block {
-  constructor(x, y, w, h, speed, array, ctx) {
+  constructor(x, y, w, h, speed, ctx) {
     this.x = x;
     this.y = y;
     this.w = w;
     this.h = h;
     this.ctx = ctx;
     this.speed = speed;
-    this.array = array;
   }
 
   draw() {
-    ctx.fillStyle = 'rgb(255,0,0)';
-    ctx.fillRect(this.x, this.y, this.w, this.h);
+    this.ctx.fillStyle = 'rgb(255,0,0)';
+    this.ctx.fillRect(this.x, this.y, this.w, this.h);
   }
 
   update() {
