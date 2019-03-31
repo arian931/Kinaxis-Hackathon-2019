@@ -48385,6 +48385,8 @@ const blurb = document.getElementById('blurb');
 
 const music = new Audio('./mp3/Ivarelli - Fast and Sad.mp3');
 music.volume = 0.5;
+
+const doorOpenSound = new Audio('./mp3/doorOpen.mp3');
 // const cxx = blurb.getContext('2d');
 
 const menu = new Menu(switchBackTo2D);
@@ -48761,6 +48763,7 @@ function draw() {
   // draw door.
   if (Player.keysCollected === keyController.maxSpawnKeys) {
     // Opened doors.
+    doorOpenSound.play();
     ctx.drawImage(
       doorTilemap,
       128,
@@ -48969,6 +48972,7 @@ module.exports = class MainCharacter {
     this.functToSwitch = functToSwitch;
     this.callBlurb = callBlurb;
     this.walkingSound = new Audio('./mp3/walking.wav');
+    this.keySound = new Audio('./mp3/key.mp3');
     // this.walkingSound.volume = 1.5;
   }
 
@@ -49038,6 +49042,7 @@ module.exports = class MainCharacter {
           && this.y + this.height / 2 > key.y + key.height / 2 - 32
           && this.y + this.height / 2 + 32 < key.y + key.height / 2 + 32
         ) {
+          this.keySound.play();
           this.gameObjects.splice(j, 1);
           this.keysCollected++;
           this.callBlurb();

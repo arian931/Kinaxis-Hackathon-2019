@@ -57,6 +57,7 @@ module.exports = class MainCharacter {
     this.functToSwitch = functToSwitch;
     this.callBlurb = callBlurb;
     this.walkingSound = new Audio('./mp3/walking.wav');
+    this.keySound = new Audio('./mp3/key.mp3');
     // this.walkingSound.volume = 1.5;
   }
 
@@ -126,6 +127,7 @@ module.exports = class MainCharacter {
           && this.y + this.height / 2 > key.y + key.height / 2 - 32
           && this.y + this.height / 2 + 32 < key.y + key.height / 2 + 32
         ) {
+          this.keySound.play();
           this.gameObjects.splice(j, 1);
           this.keysCollected++;
           this.callBlurb();
