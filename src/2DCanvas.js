@@ -22,9 +22,6 @@ const blurb = document.getElementById('blurb');
 const cxx = blurb.getContext('2d');
 
 
-
-
-const blurb = document.getElementById('blurb');
 // const cxx = blurb.getContext('2d');
 // const menu = new Menu(switchBackTo2D);
 // menu.start();
@@ -558,7 +555,7 @@ function switchBackTo2D() {
   if (InThreeD) {
     InThreeD = false;
 
-    gameLoop();s
+    gameLoop(); s
 
   }
   gameLoop();
