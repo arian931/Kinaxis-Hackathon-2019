@@ -314,13 +314,13 @@ const divForThreeResultPos = document.getElementById('after3dPos');
 const divForThreeResultNeg = document.getElementById('after3dNeg');
 function showResultOf3D(good) {
   if (good) {
-    timeLeftForResult = 5;
+    timeLeftForResult = 3;
     console.log('Good');
     divForThreeResultPos.style.display = 'block';
     showResultsInterval = setInterval(showingResultsOf3DPositive, 1000);
     isPlaying = false;
   } else {
-    timeLeftForResult = 5;
+    timeLeftForResult = 3;
     console.log('Good');
     divForThreeResultNeg.style.display = 'block';
     showResultsInterval = setInterval(showingResultsOf3DPositive, 1000);
