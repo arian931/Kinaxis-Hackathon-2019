@@ -8,6 +8,16 @@ const ctx = canvas.getContext('2d');
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
 
+const scene = {
+  background: new Image(),
+  ground: new Image(),
+  foreground: new Image(),
+};
+
+scene.background.src = '../../Art/2D/minigame/background.png';
+scene.ground.src = '../../Art/2D/minigame/ground.png';
+scene.foreground.src = '../../Art/2D/minigame/foreground_detail.png';
+
 const player = new Player(300, canvas.height / 2 + 100, 30, 90, ctx);
 const floorHeight = player.y + player.H;
 // const block = new Block(canvas.width, floorHeight - 80, 40, 80, 50, ctx);
@@ -39,10 +49,14 @@ let counterForSpawn = 0;
 setInterval(gameLoop, 33);
 function gameLoop() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
-  ctx.fillStyle = 'rgb(0,0,0)';
-  ctx.fillRect(0, 0, canvas.width, canvas.height);
-  ctx.fillStyle = 'rgb(0,0,200)';
-  ctx.fillRect(0, floorHeight, canvas.width, 20);
+  // ctx.fillStyle = 'rgb(0,0,0)';
+  // ctx.fillRect(0, 0, canvas.width, canvas.height);
+  // ctx.fillStyle = 'rgb(0,0,200)';
+  // ctx.fillRect(0, floorHeight, canvas.width, 20);
+
+  ctx.drawImage(scene.background, ctx.canvas.width / 2 - 1600 / 2, ctx.canvas.height / 2 - 720 / 2);
+  ctx.drawImage(scene.ground, ctx.canvas.width / 2 - 1032 / 2, floorHeight);
+
   /*
    */
   if (counterForSpawn >= randomSpawn) {
@@ -101,6 +115,8 @@ function gameLoop() {
   /*
    */
   player.draw();
+  // Draw foreground.
+  ctx.drawImage(scene.foreground, ctx.canvas.width / 2 - 1600 / 2, ctx.canvas.height / 2 - 720 / 2);
 }
 
 function addBlock() {
