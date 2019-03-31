@@ -4,7 +4,7 @@ let mainX = MainCharacter.X;
 let mainY = MainCharacter.y;
 let mainWidth = MainCharacter.width;
 let mainHeight = MainCharacter.height;
-let mainspeed = MainCharacter.speed;
+let mainSpeed = MainCharacter.speed;
 // needed to transfer the maincharacter and position and dimisions over from other code in file
 // must always be a let var always changing          speedboost is dif
 class speedPotion {
@@ -30,9 +30,8 @@ class speedPotion {
       // overlap created 
       for (let time = 15; time < 15; time++); {
         //boost last for 15 sec
-        console.log('you got help')
         //check if correct check if the random is right
-        //   MainCharacter.speed = SpeedBoost; // double check not rediffended 
+      let ; new mainSpeed = SpeedBoost + mainSpeed;  
       }
     }
   }
