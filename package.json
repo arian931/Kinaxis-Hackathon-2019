@@ -20,12 +20,15 @@
   "homepage": "https://github.com/xXAligatorXx/WHAAC#readme",
   "dependencies": {
     "browserify": "^16.2.3",
-<<<<<<< HEAD
+
     "three": "^0.102.1",
     "three-gltf-loader": "^1.103.0"
-=======
+
     "three": "^0.102.1"
->>>>>>> c3f6aea0bd3e0f1d577a370fffb968ba018a2700
+
+
+    "three": "^0.102.1"
+
   },
   "devDependencies": {
     "babel-loader": "^8.0.5",

@@ -6,7 +6,7 @@ global.ctx = canvas.getContext('2d');
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
 console.log('FUCKKKKKKKkkkkk !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!');
-// require('./menu.js');
+// const Menu = require('./menu.js');
 const Enemy = require('./enemies/enemy');
 const Key = require('./key');
 const SpikeTrap = require('./spikeTrap');
@@ -17,12 +17,17 @@ const RecursiveMaze = require('./RecursiveMaze');
 const PlayerCamera = require('./camera');
 const MainCharacter = require('./2DMainChar');
 
-<<<<<<< HEAD
+
 const blurb = document.getElementById('blurb');
 const cxx = blurb.getContext('2d');
 
-=======
->>>>>>> c3f6aea0bd3e0f1d577a370fffb968ba018a2700
+
+
+
+const blurb = document.getElementById('blurb');
+// const cxx = blurb.getContext('2d');
+// const menu = new Menu(switchBackTo2D);
+// menu.start();
 
 console.log(canvas);
 
@@ -319,16 +324,62 @@ function update() {
       }
 
       // x collision
-      if (mapArray[Math.floor((enemy.x + enemy.width / 2 + (enemy.width / 4 * enemy.xDir)) / enemy.width)]
-      [Math.floor((enemy.y + enemy.height / 2) / enemy.height)] !== 0) {
-        enemy.xDir *= -1;
-      }
+      // if (enemy.xDir === 1) {
+      //   // Right collision
+      //   if (
+      //     mapArray[Math.floor((enemy.x + enemy.width / 2 + enemy.width / 4) / enemy.width)][
+      //     Math.floor((enemy.y + enemy.height / 2) / enemy.height)
+      //     ] !== 0
+      //   ) {
+      //     // The 4 is to make sure the enemy collides close enough to the wall.
+      //     enemy.xDir = -1;
+      //   }
+      // } else if (enemy.xDir === -1) {
+      //   // Left collision
+      //   if (
+      //     mapArray[Math.floor((enemy.x + enemy.width / 2 - enemy.width / 4) / enemy.width)][
+      //     Math.floor((enemy.y + enemy.height / 2) / enemy.height)
+      //     ] !== 0
+      //   ) {
+      //     // The 4 is to make sure the enemy collides close enough to the wall.
+      //     enemy.xDir = 1;
+      //   }
+      // }
 
-      // y collision.
-      if (mapArray[Math.floor((enemy.x + enemy.width / 2) / enemy.width)]
-      [Math.floor((enemy.y + enemy.height - (enemy.yDir === 1 ? 24 : 0) + (enemy.height / 4 * enemy.yDir)) / enemy.height)] !== 0) {
-        enemy.yDir *= -1;
-      }
+      // // y collision
+      // if (enemy.yDir === 1) {
+      //   // Down collision
+      //   if (
+      //     mapArray[Math.floor((enemy.x + enemy.width / 2) / enemy.width)][
+      //     Math.floor((enemy.y + enemy.height - 24 + enemy.height / 4) / enemy.height)
+      //     ] !== 0
+      //   ) {
+      //     // The 24 is to make sure the enemy collides close enough to the bottom wall.
+      //     // The 4 is to make sure the enemy collides close enough to the wall.
+      //     enemy.yDir *= -1;
+      //   }
+      // } else if (enemy.yDir === -1) {
+      //   // Up collision
+      //   if (
+      //     mapArray[Math.floor((enemy.x + enemy.width / 2) / enemy.width)][
+      //     Math.floor((enemy.y + enemy.height - enemy.height / 4) / enemy.height)
+      //     ] !== 0
+      //   ) {
+      //     // The 4 is to make sure the enemy collides close enough to the wall.
+      //     enemy.yDir *= -1;
+      //   }
+      // }
+
+      // if (mapArray[Math.floor((enemy.x + enemy.width / 2 + (enemy.width / 4 * enemy.xDir)) / enemy.width)]
+      // [Math.floor((enemy.y + enemy.height / 2) / enemy.height)] !== 0) {
+      //   enemy.xDir *= -1;
+      // }
+
+      // // y collision.
+      // if (mapArray[Math.floor((enemy.x + enemy.width / 2) / enemy.width)]
+      // [Math.floor((enemy.y + enemy.height - (enemy.yDir === 1 ? 24 : 0) + (enemy.height / 4 * enemy.yDir)) / enemy.height)] !== 0) {
+      //   enemy.yDir *= -1;
+      // }
     }
   }
 }
@@ -341,12 +392,52 @@ function draw() {
   // draw door.
   if (Player.keysCollected === keyController.maxSpawnKeys) {
     // Opened doors.
-    ctx.drawImage(doorTilemap, 128, 0, 128, 128, 128 * (mapSize - 1) - worldPosX, 128 * (mapSize - 3) - worldPosY, 128, 128);
-    ctx.drawImage(doorTilemap, 128, 128, 128, 128, 128 * (mapSize - 1) - worldPosX, 128 * (mapSize - 2) - worldPosY, 128, 128);
+    ctx.drawImage(
+      doorTilemap,
+      128,
+      0,
+      128,
+      128,
+      128 * (mapSize - 1) - worldPosX,
+      128 * (mapSize - 3) - worldPosY,
+      128,
+      128,
+    );
+    ctx.drawImage(
+      doorTilemap,
+      128,
+      128,
+      128,
+      128,
+      128 * (mapSize - 1) - worldPosX,
+      128 * (mapSize - 2) - worldPosY,
+      128,
+      128,
+    );
   } else {
     // Closed doors.
-    ctx.drawImage(doorTilemap, 0, 0, 128, 128, 128 * (mapSize - 1) - worldPosX, 128 * (mapSize - 3) - worldPosY, 128, 128);
-    ctx.drawImage(doorTilemap, 0, 128, 128, 128, 128 * (mapSize - 1) - worldPosX, 128 * (mapSize - 2) - worldPosY, 128, 128);
+    ctx.drawImage(
+      doorTilemap,
+      0,
+      0,
+      128,
+      128,
+      128 * (mapSize - 1) - worldPosX,
+      128 * (mapSize - 3) - worldPosY,
+      128,
+      128,
+    );
+    ctx.drawImage(
+      doorTilemap,
+      0,
+      128,
+      128,
+      128,
+      128 * (mapSize - 1) - worldPosX,
+      128 * (mapSize - 2) - worldPosY,
+      128,
+      128,
+    );
   }
 
   // Sort the game objects based on its y.
@@ -404,6 +495,48 @@ function draw() {
       );
     }
   }
+
+  // Draw the walls over the player.
+  if (mapArray[Math.floor((Player.x + Player.width / 2) / Player.width) - 1][Math.floor((Player.y + Player.height) / Player.height)] === 1) {
+    ctx.drawImage(
+      buffer.canvas,
+      (Math.floor((Player.x + Player.width / 2) / Player.width) - 1) * Player.width,
+      Math.floor((Player.y + Player.height) / Player.height) * Player.height,
+      Player.width,
+      Player.height,
+      (Math.floor((Player.x + Player.width / 2) / Player.width) - 1) * Player.width - worldPosX,
+      Math.floor((Player.y + Player.height) / Player.height) * Player.height - worldPosY,
+      Player.width,
+      Player.height
+    );
+  }
+  if (mapArray[Math.floor((Player.x + Player.width / 2) / Player.width)][Math.floor((Player.y + Player.height) / Player.height)] === 1) {
+    ctx.drawImage(
+      buffer.canvas,
+      Math.floor((Player.x + Player.width / 2) / Player.width) * Player.width,
+      Math.floor((Player.y + Player.height) / Player.height) * Player.height,
+      Player.width,
+      Player.height,
+      Math.floor((Player.x + Player.width / 2) / Player.width) * Player.width - worldPosX,
+      Math.floor((Player.y + Player.height) / Player.height) * Player.height - worldPosY,
+      Player.width,
+      Player.height
+    );
+  }
+  if (mapArray[Math.floor((Player.x + Player.width / 2) / Player.width) + 1][Math.floor((Player.y + Player.height) / Player.height)] === 1) {
+    ctx.drawImage(
+      buffer.canvas,
+      (Math.floor((Player.x + Player.width / 2) / Player.width) + 1) * Player.width,
+      Math.floor((Player.y + Player.height) / Player.height) * Player.height,
+      Player.width,
+      Player.height,
+      (Math.floor((Player.x + Player.width / 2) / Player.width) + 1) * Player.width - worldPosX,
+      Math.floor((Player.y + Player.height) / Player.height) * Player.height - worldPosY,
+      Player.width,
+      Player.height
+    );
+  }
+
 }
 
 function callBlurb() {
@@ -424,8 +557,11 @@ function switchBackTo2D() {
   // console.log('2d is back');
   if (InThreeD) {
     InThreeD = false;
+
     gameLoop();s
+
   }
+  gameLoop();
 }
 function funToCheckForSwitchBack() {
   // console.log('checkingFor3d');

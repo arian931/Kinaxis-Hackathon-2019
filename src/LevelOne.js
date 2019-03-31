@@ -21,6 +21,7 @@ module.exports = class LevelOne {
     sizeOfPlatforms,
     numberOfSections,
     functToSwitch,
+    showResult,
   ) {
     this.scene = scene;
     this.renderer = renderer;
@@ -51,6 +52,8 @@ module.exports = class LevelOne {
     this.spawnPointZ = 10;
     this.numberOfSection = numberOfSections;
     this.functToSwitch = functToSwitch;
+    this.timeLeft = 100;
+    this.showResult = showResult;
   }
 
   generateScene() {
@@ -619,7 +622,7 @@ module.exports = class LevelOne {
     } else {
       console.log('finsihed section');
       console.log('functToSwitch');
-      this.functToSwitch();
+      this.showResult(true);
     }
   }
 
