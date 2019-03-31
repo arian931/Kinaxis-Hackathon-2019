@@ -5,7 +5,7 @@ module.exports = class Enemy {
     this.dir = 0; // 0 = horizontal, 1 = vertical.
     this.width = 128;
     this.height = 128;
-    this.speed = 20;
+    this.speed = 200;
     this.hSpeed = 0;
     this.vSpeed = 0;
     this.spriteIndexX = 0;
@@ -56,11 +56,14 @@ module.exports = class Enemy {
 
   // x and y are tile positions.
   move(x, y) {
-    console.log(x);
+    // console.log(x);
     const currentPosX = Math.floor((this.x + this.width / 2) / 128);
     const currentPosY = Math.floor((this.y + this.height / 2) / 128);
-    this.x += this.speed * (x - currentPosX > 0 ? 1 : -1);
-    this.y += this.speed * (y - currentPosY > 0 ? 1 : -1);
+    console.log(this.speed);
+    console.log(x - currentPosX);
+    this.x += this.speed * (x - currentPosX);
+    // console.log(this.x);
+    this.y += this.speed * (y - currentPosY);
     if (currentPosX === x && currentPosY === y) {
       console.log('test');
       const dirs = []; // 0 = right, 1 = down, 2 = left, 3 = up.
@@ -104,6 +107,7 @@ module.exports = class Enemy {
             this.vis[k][j] = false;
           }
         }
+        this.move(x, y);
       }
       // this.move(10, 10);
       // this.move(2, 2);

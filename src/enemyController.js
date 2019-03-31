@@ -15,7 +15,7 @@ module.exports = class EnemyController {
 
   // Spawn the enemies randomly.
   spawnEnemies(mapArray, gameObjects) {
-    const chanceMax = 100;
+    const chanceMax = 2;
     let chance = chanceMax;
     for (let y = 0; y < mapArray.length; y++) {
       for (let x = 0; x < mapArray[y].length; x++) {
@@ -50,7 +50,7 @@ module.exports = class EnemyController {
                 break;
               default: break;
             }
-            chance = chanceMax;
+            // chance = chanceMax;
           }
           chance -= 1;
         }

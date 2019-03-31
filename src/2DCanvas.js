@@ -6,7 +6,7 @@ global.ctx = canvas.getContext('2d');
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
 console.log('FUCKKKKKKKkkkkk !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!');
-const Menu = require('./menu.js');
+// const Menu = require('./menu.js');
 const Enemy = require('./enemies/enemy');
 const Key = require('./key');
 const SpikeTrap = require('./spikeTrap');
@@ -19,8 +19,8 @@ const MainCharacter = require('./2DMainChar');
 
 const blurb = document.getElementById('blurb');
 // const cxx = blurb.getContext('2d');
-const menu = new Menu(switchBackTo2D);
-menu.start();
+// const menu = new Menu(switchBackTo2D);
+// menu.start();
 console.log(canvas);
 
 // Load the tilemap.
@@ -316,51 +316,51 @@ function update() {
       }
 
       // x collision
-      if (enemy.xDir === 1) {
-        // Right collision
-        if (
-          mapArray[Math.floor((enemy.x + enemy.width / 2 + enemy.width / 4) / enemy.width)][
-          Math.floor((enemy.y + enemy.height / 2) / enemy.height)
-          ] !== 0
-        ) {
-          // The 4 is to make sure the enemy collides close enough to the wall.
-          enemy.xDir = -1;
-        }
-      } else if (enemy.xDir === -1) {
-        // Left collision
-        if (
-          mapArray[Math.floor((enemy.x + enemy.width / 2 - enemy.width / 4) / enemy.width)][
-          Math.floor((enemy.y + enemy.height / 2) / enemy.height)
-          ] !== 0
-        ) {
-          // The 4 is to make sure the enemy collides close enough to the wall.
-          enemy.xDir = 1;
-        }
-      }
+      // if (enemy.xDir === 1) {
+      //   // Right collision
+      //   if (
+      //     mapArray[Math.floor((enemy.x + enemy.width / 2 + enemy.width / 4) / enemy.width)][
+      //     Math.floor((enemy.y + enemy.height / 2) / enemy.height)
+      //     ] !== 0
+      //   ) {
+      //     // The 4 is to make sure the enemy collides close enough to the wall.
+      //     enemy.xDir = -1;
+      //   }
+      // } else if (enemy.xDir === -1) {
+      //   // Left collision
+      //   if (
+      //     mapArray[Math.floor((enemy.x + enemy.width / 2 - enemy.width / 4) / enemy.width)][
+      //     Math.floor((enemy.y + enemy.height / 2) / enemy.height)
+      //     ] !== 0
+      //   ) {
+      //     // The 4 is to make sure the enemy collides close enough to the wall.
+      //     enemy.xDir = 1;
+      //   }
+      // }
 
-      // y collision
-      if (enemy.yDir === 1) {
-        // Down collision
-        if (
-          mapArray[Math.floor((enemy.x + enemy.width / 2) / enemy.width)][
-          Math.floor((enemy.y + enemy.height - 24 + enemy.height / 4) / enemy.height)
-          ] !== 0
-        ) {
-          // The 24 is to make sure the enemy collides close enough to the bottom wall.
-          // The 4 is to make sure the enemy collides close enough to the wall.
-          enemy.yDir *= -1;
-        }
-      } else if (enemy.yDir === -1) {
-        // Up collision
-        if (
-          mapArray[Math.floor((enemy.x + enemy.width / 2) / enemy.width)][
-          Math.floor((enemy.y + enemy.height - enemy.height / 4) / enemy.height)
-          ] !== 0
-        ) {
-          // The 4 is to make sure the enemy collides close enough to the wall.
-          enemy.yDir *= -1;
-        }
-      }
+      // // y collision
+      // if (enemy.yDir === 1) {
+      //   // Down collision
+      //   if (
+      //     mapArray[Math.floor((enemy.x + enemy.width / 2) / enemy.width)][
+      //     Math.floor((enemy.y + enemy.height - 24 + enemy.height / 4) / enemy.height)
+      //     ] !== 0
+      //   ) {
+      //     // The 24 is to make sure the enemy collides close enough to the bottom wall.
+      //     // The 4 is to make sure the enemy collides close enough to the wall.
+      //     enemy.yDir *= -1;
+      //   }
+      // } else if (enemy.yDir === -1) {
+      //   // Up collision
+      //   if (
+      //     mapArray[Math.floor((enemy.x + enemy.width / 2) / enemy.width)][
+      //     Math.floor((enemy.y + enemy.height - enemy.height / 4) / enemy.height)
+      //     ] !== 0
+      //   ) {
+      //     // The 4 is to make sure the enemy collides close enough to the wall.
+      //     enemy.yDir *= -1;
+      //   }
+      // }
 
       // if (mapArray[Math.floor((enemy.x + enemy.width / 2 + (enemy.width / 4 * enemy.xDir)) / enemy.width)]
       // [Math.floor((enemy.y + enemy.height / 2) / enemy.height)] !== 0) {
@@ -566,4 +566,4 @@ function switchToThreeD() {
   InThreeD = true;
   checkForSwitchBackInerval = setInterval(funToCheckForSwitchBack, 33);
 }
-// window.requestAnimationFrame(gameLoop);
+window.requestAnimationFrame(gameLoop);
