@@ -4,6 +4,7 @@
 /* eslint-disable no-unused-vars */
 const Player = require('./PlayerClass');
 const Block = require('./block');
+const Teacher = require('./teacher');
 
 module.exports = class miniGame {
   constructor() {
@@ -23,7 +24,6 @@ module.exports = class miniGame {
     this.scene.background.src = '../../Art/2D/minigame/background.png';
     this.scene.ground.src = '../../Art/2D/minigame/ground.png';
     this.scene.foreground.src = '../../Art/2D/minigame/foreground_detail.png';
-
 
     this.player = new Player(300, this.canvas.height / 2 + 100, 30, 90, this.ctx);
     this.floorHeight = this.player.y + this.player.H;
@@ -53,6 +53,18 @@ module.exports = class miniGame {
     this.maxAmountForRandomSpawn = 30;
     this.randomSpawn = 0;
     this.counterForSpawn = 0;
+
+    this.inTransition = false;
+    this.delayForTransition = 50;
+    this.counterForTransition = 0;
+    this.stopSpawning = false;
+
+    this.teacher = new Teacher(this.canvas.width, this.floorHeight - 90, 30, 90, 10, this.ctx);
+    this.endBlurbPos = document.getElementById('TwoDRunnerPositive');
+    this.endBlurbNeg = document.getElementById('TwoDRunnerNegative');
+
+    this.endBlurbDelay = 500;
+    this.endBlurbDelayCounter = 0;
 
     this.handleEvent = (e) => {
       switch (e.type) {
@@ -118,17 +130,51 @@ module.exports = class miniGame {
     // this.ctx.fillStyle = 'rgb(0,0,200)';
     // this.ctx.fillRect(0, this.floorHeight, this.canvas.width, 20);
 
-    this.ctx.drawImage(this.scene.background, this.ctx.canvas.width / 2 - 1600 / 2, this.ctx.canvas.height / 2 - 720 / 2);
+    this.ctx.drawImage(
+      this.scene.background,
+      this.ctx.canvas.width / 2 - 1600 / 2,
+      this.ctx.canvas.height / 2 - 720 / 2,
+    );
     this.ctx.drawImage(this.scene.ground, this.ctx.canvas.width / 2 - 1032 / 2, this.floorHeight);
+    if (this.numberOfBlocksPassed >= 5) {
+      this.stopSpawning = true;
+      if (this.blockArray.length <= 0) {
+        console.log('inTransiton');
+        this.inTransition = true;
+        if (this.teacher.x - 200 <= this.player.x) {
+          console.log(this.endBlurb);
+          this.endBlurbPos.style.display = 'block';
+          this.teacher.draw();
+          // console.log('startin convo');
+          if (this.endBlurbDelayCounter == this.endBlurbDelay) {
+            document.removeEventListener('keydown', this);
+            document.removeEventListener('keyup', this);
+            this.canvas.style.display = 'none';
+            this.mainCanvas.style.display = 'block';
+            this.endBlurbPos.style.display = 'none';
+            this.endBlurbNeg.style.display = 'none';
+            clearInterval(this.mainInterval);
+            // console.log('collision');
+          } else {
+            this.endBlurbDelayCounter++;
+          }
+        } else {
+          this.teacher.update();
+          this.teacher.draw();
+        }
+      }
+    }
     /*
      */
-    if (this.counterForSpawn >= this.randomSpawn) {
-      console.log('spawn');
-      this.randomSpawn = Math.floor(Math.random() * this.maxAmountForRandomSpawn + 20);
-      this.counterForSpawn = 0;
-      this.addBlock();
-    } else {
-      this.counterForSpawn++;
+    if (!this.stopSpawning) {
+      if (this.counterForSpawn >= this.randomSpawn) {
+        console.log('spawn');
+        this.randomSpawn = Math.floor(Math.random() * this.maxAmountForRandomSpawn + 20);
+        this.counterForSpawn = 0;
+        this.addBlock();
+      } else {
+        this.counterForSpawn++;
+      }
     }
     /*
      */
@@ -184,7 +230,11 @@ module.exports = class miniGame {
     /*
      */
     this.player.draw();
-    this.ctx.drawImage(this.scene.foreground, this.ctx.canvas.width / 2 - 1600 / 2, this.ctx.canvas.height / 2 - 720 / 2);
+    this.ctx.drawImage(
+      this.scene.foreground,
+      this.ctx.canvas.width / 2 - 1600 / 2,
+      this.ctx.canvas.height / 2 - 720 / 2,
+    );
   }
 
   addBlock() {

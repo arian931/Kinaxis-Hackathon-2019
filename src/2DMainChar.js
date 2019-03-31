@@ -150,8 +150,8 @@ module.exports = class MainCharacter {
       128,
       128,
     );
-    context.fillStyle = 'rgba(0,0,0,0.5)';
-    context.fillRect(this.x + 50 - worldPosX, this.y - worldPosY + this.height, 28, -20);
+    // context.fillStyle = 'rgba(0,0,0,0.5)';
+    // context.fillRect(this.x + 50 - worldPosX, this.y - worldPosY + this.height, 28, -20);
   }
 
   checkMovePosX() {
