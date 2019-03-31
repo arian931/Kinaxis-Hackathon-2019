@@ -213,10 +213,7 @@ document.addEventListener('keydown', (event) => {
       break;
     case 'Space':
       // switchToThreeD();
-      miniGameCanvas.style.display = 'block';
-      divToDrawTo.style.display = 'none';
-      const minigame = new MiniGame();
-      minigame.start();
+      switchToMiniGame();
       break;
     default:
       break;
@@ -534,4 +531,12 @@ function switchToThreeD() {
   InThreeD = true;
   checkForSwitchBackInerval = setInterval(funToCheckForSwitchBack, 33);
 }
+
+const switchToMiniGame = () => {
+  miniGameCanvas.style.display = 'block';
+  divToDrawTo.style.display = 'none';
+  const minigame = new MiniGame();
+  minigame.start();
+};
+
 window.requestAnimationFrame(gameLoop);
