@@ -1,14 +1,15 @@
-const SpeedBoost = 240;
+const SpeedBoost = 60;
 let main = MainCharacter;
 let mainX = MainCharacter.X;
 let mainY = MainCharacter.y;
 let mainWidth = MainCharacter.width;
 let mainHeight = MainCharacter.height;
-let mainSpeed = MainCharacter.speed;
+const mainSpeed = MainCharacter.speed;
+let mainSpeed = 120
 // needed to transfer the maincharacter and position and dimisions over from other code in file
 // must always be a let var always changing          speedboost is dif
 class speedPotion {
-  constructor(x, y, w, h, potionArray) {
+  constructor(x, y, w, h) {
     this.w = w; // width
     this.h = h; // height
     this.x = x;
@@ -29,9 +30,7 @@ class speedPotion {
       // creates collision / collision detected 
       // overlap created 
       for (let time = 15; time < 15; time++); {
-        //boost last for 15 sec
-        //check if correct check if the random is right
-     // let ; new mainSpeed = SpeedBoost + mainSpeed;  
+        let mainspeed = SpeedBoost + mainspeed;
       }
     }
   }
