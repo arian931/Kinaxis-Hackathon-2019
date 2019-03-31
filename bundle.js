@@ -48369,7 +48369,7 @@ global.ctx = canvas.getContext('2d');
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
 console.log('FUCKKKKKKKkkkkk !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!');
-// const Menu = require('./menu.js');
+const Menu = require('./menu.js');
 const MiniGame = require('./Hindex');
 const Enemy = require('./enemies/enemy');
 const Key = require('./key');
@@ -48382,10 +48382,12 @@ const PlayerCamera = require('./camera');
 const MainCharacter = require('./2DMainChar');
 
 const blurb = document.getElementById('blurb');
+
+const music = new Audio('./mp3/Ivarelli - Fast and Sad.mp3');
 // const cxx = blurb.getContext('2d');
 
-// const menu = new Menu(switchBackTo2D);
-// menu.start();
+const menu = new Menu(switchBackTo2D);
+menu.start();
 
 console.log(canvas);
 
@@ -48837,10 +48839,10 @@ function draw() {
   ctx.fillStyle = 'blue';
   ctx.fillRect(
     minimapPosX
-      + (Math.floor((Player.x + Player.width / 2) / Player.width) * minimap.canvas.width) / mapSize,
+    + (Math.floor((Player.x + Player.width / 2) / Player.width) * minimap.canvas.width) / mapSize,
     minimapPosY
-      + (Math.floor((Player.y + Player.height / 2) / Player.height) * minimap.canvas.height)
-        / mapSize,
+    + (Math.floor((Player.y + Player.height / 2) / Player.height) * minimap.canvas.height)
+    / mapSize,
     minimap.canvas.width / mapSize,
     minimap.canvas.height / mapSize,
   );
@@ -48852,10 +48854,10 @@ function draw() {
       ctx.fillStyle = 'red';
       ctx.fillRect(
         minimapPosX
-          + (Math.floor((enemy.x + enemy.width / 2) / enemy.width) * minimap.canvas.width) / mapSize,
+        + (Math.floor((enemy.x + enemy.width / 2) / enemy.width) * minimap.canvas.width) / mapSize,
         minimapPosY
-          + (Math.floor((enemy.y + enemy.height - 4) / enemy.height) * minimap.canvas.height)
-            / mapSize,
+        + (Math.floor((enemy.y + enemy.height - 4) / enemy.height) * minimap.canvas.height)
+        / mapSize,
         minimap.canvas.width / mapSize,
         minimap.canvas.height / mapSize,
       );
@@ -48878,11 +48880,12 @@ function gameLoop() {
   }
 }
 function switchBackTo2D() {
+  music.play();
   console.log('2d is back');
   if (InThreeD) {
     InThreeD = false;
-    gameLoop();
   }
+  gameLoop();
 }
 function funToCheckForSwitchBack() {
   // console.log('checkingFor3d');
@@ -48900,10 +48903,10 @@ function switchToThreeD() {
   checkForSwitchBackInerval = setInterval(funToCheckForSwitchBack, 33);
 }
 
-window.requestAnimationFrame(gameLoop);
+// window.requestAnimationFrame(gameLoop);
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./2DMainChar":3,"./Hindex":7,"./RecursiveMaze":13,"./camera":16,"./enemies/enemy":17,"./enemyController":21,"./key":23,"./keyController":24,"./spikeTrap":25,"./trapController":26}],3:[function(require,module,exports){
+},{"./2DMainChar":3,"./Hindex":7,"./RecursiveMaze":13,"./camera":16,"./enemies/enemy":17,"./enemyController":21,"./key":23,"./keyController":24,"./menu.js":25,"./spikeTrap":26,"./trapController":27}],3:[function(require,module,exports){
 /* eslint-disable no-plusplus */
 /* eslint-disable no-param-reassign */
 /* eslint-disable prefer-const */
@@ -49151,7 +49154,7 @@ module.exports = class MainCharacter {
   }
 };
 
-},{"./enemies/enemy":17,"./key":23,"./spikeTrap":25}],4:[function(require,module,exports){
+},{"./enemies/enemy":17,"./key":23,"./spikeTrap":26}],4:[function(require,module,exports){
 const THREE = require('three');
 /**
  * @author mrdoob / http://mrdoob.com/
@@ -49369,7 +49372,7 @@ module.exports = class miniGame {
               if (!this.gravityIsStrong) {
                 console.log('strong gravity');
                 this.gravityIsStrong = true;
-                this.gravity = this.gravity * 4;
+                this.gravity = this.gravity * 2;
               }
               break;
             default:
@@ -49385,7 +49388,7 @@ module.exports = class miniGame {
             case 'ArrowDown':
               if (this.gravityIsStrong) {
                 this.gravityIsStrong = false;
-                this.gravity = this.gravity / 4;
+                this.gravity = this.gravity / 2;
               }
               break;
             default:
@@ -51494,6 +51497,79 @@ module.exports = class KeyController {
 
 }
 },{"./key":23}],25:[function(require,module,exports){
+module.exports = class Menu {
+  constructor(switchBackTo2D) {
+    this.menuMusic = new Audio('./mp3/rain.mp3');
+    this.RADIUS = 50;
+    this.handleEvent = (e) => {
+      switch (e.type) {
+        case 'click':
+          if (Math.sqrt((e.clientX - canvas.width / 2) * (e.clientX - canvas.width / 2) + (e.clientY - canvas.height / 2) * (e.clientY - canvas.height / 2)) < this.RADIUS) {
+            canvas.removeEventListener('mousemove', this);
+            canvas.style.cursor = 'auto';
+            let timer = 0;
+            const circleBigger = setInterval(() => {
+              timer += 5;
+              ctx.fillStyle = 'white';
+              ctx.beginPath();
+              ctx.arc(canvas.width / 2, canvas.height / 2, timer, 0, 2 * Math.PI);
+              ctx.fill();
+              if (timer >= canvas.width / 1.5) {
+                clearInterval(circleBigger);
+                canvas.removeEventListener('click', this);
+                this.menuMusic.pause();
+                switchBackTo2D();
+                // console.log('test');
+              }
+            }, 20);
+          }
+          break;
+        case 'mousemove':
+          if (Math.sqrt((e.clientX - canvas.width / 2) * (e.clientX - canvas.width / 2) + (e.clientY - canvas.height / 2) * (e.clientY - canvas.height / 2)) < this.RADIUS) {
+            ctx.fillStyle = 'white';
+            ctx.beginPath();
+            ctx.arc(canvas.width / 2, canvas.height / 2, this.RADIUS - 1, 0, 2 * Math.PI);
+            ctx.fill();
+            canvas.style.cursor = 'pointer';
+          } else {
+            ctx.fillStyle = 'black';
+            ctx.beginPath();
+            ctx.arc(canvas.width / 2, canvas.height / 2, this.RADIUS - 1, 0, 2 * Math.PI);
+            ctx.fill();
+            canvas.style.cursor = 'auto';
+          }
+          break;
+        default:
+          break;
+      }
+    };
+  }
+
+
+  // handleMouseMove(e) {
+
+  // }
+
+  // handleMouseClick(e) {
+  // }
+
+  start() {
+    this.menuMusic.play();
+    ctx.fillStyle = 'black';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    ctx.fillStyle = 'white';
+    ctx.font = '50px Arial';
+    ctx.fillText("Let's talk about mental health!", canvas.width / 10, canvas.height / 3);
+    ctx.strokeStyle = 'white';
+    ctx.beginPath();
+    ctx.arc(canvas.width / 2, canvas.height / 2, this.RADIUS, 0, 2 * Math.PI);
+    ctx.stroke();
+    canvas.addEventListener('mousemove', this);
+    canvas.addEventListener('click', this);
+  }
+};
+
+},{}],26:[function(require,module,exports){
 module.exports = class SpikeTrap {
   constructor(x, y) {
     this.x = x;
@@ -51525,7 +51601,7 @@ module.exports = class SpikeTrap {
     );
   }
 }
-},{}],26:[function(require,module,exports){
+},{}],27:[function(require,module,exports){
 const SpikeTrap = require('./spikeTrap');
 
 module.exports = class TrapController {
@@ -51549,4 +51625,4 @@ module.exports = class TrapController {
     }
   }
 }
-},{"./spikeTrap":25}]},{},[22]);
+},{"./spikeTrap":26}]},{},[22]);

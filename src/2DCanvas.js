@@ -6,7 +6,7 @@ global.ctx = canvas.getContext('2d');
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
 console.log('FUCKKKKKKKkkkkk !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!');
-// const Menu = require('./menu.js');
+const Menu = require('./menu.js');
 const MiniGame = require('./Hindex');
 const Enemy = require('./enemies/enemy');
 const Key = require('./key');
@@ -19,10 +19,12 @@ const PlayerCamera = require('./camera');
 const MainCharacter = require('./2DMainChar');
 
 const blurb = document.getElementById('blurb');
+
+const music = new Audio('./mp3/Ivarelli - Fast and Sad.mp3');
 // const cxx = blurb.getContext('2d');
 
-// const menu = new Menu(switchBackTo2D);
-// menu.start();
+const menu = new Menu(switchBackTo2D);
+menu.start();
 
 console.log(canvas);
 
@@ -474,10 +476,10 @@ function draw() {
   ctx.fillStyle = 'blue';
   ctx.fillRect(
     minimapPosX
-      + (Math.floor((Player.x + Player.width / 2) / Player.width) * minimap.canvas.width) / mapSize,
+    + (Math.floor((Player.x + Player.width / 2) / Player.width) * minimap.canvas.width) / mapSize,
     minimapPosY
-      + (Math.floor((Player.y + Player.height / 2) / Player.height) * minimap.canvas.height)
-        / mapSize,
+    + (Math.floor((Player.y + Player.height / 2) / Player.height) * minimap.canvas.height)
+    / mapSize,
     minimap.canvas.width / mapSize,
     minimap.canvas.height / mapSize,
   );
@@ -489,10 +491,10 @@ function draw() {
       ctx.fillStyle = 'red';
       ctx.fillRect(
         minimapPosX
-          + (Math.floor((enemy.x + enemy.width / 2) / enemy.width) * minimap.canvas.width) / mapSize,
+        + (Math.floor((enemy.x + enemy.width / 2) / enemy.width) * minimap.canvas.width) / mapSize,
         minimapPosY
-          + (Math.floor((enemy.y + enemy.height - 4) / enemy.height) * minimap.canvas.height)
-            / mapSize,
+        + (Math.floor((enemy.y + enemy.height - 4) / enemy.height) * minimap.canvas.height)
+        / mapSize,
         minimap.canvas.width / mapSize,
         minimap.canvas.height / mapSize,
       );
@@ -515,11 +517,12 @@ function gameLoop() {
   }
 }
 function switchBackTo2D() {
+  music.play();
   console.log('2d is back');
   if (InThreeD) {
     InThreeD = false;
-    gameLoop();
   }
+  gameLoop();
 }
 function funToCheckForSwitchBack() {
   // console.log('checkingFor3d');
@@ -537,4 +540,4 @@ function switchToThreeD() {
   checkForSwitchBackInerval = setInterval(funToCheckForSwitchBack, 33);
 }
 
-window.requestAnimationFrame(gameLoop);
+// window.requestAnimationFrame(gameLoop);
