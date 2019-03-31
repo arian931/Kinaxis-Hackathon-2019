@@ -49012,7 +49012,7 @@ module.exports = class MainCharacter {
           this.x + this.width / 2 > key.x + 32
           && this.x + this.width / 2 < key.x + key.width - 32
           && this.y + this.height / 2 > key.y + key.height / 2 - 32
-          && this.y + this.height / 2 < key.y + key.height / 2 + 32) {
+          && this.y + this.height / 2 + 32 < key.y + key.height / 2 + 32) {
           this.gameObjects.splice(j, 1);
           this.keysCollected++;
           this.callBlurb();
@@ -50583,8 +50583,8 @@ module.exports = class Enemy {
     // this.x += this.hSpeed;
     // this.y += this.vSpeed;
     const dirs = []; // 0 = right, 1 = down, 2 = left, 3 = up.
-    const currentPosX = Math.floor((this.x) / 128);
-    const currentPosY = Math.floor((this.y) / 128);
+    const currentPosX = Math.floor((this.x + this.width / 2 - (this.width / 2) * this.xDir) / 128);
+    const currentPosY = Math.floor((this.y + this.height / 2 - (this.height / 2) * this.yDir) / 128);
     // if (currentPosX !== this.moveX || currentPosY !== this.moveY) {
     // console.log(this.speed);
     // console.log(this.moveX - currentPosX);
@@ -50644,21 +50644,29 @@ module.exports = class Enemy {
           console.log('move right');
           this.moveX = currentPosX + 1;
           this.moveY = currentPosY;
+          this.xDir = 1;
+          this.yDir = 0;
           break;
         case 1:
           console.log('move down');
           this.moveX = currentPosX;
           this.moveY = currentPosY + 1;
+          this.yDir = 1;
+          this.xDir = 0;
           break;
         case 2:
           console.log('move left');
           this.moveX = currentPosX - 1;
           this.moveY = currentPosY;
+          this.xDir = -1;
+          this.yDir = 0;
           break;
         case 3:
           console.log('move up');
           this.moveX = currentPosX;
           this.moveY = currentPosY - 1;
+          this.yDir = -1;
+          this.xDir = 0;
           break;
         default:
           break;
@@ -50672,7 +50680,9 @@ module.exports = class Enemy {
       // If the enemy is moving horizontally(not idle), change its sprite y
       // index to either row 1 or row 3 of the sprite sheet.
       this.spriteIndexY = this.xDir === 1 ? 1 : 3;
-    } else {
+    }
+
+    if (this.yDir !== 0) {
       // If the enemy is moving vertically(not idle), change its sprite y
       // index to either row 2 or row 4 of the sprite sheet.
       this.spriteIndexY = this.yDir === 1 ? 2 : 4;
@@ -50770,7 +50780,7 @@ module.exports = class EnemyController {
               case 0:
                 gameObjects.push(new EnemyDepression(
                   x * 128,
-                  y * 128 - 24,
+                  y * 128,
                   (mapArray[x][y - 1] === 1 && mapArray[x][y + 1] === 1 ? 0 : 1),
                   mapArray
                 ));
@@ -50778,7 +50788,7 @@ module.exports = class EnemyController {
               case 1:
                 gameObjects.push(new EnemyAnxiety(
                   x * 128,
-                  y * 128 - 24,
+                  y * 128,
                   (mapArray[x][y - 1] === 1 && mapArray[x][y + 1] === 1 ? 0 : 1),
                   mapArray
                 ));
@@ -50786,7 +50796,7 @@ module.exports = class EnemyController {
               case 2:
                 gameObjects.push(new EnemyBPD(
                   x * 128,
-                  y * 128 - 24,
+                  y * 128,
                   (mapArray[x][y - 1] === 1 && mapArray[x][y + 1] === 1 ? 0 : 1),
                   mapArray
                 ));
