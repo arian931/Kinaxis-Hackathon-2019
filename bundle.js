@@ -48384,8 +48384,6 @@ const MainCharacter = require('./2DMainChar');
 const blurb = document.getElementById('blurb');
 const cxx = blurb.getContext('2d');
 
-
-// const cxx = blurb.getContext('2d');
 // const menu = new Menu(switchBackTo2D);
 // menu.start();
 
@@ -48490,20 +48488,21 @@ tilemap.onload = () => {
           );
           break;
         case 1: // Walls
-          if (y - 1 < 0) {
-            if (mapArray[x][y + 1] === 0) {
-              buffer.drawImage(tilemap, 0, 0, 128, 128, 128 * x, 128 * y, 128, 128);
-            } else {
-              buffer.drawImage(tilemap, 128, 0, 128, 128, 128 * x, 128 * y, 128, 128);
-            }
-          } else if (
-            (mapArray[x][y + 1] === 0 && mapArray[x][y - 1] === 0)
-            || (mapArray[x][y + 1] === 0 && mapArray[x][y - 1] === 1)
-          ) {
-            buffer.drawImage(tilemap, 0, 0, 128, 128, 128 * x, 128 * y, 128, 128);
-          } else {
-            buffer.drawImage(tilemap, 128, 0, 128, 128, 128 * x, 128 * y, 128, 128);
-          }
+          // if (y - 1 < 0) {
+          //   if (mapArray[x][y + 1] === 0) {
+          //     buffer.drawImage(tilemap, 0, 0, 128, 128, 128 * x, 128 * y, 128, 128);
+          //   } else {
+          //     buffer.drawImage(tilemap, 128, 0, 128, 128, 128 * x, 128 * y, 128, 128);
+          //   }
+          // } else if (
+          //   (mapArray[x][y + 1] === 0 && mapArray[x][y - 1] === 0)
+          //   || (mapArray[x][y + 1] === 0 && mapArray[x][y - 1] === 1)
+          // ) {
+          //   buffer.drawImage(tilemap, 0, 0, 128, 128, 128 * x, 128 * y, 128, 128);
+          // } else {
+          //   buffer.drawImage(tilemap, 128, 0, 128, 128, 128 * x, 128 * y, 128, 128);
+          // }
+          buffer.drawImage(tilemap, 128, 0, 128, 128, 128 * x, 128 * y, 128, 128);
           minimap.fillStyle = `rgba(56, 56, 56, ${minimapAlpha})`;
           minimap.fillRect(
             (x * minimap.canvas.width) / mapSize,
