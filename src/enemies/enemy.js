@@ -40,11 +40,9 @@ module.exports = class Enemy {
     // this.x += this.hSpeed;
     // this.y += this.vSpeed;
 
-    let currentPosX = Math.floor((this.x) / 128);
-    let currentPosY = Math.floor((this.y) / 128);
+    const currentPosX = Math.floor((this.x) / 128);
+    const currentPosY = Math.floor((this.y) / 128);
     if (currentPosX !== this.moveX || currentPosY !== this.moveY) {
-      currentPosX = Math.floor((this.x) / 128);
-      currentPosY = Math.floor((this.y) / 128);
       // console.log(this.speed);
       // console.log(this.moveX - currentPosX);
       this.x += this.speed * (this.moveX - currentPosX);
@@ -55,37 +53,37 @@ module.exports = class Enemy {
       // console.log('test');
       const dirs = []; // 0 = right, 1 = down, 2 = left, 3 = up.
       if (
-        !this.vis[Math.floor(this.x / 128) + 1][Math.floor(this.y / 128)]
-        && this.mapArray[Math.floor(this.x / 128) + 1][Math.floor(this.y / 128)] === 0
+        !this.vis[currentPosX + 1][currentPosY]
+        && this.mapArray[currentPosX + 1][currentPosY] === 0
       ) {
         // Right collision
         dirs.push(0);
-        // this.vis.push(Math.floor(this.x / 128));
-        this.vis[Math.floor(this.x / 128) + 1][Math.floor(this.y / 128)] = true;
+        // this.vis.push(currentPosX);
+        this.vis[currentPosX + 1][currentPosY] = true;
       }
       if (
-        !this.vis[Math.floor(this.x / 128) - 1][Math.floor(this.y / 128)]
-        && this.mapArray[Math.floor(this.x / 128) - 1][Math.floor(this.y / 128)] === 0) {
+        !this.vis[currentPosX - 1][currentPosY]
+        && this.mapArray[currentPosX - 1][currentPosY] === 0) {
         // Leftcollision
         dirs.push(2);
         // this.vis.push(Math.floor(this.x / 128 - 1));
-        this.vis[Math.floor(this.x / 128) - 1][Math.floor(this.y / 128)] = true;
+        this.vis[currentPosX - 1][currentPosY] = true;
       }
       if (
-        !this.vis[Math.floor(this.x / 128)][Math.floor(this.y / 128) + 1]
-        && this.mapArray[Math.floor(this.x / 128)][Math.floor(this.y / 128) + 1] === 0) {
+        !this.vis[currentPosX][currentPosY + 1]
+        && this.mapArray[currentPosX][currentPosY + 1] === 0) {
         // Down collision
         dirs.push(1);
-        // this.vis.push(Math.floor(this.x / 128));
-        this.vis[Math.floor(this.x / 128)][Math.floor(this.y / 128) + 1] = true;
+        // this.vis.push(currentPosX);
+        this.vis[currentPosX][currentPosY + 1] = true;
       }
       if (
-        !this.vis[Math.floor(this.x / 128)][Math.floor(this.y / 128) - 1]
-        && this.mapArray[Math.floor(this.x / 128)][Math.floor(this.y / 128) - 1] === 0) {
+        !this.vis[currentPosX][currentPosY - 1]
+        && this.mapArray[currentPosX][currentPosY - 1] === 0) {
         // Up collision
         dirs.push(3);
-        // this.vis.push(Math.floor(this.x / 128));
-        this.vis[Math.floor(this.x / 128)][Math.floor(this.y / 128) - 1] = true;
+        // this.vis.push(currentPosX);
+        this.vis[currentPosX][currentPosY - 1] = true;
       }
       console.log(dirs);
       if (dirs.length === 0) {
