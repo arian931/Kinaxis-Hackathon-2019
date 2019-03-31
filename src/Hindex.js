@@ -4,6 +4,7 @@
 /* eslint-disable no-unused-vars */
 const Player = require('./PlayerClass');
 const Block = require('./block');
+
 const canvas = document.getElementById('minigameCanvas');
 const ctx = canvas.getContext('2d');
 
@@ -28,8 +29,8 @@ const isJumping = false;
 console.log(floorHeight);
 
 const randomAmountOfTimeForSpawn = 20;
-let randomSpawn = 0;
-let counterForSpawn = 0;
+const randomSpawn = 0;
+const counterForSpawn = 0;
 module.exports = () => {
   // addBlock();
   setInterval(gameLoop, 33);
@@ -63,62 +64,60 @@ module.exports = () => {
   });
 };
 
-
 // const block = new Block(canvas.width, floorHeight - 80, 40, 80, 50, ctx);
-
 
 function gameLoop() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
-  ctx.fillStyle = 'rgb(0,0,0)';
+  ctx.fillStyle = 'rgb(255,255,255)';
   ctx.fillRect(0, 0, canvas.width, canvas.height);
   ctx.fillStyle = 'rgb(0,0,200)';
   ctx.fillRect(0, floorHeight, canvas.width, 10);
   /*
    */
-  if (counterForSpawn >= randomAmountOfTimeForSpawn + randomSpawn) {
-    console.log('spawn');
-    randomSpawn = Math.floor(Math.random() * 50 + 1);
-    counterForSpawn = 0;
-    addBlock();
-  } else {
-    counterForSpawn++;
-  }
+  // if (counterForSpawn >= randomAmountOfTimeForSpawn + randomSpawn) {
+  //   console.log('spawn');
+  //   randomSpawn = Math.floor(Math.random() * 50 + 1);
+  //   counterForSpawn = 0;
+  //   addBlock();
+  // } else {
+  //   counterForSpawn++;
+  // }
   /*
    */
-  for (let x = 0; x < blockArray.length; x++) {
-    if (!blockArray[x].update()) {
-      blockArray.shift();
-    }
-    blockArray[x].draw();
-    if (
-      player.x + player.W >= blockArray[x].x
-      && player.x <= blockArray[x].x + blockArray[x].w
-      && player.y + player.H >= blockArray[x].y
-    ) {
-      console.log('collision');
-    }
-  }
+  // for (let x = 0; x < blockArray.length; x++) {
+  //   if (!blockArray[x].update()) {
+  //     blockArray.shift();
+  //   }
+  //   blockArray[x].draw();
+  //   if (
+  //     player.x + player.W >= blockArray[x].x
+  //     && player.x <= blockArray[x].x + blockArray[x].w
+  //     && player.y + player.H >= blockArray[x].y
+  //   ) {
+  //     console.log('collision');
+  //   }
+  // }
   /*
    */
-  if (jumping) {
-    /*
-     */
-    jumpCounter++;
-    // console.log(jumpCounter + " jumpCounter");
-    if (jumpCounter >= jumpDuration) {
-      // console.log("jumping is false;");
-      // console.log(jumping);
-      if (player.y + player.H <= floorHeight - gravity) {
-        // console.log("gravity");
-        player.y += gravity;
-      } else {
-        jumping = false;
-      }
-    } else {
-      player.y -= jumpPower * jumpingMultiplier;
-      jumpingMultiplier *= 0.9;
-    }
-  }
+  // if (jumping) {
+  //   /*
+  //    */
+  //   jumpCounter++;
+  //   // console.log(jumpCounter + " jumpCounter");
+  //   if (jumpCounter >= jumpDuration) {
+  //     // console.log("jumping is false;");
+  //     // console.log(jumping);
+  //     if (player.y + player.H <= floorHeight - gravity) {
+  //       // console.log("gravity");
+  //       player.y += gravity;
+  //     } else {
+  //       jumping = false;
+  //     }
+  //   } else {
+  //     player.y -= jumpPower * jumpingMultiplier;
+  //     jumpingMultiplier *= 0.9;
+  //   }
+  // }
   /*
    */
   player.draw();
@@ -128,4 +127,3 @@ function addBlock() {
   console.log(blockArray);
   blockArray.push(new Block(canvas.width, floorHeight - 80, 40, 80, 20, blockArray, ctx));
 }
-
