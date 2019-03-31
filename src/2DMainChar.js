@@ -9,6 +9,7 @@ const Enemy = require('./enemies/enemy');
 const Key = require('./key');
 const SpikeTrap = require('./spikeTrap');
 const MapPowerup = require('./mapPowerup');
+const KeyController = require('./keyController');
 
 module.exports = class MainCharacter {
   constructor(
@@ -21,6 +22,7 @@ module.exports = class MainCharacter {
     context,
     gameObjects,
     functToSwitch,
+    functToTransition,
     callBlurb,
   ) {
     this.image = new Image();
@@ -53,11 +55,13 @@ module.exports = class MainCharacter {
     this.moveDown = false;
     this.counter = 10;
     this.playerSpeed = 4;
-    this.keysCollected = 0;
+    this.keysCollected = 2;
     this.hasMap = false;
+    this.keyController = new KeyController();
     this.gameObjects = gameObjects;
     this.functToSwitch = functToSwitch;
-    this.callBlurb = callBlurb;
+    this.functToTransition = functToSwitch,
+      this.callBlurb = callBlurb;
   }
 
   update() {
@@ -119,6 +123,11 @@ module.exports = class MainCharacter {
         ) {
           this.gameObjects.splice(j, 1);
           this.keysCollected++;
+          if (this.keysCollected === this.keyController.maxSpawnKeys) {
+            this.mazeArray[this.mazeSize - 2][this.mazeSize - 3] = 0;
+            this.mazeArray[this.mazeSize - 3][this.mazeSize - 3] = 0;
+            console.log(this.mazeArray);
+          }
           this.callBlurb();
         }
       }

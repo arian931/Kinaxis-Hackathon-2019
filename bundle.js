@@ -48431,9 +48431,12 @@ const switchToMiniGame = () => {
   minigame.start();
 };
 mapArray = Recursive.array;
+console.log(mapArray);
 const Player = new MainCharacter(
-  130,
-  120,
+  //130,
+  //120,
+  128 * (mapSize - 2),
+  128 * (mapSize - 2),
   canvas.width,
   canvas.height,
   Recursive.MazeSize,
@@ -48442,6 +48445,7 @@ const Player = new MainCharacter(
   gameObjects,
   // eslint-disable-next-line no-use-before-define
   switchToMiniGame,
+  switchToThreeD,
   // enemyController.enemies,
   callBlurb,
 );
@@ -48477,6 +48481,8 @@ buffer.canvas.width = 128 * mapSize;
 buffer.canvas.height = 128 * mapSize;
 Camera.attachBuffer(buffer);
 // console.log(`${buffer.canvas.width} ${buffer.canvas.height}`);
+worldPosX = Player.x + Player.width / 2 - Camera.vWidth / 2;
+worldPosY = Player.y + Player.height / 2 - Camera.vHeight / 2;
 
 // Create the image buffer of the map.
 tilemap.onload = () => {
@@ -48760,6 +48766,10 @@ function update() {
       // }
     }
   }
+
+  if (Math.floor(Player.x / Player.width) >= mapSize - 1) {
+    switchToThreeD();
+  }
 }
 
 function draw() {
@@ -48959,6 +48969,7 @@ const Enemy = require('./enemies/enemy');
 const Key = require('./key');
 const SpikeTrap = require('./spikeTrap');
 const MapPowerup = require('./mapPowerup');
+const KeyController = require('./keyController');
 
 module.exports = class MainCharacter {
   constructor(
@@ -48971,6 +48982,7 @@ module.exports = class MainCharacter {
     context,
     gameObjects,
     functToSwitch,
+    functToTransition,
     callBlurb,
   ) {
     this.image = new Image();
@@ -49003,11 +49015,13 @@ module.exports = class MainCharacter {
     this.moveDown = false;
     this.counter = 10;
     this.playerSpeed = 4;
-    this.keysCollected = 0;
+    this.keysCollected = 2;
     this.hasMap = false;
+    this.keyController = new KeyController();
     this.gameObjects = gameObjects;
     this.functToSwitch = functToSwitch;
-    this.callBlurb = callBlurb;
+    this.functToTransition = functToSwitch,
+      this.callBlurb = callBlurb;
   }
 
   update() {
@@ -49069,6 +49083,11 @@ module.exports = class MainCharacter {
         ) {
           this.gameObjects.splice(j, 1);
           this.keysCollected++;
+          if (this.keysCollected === this.keyController.maxSpawnKeys) {
+            this.mazeArray[this.mazeSize - 2][this.mazeSize - 3] = 0;
+            this.mazeArray[this.mazeSize - 3][this.mazeSize - 3] = 0;
+            console.log(this.mazeArray);
+          }
           this.callBlurb();
         }
       }
@@ -49209,7 +49228,7 @@ module.exports = class MainCharacter {
   }
 };
 
-},{"./enemies/enemy":17,"./key":23,"./mapPowerup":25,"./spikeTrap":26}],4:[function(require,module,exports){
+},{"./enemies/enemy":17,"./key":23,"./keyController":24,"./mapPowerup":25,"./spikeTrap":26}],4:[function(require,module,exports){
 const THREE = require('three');
 /**
  * @author mrdoob / http://mrdoob.com/
@@ -51528,7 +51547,7 @@ module.exports = class KeyController {
     let keysSpawned = 0;
     const chanceMax = 150;
     let chance = chanceMax;
-    //gameObjects.push(new Key(128, 128));
+    gameObjects.push(new Key(128 * 26, 128 * 27));
     for (let y = 0; y < mapArray.length; y++) {
       for (let x = 0; x < mapArray[y].length; x++) {
         // Check for ground.
@@ -51537,7 +51556,6 @@ module.exports = class KeyController {
             continue;
           }
           gameObjects.push(new Key(x * 128, y * 128));
-          console.log('good');
           keysSpawned++;
           if (keysSpawned === this.maxSpawnKeys) {
             return;
