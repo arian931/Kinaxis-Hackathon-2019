@@ -7,7 +7,7 @@ canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
 console.log('FUCKKKKKKKkkkkk !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!');
 // const Menu = require('./menu.js');
-const miniLoop = require('./Hindex');
+const MiniGame = require('./Hindex');
 const Enemy = require('./enemies/enemy');
 const Key = require('./key');
 const SpikeTrap = require('./spikeTrap');
@@ -215,7 +215,8 @@ document.addEventListener('keydown', (event) => {
       // switchToThreeD();
       miniGameCanvas.style.display = 'block';
       divToDrawTo.style.display = 'none';
-      miniLoop();
+      const minigame = new MiniGame();
+      minigame.start();
       break;
     default:
       break;

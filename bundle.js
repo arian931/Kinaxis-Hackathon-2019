@@ -48370,7 +48370,7 @@ canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
 console.log('FUCKKKKKKKkkkkk !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!');
 // const Menu = require('./menu.js');
-const miniLoop = require('./Hindex');
+const MiniGame = require('./Hindex');
 const Enemy = require('./enemies/enemy');
 const Key = require('./key');
 const SpikeTrap = require('./spikeTrap');
@@ -48578,7 +48578,8 @@ document.addEventListener('keydown', (event) => {
       // switchToThreeD();
       miniGameCanvas.style.display = 'block';
       divToDrawTo.style.display = 'none';
-      miniLoop();
+      const minigame = new MiniGame();
+      minigame.start();
       break;
     default:
       break;
@@ -49306,130 +49307,177 @@ module.exports = class Floor {
 /* eslint-disable no-unused-vars */
 const Player = require('./PlayerClass');
 const Block = require('./block');
-const canvas = document.getElementById('minigameCanvas');
-const ctx = canvas.getContext('2d');
 
-// canvas.width = window.innerWidth;
-// canvas.height = window.innerHeight;
+module.exports = class miniGame {
+  constructor() {
+    this.canvas = document.getElementById('minigameCanvas');
+    this.mainCanvas = document.getElementById('backgroundCanvas');
+    this.ctx = this.canvas.getContext('2d');
 
-const player = new Player(300, canvas.height / 2 + 100, 30, 90, ctx);
-const floorHeight = player.y + player.H;
-const blockArray = [];
-const blockArrayI = 0;
-blockArray[0] = new Block(canvas.width, floorHeight - 80, 40, 80, 50, ctx, blockArray, addBlock);
-addBlock();
-let playerInput = false;
-let jumping = false;
-const jumpPower = 20;
-const jumpDuration = 10;
-let jumpCounter = 0;
-const gravity = 8;
-let jumpingMultiplier = 1;
-const falling = false;
-const isJumping = false;
-console.log(floorHeight);
+    this.canvas.width = window.innerWidth;
+    this.canvas.height = window.innerHeight;
 
-const randomAmountOfTimeForSpawn = 20;
-let randomSpawn = 0;
-let counterForSpawn = 0;
-module.exports = () => {
+    this.player = new Player(300, this.canvas.height / 2 + 100, 30, 90, this.ctx);
+    this.floorHeight = this.player.y + this.player.H;
+    // this.block = new Block(canvas.width, floorHeight - 80, 40, 80, 50, ctx);
+
+    this.blockArray = [];
+    this.blockArrayI = 0;
+    this.blockSpeed = 20;
+    this.addBlock();
+    console.log(this.blockArray);
+    this.playerInput = false;
+    this.jumping = false;
+    this.jumpPower = 25;
+    this.jumpDuration = 8;
+    this.jumpCounter = 0;
+    this.gravity = 20;
+    this.jumpingMultiplier = 1;
+    this.falling = false;
+    this.isJumping = false;
+
+    this.numberOfBlocksPassed = 0;
+    this.increasedDif = false;
+    console.log(this.floorHeight);
+
+    this.randomAmountOfTimeForSpawn = 20;
+    this.maxAmountForRandomSpawn = 30;
+    this.randomSpawn = 0;
+    this.counterForSpawn = 0;
+
+    this.handleEvent = (e) => {
+      switch (e.type) {
+        case 'keydown':
+          switch (e.code) {
+            case 'KeyW':
+            case 'ArrowUp':
+              if (!this.jumping) {
+                // console.log("can jump");
+                this.jumping = true;
+                this.jumpCounter = 0;
+                this.jumpingMultiplier = 1;
+              } else {
+                console.log('not alloud to jump');
+              }
+              break;
+            default:
+          }
+          break;
+        case 'keyup':
+          switch (e.code) {
+            case 'KeyW':
+            case 'ArrowUp':
+              this.playerInput = false;
+              break;
+            default:
+          }
+          break;
+        default:
+          break;
+      }
+    };
+  }
   // addBlock();
-  setInterval(gameLoop, 33);
-  document.addEventListener('keydown', (event) => {
-    switch (event.code) {
-      case 'KeyW':
-      case 'ArrowUp':
-      case 'Space':
-        if (!jumping) {
-          // console.log("can jump");
-          jumping = true;
-          jumpCounter = 0;
-          jumpingMultiplier = 1;
+
+  start() {
+    // console.log(this.blockArray);
+    this.mainInterval = setInterval(this.gameLoop.bind(this), 33);
+
+    document.addEventListener('keydown', this);
+    document.addEventListener('keyup', this);
+  }
+
+  gameLoop() {
+    this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+    this.ctx.fillStyle = 'rgb(0,0,0)';
+    this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+    this.ctx.fillStyle = 'rgb(0,0,200)';
+    this.ctx.fillRect(0, this.floorHeight, this.canvas.width, 20);
+    /*
+     */
+    if (this.counterForSpawn >= this.randomSpawn) {
+      console.log('spawn');
+      this.randomSpawn = Math.floor(Math.random() * this.maxAmountForRandomSpawn + 20);
+      this.counterForSpawn = 0;
+      this.addBlock();
+    } else {
+      this.counterForSpawn++;
+    }
+    /*
+     */
+    // console.log(this.blockArray);
+    for (let x = 0; x < this.blockArray.length; x++) {
+      if (!this.blockArray[x].update()) {
+        this.increasedDif = false;
+        this.numberOfBlocksPassed++;
+        this.blockArray.shift();
+      }
+      this.blockArray[x].draw();
+      if (
+        this.player.x + this.player.W >= this.blockArray[x].x
+        && this.player.x <= this.blockArray[x].x + this.blockArray[x].w
+        && this.player.y + this.player.H >= this.blockArray[x].y
+      ) {
+        document.removeEventListener('keydown', this);
+        document.removeEventListener('keyup', this);
+        this.canvas.style.display = 'none';
+        this.mainCanvas.style.display = 'block';
+        clearInterval(this.mainInterval);
+        console.log('collision');
+      }
+    }
+    if (this.numberOfBlocksPassed % 5 == 0 && !this.increasedDif) {
+      console.log('increased speed');
+      this.maxAmountForRandomSpawn -= 2;
+      this.blockSpeed += 3;
+      this.increasedDif = true;
+    }
+    /*
+     */
+    if (this.jumping) {
+      /*
+       */
+      this.jumpCounter++;
+      // console.log(jumpCounter + " jumpCounter");
+      if (this.jumpCounter >= this.jumpDuration) {
+        // console.log("jumping is false;");
+        // console.log(jumping);
+        if (this.player.y + this.player.H <= this.floorHeight - this.gravity) {
+          // console.log("gravity");
+          this.player.y += this.gravity;
         } else {
-          console.log('not alloud to jump');
+          this.player.y = this.floorHeight - this.player.H;
+          this.jumping = false;
         }
-        break;
-      default:
+      } else {
+        this.player.y -= this.jumpPower * this.jumpingMultiplier;
+        this.jumpingMultiplier *= 0.9;
+      }
     }
-  });
-  document.addEventListener('keyup', (event) => {
-    console.log(event.code);
-    switch (event.code) {
-      case 'KeyW':
-      case 'ArrowUp':
-      case 'Space':
-        playerInput = false;
-        break;
-      default:
-    }
-  });
+    /*
+     */
+    this.player.draw();
+  }
+
+  addBlock() {
+    // console.log(this.blockArray);
+    const randomHeight = Math.floor(Math.random() * 40 + 40);
+    this.blockArray.push(
+      new Block(
+        this.canvas.width,
+        this.floorHeight - randomHeight,
+        40,
+        randomHeight,
+        this.blockSpeed,
+        this.ctx,
+      ),
+    );
+  }
 };
 
 
 // const block = new Block(canvas.width, floorHeight - 80, 40, 80, 50, ctx);
 
-
-function gameLoop() {
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
-  ctx.fillStyle = 'rgb(0,0,0)';
-  ctx.fillRect(0, 0, canvas.width, canvas.height);
-  ctx.fillStyle = 'rgb(0,0,200)';
-  ctx.fillRect(0, floorHeight, canvas.width, 10);
-  /*
-   */
-  if (counterForSpawn >= randomAmountOfTimeForSpawn + randomSpawn) {
-    console.log('spawn');
-    randomSpawn = Math.floor(Math.random() * 50 + 1);
-    counterForSpawn = 0;
-    addBlock();
-  } else {
-    counterForSpawn++;
-  }
-  /*
-   */
-  for (let x = 0; x < blockArray.length; x++) {
-    if (!blockArray[x].update()) {
-      blockArray.shift();
-    }
-    blockArray[x].draw();
-    if (
-      player.x + player.W >= blockArray[x].x
-      && player.x <= blockArray[x].x + blockArray[x].w
-      && player.y + player.H >= blockArray[x].y
-    ) {
-      console.log('collision');
-    }
-  }
-  /*
-   */
-  if (jumping) {
-    /*
-     */
-    jumpCounter++;
-    // console.log(jumpCounter + " jumpCounter");
-    if (jumpCounter >= jumpDuration) {
-      // console.log("jumping is false;");
-      // console.log(jumping);
-      if (player.y + player.H <= floorHeight - gravity) {
-        // console.log("gravity");
-        player.y += gravity;
-      } else {
-        jumping = false;
-      }
-    } else {
-      player.y -= jumpPower * jumpingMultiplier;
-      jumpingMultiplier *= 0.9;
-    }
-  }
-  /*
-   */
-  player.draw();
-}
-
-function addBlock() {
-  console.log(blockArray);
-  blockArray.push(new Block(canvas.width, floorHeight - 80, 40, 80, 20, blockArray, ctx));
-}
 
 
 },{"./PlayerClass":12,"./block":15}],8:[function(require,module,exports){
@@ -50450,7 +50498,7 @@ module.exports = class Player {
       128,
     );
   }
-}
+};
 
 },{}],13:[function(require,module,exports){
 // eslint-disable-next-line no-unused-vars
@@ -50668,19 +50716,18 @@ module.exports = class WallGenerator {
 
 },{}],15:[function(require,module,exports){
 module.exports = class Block {
-  constructor(x, y, w, h, speed, array, ctx) {
+  constructor(x, y, w, h, speed, ctx) {
     this.x = x;
     this.y = y;
     this.w = w;
     this.h = h;
     this.ctx = ctx;
     this.speed = speed;
-    this.array = array;
   }
 
   draw() {
-    ctx.fillStyle = 'rgb(255,0,0)';
-    ctx.fillRect(this.x, this.y, this.w, this.h);
+    this.ctx.fillStyle = 'rgb(255,0,0)';
+    this.ctx.fillRect(this.x, this.y, this.w, this.h);
   }
 
   update() {
