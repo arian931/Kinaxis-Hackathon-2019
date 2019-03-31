@@ -14,22 +14,27 @@ const floorHeight = player.y + player.H;
 
 const blockArray = [];
 const blockArrayI = 0;
-blockArray[0] = new Block(canvas.width, floorHeight - 80, 40, 80, 50, ctx, blockArray, addBlock);
+let blockSpeed = 20;
 addBlock();
 let playerInput = false;
 let jumping = false;
-const jumpPower = 20;
-const jumpDuration = 10;
+const jumpPower = 25;
+const jumpDuration = 8;
 let jumpCounter = 0;
-const gravity = 8;
+const gravity = 20;
 let jumpingMultiplier = 1;
 const falling = false;
 const isJumping = false;
+
+let numberOfBlocksPassed = 0;
+let increasedDif = false;
 console.log(floorHeight);
 
 const randomAmountOfTimeForSpawn = 20;
+let maxAmountForRandomSpawn = 30;
 let randomSpawn = 0;
 let counterForSpawn = 0;
+
 // addBlock();
 setInterval(gameLoop, 33);
 function gameLoop() {
@@ -37,12 +42,12 @@ function gameLoop() {
   ctx.fillStyle = 'rgb(0,0,0)';
   ctx.fillRect(0, 0, canvas.width, canvas.height);
   ctx.fillStyle = 'rgb(0,0,200)';
-  ctx.fillRect(0, floorHeight, canvas.width, 10);
+  ctx.fillRect(0, floorHeight, canvas.width, 20);
   /*
    */
-  if (counterForSpawn >= randomAmountOfTimeForSpawn + randomSpawn) {
+  if (counterForSpawn >= randomSpawn) {
     console.log('spawn');
-    randomSpawn = Math.floor(Math.random() * 50 + 1);
+    randomSpawn = Math.floor(Math.random() * maxAmountForRandomSpawn + 20);
     counterForSpawn = 0;
     addBlock();
   } else {
@@ -52,6 +57,8 @@ function gameLoop() {
    */
   for (let x = 0; x < blockArray.length; x++) {
     if (!blockArray[x].update()) {
+      increasedDif = false;
+      numberOfBlocksPassed++;
       blockArray.shift();
     }
     blockArray[x].draw();
@@ -62,6 +69,12 @@ function gameLoop() {
     ) {
       console.log('collision');
     }
+  }
+  if (numberOfBlocksPassed % 5 == 0 && !increasedDif) {
+    console.log('increased speed');
+    maxAmountForRandomSpawn -= 2;
+    blockSpeed += 3;
+    increasedDif = true;
   }
   /*
    */
@@ -77,6 +90,7 @@ function gameLoop() {
         // console.log("gravity");
         player.y += gravity;
       } else {
+        player.y = floorHeight - player.H;
         jumping = false;
       }
     } else {
@@ -91,7 +105,18 @@ function gameLoop() {
 
 function addBlock() {
   console.log(blockArray);
-  blockArray.push(new Block(canvas.width, floorHeight - 80, 40, 80, 20, blockArray, ctx));
+  const randomHeight = Math.floor(Math.random() * 40 + 40);
+  blockArray.push(
+    new Block(
+      canvas.width,
+      floorHeight - randomHeight,
+      40,
+      randomHeight,
+      blockSpeed,
+      blockArray,
+      ctx,
+    ),
+  );
 }
 
 document.addEventListener('keydown', (event) => {
