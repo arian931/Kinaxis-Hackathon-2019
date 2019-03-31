@@ -48380,9 +48380,8 @@ const RecursiveMaze = require('./RecursiveMaze');
 const PlayerCamera = require('./camera');
 const MainCharacter = require('./2DMainChar');
 
-
 const blurb = document.getElementById('blurb');
-const cxx = blurb.getContext('2d');
+// const cxx = blurb.getContext('2d');
 
 // const menu = new Menu(switchBackTo2D);
 // menu.start();
@@ -48832,8 +48831,8 @@ function draw() {
     minimapPosX
       + (Math.floor((Player.x + Player.width / 2) / Player.width) * minimap.canvas.width) / mapSize,
     minimapPosY
-    + (Math.floor((Player.y + Player.height / 2) / Player.height) * minimap.canvas.height)
-    / mapSize,
+      + (Math.floor((Player.y + Player.height / 2) / Player.height) * minimap.canvas.height)
+        / mapSize,
     minimap.canvas.width / mapSize,
     minimap.canvas.height / mapSize,
   );
@@ -48871,14 +48870,11 @@ function gameLoop() {
   }
 }
 function switchBackTo2D() {
-  // console.log('2d is back');
+  console.log('2d is back');
   if (InThreeD) {
     InThreeD = false;
-
-    gameLoop(); s
-
+    gameLoop();
   }
-  gameLoop();
 }
 function funToCheckForSwitchBack() {
   // console.log('checkingFor3d');
@@ -48890,6 +48886,7 @@ function funToCheckForSwitchBack() {
 }
 let checkForSwitchBackInerval;
 function switchToThreeD() {
+  console.log('switched back to 3d');
   divToDrawTo.style.display = 'none';
   InThreeD = true;
   checkForSwitchBackInerval = setInterval(funToCheckForSwitchBack, 33);
@@ -49013,7 +49010,8 @@ module.exports = class MainCharacter {
           this.x + this.width / 2 > key.x + 32
           && this.x + this.width / 2 < key.x + key.width - 32
           && this.y + this.height - 10 > key.y + key.height / 2 - 32
-          && this.y + this.height - 10 < key.y + key.height / 2 + 32) {
+          && this.y + this.height - 10 < key.y + key.height / 2 + 32
+        ) {
           this.gameObjects.splice(j, 1);
           this.keysCollected++;
           this.callBlurb();
@@ -49026,15 +49024,16 @@ module.exports = class MainCharacter {
           if (
             this.x + this.width / 2 > trap.x
             && this.x + this.width / 2 < trap.x + trap.width
-<<<<<<< HEAD
-            && this.y + this.height > trap.y
-            && this.y + this.height < trap.y + trap.height
+            && this.y + this.height / 2 > trap.y
+            && this.y + this.height / 2 < trap.y + trap.height
           ) {
-            this.x = 130;
-            this.y = 120;
+            this.functToSwitch();
+          }
+        }
       }
     }
   }
+
   draw(context, worldPosX, worldPosY) {
     // console.log('draw');
     context.drawImage(
@@ -49060,8 +49059,14 @@ module.exports = class MainCharacter {
     //   this.hSpeed = this.playerSpeed;
     //   this.x += this.hSpeed;
     // }
-    if (this.mazeArray[Math.floor((this.x + 76 + this.playerSpeed) / this.width)][Math.floor((this.y + 20) / this.height)] === 0
-      && this.mazeArray[Math.floor((this.x + 76 + this.playerSpeed) / this.width)][Math.floor((this.y + this.height) / this.height)] === 0) {
+    if (
+      this.mazeArray[Math.floor((this.x + 76 + this.playerSpeed) / this.width)][
+        Math.floor((this.y + 20) / this.height)
+      ] === 0
+      && this.mazeArray[Math.floor((this.x + 76 + this.playerSpeed) / this.width)][
+        Math.floor((this.y + this.height) / this.height)
+      ] === 0
+    ) {
       this.hSpeed = this.playerSpeed;
       this.x += this.hSpeed;
     }
@@ -49075,8 +49080,14 @@ module.exports = class MainCharacter {
     //   this.hSpeed = -this.playerSpeed;
     //   this.x += this.hSpeed;
     // }
-    if (this.mazeArray[Math.floor((this.x + 50 - this.playerSpeed) / this.width)][Math.floor((this.y + 20) / this.height)] === 0
-      && this.mazeArray[Math.floor((this.x + 50 - this.playerSpeed) / this.width)][Math.floor((this.y + this.height) / this.height)] === 0) {
+    if (
+      this.mazeArray[Math.floor((this.x + 50 - this.playerSpeed) / this.width)][
+        Math.floor((this.y + 20) / this.height)
+      ] === 0
+      && this.mazeArray[Math.floor((this.x + 50 - this.playerSpeed) / this.width)][
+        Math.floor((this.y + this.height) / this.height)
+      ] === 0
+    ) {
       this.hSpeed = -this.playerSpeed;
       this.x += this.hSpeed;
     }
@@ -49093,8 +49104,14 @@ module.exports = class MainCharacter {
     //   this.y += this.vSpeed;
     // }
     // this.posTopX = parseInt((this.x + 50) / ((this.CWidth * 128) / this.CWidth));
-    if (this.mazeArray[Math.floor((this.x + 50) / this.width)][Math.floor((this.y + this.height + this.playerSpeed) / this.height)] === 0
-      && this.mazeArray[Math.floor((this.x + 76) / this.width)][Math.floor((this.y + this.height + this.playerSpeed) / this.height)] === 0) {
+    if (
+      this.mazeArray[Math.floor((this.x + 50) / this.width)][
+        Math.floor((this.y + this.height + this.playerSpeed) / this.height)
+      ] === 0
+      && this.mazeArray[Math.floor((this.x + 76) / this.width)][
+        Math.floor((this.y + this.height + this.playerSpeed) / this.height)
+      ] === 0
+    ) {
       this.vSpeed = this.playerSpeed;
       this.y += this.vSpeed;
     }
@@ -49111,8 +49128,14 @@ module.exports = class MainCharacter {
     //   this.y += this.vSpeed;
     // }
     this.posTopX = parseInt((this.x + 50) / ((this.CWidth * 128) / this.CWidth));
-    if (this.mazeArray[Math.floor((this.x + 50) / this.width)][Math.floor((this.y + 20 - this.playerSpeed) / this.height)] === 0
-      && this.mazeArray[Math.floor((this.x + 76) / this.width)][Math.floor((this.y + 20 - this.playerSpeed) / this.height)] === 0) {
+    if (
+      this.mazeArray[Math.floor((this.x + 50) / this.width)][
+        Math.floor((this.y + 20 - this.playerSpeed) / this.height)
+      ] === 0
+      && this.mazeArray[Math.floor((this.x + 76) / this.width)][
+        Math.floor((this.y + 20 - this.playerSpeed) / this.height)
+      ] === 0
+    ) {
       this.vSpeed = -this.playerSpeed;
       this.y += this.vSpeed;
     }
@@ -51082,9 +51105,9 @@ let checkingThree = setInterval(checkFor3dTransation, 100);
 function switchBackToTwoD() {
   TwoCanvas.style.display = 'block';
   isPlaying = false;
-  // console.log(
-  //   'switch back to 2d !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!',
-  // );
+  console.log(
+    'switch back to 2d !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!',
+  );
   checkingThree = setInterval(checkFor3dTransation, 100);
   clearScene();
 }

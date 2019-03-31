@@ -18,7 +18,7 @@ const PlayerCamera = require('./camera');
 const MainCharacter = require('./2DMainChar');
 
 const blurb = document.getElementById('blurb');
-const cxx = blurb.getContext('2d');
+// const cxx = blurb.getContext('2d');
 
 // const menu = new Menu(switchBackTo2D);
 // menu.start();
@@ -507,14 +507,11 @@ function gameLoop() {
   }
 }
 function switchBackTo2D() {
-  // console.log('2d is back');
+  console.log('2d is back');
   if (InThreeD) {
     InThreeD = false;
-
     gameLoop();
-    s;
   }
-  gameLoop();
 }
 function funToCheckForSwitchBack() {
   // console.log('checkingFor3d');
@@ -526,6 +523,7 @@ function funToCheckForSwitchBack() {
 }
 let checkForSwitchBackInerval;
 function switchToThreeD() {
+  console.log('switched back to 3d');
   divToDrawTo.style.display = 'none';
   InThreeD = true;
   checkForSwitchBackInerval = setInterval(funToCheckForSwitchBack, 33);
