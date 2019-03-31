@@ -5,7 +5,7 @@ module.exports = class Enemy {
     this.dir = 0; // 0 = horizontal, 1 = vertical.
     this.width = 128;
     this.height = 128;
-    this.speed = 200;
+    this.speed = 0;
     this.hSpeed = 0;
     this.vSpeed = 0;
     this.spriteIndexX = 0;
@@ -26,7 +26,9 @@ module.exports = class Enemy {
         this.vis[i][j] = false;
       }
     }
-    this.move(Math.floor((this.x + this.width / 2) / 128), Math.floor((this.y + this.height / 2) / 128));
+    this.moveX = Math.floor((this.x + this.width / 2) / 128);
+    this.moveY = Math.floor((this.y + this.height / 2) / 128);
+    // this.move(, );
   }
 
   update(dt) {
@@ -38,34 +40,19 @@ module.exports = class Enemy {
     this.x += this.hSpeed;
     this.y += this.vSpeed;
 
-    // Increase the sprite's frame position.
-    this.spriteIndexX = (this.spriteIndexX + this.animationSpeed) % this.animationSize;
-
-    if (this.xDir !== 0) {
-      // If the enemy is moving horizontally(not idle), change its sprite y
-      // index to either row 1 or row 3 of the sprite sheet.
-      this.spriteIndexY = this.xDir === 1 ? 1 : 3;
-    } else {
-      // If the enemy is moving vertically(not idle), change its sprite y
-      // index to either row 2 or row 4 of the sprite sheet.
-      this.spriteIndexY = this.yDir === 1 ? 2 : 4;
+    let currentPosX = Math.floor((this.x + this.width / 2) / 128);
+    let currentPosY = Math.floor((this.y + this.height / 2) / 128);
+    if (currentPosX !== this.moveX || currentPosY !== this.moveY) {
+      currentPosX = Math.floor((this.x + this.width / 2) / 128);
+      currentPosY = Math.floor((this.y + this.height / 2) / 128);
+      // console.log(this.speed);
+      // console.log(this.moveX - currentPosX);
+      this.x += this.speed * (this.moveX - currentPosX);
+      // console.log(this.x);
+      this.y += this.speed * (this.moveY - currentPosY);
     }
-    this.posX = parseInt((this.x + 50) / ((this.CWidth * 128) / this.CWidth), 10);
-    this.posY = parseInt((this.y + 20) / ((this.CHeight * 128) / this.CHeight), 10);
-  }
-
-  // x and y are tile positions.
-  move(x, y) {
-    // console.log(x);
-    const currentPosX = Math.floor((this.x + this.width / 2) / 128);
-    const currentPosY = Math.floor((this.y + this.height / 2) / 128);
-    console.log(this.speed);
-    console.log(x - currentPosX);
-    this.x += this.speed * (x - currentPosX);
-    // console.log(this.x);
-    this.y += this.speed * (y - currentPosY);
-    if (currentPosX === x && currentPosY === y) {
-      console.log('test');
+    if (currentPosX === this.moveX && currentPosY === this.moveY) {
+      // console.log('test');
       const dirs = []; // 0 = right, 1 = down, 2 = left, 3 = up.
       if (
         !this.vis[Math.floor((this.x + this.width / 2) / 128) + 1][Math.floor((this.y + this.height / 2) / 128)]
@@ -101,13 +88,12 @@ module.exports = class Enemy {
         this.vis[Math.floor((this.x + this.width / 2) / 128)][Math.floor((this.y + this.height / 2) / 128) - 1] = true;
       }
       console.log(dirs);
-      if (!dirs) {
+      if (dirs.length === 0) {
         for (let k = 0; k < this.mapArray.length; k++) {
           for (let j = 0; j < this.mapArray[k].length; j++) {
             this.vis[k][j] = false;
           }
         }
-        this.move(x, y);
       }
       // this.move(10, 10);
       // this.move(2, 2);
@@ -115,25 +101,49 @@ module.exports = class Enemy {
       switch (dirs[randDir]) {
         case 0:
           console.log('move right');
-          this.move(Math.floor((this.x + this.width / 2) / 128) + 1, Math.floor((this.y + this.height / 2) / 128));
+          this.moveX = Math.floor((this.x + this.width / 2) / 128) + 1;
+          this.moveY = Math.floor((this.y + this.height / 2) / 128);
           break;
         case 1:
           console.log('move down');
-          this.move(Math.floor((this.x + this.width / 2) / 128), Math.floor((this.y + this.height / 2) / 128) + 1);
+          this.moveX = Math.floor((this.x + this.width / 2) / 128);
+          this.moveY = Math.floor((this.y + this.height / 2) / 128) + 1;
           break;
         case 2:
           console.log('move left');
-          this.move(Math.floor((this.x + this.width / 2) / 128) - 1, Math.floor((this.y + this.height / 2) / 128));
+          this.moveX = Math.floor((this.x + this.width / 2) / 128) - 1;
+          this.moveY = Math.floor((this.y + this.height / 2) / 128);
           break;
         case 3:
           console.log('move up');
-          this.move(Math.floor((this.x + this.width / 2) / 128), Math.floor((this.y + this.height / 2) / 128) - 1);
+          this.moveX = Math.floor((this.x + this.width / 2) / 128);
+          this.moveY = Math.floor((this.y + this.height / 2) / 128) - 1;
           break;
         default:
           break;
       }
     }
+
+    // Increase the sprite's frame position.
+    this.spriteIndexX = (this.spriteIndexX + this.animationSpeed) % this.animationSize;
+
+    if (this.xDir !== 0) {
+      // If the enemy is moving horizontally(not idle), change its sprite y
+      // index to either row 1 or row 3 of the sprite sheet.
+      this.spriteIndexY = this.xDir === 1 ? 1 : 3;
+    } else {
+      // If the enemy is moving vertically(not idle), change its sprite y
+      // index to either row 2 or row 4 of the sprite sheet.
+      this.spriteIndexY = this.yDir === 1 ? 2 : 4;
+    }
+    this.posX = parseInt((this.x + 50) / ((this.CWidth * 128) / this.CWidth), 10);
+    this.posY = parseInt((this.y + 20) / ((this.CHeight * 128) / this.CHeight), 10);
   }
+
+  // x and y are tile positions.
+  // move(x, y) {
+  //   // console.log(x);
+  // }
 
   draw(ctx, worldPosX, worldPosY) {
     ctx.drawImage(
