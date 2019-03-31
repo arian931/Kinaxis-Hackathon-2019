@@ -7,6 +7,7 @@ canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
 console.log('FUCKKKKKKKkkkkk !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!');
 // const Menu = require('./menu.js');
+const miniLoop = require('./Hindex');
 const Enemy = require('./enemies/enemy');
 const Key = require('./key');
 const SpikeTrap = require('./spikeTrap');
@@ -53,6 +54,7 @@ const Recursive = new RecursiveMaze(mapSize);
 const Camera = new PlayerCamera(ctx);
 Recursive.draw();
 const divToDrawTo = document.getElementById('backgroundCanvas');
+const miniGameCanvas = document.getElementById('minigameCanvas');
 const image = new Image();
 image.id = 'pic';
 
@@ -210,7 +212,10 @@ document.addEventListener('keydown', (event) => {
       Player.moveLeft = false;
       break;
     case 'Space':
-      switchToThreeD();
+      // switchToThreeD();
+      miniGameCanvas.style.display = 'block';
+      divToDrawTo.style.display = 'none';
+      miniLoop();
       break;
     default:
       break;
