@@ -9,6 +9,7 @@ console.log('FUCKKKKKKKkkkkk !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 // const Menu = require('./menu.js');
 const MiniGame = require('./Hindex');
 const Enemy = require('./enemies/enemy');
+const MapPowerup = require('./mapPowerup');
 const Key = require('./key');
 const SpikeTrap = require('./spikeTrap');
 const TrapController = require('./trapController');
@@ -32,6 +33,9 @@ tilemap.src = '../../Art/2D/tilemap.png';
 
 const doorTilemap = new Image();
 doorTilemap.src = '../../Art/2D/door_spritesheet.png';
+
+const spriteKeysCollected = new Image();
+spriteKeysCollected.src = '../../Art/2D/keys_collected.png';
 
 // eslint-disable-next-line no-unused-vars
 const gameObjects = [];
@@ -82,6 +86,14 @@ gameObjects.push(Player);
 enemyController.spawnEnemies(mapArray, gameObjects);
 trapController.spawnTraps(mapArray, gameObjects);
 keyController.spawnKeys(mapArray, gameObjects);
+let randX;
+let randY;
+do {
+  randX = Math.floor(Math.random() * mapSize);
+  randY = Math.floor(Math.random() * mapSize);
+} while (mapArray[randX][randY] !== 0);
+gameObjects.push(new MapPowerup(randX * 128, randY * 128));
+
 Camera.attachTo(Player);
 
 let InThreeD = false;
@@ -469,30 +481,62 @@ function draw() {
     return -1;
   });
 
-  // Draw minimap and player.
-  ctx.drawImage(minimap.canvas, minimapPosX, minimapPosY);
-  ctx.fillStyle = 'blue';
-  ctx.fillRect(
-    minimapPosX
-      + (Math.floor((Player.x + Player.width / 2) / Player.width) * minimap.canvas.width) / mapSize,
-    minimapPosY
-      + (Math.floor((Player.y + Player.height / 2) / Player.height) * minimap.canvas.height)
-        / mapSize,
-    minimap.canvas.width / mapSize,
-    minimap.canvas.height / mapSize,
-  );
+  let mapEnemies = [];
 
   for (let i = 0; i < gameObjects.length; i++) {
     gameObjects[i].draw(ctx, worldPosX, worldPosY);
     if (gameObjects[i] instanceof Enemy) {
-      const enemy = gameObjects[i];
+      mapEnemies.push(gameObjects[i]);
+      //   const enemy = gameObjects[i];
+      //   ctx.fillStyle = 'red';
+      //   ctx.fillRect(
+      //     minimapPosX
+      //       + (Math.floor((enemy.x + enemy.width / 2) / enemy.width) * minimap.canvas.width) / mapSize,
+      //     minimapPosY
+      //       + (Math.floor((enemy.y + enemy.height - 4) / enemy.height) * minimap.canvas.height)
+      //         / mapSize,
+      //     minimap.canvas.width / mapSize,
+      //     minimap.canvas.height / mapSize,
+      //   );
+    }
+  }
+
+  // Draw keys collected.
+  ctx.drawImage(
+    spriteKeysCollected,
+    0,
+    Player.keysCollected * 384 / 4,
+    288,
+    384 / 4,
+    20,
+    20,
+    288,
+    384 / 4
+  );
+
+  if (Player.hasMap) {
+    // Draw minimap and player.
+    ctx.drawImage(minimap.canvas, minimapPosX, minimapPosY);
+    ctx.fillStyle = 'blue';
+    ctx.fillRect(
+      minimapPosX
+      + (Math.floor((Player.x + Player.width / 2) / Player.width) * minimap.canvas.width) / mapSize,
+      minimapPosY
+      + (Math.floor((Player.y + Player.height / 2) / Player.height) * minimap.canvas.height)
+      / mapSize,
+      minimap.canvas.width / mapSize,
+      minimap.canvas.height / mapSize,
+    );
+
+    for (let i = 0; i < mapEnemies.length; i++) {
+      const enemy = mapEnemies[i];
       ctx.fillStyle = 'red';
       ctx.fillRect(
         minimapPosX
-          + (Math.floor((enemy.x + enemy.width / 2) / enemy.width) * minimap.canvas.width) / mapSize,
+        + (Math.floor((enemy.x + enemy.width / 2) / enemy.width) * minimap.canvas.width) / mapSize,
         minimapPosY
-          + (Math.floor((enemy.y + enemy.height - 4) / enemy.height) * minimap.canvas.height)
-            / mapSize,
+        + (Math.floor((enemy.y + enemy.height - 4) / enemy.height) * minimap.canvas.height)
+        / mapSize,
         minimap.canvas.width / mapSize,
         minimap.canvas.height / mapSize,
       );

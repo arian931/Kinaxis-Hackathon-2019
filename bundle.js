@@ -48372,6 +48372,7 @@ console.log('FUCKKKKKKKkkkkk !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 // const Menu = require('./menu.js');
 const MiniGame = require('./Hindex');
 const Enemy = require('./enemies/enemy');
+const MapPowerup = require('./mapPowerup');
 const Key = require('./key');
 const SpikeTrap = require('./spikeTrap');
 const TrapController = require('./trapController');
@@ -48395,6 +48396,9 @@ tilemap.src = '../../Art/2D/tilemap.png';
 
 const doorTilemap = new Image();
 doorTilemap.src = '../../Art/2D/door_spritesheet.png';
+
+const spriteKeysCollected = new Image();
+spriteKeysCollected.src = '../../Art/2D/keys_collected.png';
 
 // eslint-disable-next-line no-unused-vars
 const gameObjects = [];
@@ -48445,6 +48449,14 @@ gameObjects.push(Player);
 enemyController.spawnEnemies(mapArray, gameObjects);
 trapController.spawnTraps(mapArray, gameObjects);
 keyController.spawnKeys(mapArray, gameObjects);
+let randX;
+let randY;
+do {
+  randX = Math.floor(Math.random() * mapSize);
+  randY = Math.floor(Math.random() * mapSize);
+} while (mapArray[randX][randY] !== 0);
+gameObjects.push(new MapPowerup(randX * 128, randY * 128));
+
 Camera.attachTo(Player);
 
 let InThreeD = false;
@@ -48832,30 +48844,62 @@ function draw() {
     return -1;
   });
 
-  // Draw minimap and player.
-  ctx.drawImage(minimap.canvas, minimapPosX, minimapPosY);
-  ctx.fillStyle = 'blue';
-  ctx.fillRect(
-    minimapPosX
-      + (Math.floor((Player.x + Player.width / 2) / Player.width) * minimap.canvas.width) / mapSize,
-    minimapPosY
-      + (Math.floor((Player.y + Player.height / 2) / Player.height) * minimap.canvas.height)
-        / mapSize,
-    minimap.canvas.width / mapSize,
-    minimap.canvas.height / mapSize,
-  );
+  let mapEnemies = [];
 
   for (let i = 0; i < gameObjects.length; i++) {
     gameObjects[i].draw(ctx, worldPosX, worldPosY);
     if (gameObjects[i] instanceof Enemy) {
-      const enemy = gameObjects[i];
+      mapEnemies.push(gameObjects[i]);
+      //   const enemy = gameObjects[i];
+      //   ctx.fillStyle = 'red';
+      //   ctx.fillRect(
+      //     minimapPosX
+      //       + (Math.floor((enemy.x + enemy.width / 2) / enemy.width) * minimap.canvas.width) / mapSize,
+      //     minimapPosY
+      //       + (Math.floor((enemy.y + enemy.height - 4) / enemy.height) * minimap.canvas.height)
+      //         / mapSize,
+      //     minimap.canvas.width / mapSize,
+      //     minimap.canvas.height / mapSize,
+      //   );
+    }
+  }
+
+  // Draw keys collected.
+  ctx.drawImage(
+    spriteKeysCollected,
+    0,
+    Player.keysCollected * 384 / 4,
+    288,
+    384 / 4,
+    20,
+    20,
+    288,
+    384 / 4
+  );
+
+  if (Player.hasMap) {
+    // Draw minimap and player.
+    ctx.drawImage(minimap.canvas, minimapPosX, minimapPosY);
+    ctx.fillStyle = 'blue';
+    ctx.fillRect(
+      minimapPosX
+      + (Math.floor((Player.x + Player.width / 2) / Player.width) * minimap.canvas.width) / mapSize,
+      minimapPosY
+      + (Math.floor((Player.y + Player.height / 2) / Player.height) * minimap.canvas.height)
+      / mapSize,
+      minimap.canvas.width / mapSize,
+      minimap.canvas.height / mapSize,
+    );
+
+    for (let i = 0; i < mapEnemies.length; i++) {
+      const enemy = mapEnemies[i];
       ctx.fillStyle = 'red';
       ctx.fillRect(
         minimapPosX
-          + (Math.floor((enemy.x + enemy.width / 2) / enemy.width) * minimap.canvas.width) / mapSize,
+        + (Math.floor((enemy.x + enemy.width / 2) / enemy.width) * minimap.canvas.width) / mapSize,
         minimapPosY
-          + (Math.floor((enemy.y + enemy.height - 4) / enemy.height) * minimap.canvas.height)
-            / mapSize,
+        + (Math.floor((enemy.y + enemy.height - 4) / enemy.height) * minimap.canvas.height)
+        / mapSize,
         minimap.canvas.width / mapSize,
         minimap.canvas.height / mapSize,
       );
@@ -48903,7 +48947,7 @@ function switchToThreeD() {
 window.requestAnimationFrame(gameLoop);
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./2DMainChar":3,"./Hindex":7,"./RecursiveMaze":13,"./camera":16,"./enemies/enemy":17,"./enemyController":21,"./key":23,"./keyController":24,"./spikeTrap":25,"./trapController":26}],3:[function(require,module,exports){
+},{"./2DMainChar":3,"./Hindex":7,"./RecursiveMaze":13,"./camera":16,"./enemies/enemy":17,"./enemyController":21,"./key":23,"./keyController":24,"./mapPowerup":25,"./spikeTrap":26,"./trapController":27}],3:[function(require,module,exports){
 /* eslint-disable no-plusplus */
 /* eslint-disable no-param-reassign */
 /* eslint-disable prefer-const */
@@ -48914,6 +48958,7 @@ window.requestAnimationFrame(gameLoop);
 const Enemy = require('./enemies/enemy');
 const Key = require('./key');
 const SpikeTrap = require('./spikeTrap');
+const MapPowerup = require('./mapPowerup');
 
 module.exports = class MainCharacter {
   constructor(
@@ -48959,6 +49004,7 @@ module.exports = class MainCharacter {
     this.counter = 10;
     this.playerSpeed = 4;
     this.keysCollected = 0;
+    this.hasMap = false;
     this.gameObjects = gameObjects;
     this.functToSwitch = functToSwitch;
     this.callBlurb = callBlurb;
@@ -49040,6 +49086,18 @@ module.exports = class MainCharacter {
           }
         }
       }
+      if (this.gameObjects[j] instanceof MapPowerup) {
+        const map = this.gameObjects[j];
+        if (
+          this.x + this.width / 2 > map.x
+          && this.x + this.width / 2 < map.x + map.width
+          && this.y + this.height / 2 > map.y
+          && this.y + this.height / 2 < map.y + map.height
+        ) {
+          this.gameObjects.splice(j, 1);
+          this.hasMap = true;
+        }
+      }
     }
   }
 
@@ -49070,10 +49128,10 @@ module.exports = class MainCharacter {
     // }
     if (
       this.mazeArray[Math.floor((this.x + 76 + this.playerSpeed) / this.width)][
-        Math.floor((this.y + 20) / this.height)
+      Math.floor((this.y + 20) / this.height)
       ] === 0
       && this.mazeArray[Math.floor((this.x + 76 + this.playerSpeed) / this.width)][
-        Math.floor((this.y + this.height) / this.height)
+      Math.floor((this.y + this.height) / this.height)
       ] === 0
     ) {
       this.hSpeed = this.playerSpeed;
@@ -49091,10 +49149,10 @@ module.exports = class MainCharacter {
     // }
     if (
       this.mazeArray[Math.floor((this.x + 50 - this.playerSpeed) / this.width)][
-        Math.floor((this.y + 20) / this.height)
+      Math.floor((this.y + 20) / this.height)
       ] === 0
       && this.mazeArray[Math.floor((this.x + 50 - this.playerSpeed) / this.width)][
-        Math.floor((this.y + this.height) / this.height)
+      Math.floor((this.y + this.height) / this.height)
       ] === 0
     ) {
       this.hSpeed = -this.playerSpeed;
@@ -49115,10 +49173,10 @@ module.exports = class MainCharacter {
     // this.posTopX = parseInt((this.x + 50) / ((this.CWidth * 128) / this.CWidth));
     if (
       this.mazeArray[Math.floor((this.x + 50) / this.width)][
-        Math.floor((this.y + this.height + this.playerSpeed) / this.height)
+      Math.floor((this.y + this.height + this.playerSpeed) / this.height)
       ] === 0
       && this.mazeArray[Math.floor((this.x + 76) / this.width)][
-        Math.floor((this.y + this.height + this.playerSpeed) / this.height)
+      Math.floor((this.y + this.height + this.playerSpeed) / this.height)
       ] === 0
     ) {
       this.vSpeed = this.playerSpeed;
@@ -49139,10 +49197,10 @@ module.exports = class MainCharacter {
     this.posTopX = parseInt((this.x + 50) / ((this.CWidth * 128) / this.CWidth));
     if (
       this.mazeArray[Math.floor((this.x + 50) / this.width)][
-        Math.floor((this.y + 20 - this.playerSpeed) / this.height)
+      Math.floor((this.y + 20 - this.playerSpeed) / this.height)
       ] === 0
       && this.mazeArray[Math.floor((this.x + 76) / this.width)][
-        Math.floor((this.y + 20 - this.playerSpeed) / this.height)
+      Math.floor((this.y + 20 - this.playerSpeed) / this.height)
       ] === 0
     ) {
       this.vSpeed = -this.playerSpeed;
@@ -49151,7 +49209,7 @@ module.exports = class MainCharacter {
   }
 };
 
-},{"./enemies/enemy":17,"./key":23,"./spikeTrap":25}],4:[function(require,module,exports){
+},{"./enemies/enemy":17,"./key":23,"./mapPowerup":25,"./spikeTrap":26}],4:[function(require,module,exports){
 const THREE = require('three');
 /**
  * @author mrdoob / http://mrdoob.com/
@@ -50774,8 +50832,6 @@ module.exports = class Block {
 // eslint-disable-next-line no-unused-vars
 module.exports = class PlayerCamera {
   constructor(ctx) {
-    this.spriteKeysCollected = new Image();
-    this.spriteKeysCollected.src = '../../Art/2D/keys_collected.png';
     this.player = undefined;
     this.ctx = ctx;
     this.vWidth = ctx.canvas.width;
@@ -50812,20 +50868,6 @@ module.exports = class PlayerCamera {
       this.ctx.canvas.width,
       this.ctx.canvas.height,
     );
-
-    if (this.player !== undefined) {
-      this.ctx.drawImage(
-        this.spriteKeysCollected,
-        0,
-        this.player.keysCollected * 384 / 4,
-        288,
-        384 / 4,
-        20,
-        20,
-        288,
-        384 / 4
-      );
-    }
   }
 };
 
@@ -51509,6 +51551,38 @@ module.exports = class KeyController {
 
 }
 },{"./key":23}],25:[function(require,module,exports){
+module.exports = class MapPowerup {
+  constructor(x, y) {
+    this.x = x;
+    this.y = y;
+    this.width = 128;
+    this.height = 128;
+    this.sprite = new Image();
+    this.sprite.src = '../../Art/2D/map_powerup_spritesheet.png';
+    this.spriteIndex = 0;
+    this.animationSpeed = 0.16;
+    this.animationSize = 8;
+  }
+
+  update(dt) {
+    this.spriteIndex = (this.spriteIndex + this.animationSpeed) % this.animationSize;
+  }
+
+  draw(ctx, worldPosX, worldPosY) {
+    ctx.drawImage(
+      this.sprite,
+      this.width * Math.floor(this.spriteIndex),
+      0,
+      this.width,
+      this.height,
+      this.x - worldPosX,
+      this.y - worldPosY,
+      this.width,
+      this.height
+    );
+  }
+}
+},{}],26:[function(require,module,exports){
 module.exports = class SpikeTrap {
   constructor(x, y) {
     this.x = x;
@@ -51540,7 +51614,7 @@ module.exports = class SpikeTrap {
     );
   }
 }
-},{}],26:[function(require,module,exports){
+},{}],27:[function(require,module,exports){
 const SpikeTrap = require('./spikeTrap');
 
 module.exports = class TrapController {
@@ -51564,4 +51638,4 @@ module.exports = class TrapController {
     }
   }
 }
-},{"./spikeTrap":25}]},{},[22]);
+},{"./spikeTrap":26}]},{},[22]);
