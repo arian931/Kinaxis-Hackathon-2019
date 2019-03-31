@@ -48843,10 +48843,10 @@ function draw() {
   ctx.fillStyle = 'blue';
   ctx.fillRect(
     minimapPosX
-    + (Math.floor((Player.x + Player.width / 2) / Player.width) * minimap.canvas.width) / mapSize,
+      + (Math.floor((Player.x + Player.width / 2) / Player.width) * minimap.canvas.width) / mapSize,
     minimapPosY
-    + (Math.floor((Player.y + Player.height / 2) / Player.height) * minimap.canvas.height)
-    / mapSize,
+      + (Math.floor((Player.y + Player.height / 2) / Player.height) * minimap.canvas.height)
+        / mapSize,
     minimap.canvas.width / mapSize,
     minimap.canvas.height / mapSize,
   );
@@ -48858,10 +48858,10 @@ function draw() {
       ctx.fillStyle = 'red';
       ctx.fillRect(
         minimapPosX
-        + (Math.floor((enemy.x + enemy.width / 2) / enemy.width) * minimap.canvas.width) / mapSize,
+          + (Math.floor((enemy.x + enemy.width / 2) / enemy.width) * minimap.canvas.width) / mapSize,
         minimapPosY
-        + (Math.floor((enemy.y + enemy.height - 4) / enemy.height) * minimap.canvas.height)
-        / mapSize,
+          + (Math.floor((enemy.y + enemy.height - 4) / enemy.height) * minimap.canvas.height)
+            / mapSize,
         minimap.canvas.width / mapSize,
         minimap.canvas.height / mapSize,
       );
@@ -48912,7 +48912,7 @@ function switchToThreeD() {
 // window.requestAnimationFrame(gameLoop);
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./2DMainChar":3,"./Hindex":7,"./RecursiveMaze":13,"./camera":16,"./enemies/enemy":17,"./enemyController":21,"./key":23,"./keyController":24,"./menu.js":25,"./spikeTrap":26,"./trapController":27}],3:[function(require,module,exports){
+},{"./2DMainChar":3,"./Hindex":7,"./RecursiveMaze":13,"./camera":16,"./enemies/enemy":17,"./enemyController":21,"./key":23,"./keyController":24,"./menu.js":25,"./spikeTrap":26,"./trapController":28}],3:[function(require,module,exports){
 /* eslint-disable no-plusplus */
 /* eslint-disable no-param-reassign */
 /* eslint-disable prefer-const */
@@ -49078,8 +49078,8 @@ module.exports = class MainCharacter {
       128,
       128,
     );
-    context.fillStyle = 'rgba(0,0,0,0.5)';
-    context.fillRect(this.x + 50 - worldPosX, this.y - worldPosY + this.height, 28, -20);
+    // context.fillStyle = 'rgba(0,0,0,0.5)';
+    // context.fillRect(this.x + 50 - worldPosX, this.y - worldPosY + this.height, 28, -20);
   }
 
   checkMovePosX() {
@@ -49332,6 +49332,7 @@ module.exports = class Floor {
 /* eslint-disable no-unused-vars */
 const Player = require('./PlayerClass');
 const Block = require('./block');
+const Teacher = require('./teacher');
 
 module.exports = class miniGame {
   constructor() {
@@ -49351,7 +49352,6 @@ module.exports = class miniGame {
     this.scene.background.src = '../../Art/2D/minigame/background.png';
     this.scene.ground.src = '../../Art/2D/minigame/ground.png';
     this.scene.foreground.src = '../../Art/2D/minigame/foreground_detail.png';
-
 
     this.player = new Player(300, this.canvas.height / 2 + 100, 30, 90, this.ctx);
     this.floorHeight = this.player.y + this.player.H;
@@ -49381,6 +49381,20 @@ module.exports = class miniGame {
     this.maxAmountForRandomSpawn = 30;
     this.randomSpawn = 0;
     this.counterForSpawn = 0;
+
+    this.inTransition = false;
+    this.delayForTransition = 50;
+    this.counterForTransition = 0;
+    this.stopSpawning = false;
+
+    this.teacher = new Teacher(this.canvas.width, this.floorHeight - 90, 30, 90, 10, this.ctx);
+    this.endBlurbPos = document.getElementById('TwoDRunnerPositive');
+    this.endBlurbNeg = document.getElementById('TwoDRunnerNegative');
+
+    this.endBlurbDelay = 500;
+    this.endBlurbDelayCounter = 0;
+
+    this.hitBlock = false;
 
     this.handleEvent = (e) => {
       switch (e.type) {
@@ -49446,73 +49460,112 @@ module.exports = class miniGame {
     // this.ctx.fillStyle = 'rgb(0,0,200)';
     // this.ctx.fillRect(0, this.floorHeight, this.canvas.width, 20);
 
-    this.ctx.drawImage(this.scene.background, this.ctx.canvas.width / 2 - 1600 / 2, this.ctx.canvas.height / 2 - 720 / 2);
+    this.ctx.drawImage(
+      this.scene.background,
+      this.ctx.canvas.width / 2 - 1600 / 2,
+      this.ctx.canvas.height / 2 - 720 / 2,
+    );
     this.ctx.drawImage(this.scene.ground, this.ctx.canvas.width / 2 - 1032 / 2, this.floorHeight);
-    /*
-     */
-    if (this.counterForSpawn >= this.randomSpawn) {
-      console.log('spawn');
-      this.randomSpawn = Math.floor(Math.random() * this.maxAmountForRandomSpawn + 20);
-      this.counterForSpawn = 0;
-      this.addBlock();
-    } else {
-      this.counterForSpawn++;
-    }
-    /*
-     */
-    // console.log(this.blockArray);
-    for (let x = 0; x < this.blockArray.length; x++) {
-      if (!this.blockArray[x].update()) {
-        this.increasedDif = false;
-        this.numberOfBlocksPassed++;
-        this.blockArray.shift();
+    if (this.numberOfBlocksPassed >= 5 || this.hitBlock) {
+      this.stopSpawning = true;
+      if (this.blockArray.length <= 0 || this.hitBlock) {
+        console.log('inTransiton');
+        this.inTransition = true;
+        if (this.teacher.x - 200 <= this.player.x || this.hitBlock) {
+          console.log(this.endBlurb);
+          if (!this.hitBlock) {
+            this.endBlurbPos.style.display = 'block';
+          } else {
+            this.endBlurbNeg.style.display = 'block';
+          }
+          this.teacher.draw();
+          // console.log('startin convo');
+          if (this.endBlurbDelayCounter == this.endBlurbDelay) {
+            document.removeEventListener('keydown', this);
+            document.removeEventListener('keyup', this);
+            this.canvas.style.display = 'none';
+            this.mainCanvas.style.display = 'block';
+            this.endBlurbPos.style.display = 'none';
+            this.endBlurbNeg.style.display = 'none';
+            clearInterval(this.mainInterval);
+            // console.log('collision');
+          } else {
+            this.endBlurbDelayCounter++;
+          }
+        } else {
+          this.teacher.update();
+          this.teacher.draw();
+        }
       }
-      this.blockArray[x].draw();
-      if (
-        this.player.x + this.player.W - 5 >= this.blockArray[x].x
-        && this.player.x + 5 <= this.blockArray[x].x + this.blockArray[x].w
-        && this.player.y + this.player.H >= this.blockArray[x].y
-      ) {
-        document.removeEventListener('keydown', this);
-        document.removeEventListener('keyup', this);
-        this.canvas.style.display = 'none';
-        this.mainCanvas.style.display = 'block';
-        clearInterval(this.mainInterval);
-        console.log('collision');
-      }
-    }
-    if (this.numberOfBlocksPassed % 5 == 0 && !this.increasedDif) {
-      console.log('increased speed');
-      this.maxAmountForRandomSpawn -= 2;
-      this.blockSpeed += 3;
-      this.increasedDif = true;
     }
     /*
      */
-    if (this.jumping) {
+    if (!this.hitBlock) {
+      if (!this.stopSpawning) {
+        if (this.counterForSpawn >= this.randomSpawn) {
+          console.log('spawn');
+          this.randomSpawn = Math.floor(Math.random() * this.maxAmountForRandomSpawn + 20);
+          this.counterForSpawn = 0;
+          this.addBlock();
+        } else {
+          this.counterForSpawn++;
+        }
+      }
       /*
        */
-      this.jumpCounter++;
-      // console.log(jumpCounter + " jumpCounter");
-      if (this.jumpCounter >= this.jumpDuration) {
-        // console.log("jumping is false;");
-        // console.log(jumping);
-        if (this.player.y + this.player.H <= this.floorHeight - this.gravity) {
-          // console.log("gravity");
-          this.player.y += this.gravity;
-        } else {
-          this.player.y = this.floorHeight - this.player.H;
-          this.jumping = false;
+      // console.log(this.blockArray);
+      for (let x = 0; x < this.blockArray.length; x++) {
+        if (!this.blockArray[x].update()) {
+          this.increasedDif = false;
+          this.numberOfBlocksPassed++;
+          this.blockArray.shift();
         }
-      } else {
-        this.player.y -= this.jumpPower * this.jumpingMultiplier;
-        this.jumpingMultiplier *= 0.9;
+        this.blockArray[x].draw();
+        if (
+          this.player.x + this.player.W - 5 >= this.blockArray[x].x
+          && this.player.x + 5 <= this.blockArray[x].x + this.blockArray[x].w
+          && this.player.y + this.player.H >= this.blockArray[x].y
+        ) {
+          this.hitBlock = true;
+        }
+      }
+      if (this.numberOfBlocksPassed % 5 == 0 && !this.increasedDif) {
+        console.log('increased speed');
+        this.maxAmountForRandomSpawn -= 2;
+        this.blockSpeed += 3;
+        this.increasedDif = true;
+      }
+      /*
+       */
+      if (this.jumping) {
+        /*
+         */
+        this.jumpCounter++;
+        // console.log(jumpCounter + " jumpCounter");
+        if (this.jumpCounter >= this.jumpDuration) {
+          // console.log("jumping is false;");
+          // console.log(jumping);
+          if (this.player.y + this.player.H <= this.floorHeight - this.gravity) {
+            // console.log("gravity");
+            this.player.y += this.gravity;
+          } else {
+            this.player.y = this.floorHeight - this.player.H;
+            this.jumping = false;
+          }
+        } else {
+          this.player.y -= this.jumpPower * this.jumpingMultiplier;
+          this.jumpingMultiplier *= 0.9;
+        }
       }
     }
     /*
      */
     this.player.draw();
-    this.ctx.drawImage(this.scene.foreground, this.ctx.canvas.width / 2 - 1600 / 2, this.ctx.canvas.height / 2 - 720 / 2);
+    this.ctx.drawImage(
+      this.scene.foreground,
+      this.ctx.canvas.width / 2 - 1600 / 2,
+      this.ctx.canvas.height / 2 - 720 / 2,
+    );
   }
 
   addBlock() {
@@ -49533,7 +49586,7 @@ module.exports = class miniGame {
 
 // const block = new Block(canvas.width, floorHeight - 80, 40, 80, 50, ctx);
 
-},{"./PlayerClass":12,"./block":15}],8:[function(require,module,exports){
+},{"./PlayerClass":12,"./block":15,"./teacher":27}],8:[function(require,module,exports){
 module.exports = class insideWallsMaze {
   constructor(x, z, w, endBlock, scene) {
     this.x = x;
@@ -51636,6 +51689,28 @@ module.exports = class SpikeTrap {
   }
 }
 },{}],27:[function(require,module,exports){
+module.exports = class Teacher {
+  constructor(x, y, w, h, speed, ctx) {
+    this.x = x;
+    this.y = y;
+    this.w = w;
+    this.h = h;
+    this.ctx = ctx;
+    this.speed = speed;
+    this.goForward = false;
+  }
+
+  draw() {
+    this.ctx.fillStyle = 'rgb(0,255,0)';
+    this.ctx.fillRect(this.x, this.y, this.w, this.h);
+  }
+
+  update() {
+    this.x -= this.speed;
+  }
+};
+
+},{}],28:[function(require,module,exports){
 const SpikeTrap = require('./spikeTrap');
 
 module.exports = class TrapController {

@@ -66,6 +66,8 @@ module.exports = class miniGame {
     this.endBlurbDelay = 500;
     this.endBlurbDelayCounter = 0;
 
+    this.hitBlock = false;
+
     this.handleEvent = (e) => {
       switch (e.type) {
         case 'keydown':
@@ -136,14 +138,18 @@ module.exports = class miniGame {
       this.ctx.canvas.height / 2 - 720 / 2,
     );
     this.ctx.drawImage(this.scene.ground, this.ctx.canvas.width / 2 - 1032 / 2, this.floorHeight);
-    if (this.numberOfBlocksPassed >= 5) {
+    if (this.numberOfBlocksPassed >= 5 || this.hitBlock) {
       this.stopSpawning = true;
-      if (this.blockArray.length <= 0) {
+      if (this.blockArray.length <= 0 || this.hitBlock) {
         console.log('inTransiton');
         this.inTransition = true;
-        if (this.teacher.x - 200 <= this.player.x) {
+        if (this.teacher.x - 200 <= this.player.x || this.hitBlock) {
           console.log(this.endBlurb);
-          this.endBlurbPos.style.display = 'block';
+          if (!this.hitBlock) {
+            this.endBlurbPos.style.display = 'block';
+          } else {
+            this.endBlurbNeg.style.display = 'block';
+          }
           this.teacher.draw();
           // console.log('startin convo');
           if (this.endBlurbDelayCounter == this.endBlurbDelay) {
@@ -166,65 +172,62 @@ module.exports = class miniGame {
     }
     /*
      */
-    if (!this.stopSpawning) {
-      if (this.counterForSpawn >= this.randomSpawn) {
-        console.log('spawn');
-        this.randomSpawn = Math.floor(Math.random() * this.maxAmountForRandomSpawn + 20);
-        this.counterForSpawn = 0;
-        this.addBlock();
-      } else {
-        this.counterForSpawn++;
+    if (!this.hitBlock) {
+      if (!this.stopSpawning) {
+        if (this.counterForSpawn >= this.randomSpawn) {
+          console.log('spawn');
+          this.randomSpawn = Math.floor(Math.random() * this.maxAmountForRandomSpawn + 20);
+          this.counterForSpawn = 0;
+          this.addBlock();
+        } else {
+          this.counterForSpawn++;
+        }
       }
-    }
-    /*
-     */
-    // console.log(this.blockArray);
-    for (let x = 0; x < this.blockArray.length; x++) {
-      if (!this.blockArray[x].update()) {
-        this.increasedDif = false;
-        this.numberOfBlocksPassed++;
-        this.blockArray.shift();
-      }
-      this.blockArray[x].draw();
-      if (
-        this.player.x + this.player.W - 5 >= this.blockArray[x].x
-        && this.player.x + 5 <= this.blockArray[x].x + this.blockArray[x].w
-        && this.player.y + this.player.H >= this.blockArray[x].y
-      ) {
-        document.removeEventListener('keydown', this);
-        document.removeEventListener('keyup', this);
-        this.canvas.style.display = 'none';
-        this.mainCanvas.style.display = 'block';
-        clearInterval(this.mainInterval);
-        console.log('collision');
-      }
-    }
-    if (this.numberOfBlocksPassed % 5 == 0 && !this.increasedDif) {
-      console.log('increased speed');
-      this.maxAmountForRandomSpawn -= 2;
-      this.blockSpeed += 3;
-      this.increasedDif = true;
-    }
-    /*
-     */
-    if (this.jumping) {
       /*
        */
-      this.jumpCounter++;
-      // console.log(jumpCounter + " jumpCounter");
-      if (this.jumpCounter >= this.jumpDuration) {
-        // console.log("jumping is false;");
-        // console.log(jumping);
-        if (this.player.y + this.player.H <= this.floorHeight - this.gravity) {
-          // console.log("gravity");
-          this.player.y += this.gravity;
-        } else {
-          this.player.y = this.floorHeight - this.player.H;
-          this.jumping = false;
+      // console.log(this.blockArray);
+      for (let x = 0; x < this.blockArray.length; x++) {
+        if (!this.blockArray[x].update()) {
+          this.increasedDif = false;
+          this.numberOfBlocksPassed++;
+          this.blockArray.shift();
         }
-      } else {
-        this.player.y -= this.jumpPower * this.jumpingMultiplier;
-        this.jumpingMultiplier *= 0.9;
+        this.blockArray[x].draw();
+        if (
+          this.player.x + this.player.W - 5 >= this.blockArray[x].x
+          && this.player.x + 5 <= this.blockArray[x].x + this.blockArray[x].w
+          && this.player.y + this.player.H >= this.blockArray[x].y
+        ) {
+          this.hitBlock = true;
+        }
+      }
+      if (this.numberOfBlocksPassed % 5 == 0 && !this.increasedDif) {
+        console.log('increased speed');
+        this.maxAmountForRandomSpawn -= 2;
+        this.blockSpeed += 3;
+        this.increasedDif = true;
+      }
+      /*
+       */
+      if (this.jumping) {
+        /*
+         */
+        this.jumpCounter++;
+        // console.log(jumpCounter + " jumpCounter");
+        if (this.jumpCounter >= this.jumpDuration) {
+          // console.log("jumping is false;");
+          // console.log(jumping);
+          if (this.player.y + this.player.H <= this.floorHeight - this.gravity) {
+            // console.log("gravity");
+            this.player.y += this.gravity;
+          } else {
+            this.player.y = this.floorHeight - this.player.H;
+            this.jumping = false;
+          }
+        } else {
+          this.player.y -= this.jumpPower * this.jumpingMultiplier;
+          this.jumpingMultiplier *= 0.9;
+        }
       }
     }
     /*
