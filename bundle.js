@@ -48829,7 +48829,7 @@ function draw() {
   ctx.fillStyle = 'blue';
   ctx.fillRect(
     minimapPosX
-      + (Math.floor((Player.x + Player.width / 2) / Player.width) * minimap.canvas.width) / mapSize,
+    + (Math.floor((Player.x + Player.width / 2) / Player.width) * minimap.canvas.width) / mapSize,
     minimapPosY
       + (Math.floor((Player.y + Player.height / 2) / Player.height) * minimap.canvas.height)
         / mapSize,
@@ -48844,10 +48844,10 @@ function draw() {
       ctx.fillStyle = 'red';
       ctx.fillRect(
         minimapPosX
-          + (Math.floor((enemy.x + enemy.width / 2) / enemy.width) * minimap.canvas.width) / mapSize,
+        + (Math.floor((enemy.x + enemy.width / 2) / enemy.width) * minimap.canvas.width) / mapSize,
         minimapPosY
-          + (Math.floor((enemy.y + enemy.height - 4) / enemy.height) * minimap.canvas.height)
-            / mapSize,
+        + (Math.floor((enemy.y + enemy.height - 4) / enemy.height) * minimap.canvas.height)
+        / mapSize,
         minimap.canvas.width / mapSize,
         minimap.canvas.height / mapSize,
       );
@@ -48873,6 +48873,7 @@ function switchBackTo2D() {
   console.log('2d is back');
   if (InThreeD) {
     InThreeD = false;
+
     gameLoop();
   }
 }
@@ -49009,9 +49010,8 @@ module.exports = class MainCharacter {
         if (
           this.x + this.width / 2 > key.x + 32
           && this.x + this.width / 2 < key.x + key.width - 32
-          && this.y + this.height - 10 > key.y + key.height / 2 - 32
-          && this.y + this.height - 10 < key.y + key.height / 2 + 32
-        ) {
+          && this.y + this.height / 2 > key.y + key.height / 2 - 32
+          && this.y + this.height / 2 + 32 < key.y + key.height / 2 + 32) {
           this.gameObjects.splice(j, 1);
           this.keysCollected++;
           this.callBlurb();
@@ -49061,10 +49061,10 @@ module.exports = class MainCharacter {
     // }
     if (
       this.mazeArray[Math.floor((this.x + 76 + this.playerSpeed) / this.width)][
-        Math.floor((this.y + 20) / this.height)
+      Math.floor((this.y + 20) / this.height)
       ] === 0
       && this.mazeArray[Math.floor((this.x + 76 + this.playerSpeed) / this.width)][
-        Math.floor((this.y + this.height) / this.height)
+      Math.floor((this.y + this.height) / this.height)
       ] === 0
     ) {
       this.hSpeed = this.playerSpeed;
@@ -49082,17 +49082,10 @@ module.exports = class MainCharacter {
     // }
     if (
       this.mazeArray[Math.floor((this.x + 50 - this.playerSpeed) / this.width)][
-        Math.floor((this.y + 20) / this.height)
-      ] === 0
-      && this.mazeArray[Math.floor((this.x + 50 - this.playerSpeed) / this.width)][
-        Math.floor((this.y + this.height) / this.height)
-      ] === 0
-    ) {
       this.hSpeed = -this.playerSpeed;
       this.x += this.hSpeed;
     }
   }
-
   checkMovePosY() {
     // console.log('hello');
     // this.posTopY = parseInt(
@@ -49106,17 +49099,10 @@ module.exports = class MainCharacter {
     // this.posTopX = parseInt((this.x + 50) / ((this.CWidth * 128) / this.CWidth));
     if (
       this.mazeArray[Math.floor((this.x + 50) / this.width)][
-        Math.floor((this.y + this.height + this.playerSpeed) / this.height)
-      ] === 0
-      && this.mazeArray[Math.floor((this.x + 76) / this.width)][
-        Math.floor((this.y + this.height + this.playerSpeed) / this.height)
-      ] === 0
-    ) {
       this.vSpeed = this.playerSpeed;
       this.y += this.vSpeed;
     }
   }
-
   checkMoveNegY() {
     // console.log('hello');
     // this.posTopY = parseInt(
@@ -49130,10 +49116,10 @@ module.exports = class MainCharacter {
     this.posTopX = parseInt((this.x + 50) / ((this.CWidth * 128) / this.CWidth));
     if (
       this.mazeArray[Math.floor((this.x + 50) / this.width)][
-        Math.floor((this.y + 20 - this.playerSpeed) / this.height)
+      Math.floor((this.y + 20 - this.playerSpeed) / this.height)
       ] === 0
       && this.mazeArray[Math.floor((this.x + 76) / this.width)][
-        Math.floor((this.y + 20 - this.playerSpeed) / this.height)
+      Math.floor((this.y + 20 - this.playerSpeed) / this.height)
       ] === 0
     ) {
       this.vSpeed = -this.playerSpeed;
@@ -50499,6 +50485,8 @@ module.exports = class WallGenerator {
 // eslint-disable-next-line no-unused-vars
 module.exports = class PlayerCamera {
   constructor(ctx) {
+    this.spriteKeysCollected = new Image();
+    this.spriteKeysCollected.src = '../../Art/2D/keys_collected.png';
     this.player = undefined;
     this.ctx = ctx;
     this.vWidth = ctx.canvas.width;
@@ -50535,6 +50523,20 @@ module.exports = class PlayerCamera {
       this.ctx.canvas.width,
       this.ctx.canvas.height,
     );
+
+    if (this.player !== undefined) {
+      this.ctx.drawImage(
+        this.spriteKeysCollected,
+        0,
+        this.player.keysCollected * 384 / 4,
+        288,
+        384 / 4,
+        20,
+        20,
+        288,
+        384 / 4
+      );
+    }
   }
 };
 
@@ -50582,8 +50584,8 @@ module.exports = class Enemy {
     // this.x += this.hSpeed;
     // this.y += this.vSpeed;
     const dirs = []; // 0 = right, 1 = down, 2 = left, 3 = up.
-    const currentPosX = Math.floor((this.x) / 128);
-    const currentPosY = Math.floor((this.y) / 128);
+    const currentPosX = Math.floor((this.x + this.width / 2 - (this.width / 2) * this.xDir) / 128);
+    const currentPosY = Math.floor((this.y + this.height / 2 - (this.height / 2) * this.yDir) / 128);
     // if (currentPosX !== this.moveX || currentPosY !== this.moveY) {
     // console.log(this.speed);
     // console.log(this.moveX - currentPosX);
@@ -50643,21 +50645,29 @@ module.exports = class Enemy {
           console.log('move right');
           this.moveX = currentPosX + 1;
           this.moveY = currentPosY;
+          this.xDir = 1;
+          this.yDir = 0;
           break;
         case 1:
           console.log('move down');
           this.moveX = currentPosX;
           this.moveY = currentPosY + 1;
+          this.yDir = 1;
+          this.xDir = 0;
           break;
         case 2:
           console.log('move left');
           this.moveX = currentPosX - 1;
           this.moveY = currentPosY;
+          this.xDir = -1;
+          this.yDir = 0;
           break;
         case 3:
           console.log('move up');
           this.moveX = currentPosX;
           this.moveY = currentPosY - 1;
+          this.yDir = -1;
+          this.xDir = 0;
           break;
         default:
           break;
@@ -50671,7 +50681,9 @@ module.exports = class Enemy {
       // If the enemy is moving horizontally(not idle), change its sprite y
       // index to either row 1 or row 3 of the sprite sheet.
       this.spriteIndexY = this.xDir === 1 ? 1 : 3;
-    } else {
+    }
+
+    if (this.yDir !== 0) {
       // If the enemy is moving vertically(not idle), change its sprite y
       // index to either row 2 or row 4 of the sprite sheet.
       this.spriteIndexY = this.yDir === 1 ? 2 : 4;
@@ -50769,7 +50781,7 @@ module.exports = class EnemyController {
               case 0:
                 gameObjects.push(new EnemyDepression(
                   x * 128,
-                  y * 128 - 24,
+                  y * 128,
                   (mapArray[x][y - 1] === 1 && mapArray[x][y + 1] === 1 ? 0 : 1),
                   mapArray
                 ));
@@ -50777,7 +50789,7 @@ module.exports = class EnemyController {
               case 1:
                 gameObjects.push(new EnemyAnxiety(
                   x * 128,
-                  y * 128 - 24,
+                  y * 128,
                   (mapArray[x][y - 1] === 1 && mapArray[x][y + 1] === 1 ? 0 : 1),
                   mapArray
                 ));
@@ -50785,7 +50797,7 @@ module.exports = class EnemyController {
               case 2:
                 gameObjects.push(new EnemyBPD(
                   x * 128,
-                  y * 128 - 24,
+                  y * 128,
                   (mapArray[x][y - 1] === 1 && mapArray[x][y + 1] === 1 ? 0 : 1),
                   mapArray
                 ));
