@@ -48998,8 +48998,8 @@ module.exports = class MainCharacter {
         const key = this.gameObjects[j];
         if (this.x + this.width / 2 > key.x + 32
           && this.x + this.width / 2 < key.x + key.width - 32
-          && this.y + this.height - 10 > key.y + key.height / 2 - 32
-          && this.y + this.height - 10 < key.y + key.height / 2 + 32) {
+          && this.y + this.height / 2 > key.y + key.height / 2 - 32
+          && this.y + this.height / 2 < key.y + key.height / 2 + 32) {
           this.gameObjects.splice(j, 1);
           this.keysCollected++;
           this.callBlurb();
