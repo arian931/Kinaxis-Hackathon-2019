@@ -1,29 +1,23 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <title>🌑WHACC🌑</title>
-    <style>
-      body {
-        margin: 0;
-        overflow: hidden;
-      }
 
-      canvas {
-        width: 100%;
-        height: 100%;
-      }
+<head>
+  <title>🌑WHACC🌑</title>
+  <style>
+    body {
+      margin: 0;
+      overflow: hidden;
+    }
 
-      #he {
-        position: absolute;
-        display: block;
-      }
+    canvas {
+      width: 100%;
+      height: 100%;
+    }
 
-      #blocker {
-        position: absolute;
-        width: 100%;
-        height: 100%;
-        background-color: rgba(0, 0, 0, 0.5);
-      }
+    #he {
+      position: absolute;
+      display: block;
+    }
 
       #instructions {
         width: 40%;
@@ -39,12 +33,32 @@
         padding-bottom: 0%;
       }
 
-      #scoreAndTimer3d {
-        position: absolute;
-        width: 100%;
-        height: 100%;
-        display: block;
-      }
+    #instructions {
+      width: 40%;
+      height: 75%;
+      display: -webkit-box;
+      display: -moz-box;
+      display: box;
+      -webkit-box-orient: horizontal;
+      -moz-box-orient: horizontal;
+      box-orient: horizontal;
+      -webkit-box-pack: center;
+      -moz-box-pack: center;
+      ‰box-pack: center;
+      -webkit-box-align: center;
+      -moz-box-align: center;
+      box-align: center;
+      color: #000000;
+      text-align: center;
+      cursor: pointer;
+      margin: auto;
+      margin-top: 5%;
+      background-color: rgba(60, 63, 60, 0.5);
+      border-radius: 10px;
+      padding-right: 1%;
+      padding-left: 1%;
+      font-family: "Times New Roman", Times, serif;
+    }
 
       #backgroundCanvas {
         display: block;
@@ -128,22 +142,24 @@
         </h1>
       </div>
     </div>
+  </div>
 
-    <div id="blocker">
-      <div id="instructions">
-        <h1 class="">
-          You find the enemy was not real, but something your mind has created.
-          However your mind is powerful, and to defeat the enemy you must make
-          your mind stronger through practicing well being. Luckly there are
-          cubes of self care, this cubes repersent medating for 10 min's a day,
-          seeing a therapist, talking to a guidance coulslor. Once you have
-          gathered all the cubes you can defeat the beast, but do not
-          procrastonate, becuase there is a time limit.
-        </h1>
-      </div>
+  <div id="blocker">
+    <div id="instructions">
+      <h1 class="">
+        You find the enemy was not real, but something your mind has created.
+        However your mind is powerful, and to defeat the enemy you must make
+        your mind stronger through practicing well being. Luckly there are
+        cubes of self care, this cubes repersent medating for 10 min's a day,
+        seeing a therapist, talking to a guidance coulslor. Once you have
+        gathered all the cubes you can defeat the beast, but do not
+        procrastonate, becuase there is a time limit.
+      </h1>
     </div>
+  </div>
 
-    <script src="bundle.js"></script>
-    <!-- <script src="src/enemy.js" type="text/javascript"></script> -->
-  </body>
+  <script src="bundle.js"></script>
+  <!-- <script src="src/enemy.js" type="text/javascript"></script> -->
+</body>
+
 </html>

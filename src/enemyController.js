@@ -15,7 +15,7 @@ module.exports = class EnemyController {
 
   // Spawn the enemies randomly.
   spawnEnemies(mapArray, gameObjects) {
-    const chanceMax = 100;
+    const chanceMax = 2;
     let chance = chanceMax;
     for (let y = 0; y < mapArray.length; y++) {
       for (let x = 0; x < mapArray[y].length; x++) {
@@ -28,29 +28,34 @@ module.exports = class EnemyController {
                 gameObjects.push(new EnemyDepression(
                   x * 128,
                   y * 128 - 24,
-                  (mapArray[x][y - 1] === 1 && mapArray[x][y + 1] === 1 ? 0 : 1)
+                  (mapArray[x][y - 1] === 1 && mapArray[x][y + 1] === 1 ? 0 : 1),
+                  mapArray
                 ));
                 break;
               case 1:
                 gameObjects.push(new EnemyAnxiety(
                   x * 128,
                   y * 128 - 24,
-                  (mapArray[x][y - 1] === 1 && mapArray[x][y + 1] === 1 ? 0 : 1)
+                  (mapArray[x][y - 1] === 1 && mapArray[x][y + 1] === 1 ? 0 : 1),
+                  mapArray
                 ));
                 break;
               case 2:
                 gameObjects.push(new EnemyBPD(
                   x * 128,
                   y * 128 - 24,
-                  (mapArray[x][y - 1] === 1 && mapArray[x][y + 1] === 1 ? 0 : 1)
+                  (mapArray[x][y - 1] === 1 && mapArray[x][y + 1] === 1 ? 0 : 1),
+                  mapArray
                 ));
                 break;
               default: break;
             }
-            chance = chanceMax;
+            // chance = chanceMax;
           }
           chance -= 1;
         }
+        if (chance === 0)
+          break;
       }
     }
   }

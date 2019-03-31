@@ -48369,7 +48369,7 @@ global.ctx = canvas.getContext('2d');
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
 console.log('FUCKKKKKKKkkkkk !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!');
-const Menu = require('./menu.js');
+// const Menu = require('./menu.js');
 const Enemy = require('./enemies/enemy');
 const Key = require('./key');
 const SpikeTrap = require('./spikeTrap');
@@ -48380,10 +48380,13 @@ const RecursiveMaze = require('./RecursiveMaze');
 const PlayerCamera = require('./camera');
 const MainCharacter = require('./2DMainChar');
 
+
 const blurb = document.getElementById('blurb');
-// const cxx = blurb.getContext('2d');
-const menu = new Menu(switchBackTo2D);
-menu.start();
+const cxx = blurb.getContext('2d');
+
+// const menu = new Menu(switchBackTo2D);
+// menu.start();
+
 console.log(canvas);
 
 // Load the tilemap.
@@ -48485,20 +48488,21 @@ tilemap.onload = () => {
           );
           break;
         case 1: // Walls
-          if (y - 1 < 0) {
-            if (mapArray[x][y + 1] === 0) {
-              buffer.drawImage(tilemap, 0, 0, 128, 128, 128 * x, 128 * y, 128, 128);
-            } else {
-              buffer.drawImage(tilemap, 128, 0, 128, 128, 128 * x, 128 * y, 128, 128);
-            }
-          } else if (
-            (mapArray[x][y + 1] === 0 && mapArray[x][y - 1] === 0)
-            || (mapArray[x][y + 1] === 0 && mapArray[x][y - 1] === 1)
-          ) {
-            buffer.drawImage(tilemap, 0, 0, 128, 128, 128 * x, 128 * y, 128, 128);
-          } else {
-            buffer.drawImage(tilemap, 128, 0, 128, 128, 128 * x, 128 * y, 128, 128);
-          }
+          // if (y - 1 < 0) {
+          //   if (mapArray[x][y + 1] === 0) {
+          //     buffer.drawImage(tilemap, 0, 0, 128, 128, 128 * x, 128 * y, 128, 128);
+          //   } else {
+          //     buffer.drawImage(tilemap, 128, 0, 128, 128, 128 * x, 128 * y, 128, 128);
+          //   }
+          // } else if (
+          //   (mapArray[x][y + 1] === 0 && mapArray[x][y - 1] === 0)
+          //   || (mapArray[x][y + 1] === 0 && mapArray[x][y - 1] === 1)
+          // ) {
+          //   buffer.drawImage(tilemap, 0, 0, 128, 128, 128 * x, 128 * y, 128, 128);
+          // } else {
+          //   buffer.drawImage(tilemap, 128, 0, 128, 128, 128 * x, 128 * y, 128, 128);
+          // }
+          buffer.drawImage(tilemap, 128, 0, 128, 128, 128 * x, 128 * y, 128, 128);
           minimap.fillStyle = `rgba(56, 56, 56, ${minimapAlpha})`;
           minimap.fillRect(
             (x * minimap.canvas.width) / mapSize,
@@ -48679,51 +48683,51 @@ function update() {
       }
 
       // x collision
-      if (enemy.xDir === 1) {
-        // Right collision
-        if (
-          mapArray[Math.floor((enemy.x + enemy.width / 2 + enemy.width / 4) / enemy.width)][
-            Math.floor((enemy.y + enemy.height / 2) / enemy.height)
-          ] !== 0
-        ) {
-          // The 4 is to make sure the enemy collides close enough to the wall.
-          enemy.xDir = -1;
-        }
-      } else if (enemy.xDir === -1) {
-        // Left collision
-        if (
-          mapArray[Math.floor((enemy.x + enemy.width / 2 - enemy.width / 4) / enemy.width)][
-            Math.floor((enemy.y + enemy.height / 2) / enemy.height)
-          ] !== 0
-        ) {
-          // The 4 is to make sure the enemy collides close enough to the wall.
-          enemy.xDir = 1;
-        }
-      }
+      // if (enemy.xDir === 1) {
+      //   // Right collision
+      //   if (
+      //     mapArray[Math.floor((enemy.x + enemy.width / 2 + enemy.width / 4) / enemy.width)][
+      //     Math.floor((enemy.y + enemy.height / 2) / enemy.height)
+      //     ] !== 0
+      //   ) {
+      //     // The 4 is to make sure the enemy collides close enough to the wall.
+      //     enemy.xDir = -1;
+      //   }
+      // } else if (enemy.xDir === -1) {
+      //   // Left collision
+      //   if (
+      //     mapArray[Math.floor((enemy.x + enemy.width / 2 - enemy.width / 4) / enemy.width)][
+      //     Math.floor((enemy.y + enemy.height / 2) / enemy.height)
+      //     ] !== 0
+      //   ) {
+      //     // The 4 is to make sure the enemy collides close enough to the wall.
+      //     enemy.xDir = 1;
+      //   }
+      // }
 
-      // y collision
-      if (enemy.yDir === 1) {
-        // Down collision
-        if (
-          mapArray[Math.floor((enemy.x + enemy.width / 2) / enemy.width)][
-            Math.floor((enemy.y + enemy.height - 24 + enemy.height / 4) / enemy.height)
-          ] !== 0
-        ) {
-          // The 24 is to make sure the enemy collides close enough to the bottom wall.
-          // The 4 is to make sure the enemy collides close enough to the wall.
-          enemy.yDir *= -1;
-        }
-      } else if (enemy.yDir === -1) {
-        // Up collision
-        if (
-          mapArray[Math.floor((enemy.x + enemy.width / 2) / enemy.width)][
-            Math.floor((enemy.y + enemy.height - enemy.height / 4) / enemy.height)
-          ] !== 0
-        ) {
-          // The 4 is to make sure the enemy collides close enough to the wall.
-          enemy.yDir *= -1;
-        }
-      }
+      // // y collision
+      // if (enemy.yDir === 1) {
+      //   // Down collision
+      //   if (
+      //     mapArray[Math.floor((enemy.x + enemy.width / 2) / enemy.width)][
+      //     Math.floor((enemy.y + enemy.height - 24 + enemy.height / 4) / enemy.height)
+      //     ] !== 0
+      //   ) {
+      //     // The 24 is to make sure the enemy collides close enough to the bottom wall.
+      //     // The 4 is to make sure the enemy collides close enough to the wall.
+      //     enemy.yDir *= -1;
+      //   }
+      // } else if (enemy.yDir === -1) {
+      //   // Up collision
+      //   if (
+      //     mapArray[Math.floor((enemy.x + enemy.width / 2) / enemy.width)][
+      //     Math.floor((enemy.y + enemy.height - enemy.height / 4) / enemy.height)
+      //     ] !== 0
+      //   ) {
+      //     // The 4 is to make sure the enemy collides close enough to the wall.
+      //     enemy.yDir *= -1;
+      //   }
+      // }
 
       // if (mapArray[Math.floor((enemy.x + enemy.width / 2 + (enemy.width / 4 * enemy.xDir)) / enemy.width)]
       // [Math.floor((enemy.y + enemy.height / 2) / enemy.height)] !== 0) {
@@ -48828,8 +48832,8 @@ function draw() {
     minimapPosX
       + (Math.floor((Player.x + Player.width / 2) / Player.width) * minimap.canvas.width) / mapSize,
     minimapPosY
-      + (Math.floor((Player.y + Player.height - 4) / Player.height) * minimap.canvas.height)
-        / mapSize,
+    + (Math.floor((Player.y + Player.height / 2) / Player.height) * minimap.canvas.height)
+    / mapSize,
     minimap.canvas.width / mapSize,
     minimap.canvas.height / mapSize,
   );
@@ -48849,59 +48853,6 @@ function draw() {
         minimap.canvas.height / mapSize,
       );
     }
-  }
-
-  // Draw the walls over the player.
-  if (
-    mapArray[Math.floor((Player.x + Player.width / 2) / Player.width) - 1][
-      Math.floor((Player.y + Player.height) / Player.height)
-    ] === 1
-  ) {
-    ctx.drawImage(
-      buffer.canvas,
-      (Math.floor((Player.x + Player.width / 2) / Player.width) - 1) * Player.width,
-      Math.floor((Player.y + Player.height) / Player.height) * Player.height,
-      Player.width,
-      Player.height,
-      (Math.floor((Player.x + Player.width / 2) / Player.width) - 1) * Player.width - worldPosX,
-      Math.floor((Player.y + Player.height) / Player.height) * Player.height - worldPosY,
-      Player.width,
-      Player.height,
-    );
-  }
-  if (
-    mapArray[Math.floor((Player.x + Player.width / 2) / Player.width)][
-      Math.floor((Player.y + Player.height) / Player.height)
-    ] === 1
-  ) {
-    ctx.drawImage(
-      buffer.canvas,
-      Math.floor((Player.x + Player.width / 2) / Player.width) * Player.width,
-      Math.floor((Player.y + Player.height) / Player.height) * Player.height,
-      Player.width,
-      Player.height,
-      Math.floor((Player.x + Player.width / 2) / Player.width) * Player.width - worldPosX,
-      Math.floor((Player.y + Player.height) / Player.height) * Player.height - worldPosY,
-      Player.width,
-      Player.height,
-    );
-  }
-  if (
-    mapArray[Math.floor((Player.x + Player.width / 2) / Player.width) + 1][
-      Math.floor((Player.y + Player.height) / Player.height)
-    ] === 1
-  ) {
-    ctx.drawImage(
-      buffer.canvas,
-      (Math.floor((Player.x + Player.width / 2) / Player.width) + 1) * Player.width,
-      Math.floor((Player.y + Player.height) / Player.height) * Player.height,
-      Player.width,
-      Player.height,
-      (Math.floor((Player.x + Player.width / 2) / Player.width) + 1) * Player.width - worldPosX,
-      Math.floor((Player.y + Player.height) / Player.height) * Player.height - worldPosY,
-      Player.width,
-      Player.height,
-    );
   }
 }
 
@@ -48923,6 +48874,9 @@ function switchBackTo2D() {
   // console.log('2d is back');
   if (InThreeD) {
     InThreeD = false;
+
+    gameLoop(); s
+
   }
   gameLoop();
 }
@@ -48940,10 +48894,10 @@ function switchToThreeD() {
   InThreeD = true;
   checkForSwitchBackInerval = setInterval(funToCheckForSwitchBack, 33);
 }
-// window.requestAnimationFrame(gameLoop);
+window.requestAnimationFrame(gameLoop);
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./2DMainChar":3,"./RecursiveMaze":11,"./camera":13,"./enemies/enemy":14,"./enemyController":18,"./key":20,"./keyController":21,"./menu.js":22,"./spikeTrap":23,"./trapController":24}],3:[function(require,module,exports){
+},{"./2DMainChar":3,"./RecursiveMaze":11,"./camera":13,"./enemies/enemy":14,"./enemyController":18,"./key":20,"./keyController":21,"./spikeTrap":22,"./trapController":23}],3:[function(require,module,exports){
 /* eslint-disable no-plusplus */
 /* eslint-disable no-param-reassign */
 /* eslint-disable prefer-const */
@@ -49058,9 +49012,8 @@ module.exports = class MainCharacter {
         if (
           this.x + this.width / 2 > key.x + 32
           && this.x + this.width / 2 < key.x + key.width - 32
-          && this.y + this.height > key.y + key.height / 2 - 32
-          && this.y + this.height < key.y + key.height / 2 + 32
-        ) {
+          && this.y + this.height - 10 > key.y + key.height / 2 - 32
+          && this.y + this.height - 10 < key.y + key.height / 2 + 32) {
           this.gameObjects.splice(j, 1);
           this.keysCollected++;
           this.callBlurb();
@@ -49073,17 +49026,15 @@ module.exports = class MainCharacter {
           if (
             this.x + this.width / 2 > trap.x
             && this.x + this.width / 2 < trap.x + trap.width
+<<<<<<< HEAD
             && this.y + this.height > trap.y
             && this.y + this.height < trap.y + trap.height
           ) {
             this.x = 130;
             this.y = 120;
-          }
-        }
       }
     }
   }
-
   draw(context, worldPosX, worldPosY) {
     // console.log('draw');
     context.drawImage(
@@ -49109,14 +49060,8 @@ module.exports = class MainCharacter {
     //   this.hSpeed = this.playerSpeed;
     //   this.x += this.hSpeed;
     // }
-    if (
-      this.mazeArray[Math.floor((this.x + 76 + this.playerSpeed) / this.width)][
-        Math.floor((this.y + 32) / this.height)
-      ] === 0
-      || this.mazeArray[Math.floor((this.x + 76 + this.playerSpeed) / this.width)][
-        Math.floor((this.y + this.height - 20) / this.height)
-      ] === 0
-    ) {
+    if (this.mazeArray[Math.floor((this.x + 76 + this.playerSpeed) / this.width)][Math.floor((this.y + 20) / this.height)] === 0
+      && this.mazeArray[Math.floor((this.x + 76 + this.playerSpeed) / this.width)][Math.floor((this.y + this.height) / this.height)] === 0) {
       this.hSpeed = this.playerSpeed;
       this.x += this.hSpeed;
     }
@@ -49130,14 +49075,8 @@ module.exports = class MainCharacter {
     //   this.hSpeed = -this.playerSpeed;
     //   this.x += this.hSpeed;
     // }
-    if (
-      this.mazeArray[Math.floor((this.x + 52 - this.playerSpeed) / this.width)][
-        Math.floor((this.y + 32) / this.height)
-      ] === 0
-      || this.mazeArray[Math.floor((this.x + 52 - this.playerSpeed) / this.width)][
-        Math.floor((this.y + this.height - 20) / this.height)
-      ] === 0
-    ) {
+    if (this.mazeArray[Math.floor((this.x + 50 - this.playerSpeed) / this.width)][Math.floor((this.y + 20) / this.height)] === 0
+      && this.mazeArray[Math.floor((this.x + 50 - this.playerSpeed) / this.width)][Math.floor((this.y + this.height) / this.height)] === 0) {
       this.hSpeed = -this.playerSpeed;
       this.x += this.hSpeed;
     }
@@ -49153,11 +49092,9 @@ module.exports = class MainCharacter {
     //   this.vSpeed = this.playerSpeed;
     //   this.y += this.vSpeed;
     // }
-    this.posTopX = parseInt((this.x + 50) / ((this.CWidth * 128) / this.CWidth));
-    if (
-      this.mazeArray[this.posTopX][Math.floor((this.y + 50) / this.height)] === 0
-      || this.mazeArray[this.posTopX][Math.floor((this.y + this.height) / this.height)] === 0
-    ) {
+    // this.posTopX = parseInt((this.x + 50) / ((this.CWidth * 128) / this.CWidth));
+    if (this.mazeArray[Math.floor((this.x + 50) / this.width)][Math.floor((this.y + this.height + this.playerSpeed) / this.height)] === 0
+      && this.mazeArray[Math.floor((this.x + 76) / this.width)][Math.floor((this.y + this.height + this.playerSpeed) / this.height)] === 0) {
       this.vSpeed = this.playerSpeed;
       this.y += this.vSpeed;
     }
@@ -49166,7 +49103,7 @@ module.exports = class MainCharacter {
   checkMoveNegY() {
     // console.log('hello');
     // this.posTopY = parseInt(
-    //   (this.y + this.height - 20 - this.playerSpeed) / ((this.CHeight * 128) / this.CHeight),
+    //   (this.y + 20 - this.playerSpeed) / ((this.CHeight * 128) / this.CHeight),
     // );
     // this.posTopX = parseInt((this.x + 50) / ((this.CWidth * 128) / this.CWidth));
     // if (this.mazeArray[this.posTopX][this.posTopY] == 0) {
@@ -49174,17 +49111,15 @@ module.exports = class MainCharacter {
     //   this.y += this.vSpeed;
     // }
     this.posTopX = parseInt((this.x + 50) / ((this.CWidth * 128) / this.CWidth));
-    if (
-      this.mazeArray[this.posTopX][Math.floor(this.y / this.height)] === 0
-      || this.mazeArray[this.posTopX][Math.floor((this.y + this.height - 24) / this.height)] === 0
-    ) {
+    if (this.mazeArray[Math.floor((this.x + 50) / this.width)][Math.floor((this.y + 20 - this.playerSpeed) / this.height)] === 0
+      && this.mazeArray[Math.floor((this.x + 76) / this.width)][Math.floor((this.y + 20 - this.playerSpeed) / this.height)] === 0) {
       this.vSpeed = -this.playerSpeed;
       this.y += this.vSpeed;
     }
   }
 };
 
-},{"./enemies/enemy":14,"./key":20,"./spikeTrap":23}],4:[function(require,module,exports){
+},{"./enemies/enemy":14,"./key":20,"./spikeTrap":22}],4:[function(require,module,exports){
 const THREE = require('three');
 /**
  * @author mrdoob / http://mrdoob.com/
@@ -50582,7 +50517,7 @@ module.exports = class PlayerCamera {
 
 },{}],14:[function(require,module,exports){
 module.exports = class Enemy {
-  constructor(x, y, dir) {
+  constructor(x, y, dir, mapArray) {
     this.x = x;
     this.y = y;
     this.dir = 0; // 0 = horizontal, 1 = vertical.
@@ -50599,8 +50534,20 @@ module.exports = class Enemy {
     this.CHeight = 29;
     this.posX = parseInt(this.x / ((this.CWidth * 128) / this.CWidth), 10);
     this.posY = parseInt(this.y / ((this.CHeight * 128) / this.CHeight), 10);
-    this.xDir = (dir === 0 ? 1 : 0);
-    this.yDir = (dir === 1 ? 1 : 0);
+    this.xDir = 0;
+    this.yDir = 0;
+    this.mapArray = mapArray;
+    this.vis = [[]];
+    for (let i = 0; i < this.mapArray.length; i++) {
+      this.vis[i] = [];
+      for (let j = 0; j < this.mapArray[i].length; j++) {
+        this.vis[i][j] = false;
+      }
+    }
+    this.cntr = 0;
+    this.moveX = Math.floor(this.x / 128);
+    this.moveY = Math.floor(this.y / 128);
+    // this.move(, );
   }
 
   update(dt) {
@@ -50609,8 +50556,90 @@ module.exports = class Enemy {
     this.vSpeed = this.speed * this.yDir * dt;
 
     // Add the horizontal and vertical speed to enemy's position.
-    this.x += this.hSpeed;
-    this.y += this.vSpeed;
+    // this.x += this.hSpeed;
+    // this.y += this.vSpeed;
+    const dirs = []; // 0 = right, 1 = down, 2 = left, 3 = up.
+    const currentPosX = Math.floor((this.x) / 128);
+    const currentPosY = Math.floor((this.y) / 128);
+    // if (currentPosX !== this.moveX || currentPosY !== this.moveY) {
+    // console.log(this.speed);
+    // console.log(this.moveX - currentPosX);
+    this.x += this.speed * (this.moveX - currentPosX);
+    // console.log(this.x);
+    this.y += this.speed * (this.moveY - currentPosY);
+    // }
+    if (currentPosX === this.moveX && currentPosY === this.moveY) {
+      this.cntr += 1;
+      console.log(this.cntr);
+      if (
+        !this.vis[currentPosX + 1][currentPosY]
+        && this.mapArray[currentPosX + 1][currentPosY] === 0
+      ) {
+        // Right collision
+        dirs.push(0);
+        // this.vis.push(currentPosX);
+        this.vis[currentPosX + 1][currentPosY] = true;
+      }
+      if (
+        !this.vis[currentPosX - 1][currentPosY]
+        && this.mapArray[currentPosX - 1][currentPosY] === 0) {
+        // Leftcollision
+        dirs.push(2);
+        // this.vis.push(Math.floor(this.x / 128 - 1));
+        this.vis[currentPosX - 1][currentPosY] = true;
+      }
+      if (
+        !this.vis[currentPosX][currentPosY + 1]
+        && this.mapArray[currentPosX][currentPosY + 1] === 0) {
+        // Down collision
+        dirs.push(1);
+        // this.vis.push(currentPosX);
+        this.vis[currentPosX][currentPosY + 1] = true;
+      }
+      if (
+        !this.vis[currentPosX][currentPosY - 1]
+        && this.mapArray[currentPosX][currentPosY - 1] === 0) {
+        // Up collision
+        dirs.push(3);
+        // this.vis.push(currentPosX);
+        this.vis[currentPosX][currentPosY - 1] = true;
+      }
+      console.log(dirs);
+      if (dirs.length === 0) {
+        for (let k = 0; k < this.mapArray.length; k++) {
+          for (let j = 0; j < this.mapArray[k].length; j++) {
+            this.vis[k][j] = false;
+          }
+        }
+      }
+      // this.move(10, 10);
+      // this.move(2, 2);
+      const randDir = Math.floor(Math.random() * dirs.length);
+      switch (dirs[randDir]) {
+        case 0:
+          console.log('move right');
+          this.moveX = currentPosX + 1;
+          this.moveY = currentPosY;
+          break;
+        case 1:
+          console.log('move down');
+          this.moveX = currentPosX;
+          this.moveY = currentPosY + 1;
+          break;
+        case 2:
+          console.log('move left');
+          this.moveX = currentPosX - 1;
+          this.moveY = currentPosY;
+          break;
+        case 3:
+          console.log('move up');
+          this.moveX = currentPosX;
+          this.moveY = currentPosY - 1;
+          break;
+        default:
+          break;
+      }
+    }
 
     // Increase the sprite's frame position.
     this.spriteIndexX = (this.spriteIndexX + this.animationSpeed) % this.animationSize;
@@ -50627,6 +50656,11 @@ module.exports = class Enemy {
     this.posX = parseInt((this.x + 50) / ((this.CWidth * 128) / this.CWidth), 10);
     this.posY = parseInt((this.y + 20) / ((this.CHeight * 128) / this.CHeight), 10);
   }
+
+  // x and y are tile positions.
+  // move(x, y) {
+  //   // console.log(x);
+  // }
 
   draw(ctx, worldPosX, worldPosY) {
     ctx.drawImage(
@@ -50647,9 +50681,9 @@ module.exports = class Enemy {
 const Enemy = require('./enemy');
 
 module.exports = class EnemyAnxiety extends Enemy {
-  constructor(x, y, dir) {
-    super(x, y, dir);
-    this.speed = 220;
+  constructor(x, y, dir, mapArray) {
+    super(x, y, dir, mapArray);
+    this.speed = 3.2;
     this.animationSpeed = 0.18;
     this.sprite.src = '../../Art/2D/enemy_anxiety_spritesheet.png';
     this.animationSize = 3;
@@ -50660,9 +50694,9 @@ module.exports = class EnemyAnxiety extends Enemy {
 const Enemy = require('./enemy');
 
 module.exports = class EnemyBPD extends Enemy {
-  constructor(x, y, dir) {
-    super(x, y, dir);
-    this.speed = 150;
+  constructor(x, y, dir, mapArray) {
+    super(x, y, dir, mapArray);
+    this.speed = 2.4;
     this.animationSpeed = 0.1;
     this.sprite.src = '../../Art/2D/enemy_borderline_personality_disorder_spritesheet.png';
     this.animationSize = 4;
@@ -50673,9 +50707,9 @@ module.exports = class EnemyBPD extends Enemy {
 const Enemy = require('./enemy');
 
 module.exports = class EnemyDepression extends Enemy {
-  constructor(x, y, dir) {
-    super(x, y, dir);
-    this.speed = 80;
+  constructor(x, y, dir, mapArray) {
+    super(x, y, dir, mapArray);
+    this.speed = 1.5;
     this.animationSpeed = 0.07;
     this.sprite.src = '../../Art/2D/enemy_depression_spritesheet.png';
     this.animationSize = 4;
@@ -50700,7 +50734,7 @@ module.exports = class EnemyController {
 
   // Spawn the enemies randomly.
   spawnEnemies(mapArray, gameObjects) {
-    const chanceMax = 100;
+    const chanceMax = 2;
     let chance = chanceMax;
     for (let y = 0; y < mapArray.length; y++) {
       for (let x = 0; x < mapArray[y].length; x++) {
@@ -50713,29 +50747,34 @@ module.exports = class EnemyController {
                 gameObjects.push(new EnemyDepression(
                   x * 128,
                   y * 128 - 24,
-                  (mapArray[x][y - 1] === 1 && mapArray[x][y + 1] === 1 ? 0 : 1)
+                  (mapArray[x][y - 1] === 1 && mapArray[x][y + 1] === 1 ? 0 : 1),
+                  mapArray
                 ));
                 break;
               case 1:
                 gameObjects.push(new EnemyAnxiety(
                   x * 128,
                   y * 128 - 24,
-                  (mapArray[x][y - 1] === 1 && mapArray[x][y + 1] === 1 ? 0 : 1)
+                  (mapArray[x][y - 1] === 1 && mapArray[x][y + 1] === 1 ? 0 : 1),
+                  mapArray
                 ));
                 break;
               case 2:
                 gameObjects.push(new EnemyBPD(
                   x * 128,
                   y * 128 - 24,
-                  (mapArray[x][y - 1] === 1 && mapArray[x][y + 1] === 1 ? 0 : 1)
+                  (mapArray[x][y - 1] === 1 && mapArray[x][y + 1] === 1 ? 0 : 1),
+                  mapArray
                 ));
                 break;
               default: break;
             }
-            chance = chanceMax;
+            // chance = chanceMax;
           }
           chance -= 1;
         }
+        if (chance === 0)
+          break;
       }
     }
   }
@@ -51154,79 +51193,6 @@ module.exports = class KeyController {
 
 }
 },{"./key":20}],22:[function(require,module,exports){
-module.exports = class Menu {
-  constructor(switchBackTo2D) {
-    this.menuMusic = new Audio('./mp3/rain.mp3');
-    this.RADIUS = 50;
-    this.handleEvent = (e) => {
-      switch (e.type) {
-        case 'click':
-          if (Math.sqrt((e.clientX - canvas.width / 2) * (e.clientX - canvas.width / 2) + (e.clientY - canvas.height / 2) * (e.clientY - canvas.height / 2)) < this.RADIUS) {
-            canvas.removeEventListener('mousemove', this);
-            canvas.style.cursor = 'auto';
-            let timer = 0;
-            const circleBigger = setInterval(() => {
-              timer += 5;
-              ctx.fillStyle = 'white';
-              ctx.beginPath();
-              ctx.arc(canvas.width / 2, canvas.height / 2, timer, 0, 2 * Math.PI);
-              ctx.fill();
-              if (timer >= canvas.width / 1.5) {
-                clearInterval(circleBigger);
-                canvas.removeEventListener('click', this);
-                this.menuMusic.pause();
-                switchBackTo2D();
-                // console.log('test');
-              }
-            }, 20);
-          }
-          break;
-        case 'mousemove':
-          if (Math.sqrt((e.clientX - canvas.width / 2) * (e.clientX - canvas.width / 2) + (e.clientY - canvas.height / 2) * (e.clientY - canvas.height / 2)) < this.RADIUS) {
-            ctx.fillStyle = 'white';
-            ctx.beginPath();
-            ctx.arc(canvas.width / 2, canvas.height / 2, this.RADIUS - 1, 0, 2 * Math.PI);
-            ctx.fill();
-            canvas.style.cursor = 'pointer';
-          } else {
-            ctx.fillStyle = 'black';
-            ctx.beginPath();
-            ctx.arc(canvas.width / 2, canvas.height / 2, this.RADIUS - 1, 0, 2 * Math.PI);
-            ctx.fill();
-            canvas.style.cursor = 'auto';
-          }
-          break;
-        default:
-          break;
-      }
-    };
-  }
-
-
-  // handleMouseMove(e) {
-
-  // }
-
-  // handleMouseClick(e) {
-  // }
-
-  start() {
-    this.menuMusic.play();
-    ctx.fillStyle = 'black';
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
-    ctx.fillStyle = 'white';
-    ctx.font = '50px Arial';
-    ctx.fillText("Let's talk about mental health!", canvas.width / 10, canvas.height / 3);
-    ctx.strokeStyle = 'white';
-    ctx.beginPath();
-    ctx.arc(canvas.width / 2, canvas.height / 2, this.RADIUS, 0, 2 * Math.PI);
-    ctx.stroke();
-    canvas.addEventListener('mousemove', this);
-    canvas.addEventListener('click', this);
-  }
-};
-
-},{}],23:[function(require,module,exports){
 module.exports = class SpikeTrap {
   constructor(x, y) {
     this.x = x;
@@ -51258,7 +51224,7 @@ module.exports = class SpikeTrap {
     );
   }
 }
-},{}],24:[function(require,module,exports){
+},{}],23:[function(require,module,exports){
 const SpikeTrap = require('./spikeTrap');
 
 module.exports = class TrapController {
@@ -51282,4 +51248,4 @@ module.exports = class TrapController {
     }
   }
 }
-},{"./spikeTrap":23}]},{},[19]);
+},{"./spikeTrap":22}]},{},[19]);
