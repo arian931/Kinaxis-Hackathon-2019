@@ -48380,10 +48380,15 @@ const RecursiveMaze = require('./RecursiveMaze');
 const PlayerCamera = require('./camera');
 const MainCharacter = require('./2DMainChar');
 
+
 const blurb = document.getElementById('blurb');
+const cxx = blurb.getContext('2d');
+
+
 // const cxx = blurb.getContext('2d');
 // const menu = new Menu(switchBackTo2D);
 // menu.start();
+
 console.log(canvas);
 
 // Load the tilemap.
@@ -48912,6 +48917,9 @@ function switchBackTo2D() {
   // console.log('2d is back');
   if (InThreeD) {
     InThreeD = false;
+
+    gameLoop(); s
+
   }
   gameLoop();
 }
@@ -50566,8 +50574,8 @@ module.exports = class Enemy {
         this.vis[i][j] = false;
       }
     }
-    this.moveX = Math.floor((this.x) / 128);
-    this.moveY = Math.floor((this.y) / 128);
+    this.moveX = Math.floor(this.x / 128);
+    this.moveY = Math.floor(this.y / 128);
     // this.move(, );
   }
 
@@ -50600,7 +50608,7 @@ module.exports = class Enemy {
       ) {
         // Right collision
         dirs.push(0);
-        this.vis.push(Math.floor(this.x / 128));
+        // this.vis.push(Math.floor(this.x / 128));
         this.vis[Math.floor(this.x / 128) + 1][Math.floor(this.y / 128)] = true;
       }
       if (
@@ -50608,15 +50616,15 @@ module.exports = class Enemy {
         && this.mapArray[Math.floor(this.x / 128) - 1][Math.floor(this.y / 128)] === 0) {
         // Leftcollision
         dirs.push(2);
-        this.vis.push(Math.floor(this.x / 128 - 1));
-        this.vis[Math.floor(this.x / 128)][Math.floor(this.y / 128)] = true;
+        // this.vis.push(Math.floor(this.x / 128 - 1));
+        this.vis[Math.floor(this.x / 128) - 1][Math.floor(this.y / 128)] = true;
       }
       if (
         !this.vis[Math.floor(this.x / 128)][Math.floor(this.y / 128) + 1]
         && this.mapArray[Math.floor(this.x / 128)][Math.floor(this.y / 128) + 1] === 0) {
         // Down collision
         dirs.push(1);
-        this.vis.push(Math.floor(this.x / 128));
+        // this.vis.push(Math.floor(this.x / 128));
         this.vis[Math.floor(this.x / 128)][Math.floor(this.y / 128) + 1] = true;
       }
       if (
@@ -50624,7 +50632,7 @@ module.exports = class Enemy {
         && this.mapArray[Math.floor(this.x / 128)][Math.floor(this.y / 128) - 1] === 0) {
         // Up collision
         dirs.push(3);
-        this.vis.push(Math.floor(this.x / 128));
+        // this.vis.push(Math.floor(this.x / 128));
         this.vis[Math.floor(this.x / 128)][Math.floor(this.y / 128) - 1] = true;
       }
       console.log(dirs);
