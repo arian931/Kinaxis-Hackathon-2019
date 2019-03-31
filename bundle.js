@@ -50500,6 +50500,8 @@ module.exports = class WallGenerator {
 // eslint-disable-next-line no-unused-vars
 module.exports = class PlayerCamera {
   constructor(ctx) {
+    this.spriteKeysCollected = new Image();
+    this.spriteKeysCollected.src = '../../Art/2D/keys_collected.png';
     this.player = undefined;
     this.ctx = ctx;
     this.vWidth = ctx.canvas.width;
@@ -50536,6 +50538,20 @@ module.exports = class PlayerCamera {
       this.ctx.canvas.width,
       this.ctx.canvas.height,
     );
+
+    if (this.player !== undefined) {
+      this.ctx.drawImage(
+        this.spriteKeysCollected,
+        0,
+        this.player.keysCollected * 384 / 4,
+        288,
+        384 / 4,
+        20,
+        20,
+        288,
+        384 / 4
+      );
+    }
   }
 };
 
