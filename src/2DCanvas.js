@@ -21,8 +21,6 @@ const MainCharacter = require('./2DMainChar');
 const blurb = document.getElementById('blurb');
 const cxx = blurb.getContext('2d');
 
-
-// const cxx = blurb.getContext('2d');
 // const menu = new Menu(switchBackTo2D);
 // menu.start();
 
