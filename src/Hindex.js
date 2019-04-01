@@ -7,12 +7,14 @@ const Block = require('./block');
 const Teacher = require('./teacher');
 
 module.exports = class miniGame {
-  constructor(goBackTo2d) {
+  constructor(goBackTo2d, goBackTo2dBad, switchBackFromMiniAndReset) {
     this.canvas = document.getElementById('minigameCanvas');
     this.mainCanvas = document.getElementById('backgroundCanvas');
     this.ctx = this.canvas.getContext('2d');
 
     this.goBackTo2d = goBackTo2d;
+    this.goBackTo2dBad = goBackTo2dBad;
+    this.switchBackFromMiniAndReset = switchBackFromMiniAndReset;
     this.canvas.width = window.innerWidth;
     this.canvas.height = window.innerHeight;
 
@@ -143,7 +145,7 @@ module.exports = class miniGame {
     if (this.numberOfBlocksPassed >= 20 || this.hitBlock) {
       this.stopSpawning = true;
       if (this.blockArray.length <= 0 || this.hitBlock) {
-        console.log('inTransiton');
+        // console.log('inTransiton');
         this.inTransition = true;
         if (this.teacher.x - 200 <= this.player.x || this.hitBlock) {
           console.log(this.endBlurb);
@@ -165,7 +167,15 @@ module.exports = class miniGame {
             this.endBlurbPos.style.display = 'none';
             this.endBlurbNeg.style.display = 'none';
             clearInterval(this.mainInterval);
-            this.goBackTo2d();
+            if (!this.hitBlock) {
+              this.goBackTo2d();
+            } else {
+              console.log('go back to bad');
+              console.log(this.goBackTo2dBad);
+              this.switchBackFromMiniAndReset();
+              this.goBackTo2dBad();
+            }
+
             // console.log('collision');
           } else {
             this.endBlurbDelayCounter++;

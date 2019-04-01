@@ -44,6 +44,8 @@ const gameObjects = [];
 let mapArray;
 const mapSize = 15;
 
+let needsToReset = false;
+
 // FPS
 let dt = 0;
 let lastTime = Date.now();
@@ -62,14 +64,22 @@ const divToDrawTo = document.getElementById('backgroundCanvas');
 const miniGameCanvas = document.getElementById('minigameCanvas');
 const image = new Image();
 image.id = 'pic';
+let toResetPlayerToBeggingOfMaze = 0;
 function switchBackFromMini() {
   InThreeD = false;
   gameLoop();
 }
+
+function switchBackFromMiniAndReset() {
+  console.log('switchBackFromMiniAndReset');
+  InThreeD = false;
+  gameLoop();
+}
+
 const switchToMiniGame = () => {
   miniGameCanvas.style.display = 'block';
   divToDrawTo.style.display = 'none';
-  const minigame = new MiniGame(switchBackFromMini);
+  const minigame = new MiniGame(switchBackFromMini, otherRest, switchBackFromMiniAndReset);
   InThreeD = true;
   minigame.start();
 };
@@ -93,6 +103,7 @@ const Player = new MainCharacter(
   switchToMiniGame,
   // enemyController.enemies,
   callBlurb,
+  otherRest,
 );
 
 const menu = new Menu(switchBackTo2D, Player);
@@ -285,10 +296,20 @@ document.addEventListener('keyup', (event) => {
 });
 
 function update() {
-  // Calucute delta time.
   const nowTime = Date.now();
   dt = (nowTime - lastTime) / 1000;
   lastTime = nowTime;
+  if (needsToReset) {
+    needsToReset = false;
+    worldPosX = Player.x + Player.width / 2 - Camera.vWidth / 2;
+    worldPosY = Player.y + Player.height / 2 - Camera.vHeight / 2;
+    Camera.xDir = 0;
+    Camera.yDir = 0;
+    Camera.update(dt);
+    Camera.draw();
+  }
+  // Calucute delta time.
+
   // console.log(deltaTime);
 
   // Update global position.
@@ -548,10 +569,10 @@ function draw() {
     ctx.fillStyle = 'blue';
     ctx.fillRect(
       minimapPosX
-      + (Math.floor((Player.x + Player.width / 2) / Player.width) * minimap.canvas.width) / mapSize,
+        + (Math.floor((Player.x + Player.width / 2) / Player.width) * minimap.canvas.width) / mapSize,
       minimapPosY
-      + (Math.floor((Player.y + Player.height / 2) / Player.height) * minimap.canvas.height)
-      / mapSize,
+        + (Math.floor((Player.y + Player.height / 2) / Player.height) * minimap.canvas.height)
+          / mapSize,
       minimap.canvas.width / mapSize,
       minimap.canvas.height / mapSize,
     );
@@ -561,10 +582,10 @@ function draw() {
       ctx.fillStyle = 'red';
       ctx.fillRect(
         minimapPosX
-        + (Math.floor((enemy.x + enemy.width / 2) / enemy.width) * minimap.canvas.width) / mapSize,
+          + (Math.floor((enemy.x + enemy.width / 2) / enemy.width) * minimap.canvas.width) / mapSize,
         minimapPosY
-        + (Math.floor((enemy.y + enemy.height - 4) / enemy.height) * minimap.canvas.height)
-        / mapSize,
+          + (Math.floor((enemy.y + enemy.height - 4) / enemy.height) * minimap.canvas.height)
+            / mapSize,
         minimap.canvas.width / mapSize,
         minimap.canvas.height / mapSize,
       );
@@ -577,10 +598,10 @@ const arrBlurbs = [];
 arrBlurbs[0] = 'Value Yourself\nTreat yourself with kindness and respect, and avoid self-criticism. Make time for your hobbies and favorite projects, or broaden your horizons. Do a daily crossword puzzle, plant a garden, take dance lessons, learn to play an instrument or become fluent in another language.';
 arrBlurbs[1] = 'Take care of your body\nTaking care of yourself physically can improve your mental health. Be sure to eat nutritious meals, avoid cigarettes, drink plenty of water, exercise, which helps decrease depression and anxiety and improve moods, get enough sleep. Researchers believe that lack of sleep contributes to a high rate of depression in college students.';
 arrBlurbs[2] = 'Surround yourself with good people\nPeople with strong family or social connections are generally healthier than those who lack a support network. Make plans with supportive family members and friends, or seek out activities where you can meet new people, such as a club, class or support group.';
-arrBlurbs[3] = 'Give yourself\nVolunteer your time and energy to help someone else. You\'ll feel good about doing something tangible to help someone in need — and it\'s a great way to meet new people.';
+arrBlurbs[3] = "Give yourself\nVolunteer your time and energy to help someone else. You'll feel good about doing something tangible to help someone in need — and it's a great way to meet new people.";
 arrBlurbs[4] = 'Learn how to deal with stress\nLike it or not, stress is a part of life. Practice good coping skills: do Tai Chi, exercise, take a nature walk, play with your pet or try journal writing as a stress reducer. Also, remember to smile and see the humor in life. Research shows that laughter can boost your immune system, ease pain, relax your body and reduce stress.';
 arrBlurbs[5] = 'Queit your mind\nTry meditating, mindfulness and/or prayer. Relaxation exercises and prayer can improve your state of mind and outlook on life. In fact, research shows that meditation may help you feel calm and enhance the effects of therapy.';
-arrBlurbs[6] = 'Set realistic goals\nDecide what you want to achieve academically, professionally and personally, and write down the steps you need to realize your goals. Aim high, but be realistic and don\'t over-schedule. You\'ll enjoy a tremendous sense of accomplishment and self-worth as you progress toward your goal.';
+arrBlurbs[6] = "Set realistic goals\nDecide what you want to achieve academically, professionally and personally, and write down the steps you need to realize your goals. Aim high, but be realistic and don't over-schedule. You'll enjoy a tremendous sense of accomplishment and self-worth as you progress toward your goal.";
 arrBlurbs[7] = 'Break up the monotony\nAlthough our routines make us more efficient and enhance our feelings of security and safety, a little change of pace can perk up a tedious schedule. Alter your jogging route, plan a road-trip, take a walk in a different park, hang some new pictures or try a new restaurant.';
 arrBlurbs[8] = 'Avoid alcohol and other drugs\nKeep alcohol use to a minimum and avoid other drugs. Sometimes people use alcohol and other drugs to "self-medicate" but in reality, alcohol and other drugs only aggravate problems.';
 arrBlurbs[9] = 'Get help when you need it\nSeeking help is a sign of strength — not a weakness. And it is important to remember that treatment is effective. People who get appropriate care can recover from mental illness and addiction and lead full, rewarding lives.';
@@ -627,4 +648,29 @@ function switchToThreeD() {
   checkForSwitchBackInerval = setInterval(funToCheckForSwitchBack, 33);
 }
 
+toResetPlayerToBeggingOfMaze = () => {
+  console.log('hi');
+  worldPosX = Player.x + Player.width / 2 - Camera.vWidth / 2;
+  worldPosY = Player.y + Player.height / 2 - Camera.vHeight / 2;
+  const nowTime = Date.now();
+  dt = (nowTime - lastTime) / 1000;
+  lastTime = nowTime;
+  Camera.xDir = 0;
+  Camera.yDir = 0;
+  Camera.update(dt);
+  Camera.draw();
+};
+
+function otherRest() {
+  console.log('hi other reset');
+  worldPosX = Player.x + Player.width / 2 - Camera.vWidth / 2;
+  worldPosY = Player.y + Player.height / 2 - Camera.vHeight / 2;
+  const nowTime = Date.now();
+  dt = (nowTime - lastTime) / 1000;
+  lastTime = nowTime;
+  Camera.xDir = 0;
+  Camera.yDir = 0;
+  Camera.update(dt);
+  Camera.draw();
+}
 // window.requestAnimationFrame(gameLoop);
