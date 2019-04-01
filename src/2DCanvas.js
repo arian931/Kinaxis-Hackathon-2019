@@ -609,8 +609,8 @@ arrBlurbs[9] = 'Get help when you need it\nSeeking help is a sign of strength â€
 
 function callBlurb() {
   console.log('BLURB');
-  keysCollected += 1;
-  console.log(keysCollected);
+  this.keysCollected += 1;
+  console.log(this.keysCollected);
   // blurb.style.display = 'block';
 }
 
