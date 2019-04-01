@@ -25,7 +25,7 @@ module.exports = class miniGame {
     this.scene.ground.src = '../../Art/2D/minigame/ground.png';
     this.scene.foreground.src = '../../Art/2D/minigame/foreground_detail.png';
 
-    this.player = new Player(300, this.canvas.height / 2 + 100, 30, 90, this.ctx);
+    this.player = new Player(300, this.canvas.height / 2 + 100, 128, 128, this.ctx, '../../Art/2D/female2_spritesheet.png');
     this.floorHeight = this.player.y + this.player.H;
     // this.block = new Block(canvas.width, floorHeight - 80, 40, 80, 50, ctx);
 

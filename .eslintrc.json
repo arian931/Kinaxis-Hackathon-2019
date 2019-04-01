@@ -10,7 +10,8 @@
     "Image": true,
     "ctx": true,
     "canvas": true,
-    "Audio": true
+    "Audio": true,
+    "cancelAnimationFrame": true
   },
   "rules": {
     "linebreak-style": 0,
@@ -20,6 +21,7 @@
       {
         "allowForLoopAfterthoughts": true
       }
-    ]
+    ],
+    "no-lonely-if": 0
   }
 }

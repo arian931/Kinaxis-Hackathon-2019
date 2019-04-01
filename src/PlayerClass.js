@@ -1,12 +1,12 @@
 module.exports = class Player {
-  constructor(x, y, w, h, ctx) {
+  constructor(x, y, w, h, ctx, img) {
     this.x = x;
     this.y = y;
     this.H = h;
     this.W = w;
     this.ctx = ctx;
     this.sprite = new Image();
-    this.sprite.src = '../../Art/2D/female2_spritesheet.png';
+    this.sprite.src = img;
     this.spriteIndex = 0;
     this.animationSize = 8;
     this.animationSpeed = 0.54;
@@ -15,7 +15,9 @@ module.exports = class Player {
   draw() {
     // this.ctx.fillStyle = 'rgb(255,255,255)';
     // this.ctx.fillRect(this.x, this.y, this.W, this.H);
+    // console.log(this.ctx)
     this.spriteIndex = (this.spriteIndex + this.animationSpeed) % this.animationSize;
+    // console.log(this.w, this.h);
     this.ctx.drawImage(
       this.sprite,
       128 * Math.floor(this.spriteIndex),
@@ -24,8 +26,8 @@ module.exports = class Player {
       128,
       this.x,
       this.y - 40,
-      128,
-      128,
+      this.W,
+      this.H,
     );
   }
 };
