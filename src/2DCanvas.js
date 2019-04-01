@@ -6,7 +6,7 @@ global.ctx = canvas.getContext('2d');
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
 console.log('FUCKKKKKKKkkkkk !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!');
-// const Menu = require('./menu.js');
+const Menu = require('./menu.js');
 const MiniGame = require('./Hindex');
 const Enemy = require('./enemies/enemy');
 const MapPowerup = require('./mapPowerup');
@@ -20,10 +20,15 @@ const PlayerCamera = require('./camera');
 const MainCharacter = require('./2DMainChar');
 
 const blurb = document.getElementById('blurb');
+
+const music = new Audio('./mp3/Ivarelli - Fast and Sad.mp3');
+music.volume = 0.5;
+
+const doorOpenSound = new Audio('./mp3/doorOpen.mp3');
 // const cxx = blurb.getContext('2d');
 
-// const menu = new Menu(switchBackTo2D);
-// menu.start();
+const menu = new Menu(switchBackTo2D);
+menu.start();
 
 console.log(canvas);
 
@@ -82,7 +87,6 @@ const Player = new MainCharacter(
   gameObjects,
   // eslint-disable-next-line no-use-before-define
   switchToMiniGame,
-  switchToThreeD,
   // enemyController.enemies,
   callBlurb,
 );
@@ -202,15 +206,15 @@ tilemap.onload = () => {
 };
 document.addEventListener('keydown', (event) => {
   switch (event.code) {
-    case 'KeyRight':
     case 'KeyD':
+    case 'ArrowRight':
       Player.xDir = 1;
       Player.moveRight = true;
       Player.moveLeft = false;
       Player.moveDown = false;
       Player.moveUp = false;
       break;
-    case 'KeyLeft':
+    case 'ArrowLeft':
     case 'KeyA':
       Player.xDir = -1;
       Player.moveLeft = true;
@@ -218,7 +222,7 @@ document.addEventListener('keydown', (event) => {
       Player.moveDown = false;
       Player.moveUp = false;
       break;
-    case 'KeyUp':
+    case 'ArrowUp':
     case 'KeyW':
       Player.yDir = -1;
       Player.moveUp = true;
@@ -226,7 +230,7 @@ document.addEventListener('keydown', (event) => {
       Player.moveDown = false;
       Player.moveLeft = false;
       break;
-    case 'KeyDown':
+    case 'ArrowDown':
     case 'KeyS':
       Player.yDir = 1;
       Player.moveDown = true;
@@ -245,22 +249,22 @@ document.addEventListener('keydown', (event) => {
 
 document.addEventListener('keyup', (event) => {
   switch (event.code) {
-    case 'KeyRight':
+    case 'ArrowRight':
     case 'KeyD':
       Player.xDir = 0;
       Player.moveRight = false;
       break;
-    case 'KeyLeft':
+    case 'ArrowLeft':
     case 'KeyA':
       Player.xDir = 0;
       Player.moveLeft = false;
       break;
-    case 'KeyUp':
+    case 'ArrowUp':
     case 'KeyW':
       Player.yDir = 0;
       Player.moveUp = false;
       break;
-    case 'KeyDown':
+    case 'ArrowDown':
     case 'KeyS':
       Player.yDir = 0;
       Player.moveDown = false;
@@ -417,6 +421,7 @@ function draw() {
   // draw door.
   if (Player.keysCollected === keyController.maxSpawnKeys) {
     // Opened doors.
+    doorOpenSound.play();
     ctx.drawImage(
       doorTilemap,
       128,
@@ -560,6 +565,9 @@ function callBlurb() {
 }
 
 function gameLoop() {
+  if (music.paused) {
+    music.play();
+  }
   if (!InThreeD) {
     window.requestAnimationFrame(gameLoop);
     update();
@@ -572,8 +580,8 @@ function switchBackTo2D() {
   console.log('2d is back');
   if (InThreeD) {
     InThreeD = false;
-    gameLoop();
   }
+  gameLoop();
 }
 function funToCheckForSwitchBack() {
   // console.log('checkingFor3d');
@@ -591,4 +599,4 @@ function switchToThreeD() {
   checkForSwitchBackInerval = setInterval(funToCheckForSwitchBack, 33);
 }
 
-window.requestAnimationFrame(gameLoop);
+// window.requestAnimationFrame(gameLoop);

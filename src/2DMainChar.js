@@ -22,7 +22,6 @@ module.exports = class MainCharacter {
     context,
     gameObjects,
     functToSwitch,
-    functToTransition,
     callBlurb,
   ) {
     this.image = new Image();
@@ -60,8 +59,10 @@ module.exports = class MainCharacter {
     this.keyController = new KeyController();
     this.gameObjects = gameObjects;
     this.functToSwitch = functToSwitch;
-    this.functToTransition = functToSwitch,
-      this.callBlurb = callBlurb;
+    this.callBlurb = callBlurb;
+    this.walkingSound = new Audio('./mp3/walking.wav');
+    this.keySound = new Audio('./mp3/key.mp3');
+    // this.walkingSound.volume = 1.5;
   }
 
   update() {
@@ -98,6 +99,15 @@ module.exports = class MainCharacter {
       this.spriteDir = this.xDir === 1 ? 0 : 2;
       this.spriteIndexY = this.spriteDir + 1;
     }
+
+    if (this.xDir || this.yDir) {
+      if (this.walkingSound.paused) {
+        this.walkingSound.play();
+      }
+    } else {
+      this.walkingSound.pause();
+    }
+
     for (let j = 0; j < this.gameObjects.length; j++) {
       if (this.gameObjects[j] instanceof Enemy) {
         // Contact with enemy
@@ -121,6 +131,7 @@ module.exports = class MainCharacter {
           && this.y + this.height / 2 > key.y + key.height / 2 - 32
           && this.y + this.height / 2 + 32 < key.y + key.height / 2 + 32
         ) {
+          this.keySound.play();
           this.gameObjects.splice(j, 1);
           this.keysCollected++;
           if (this.keysCollected === this.keyController.maxSpawnKeys) {
@@ -173,8 +184,8 @@ module.exports = class MainCharacter {
       128,
       128,
     );
-    context.fillStyle = 'rgba(0,0,0,0.5)';
-    context.fillRect(this.x + 50 - worldPosX, this.y - worldPosY + this.height, 28, -20);
+    // context.fillStyle = 'rgba(0,0,0,0.5)';
+    // context.fillRect(this.x + 50 - worldPosX, this.y - worldPosY + this.height, 28, -20);
   }
 
   checkMovePosX() {
