@@ -10,6 +10,7 @@ module.exports = class EnemyController {
     // this.spriteEnemyBPD.src = '../../Art/2D/enemy_borderline_personality_disorderanxiety_spritesheet.png';
     // this.spriteEnemyDepression = new Image();
     // this.spriteEnemyDepression = '../../Art/2D/enemy_depression_spritesheet.png';
+    this.enemiesSpawned = 0;
     this.enemies = [];
   }
 
@@ -50,10 +51,47 @@ module.exports = class EnemyController {
                 break;
               default: break;
             }
+            this.enemiesSpawned += 1;
             chance = chanceMax;
           }
           chance -= 1;
         }
+      }
+    }
+
+    // Spawn at least one enemy.
+    while (this.enemiesSpawned === 0) {
+      const randX = Math.floor(Math.random() * (mapArray.length - 1));
+      const randY = Math.floor(Math.random() * (mapArray.length - 1));
+      if (mapArray[randX][randY] === 0) {
+        switch (Math.floor(Math.random() * 3)) {
+          case 0:
+            gameObjects.push(new EnemyDepression(
+              randX * 128,
+              randY * 128,
+              undefined, // (mapArray[randX][randY - 1] === 1 && mapArray[randX][randY + 1] === 1 ? 0 : 1),
+              mapArray
+            ));
+            break;
+          case 1:
+            gameObjects.push(new EnemyAnxiety(
+              randX * 128,
+              randY * 128,
+              undefined, // (mapArray[randX][randY - 1] === 1 && mapArray[randX][randY + 1] === 1 ? 0 : 1),
+              mapArray
+            ));
+            break;
+          case 2:
+            gameObjects.push(new EnemyBPD(
+              randX * 128,
+              randY * 128,
+              undefined, // (mapArray[randX][randY - 1] === 1 && mapArray[randX][randY + 1] === 1 ? 0 : 1),
+              mapArray
+            ));
+            break;
+          default: break;
+        }
+        this.enemiesSpawned += 1;
       }
     }
   }

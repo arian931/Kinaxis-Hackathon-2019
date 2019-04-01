@@ -259,10 +259,10 @@ document.addEventListener('keydown', (event) => {
       Player.moveUp = false;
       Player.moveLeft = false;
       break;
-    case 'Space':
-      // switchToThreeD();
-      switchToMiniGame();
-      break;
+    // case 'Space':
+    //   // switchToThreeD();
+    //   switchToMiniGame();
+    //   break;
     default:
       break;
   }
@@ -593,9 +593,22 @@ function draw() {
   }
 }
 
+const arrBlurbs = [];
+
+arrBlurbs[0] = 'Value Yourself\nTreat yourself with kindness and respect, and avoid self-criticism. Make time for your hobbies and favorite projects, or broaden your horizons. Do a daily crossword puzzle, plant a garden, take dance lessons, learn to play an instrument or become fluent in another language.';
+arrBlurbs[1] = 'Take care of your body\nTaking care of yourself physically can improve your mental health. Be sure to eat nutritious meals, avoid cigarettes, drink plenty of water, exercise, which helps decrease depression and anxiety and improve moods, get enough sleep. Researchers believe that lack of sleep contributes to a high rate of depression in college students.';
+arrBlurbs[2] = 'Surround yourself with good people\nPeople with strong family or social connections are generally healthier than those who lack a support network. Make plans with supportive family members and friends, or seek out activities where you can meet new people, such as a club, class or support group.';
+arrBlurbs[3] = "Give yourself\nVolunteer your time and energy to help someone else. You'll feel good about doing something tangible to help someone in need — and it's a great way to meet new people.";
+arrBlurbs[4] = 'Learn how to deal with stress\nLike it or not, stress is a part of life. Practice good coping skills: do Tai Chi, exercise, take a nature walk, play with your pet or try journal writing as a stress reducer. Also, remember to smile and see the humor in life. Research shows that laughter can boost your immune system, ease pain, relax your body and reduce stress.';
+arrBlurbs[5] = 'Queit your mind\nTry meditating, mindfulness and/or prayer. Relaxation exercises and prayer can improve your state of mind and outlook on life. In fact, research shows that meditation may help you feel calm and enhance the effects of therapy.';
+arrBlurbs[6] = "Set realistic goals\nDecide what you want to achieve academically, professionally and personally, and write down the steps you need to realize your goals. Aim high, but be realistic and don't over-schedule. You'll enjoy a tremendous sense of accomplishment and self-worth as you progress toward your goal.";
+arrBlurbs[7] = 'Break up the monotony\nAlthough our routines make us more efficient and enhance our feelings of security and safety, a little change of pace can perk up a tedious schedule. Alter your jogging route, plan a road-trip, take a walk in a different park, hang some new pictures or try a new restaurant.';
+arrBlurbs[8] = 'Avoid alcohol and other drugs\nKeep alcohol use to a minimum and avoid other drugs. Sometimes people use alcohol and other drugs to "self-medicate" but in reality, alcohol and other drugs only aggravate problems.';
+arrBlurbs[9] = 'Get help when you need it\nSeeking help is a sign of strength — not a weakness. And it is important to remember that treatment is effective. People who get appropriate care can recover from mental illness and addiction and lead full, rewarding lives.';
+
 function callBlurb() {
   console.log('BLURB');
-  keysCollected++;
+  this.keysCollected += 1;
   // blurb.style.display = 'block';
 }
 
