@@ -25,7 +25,7 @@ module.exports = class Player {
       128,
       128,
       this.x,
-      this.y - 40,
+      this.y,
       this.W,
       this.H,
     );

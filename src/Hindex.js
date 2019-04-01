@@ -26,14 +26,20 @@ module.exports = class miniGame {
     this.scene.ground.src = '../../Art/2D/minigame/ground.png';
     this.scene.foreground.src = '../../Art/2D/minigame/foreground_detail.png';
 
-    this.player = new Player(300, this.canvas.height / 2 + 100, 128, 128, this.ctx, '../../Art/2D/female2_spritesheet.png');
+    this.player = new Player(
+      300,
+      this.canvas.height / 2 + 100,
+      128,
+      128,
+      this.ctx,
+      '../../Art/2D/female2_spritesheet.png',
+    );
     this.floorHeight = this.player.y + this.player.H;
     // this.block = new Block(canvas.width, floorHeight - 80, 40, 80, 50, ctx);
 
     this.blockArray = [];
     this.blockArrayI = 0;
     this.blockSpeed = 20;
-    this.addBlock();
     console.log(this.blockArray);
     this.playerInput = false;
     this.jumping = false;
@@ -50,9 +56,9 @@ module.exports = class miniGame {
     this.increasedDif = false;
     console.log(this.floorHeight);
 
-    this.randomAmountOfTimeForSpawn = 20;
+    this.randomAmountOfTimeForSpawn = 30;
     this.maxAmountForRandomSpawn = 30;
-    this.randomSpawn = 0;
+    this.randomSpawn = 20;
     this.counterForSpawn = 0;
 
     this.inTransition = false;
@@ -128,18 +134,13 @@ module.exports = class miniGame {
 
   gameLoop() {
     this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-    // this.ctx.fillStyle = 'rgb(0,0,0)';
-    // this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
-    // this.ctx.fillStyle = 'rgb(0,0,200)';
-    // this.ctx.fillRect(0, this.floorHeight, this.canvas.width, 20);
-
     this.ctx.drawImage(
       this.scene.background,
       this.ctx.canvas.width / 2 - 1600 / 2,
       this.ctx.canvas.height / 2 - 720 / 2,
     );
     this.ctx.drawImage(this.scene.ground, this.ctx.canvas.width / 2 - 1032 / 2, this.floorHeight);
-    if (this.numberOfBlocksPassed >= 5 || this.hitBlock) {
+    if (this.numberOfBlocksPassed >= 20 || this.hitBlock) {
       this.stopSpawning = true;
       if (this.blockArray.length <= 0 || this.hitBlock) {
         console.log('inTransiton');
@@ -150,6 +151,9 @@ module.exports = class miniGame {
             this.endBlurbPos.style.display = 'block';
           } else {
             this.endBlurbNeg.style.display = 'block';
+            for (let x = 0; x < this.blockArray.length; x++) {
+              this.blockArray[x].draw();
+            }
           }
           this.teacher.draw();
           // console.log('startin convo');
@@ -196,8 +200,8 @@ module.exports = class miniGame {
         }
         this.blockArray[x].draw();
         if (
-          this.player.x + this.player.W - 5 >= this.blockArray[x].x
-          && this.player.x + 5 <= this.blockArray[x].x + this.blockArray[x].w
+          this.player.x + this.player.W - 20 >= this.blockArray[x].x
+          && this.player.x + 20 <= this.blockArray[x].x + this.blockArray[x].w
           && this.player.y + this.player.H >= this.blockArray[x].y
         ) {
           this.hitBlock = true;
