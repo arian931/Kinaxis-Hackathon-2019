@@ -1,4 +1,4 @@
-const SpeedBoost = 60;
+/*const SpeedBoost = 60;
 let mainX = MainCharacter.x;
 let mainY = MainCharacter.y;
 let mainWidth = MainCharacter.width;
@@ -47,11 +47,12 @@ class speedPotion {
       && speedPotion.y + speedPotion.w > MainCharacter.x
       && speedPotion.y > MainCharacter.y + MainCharacter.height
       && speedPotion.y + speedPotion.h > MainCharacter.y) {
-      // creates collision / collision detected 
-      // overlap created 
+      // creates collision / collision detected
+      // overlap created
       for (let time = 15; time < 15; time++); {
         let mainspeed = SpeedBoost + mainspeed;
       }
     }
   }
 };
+*/
