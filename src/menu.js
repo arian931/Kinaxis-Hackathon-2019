@@ -10,7 +10,12 @@ module.exports = class Menu {
       switch (e.type) {
         case 'click':
           if (!this.circleDrawn) {
-            if (Math.sqrt((e.clientX - canvas.width / 2) * (e.clientX - canvas.width / 2) + (e.clientY - canvas.height / 2) * (e.clientY - canvas.height / 2)) < this.RADIUS) {
+            if (
+              Math.sqrt(
+                (e.clientX - canvas.width / 2) * (e.clientX - canvas.width / 2)
+                  + (e.clientY - canvas.height / 2) * (e.clientY - canvas.height / 2),
+              ) < this.RADIUS
+            ) {
               canvas.removeEventListener('mousemove', this);
               canvas.style.cursor = 'auto';
               let timer = 0;
@@ -23,10 +28,38 @@ module.exports = class Menu {
                 if (timer >= canvas.width / 1.5) {
                   clearInterval(circleBigger);
                   canvas.removeEventListener('click', this);
-                  this.playerOp1 = new Player(canvas.width / 9 - 150, canvas.height / 3, 300, 300, ctx, '../../Art/2D/female1_spritesheet.png');
-                  this.playerOp2 = new Player(canvas.width / 3 - 150, canvas.height / 3, 300, 300, ctx, '../../Art/2D/female2_spritesheet.png');
-                  this.playerOp3 = new Player((canvas.width / 9) * 8 - 150, canvas.height / 3, 300, 300, ctx, '../../Art/2D/male1_spritesheet.png');
-                  this.playerOp4 = new Player((canvas.width / 3) * 2 - 150, canvas.height / 3, 300, 300, ctx, '../../Art/2D/male2_spritesheet.png');
+                  this.playerOp1 = new Player(
+                    canvas.width / 9 - 150,
+                    canvas.height / 3,
+                    300,
+                    300,
+                    ctx,
+                    '../../Art/2D/female1_spritesheet.png',
+                  );
+                  this.playerOp2 = new Player(
+                    canvas.width / 3 - 150,
+                    canvas.height / 3,
+                    300,
+                    300,
+                    ctx,
+                    '../../Art/2D/female2_spritesheet.png',
+                  );
+                  this.playerOp3 = new Player(
+                    (canvas.width / 9) * 8 - 150,
+                    canvas.height / 3,
+                    300,
+                    300,
+                    ctx,
+                    '../../Art/2D/male1_spritesheet.png',
+                  );
+                  this.playerOp4 = new Player(
+                    (canvas.width / 3) * 2 - 150,
+                    canvas.height / 3,
+                    300,
+                    300,
+                    ctx,
+                    '../../Art/2D/male2_spritesheet.png',
+                  );
                   // setInterval(() => {
                   //   this.clearRect(0, 0, canvas.width, canvas.height);
                   //   this.playerOp1.draw();
@@ -34,6 +67,7 @@ module.exports = class Menu {
                   // ctx.clearRect(0, 0, canvas.width, canvas.height);
                   this.circleDrawn = true;
                   const startAnimation = () => {
+                    requestAnimationFrame(startAnimation);
                     // ctx.clearRect(0, 0, canvas.width, canvas.height);
                     this.playerOp1.draw();
                     this.playerOp2.draw();
@@ -71,7 +105,12 @@ module.exports = class Menu {
               }, 20);
             }
           } else {
-            if (e.clientX > canvas.width / 9 - 150 && e.clientY > canvas.height / 3 && e.clientX < canvas.width / 9 + 150 && e.clientY < canvas.height / 3 + 300) {
+            if (
+              e.clientX > canvas.width / 9 - 150
+              && e.clientY > canvas.height / 3
+              && e.clientX < canvas.width / 9 + 150
+              && e.clientY < canvas.height / 3 + 300
+            ) {
               console.log('player1 selected');
               switchBackTo2D();
               canvas.removeEventListener('mousemove', this);
@@ -82,7 +121,12 @@ module.exports = class Menu {
               //   this.animateOp = 1;
               //   this.animateOp1();
               // }
-            } else if (e.clientX > canvas.width / 3 - 150 && e.clientY > canvas.height / 3 && e.clientX < canvas.width / 3 + 150 && e.clientY < canvas.height / 3 + 300) {
+            } else if (
+              e.clientX > canvas.width / 3 - 150
+              && e.clientY > canvas.height / 3
+              && e.clientX < canvas.width / 3 + 150
+              && e.clientY < canvas.height / 3 + 300
+            ) {
               console.log('player2 selected');
               switchBackTo2D();
               canvas.removeEventListener('mousemove', this);
@@ -93,7 +137,12 @@ module.exports = class Menu {
               //   this.animateOp = 2;
               //   this.animateOp2();
               // }
-            } else if (e.clientX > (canvas.width / 9) * 8 - 150 && e.clientY > canvas.height / 3 && e.clientX < (canvas.width / 9) * 8 + 150 && e.clientY < canvas.height / 3 + 300) {
+            } else if (
+              e.clientX > (canvas.width / 9) * 8 - 150
+              && e.clientY > canvas.height / 3
+              && e.clientX < (canvas.width / 9) * 8 + 150
+              && e.clientY < canvas.height / 3 + 300
+            ) {
               console.log('player3 selected');
               switchBackTo2D();
               canvas.removeEventListener('mousemove', this);
@@ -104,7 +153,12 @@ module.exports = class Menu {
               //   this.animateOp = 3;
               //   this.animateOp3();
               // }
-            } else if (e.clientX > (canvas.width / 3) * 2 - 150 && e.clientY > canvas.height / 3 && e.clientX < (canvas.width / 3) * 2 + 150 && e.clientY < canvas.height / 3 + 300) {
+            } else if (
+              e.clientX > (canvas.width / 3) * 2 - 150
+              && e.clientY > canvas.height / 3
+              && e.clientX < (canvas.width / 3) * 2 + 150
+              && e.clientY < canvas.height / 3 + 300
+            ) {
               console.log('player4 selected');
               switchBackTo2D();
               canvas.removeEventListener('mousemove', this);
@@ -120,7 +174,12 @@ module.exports = class Menu {
           break;
         case 'mousemove':
           if (!this.circleDrawn) {
-            if (Math.sqrt((e.clientX - canvas.width / 2) * (e.clientX - canvas.width / 2) + (e.clientY - canvas.height / 2) * (e.clientY - canvas.height / 2)) < this.RADIUS) {
+            if (
+              Math.sqrt(
+                (e.clientX - canvas.width / 2) * (e.clientX - canvas.width / 2)
+                  + (e.clientY - canvas.height / 2) * (e.clientY - canvas.height / 2),
+              ) < this.RADIUS
+            ) {
               ctx.fillStyle = 'white';
               ctx.beginPath();
               ctx.arc(canvas.width / 2, canvas.height / 2, this.RADIUS - 1, 0, 2 * Math.PI);
@@ -134,25 +193,45 @@ module.exports = class Menu {
               canvas.style.cursor = 'auto';
             }
           } else {
-            if (e.clientX > canvas.width / 9 - 150 && e.clientY > canvas.height / 3 && e.clientX < canvas.width / 9 + 150 && e.clientY < canvas.height / 3 + 300) {
+            if (
+              e.clientX > canvas.width / 9 - 150
+              && e.clientY > canvas.height / 3
+              && e.clientX < canvas.width / 9 + 150
+              && e.clientY < canvas.height / 3 + 300
+            ) {
               canvas.style.cursor = 'pointer';
               if (this.animateOp !== 1) {
                 this.animateOp = 1;
                 this.animateOp1();
               }
-            } else if (e.clientX > canvas.width / 3 - 150 && e.clientY > canvas.height / 3 && e.clientX < canvas.width / 3 + 150 && e.clientY < canvas.height / 3 + 300) {
+            } else if (
+              e.clientX > canvas.width / 3 - 150
+              && e.clientY > canvas.height / 3
+              && e.clientX < canvas.width / 3 + 150
+              && e.clientY < canvas.height / 3 + 300
+            ) {
               canvas.style.cursor = 'pointer';
               if (this.animateOp !== 2) {
                 this.animateOp = 2;
                 this.animateOp2();
               }
-            } else if (e.clientX > (canvas.width / 9) * 8 - 150 && e.clientY > canvas.height / 3 && e.clientX < (canvas.width / 9) * 8 + 150 && e.clientY < canvas.height / 3 + 300) {
+            } else if (
+              e.clientX > (canvas.width / 9) * 8 - 150
+              && e.clientY > canvas.height / 3
+              && e.clientX < (canvas.width / 9) * 8 + 150
+              && e.clientY < canvas.height / 3 + 300
+            ) {
               canvas.style.cursor = 'pointer';
               if (this.animateOp !== 3) {
                 this.animateOp = 3;
                 this.animateOp3();
               }
-            } else if (e.clientX > (canvas.width / 3) * 2 - 150 && e.clientY > canvas.height / 3 && e.clientX < (canvas.width / 3) * 2 + 150 && e.clientY < canvas.height / 3 + 300) {
+            } else if (
+              e.clientX > (canvas.width / 3) * 2 - 150
+              && e.clientY > canvas.height / 3
+              && e.clientX < (canvas.width / 3) * 2 + 150
+              && e.clientY < canvas.height / 3 + 300
+            ) {
               canvas.style.cursor = 'pointer';
               if (this.animateOp !== 4) {
                 this.animateOp = 4;
