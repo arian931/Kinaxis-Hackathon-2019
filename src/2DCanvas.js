@@ -75,10 +75,10 @@ const switchToMiniGame = () => {
 mapArray = Recursive.array;
 console.log(mapArray);
 const Player = new MainCharacter(
-  //130,
-  //120,
-  128 * (mapSize - 2),
-  128 * (mapSize - 2),
+  130,
+  120,
+  // 128 * (mapSize - 2), // For testing exit.
+  // 128 * (mapSize - 2), // For testing exit.
   canvas.width,
   canvas.height,
   Recursive.MazeSize,
@@ -122,8 +122,9 @@ buffer.canvas.width = 128 * mapSize;
 buffer.canvas.height = 128 * mapSize;
 Camera.attachBuffer(buffer);
 // console.log(`${buffer.canvas.width} ${buffer.canvas.height}`);
-worldPosX = Player.x + Player.width / 2 - Camera.vWidth / 2;
-worldPosY = Player.y + Player.height / 2 - Camera.vHeight / 2;
+
+// worldPosX = Player.x + Player.width / 2 - Camera.vWidth / 2; // For testing exit.
+// worldPosY = Player.y + Player.height / 2 - Camera.vHeight / 2;
 
 // Create the image buffer of the map.
 tilemap.onload = () => {
