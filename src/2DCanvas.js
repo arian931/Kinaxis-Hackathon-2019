@@ -8,7 +8,8 @@ canvas.height = window.innerHeight;
 const Menu = require('./menu.js');
 const MiniGame = require('./Hindex');
 const Enemy = require('./enemies/enemy');
-const MapPowerup = require('./mapPowerup');
+const PowerupController = require('./powerupController');
+// const MapPowerup = require('./mapPowerup');
 const Key = require('./key');
 const SpikeTrap = require('./spikeTrap');
 const TrapController = require('./trapController');
@@ -55,6 +56,7 @@ let worldPosY = 0;
 const enemyController = new EnemyController();
 const trapController = new TrapController();
 const keyController = new KeyController();
+const powerupController = new PowerupController();
 const Recursive = new RecursiveMaze(mapSize);
 const Camera = new PlayerCamera(ctx);
 Recursive.draw();
@@ -102,13 +104,15 @@ gameObjects.push(Player);
 enemyController.spawnEnemies(mapArray, gameObjects);
 trapController.spawnTraps(mapArray, gameObjects);
 keyController.spawnKeys(mapArray, gameObjects);
-let randX;
-let randY;
-do {
-  randX = Math.floor(Math.random() * mapSize);
-  randY = Math.floor(Math.random() * mapSize);
-} while (mapArray[randX][randY] !== 0);
-gameObjects.push(new MapPowerup(randX * 128, randY * 128));
+powerupController.spawnPowerups(mapArray, gameObjects);
+
+// let randX;
+// let randY;
+// do {
+//   randX = Math.floor(Math.random() * mapSize);
+//   randY = Math.floor(Math.random() * mapSize);
+// } while (mapArray[randX][randY] !== 0);
+// gameObjects.push(new MapPowerup(randX * 128, randY * 128));
 
 Camera.attachTo(Player);
 
