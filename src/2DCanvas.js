@@ -77,7 +77,6 @@ const switchToMiniGame = () => {
   minigame.start();
 };
 mapArray = Recursive.array;
-console.log(mapArray);
 function switchBack() {
   InThreeD = false;
 }
