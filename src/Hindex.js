@@ -63,7 +63,7 @@ module.exports = class miniGame {
     this.endBlurbPos = document.getElementById('TwoDRunnerPositive');
     this.endBlurbNeg = document.getElementById('TwoDRunnerNegative');
 
-    this.endBlurbDelay = 250;
+    this.endBlurbDelay = 100;
     this.endBlurbDelayCounter = 0;
 
     this.hitBlock = false;
