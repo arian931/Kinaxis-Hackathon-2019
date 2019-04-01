@@ -190,14 +190,14 @@ tilemap.onload = () => {
 document.addEventListener('keydown', (event) => {
   switch (event.code) {
     case 'KeyD':
-    case 'ArrowRight':
+    case "ArrowRight":
       Player.xDir = 1;
       Player.moveRight = true;
       Player.moveLeft = false;
       Player.moveDown = false;
       Player.moveUp = false;
       break;
-    case 'ArrowLeft':
+    case "ArrowLeft":
     case 'KeyA':
       Player.xDir = -1;
       Player.moveLeft = true;
@@ -205,7 +205,7 @@ document.addEventListener('keydown', (event) => {
       Player.moveDown = false;
       Player.moveUp = false;
       break;
-    case 'ArrowUp':
+    case "ArrowUp":
     case 'KeyW':
       Player.yDir = -1;
       Player.moveUp = true;
@@ -213,7 +213,7 @@ document.addEventListener('keydown', (event) => {
       Player.moveDown = false;
       Player.moveLeft = false;
       break;
-    case 'ArrowDown':
+    case "ArrowDown":
     case 'KeyS':
       Player.yDir = 1;
       Player.moveDown = true;
@@ -232,22 +232,22 @@ document.addEventListener('keydown', (event) => {
 
 document.addEventListener('keyup', (event) => {
   switch (event.code) {
-    case 'ArrowRight':
+    case "ArrowRight":
     case 'KeyD':
       Player.xDir = 0;
       Player.moveRight = false;
       break;
-    case 'ArrowLeft':
+    case "ArrowLeft":
     case 'KeyA':
       Player.xDir = 0;
       Player.moveLeft = false;
       break;
-    case 'ArrowUp':
+    case "ArrowUp":
     case 'KeyW':
       Player.yDir = 0;
       Player.moveUp = false;
       break;
-    case 'ArrowDown':
+    case "ArrowDown":
     case 'KeyS':
       Player.yDir = 0;
       Player.moveDown = false;
