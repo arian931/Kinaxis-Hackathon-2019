@@ -26,9 +26,6 @@ music.volume = 0.5;
 const doorOpenSound = new Audio('./mp3/doorOpen.mp3');
 // const cxx = blurb.getContext('2d');
 
-const menu = new Menu(switchBackTo2D);
-menu.start();
-
 console.log(canvas);
 
 // Load the tilemap.
@@ -45,13 +42,13 @@ spriteKeysCollected.src = '../../Art/2D/keys_collected.png';
 const gameObjects = [];
 
 let mapArray;
-const mapSize = 5;
+const mapSize = 10;
 
 // FPS
 let dt = 0;
 let lastTime = Date.now();
 
-// Define world position variables.
+// Define world position variables.T
 let worldPosX = 0;
 let worldPosY = 0;
 
@@ -97,6 +94,10 @@ const Player = new MainCharacter(
   // enemyController.enemies,
   callBlurb,
 );
+
+const menu = new Menu(switchBackTo2D, Player);
+menu.start();
+
 gameObjects.push(Player);
 enemyController.spawnEnemies(mapArray, gameObjects);
 trapController.spawnTraps(mapArray, gameObjects);
@@ -573,6 +574,7 @@ function draw() {
 
 function callBlurb() {
   console.log('BLURB');
+  keysCollected++;
   // blurb.style.display = 'block';
 }
 
