@@ -587,8 +587,7 @@ arrBlurbs[9] = 'Get help when you need it\nSeeking help is a sign of strength â€
 
 function callBlurb() {
   console.log('BLURB');
-  // eslint-disable-next-line no-plusplus
-  this.keysCollected++;
+  this.keysCollected += 1;
   // blurb.style.display = 'block';
 }
 
