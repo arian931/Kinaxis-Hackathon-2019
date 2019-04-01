@@ -42,7 +42,7 @@ spriteKeysCollected.src = '../../Art/2D/keys_collected.png';
 const gameObjects = [];
 
 let mapArray;
-const mapSize = 10;
+const mapSize = 15;
 
 // FPS
 let dt = 0;
