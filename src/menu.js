@@ -120,6 +120,7 @@ module.exports = class Menu {
             ) {
               console.log('player1 selected');
               this.player.setImage('../../Art/2D/female1_spritesheet.png');
+              this.animateOp = 0;
               switchBackTo2D();
               canvas.removeEventListener('mousemove', this);
               canvas.removeEventListener('click', this);
@@ -137,6 +138,7 @@ module.exports = class Menu {
             ) {
               console.log('player2 selected');
               this.player.setImage('../../Art/2D/female2_spritesheet.png');
+              this.animateOp = 0;
               switchBackTo2D();
               canvas.removeEventListener('mousemove', this);
               canvas.removeEventListener('click', this);
@@ -154,6 +156,7 @@ module.exports = class Menu {
             ) {
               console.log('player3 selected');
               this.player.setImage('../../Art/2D/male1_spritesheet.png');
+              this.animateOp = 0;
               switchBackTo2D();
               canvas.removeEventListener('mousemove', this);
               canvas.removeEventListener('click', this);
@@ -171,6 +174,7 @@ module.exports = class Menu {
             ) {
               console.log('player4 selected');
               this.player.setImage('../../Art/2D/male2_spritesheet.png');
+              this.animateOp = 0;
               switchBackTo2D();
               canvas.removeEventListener('mousemove', this);
               canvas.removeEventListener('click', this);
