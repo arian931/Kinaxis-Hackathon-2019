@@ -45,7 +45,7 @@ spriteKeysCollected.src = '../../Art/2D/keys_collected.png';
 const gameObjects = [];
 
 let mapArray;
-const mapSize = 15;
+const mapSize = 5;
 
 // FPS
 let dt = 0;
@@ -247,10 +247,10 @@ document.addEventListener('keydown', (event) => {
       Player.moveUp = false;
       Player.moveLeft = false;
       break;
-    case 'Space':
-      // switchToThreeD();
-      switchToMiniGame();
-      break;
+    // case 'Space':
+    //   // switchToThreeD();
+    //   switchToMiniGame();
+    //   break;
     default:
       break;
   }
