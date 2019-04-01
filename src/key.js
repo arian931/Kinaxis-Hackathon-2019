@@ -25,7 +25,7 @@ module.exports = class Key {
       this.x - worldPosX,
       this.y - worldPosY,
       this.width,
-      this.height
+      this.height,
     );
   }
 }

@@ -18,6 +18,9 @@ const RecursiveMaze = require('./RecursiveMaze');
 const PlayerCamera = require('./camera');
 const MainCharacter = require('./2DMainChar');
 
+const blurbPage = document.getElementById('blurbPage');
+const csx = blurbPage.getContext('2d');
+
 const blurb = document.getElementById('blurb');
 
 const music = new Audio('./mp3/Ivarelli - Fast and Sad.mp3');
@@ -610,8 +613,9 @@ arrBlurbs[9] = 'Get help when you need it\nSeeking help is a sign of strength â€
 function callBlurb() {
   console.log('BLURB');
   this.keysCollected += 1;
+  // blurbPage.style.display = 'block';
   console.log(this.keysCollected);
-  // blurb.style.display = 'block';
+  
 }
 
 function gameLoop() {
