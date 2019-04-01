@@ -18,7 +18,7 @@ module.exports = class KeyController {
             continue;
           }
           if (keysSpawned === this.maxSpawnKeys) {
-            return;
+            // return;
           }
           gameObjects.push(new Key(x * 128, y * 128));
           keysSpawned++;
@@ -28,5 +28,4 @@ module.exports = class KeyController {
       }
     }
   }
-
-}
+};
