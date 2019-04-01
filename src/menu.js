@@ -159,7 +159,7 @@ module.exports = class Menu {
   }
 
   animateOp1() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.clearRect(canvas.width / 9 - 150, 0, 300, canvas.height);
     this.playerOp1.draw();
     if (this.animateOp === 1) {
       requestAnimationFrame(this.animateOp1.bind(this));
@@ -169,7 +169,7 @@ module.exports = class Menu {
   }
 
   animateOp2() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.clearRect(canvas.width / 3 - 150, 0, 300, canvas.height);
     this.playerOp2.draw();
     if (this.animateOp === 2) {
       requestAnimationFrame(this.animateOp2.bind(this));
@@ -179,7 +179,7 @@ module.exports = class Menu {
   }
 
   animateOp3() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.clearRect((canvas.width / 9) * 8 - 150, 0, 300, canvas.height);
     this.playerOp3.draw();
     if (this.animateOp === 3) {
       requestAnimationFrame(this.animateOp3.bind(this));
@@ -189,7 +189,7 @@ module.exports = class Menu {
   }
 
   animateOp4() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.clearRect((canvas.width / 3) * 2 - 150, 0, 300, canvas.height);
     this.playerOp4.draw();
     if (this.animateOp === 4) {
       requestAnimationFrame(this.animateOp4.bind(this));
