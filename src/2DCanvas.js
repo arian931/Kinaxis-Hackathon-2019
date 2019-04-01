@@ -42,7 +42,9 @@ spriteKeysCollected.src = '../../Art/2D/keys_collected.png';
 const gameObjects = [];
 
 let mapArray;
-const mapSize = 10;
+const mapSize = 15;
+
+let needsToReset = false;
 
 // FPS
 let dt = 0;
@@ -62,14 +64,22 @@ const divToDrawTo = document.getElementById('backgroundCanvas');
 const miniGameCanvas = document.getElementById('minigameCanvas');
 const image = new Image();
 image.id = 'pic';
+let toResetPlayerToBeggingOfMaze = 0;
 function switchBackFromMini() {
   InThreeD = false;
   gameLoop();
 }
+
+function switchBackFromMiniAndReset() {
+  console.log('switchBackFromMiniAndReset');
+  InThreeD = false;
+  gameLoop();
+}
+
 const switchToMiniGame = () => {
   miniGameCanvas.style.display = 'block';
   divToDrawTo.style.display = 'none';
-  const minigame = new MiniGame(switchBackFromMini);
+  const minigame = new MiniGame(switchBackFromMini, otherRest, switchBackFromMiniAndReset);
   InThreeD = true;
   minigame.start();
 };
@@ -93,6 +103,7 @@ const Player = new MainCharacter(
   switchToMiniGame,
   // enemyController.enemies,
   callBlurb,
+  otherRest,
 );
 
 const menu = new Menu(switchBackTo2D, Player);
@@ -285,10 +296,20 @@ document.addEventListener('keyup', (event) => {
 });
 
 function update() {
-  // Calucute delta time.
   const nowTime = Date.now();
   dt = (nowTime - lastTime) / 1000;
   lastTime = nowTime;
+  if (needsToReset) {
+    needsToReset = false;
+    worldPosX = Player.x + Player.width / 2 - Camera.vWidth / 2;
+    worldPosY = Player.y + Player.height / 2 - Camera.vHeight / 2;
+    Camera.xDir = 0;
+    Camera.yDir = 0;
+    Camera.update(dt);
+    Camera.draw();
+  }
+  // Calucute delta time.
+
   // console.log(deltaTime);
 
   // Update global position.
@@ -548,10 +569,10 @@ function draw() {
     ctx.fillStyle = 'blue';
     ctx.fillRect(
       minimapPosX
-      + (Math.floor((Player.x + Player.width / 2) / Player.width) * minimap.canvas.width) / mapSize,
+        + (Math.floor((Player.x + Player.width / 2) / Player.width) * minimap.canvas.width) / mapSize,
       minimapPosY
-      + (Math.floor((Player.y + Player.height / 2) / Player.height) * minimap.canvas.height)
-      / mapSize,
+        + (Math.floor((Player.y + Player.height / 2) / Player.height) * minimap.canvas.height)
+          / mapSize,
       minimap.canvas.width / mapSize,
       minimap.canvas.height / mapSize,
     );
@@ -561,10 +582,10 @@ function draw() {
       ctx.fillStyle = 'red';
       ctx.fillRect(
         minimapPosX
-        + (Math.floor((enemy.x + enemy.width / 2) / enemy.width) * minimap.canvas.width) / mapSize,
+          + (Math.floor((enemy.x + enemy.width / 2) / enemy.width) * minimap.canvas.width) / mapSize,
         minimapPosY
-        + (Math.floor((enemy.y + enemy.height - 4) / enemy.height) * minimap.canvas.height)
-        / mapSize,
+          + (Math.floor((enemy.y + enemy.height - 4) / enemy.height) * minimap.canvas.height)
+            / mapSize,
         minimap.canvas.width / mapSize,
         minimap.canvas.height / mapSize,
       );
@@ -614,4 +635,29 @@ function switchToThreeD() {
   checkForSwitchBackInerval = setInterval(funToCheckForSwitchBack, 33);
 }
 
+toResetPlayerToBeggingOfMaze = () => {
+  console.log('hi');
+  worldPosX = Player.x + Player.width / 2 - Camera.vWidth / 2;
+  worldPosY = Player.y + Player.height / 2 - Camera.vHeight / 2;
+  const nowTime = Date.now();
+  dt = (nowTime - lastTime) / 1000;
+  lastTime = nowTime;
+  Camera.xDir = 0;
+  Camera.yDir = 0;
+  Camera.update(dt);
+  Camera.draw();
+};
+
+function otherRest() {
+  console.log('hi other reset');
+  worldPosX = Player.x + Player.width / 2 - Camera.vWidth / 2;
+  worldPosY = Player.y + Player.height / 2 - Camera.vHeight / 2;
+  const nowTime = Date.now();
+  dt = (nowTime - lastTime) / 1000;
+  lastTime = nowTime;
+  Camera.xDir = 0;
+  Camera.yDir = 0;
+  Camera.update(dt);
+  Camera.draw();
+}
 // window.requestAnimationFrame(gameLoop);
