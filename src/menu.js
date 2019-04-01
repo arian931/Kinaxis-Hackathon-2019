@@ -74,6 +74,9 @@ module.exports = class Menu {
             if (e.clientX > canvas.width / 9 - 150 && e.clientY > canvas.height / 3 && e.clientX < canvas.width / 9 + 150 && e.clientY < canvas.height / 3 + 300) {
               console.log('player1 selected');
               switchBackTo2D();
+              canvas.removeEventListener('mousemove', this);
+              canvas.removeEventListener('click', this);
+              canvas.style.cursor = 'auto';
               // canvas.style.cursor = 'pointer';
               // if (this.animateOp !== 1) {
               //   this.animateOp = 1;
@@ -82,6 +85,9 @@ module.exports = class Menu {
             } else if (e.clientX > canvas.width / 3 - 150 && e.clientY > canvas.height / 3 && e.clientX < canvas.width / 3 + 150 && e.clientY < canvas.height / 3 + 300) {
               console.log('player2 selected');
               switchBackTo2D();
+              canvas.removeEventListener('mousemove', this);
+              canvas.removeEventListener('click', this);
+              canvas.style.cursor = 'auto';
               // canvas.style.cursor = 'pointer';
               // if (this.animateOp !== 2) {
               //   this.animateOp = 2;
@@ -90,6 +96,9 @@ module.exports = class Menu {
             } else if (e.clientX > (canvas.width / 9) * 8 - 150 && e.clientY > canvas.height / 3 && e.clientX < (canvas.width / 9) * 8 + 150 && e.clientY < canvas.height / 3 + 300) {
               console.log('player3 selected');
               switchBackTo2D();
+              canvas.removeEventListener('mousemove', this);
+              canvas.removeEventListener('click', this);
+              canvas.style.cursor = 'auto';
               // canvas.style.cursor = 'pointer';
               // if (this.animateOp !== 3) {
               //   this.animateOp = 3;
@@ -98,6 +107,9 @@ module.exports = class Menu {
             } else if (e.clientX > (canvas.width / 3) * 2 - 150 && e.clientY > canvas.height / 3 && e.clientX < (canvas.width / 3) * 2 + 150 && e.clientY < canvas.height / 3 + 300) {
               console.log('player4 selected');
               switchBackTo2D();
+              canvas.removeEventListener('mousemove', this);
+              canvas.removeEventListener('click', this);
+              canvas.style.cursor = 'auto';
               // canvas.style.cursor = 'pointer';
               // if (this.animateOp !== 4) {
               //   this.animateOp = 4;
