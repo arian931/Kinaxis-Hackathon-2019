@@ -42,13 +42,13 @@ spriteKeysCollected.src = '../../Art/2D/keys_collected.png';
 const gameObjects = [];
 
 let mapArray;
-const mapSize = 15;
+const mapSize = 10;
 
 // FPS
 let dt = 0;
 let lastTime = Date.now();
 
-// Define world position variables.
+// Define world position variables.T
 let worldPosX = 0;
 let worldPosY = 0;
 
@@ -574,6 +574,7 @@ function draw() {
 
 function callBlurb() {
   console.log('BLURB');
+  keysCollected++;
   // blurb.style.display = 'block';
 }
 
