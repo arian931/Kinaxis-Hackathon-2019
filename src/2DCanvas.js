@@ -26,9 +26,6 @@ music.volume = 0.5;
 const doorOpenSound = new Audio('./mp3/doorOpen.mp3');
 // const cxx = blurb.getContext('2d');
 
-const menu = new Menu(switchBackTo2D);
-menu.start();
-
 console.log(canvas);
 
 // Load the tilemap.
@@ -97,6 +94,10 @@ const Player = new MainCharacter(
   // enemyController.enemies,
   callBlurb,
 );
+
+const menu = new Menu(switchBackTo2D, Player);
+menu.start();
+
 gameObjects.push(Player);
 enemyController.spawnEnemies(mapArray, gameObjects);
 trapController.spawnTraps(mapArray, gameObjects);

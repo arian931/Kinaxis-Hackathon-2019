@@ -65,6 +65,11 @@ module.exports = class MainCharacter {
     // this.walkingSound.volume = 1.5;
   }
 
+  setImage(src) {
+    this.image = new Image();
+    this.image.src = src;
+  }
+
   update() {
     // 0.7071 is a magic constant for diagonal movement.
     this.counter++;
