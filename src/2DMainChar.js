@@ -139,12 +139,12 @@ module.exports = class MainCharacter {
           this.keySound.play();
           this.gameObjects.splice(j, 1);
           // this.keysCollected += 1;
+          this.callBlurb();
           if (this.keysCollected === this.keyController.maxSpawnKeys) {
             this.mazeArray[this.mazeSize - 2][this.mazeSize - 3] = 0;
             this.mazeArray[this.mazeSize - 3][this.mazeSize - 3] = 0;
             console.log(this.mazeArray);
           }
-          this.callBlurb();
         }
       }
       if (this.gameObjects[j] instanceof SpikeTrap) {
