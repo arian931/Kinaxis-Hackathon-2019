@@ -6,6 +6,42 @@ module.exports = class Menu {
     this.RADIUS = 50;
     this.circleDrawn = false;
     this.animateOp = 0;
+    this.playerOp1 = new Player(
+      canvas.width / 9 - 150,
+      canvas.height / 3,
+      300,
+      300,
+      ctx,
+      '../../Art/2D/female1_spritesheet.png',
+    );
+    this.playerOp2 = new Player(
+      canvas.width / 3 - 150,
+      canvas.height / 3,
+      300,
+      300,
+      ctx,
+      '../../Art/2D/female2_spritesheet.png',
+    );
+    this.playerOp3 = new Player(
+      (canvas.width / 9) * 8 - 150,
+      canvas.height / 3,
+      300,
+      300,
+      ctx,
+      '../../Art/2D/male1_spritesheet.png',
+    );
+    this.playerOp4 = new Player(
+      (canvas.width / 3) * 2 - 150,
+      canvas.height / 3,
+      300,
+      300,
+      ctx,
+      '../../Art/2D/male2_spritesheet.png',
+    );
+    this.playerOp1.draw();
+    this.playerOp2.draw();
+    this.playerOp3.draw();
+    this.playerOp4.draw();
     this.handleEvent = (e) => {
       switch (e.type) {
         case 'click':
@@ -19,6 +55,7 @@ module.exports = class Menu {
               canvas.removeEventListener('mousemove', this);
               canvas.style.cursor = 'auto';
               let timer = 0;
+
               const circleBigger = setInterval(() => {
                 timer += 5;
                 ctx.fillStyle = 'white';
@@ -28,46 +65,15 @@ module.exports = class Menu {
                 if (timer >= canvas.width / 1.5) {
                   clearInterval(circleBigger);
                   canvas.removeEventListener('click', this);
-                  this.playerOp1 = new Player(
-                    canvas.width / 9 - 150,
-                    canvas.height / 3,
-                    300,
-                    300,
-                    ctx,
-                    '../../Art/2D/female1_spritesheet.png',
-                  );
-                  this.playerOp2 = new Player(
-                    canvas.width / 3 - 150,
-                    canvas.height / 3,
-                    300,
-                    300,
-                    ctx,
-                    '../../Art/2D/female2_spritesheet.png',
-                  );
-                  this.playerOp3 = new Player(
-                    (canvas.width / 9) * 8 - 150,
-                    canvas.height / 3,
-                    300,
-                    300,
-                    ctx,
-                    '../../Art/2D/male1_spritesheet.png',
-                  );
-                  this.playerOp4 = new Player(
-                    (canvas.width / 3) * 2 - 150,
-                    canvas.height / 3,
-                    300,
-                    300,
-                    ctx,
-                    '../../Art/2D/male2_spritesheet.png',
-                  );
+
                   // setInterval(() => {
                   //   this.clearRect(0, 0, canvas.width, canvas.height);
                   //   this.playerOp1.draw();
                   // }, 210);
                   // ctx.clearRect(0, 0, canvas.width, canvas.height);
                   this.circleDrawn = true;
+
                   const startAnimation = () => {
-                    requestAnimationFrame(startAnimation);
                     // ctx.clearRect(0, 0, canvas.width, canvas.height);
                     this.playerOp1.draw();
                     this.playerOp2.draw();
