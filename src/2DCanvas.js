@@ -72,6 +72,7 @@ function switchBackFromMini() {
 
 function switchBackFromMiniAndReset() {
   console.log('switchBackFromMiniAndReset');
+  needsToReset = true;
   InThreeD = false;
   gameLoop();
 }
@@ -296,10 +297,12 @@ document.addEventListener('keyup', (event) => {
 });
 
 function update() {
+  console.log('update');
   const nowTime = Date.now();
   dt = (nowTime - lastTime) / 1000;
   lastTime = nowTime;
   if (needsToReset) {
+    console.log('FUCKING FUCKING !!!!!!!!!!!!!!!!!!!!!!');
     needsToReset = false;
     worldPosX = Player.x + Player.width / 2 - Camera.vWidth / 2;
     worldPosY = Player.y + Player.height / 2 - Camera.vHeight / 2;
@@ -613,6 +616,10 @@ function callBlurb() {
 }
 
 function gameLoop() {
+  if (needsToReset) {
+    needsToReset = false;
+    update();
+  }
   if (music.paused) {
     music.play();
   }
@@ -662,7 +669,7 @@ toResetPlayerToBeggingOfMaze = () => {
 };
 
 function otherRest() {
-  console.log('hi other reset');
+  console.log('hi other reset is this happening');
   worldPosX = Player.x + Player.width / 2 - Camera.vWidth / 2;
   worldPosY = Player.y + Player.height / 2 - Camera.vHeight / 2;
   const nowTime = Date.now();
