@@ -5,7 +5,6 @@ global.canvas = document.getElementById('backgroundCanvas');
 global.ctx = canvas.getContext('2d');
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
-console.log('FUCKKKKKKKkkkkk !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!');
 const Menu = require('./menu.js');
 const MiniGame = require('./Hindex');
 const Enemy = require('./enemies/enemy');
@@ -66,14 +65,23 @@ const divToDrawTo = document.getElementById('backgroundCanvas');
 const miniGameCanvas = document.getElementById('minigameCanvas');
 const image = new Image();
 image.id = 'pic';
+function switchBackFromMini() {
+  InThreeD = false;
+  gameLoop();
+}
 const switchToMiniGame = () => {
   miniGameCanvas.style.display = 'block';
   divToDrawTo.style.display = 'none';
-  const minigame = new MiniGame();
+  const minigame = new MiniGame(switchBackFromMini);
+  InThreeD = true;
   minigame.start();
 };
 mapArray = Recursive.array;
 console.log(mapArray);
+function switchBack() {
+  InThreeD = false;
+}
+
 const Player = new MainCharacter(
   130,
   120,
@@ -208,14 +216,14 @@ tilemap.onload = () => {
 document.addEventListener('keydown', (event) => {
   switch (event.code) {
     case 'KeyD':
-    case "ArrowRight":
+    case 'ArrowRight':
       Player.xDir = 1;
       Player.moveRight = true;
       Player.moveLeft = false;
       Player.moveDown = false;
       Player.moveUp = false;
       break;
-    case "ArrowLeft":
+    case 'ArrowLeft':
     case 'KeyA':
       Player.xDir = -1;
       Player.moveLeft = true;
@@ -223,7 +231,7 @@ document.addEventListener('keydown', (event) => {
       Player.moveDown = false;
       Player.moveUp = false;
       break;
-    case "ArrowUp":
+    case 'ArrowUp':
     case 'KeyW':
       Player.yDir = -1;
       Player.moveUp = true;
@@ -231,7 +239,7 @@ document.addEventListener('keydown', (event) => {
       Player.moveDown = false;
       Player.moveLeft = false;
       break;
-    case "ArrowDown":
+    case 'ArrowDown':
     case 'KeyS':
       Player.yDir = 1;
       Player.moveDown = true;
@@ -250,22 +258,22 @@ document.addEventListener('keydown', (event) => {
 
 document.addEventListener('keyup', (event) => {
   switch (event.code) {
-    case "ArrowRight":
+    case 'ArrowRight':
     case 'KeyD':
       Player.xDir = 0;
       Player.moveRight = false;
       break;
-    case "ArrowLeft":
+    case 'ArrowLeft':
     case 'KeyA':
       Player.xDir = 0;
       Player.moveLeft = false;
       break;
-    case "ArrowUp":
+    case 'ArrowUp':
     case 'KeyW':
       Player.yDir = 0;
       Player.moveUp = false;
       break;
-    case "ArrowDown":
+    case 'ArrowDown':
     case 'KeyS':
       Player.yDir = 0;
       Player.moveDown = false;
@@ -497,7 +505,7 @@ function draw() {
     return -1;
   });
 
-  let mapEnemies = [];
+  const mapEnemies = [];
 
   for (let i = 0; i < gameObjects.length; i++) {
     gameObjects[i].draw(ctx, worldPosX, worldPosY);
@@ -521,13 +529,13 @@ function draw() {
   ctx.drawImage(
     spriteKeysCollected,
     0,
-    Player.keysCollected * 384 / 4,
+    (Player.keysCollected * 384) / 4,
     288,
     384 / 4,
     20,
     20,
     288,
-    384 / 4
+    384 / 4,
   );
 
   if (Player.hasMap) {
@@ -536,10 +544,10 @@ function draw() {
     ctx.fillStyle = 'blue';
     ctx.fillRect(
       minimapPosX
-      + (Math.floor((Player.x + Player.width / 2) / Player.width) * minimap.canvas.width) / mapSize,
+        + (Math.floor((Player.x + Player.width / 2) / Player.width) * minimap.canvas.width) / mapSize,
       minimapPosY
-      + (Math.floor((Player.y + Player.height / 2) / Player.height) * minimap.canvas.height)
-      / mapSize,
+        + (Math.floor((Player.y + Player.height / 2) / Player.height) * minimap.canvas.height)
+          / mapSize,
       minimap.canvas.width / mapSize,
       minimap.canvas.height / mapSize,
     );
@@ -549,10 +557,10 @@ function draw() {
       ctx.fillStyle = 'red';
       ctx.fillRect(
         minimapPosX
-        + (Math.floor((enemy.x + enemy.width / 2) / enemy.width) * minimap.canvas.width) / mapSize,
+          + (Math.floor((enemy.x + enemy.width / 2) / enemy.width) * minimap.canvas.width) / mapSize,
         minimapPosY
-        + (Math.floor((enemy.y + enemy.height - 4) / enemy.height) * minimap.canvas.height)
-        / mapSize,
+          + (Math.floor((enemy.y + enemy.height - 4) / enemy.height) * minimap.canvas.height)
+            / mapSize,
         minimap.canvas.width / mapSize,
         minimap.canvas.height / mapSize,
       );
@@ -584,6 +592,7 @@ function switchBackTo2D() {
   }
   gameLoop();
 }
+const runnerDiv = document.getElementById('TwoDRunnerPositive');
 function funToCheckForSwitchBack() {
   // console.log('checkingFor3d');
   if (divToDrawTo.style.display == 'block') {

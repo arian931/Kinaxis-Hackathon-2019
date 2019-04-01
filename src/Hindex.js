@@ -7,11 +7,12 @@ const Block = require('./block');
 const Teacher = require('./teacher');
 
 module.exports = class miniGame {
-  constructor() {
+  constructor(goBackTo2d) {
     this.canvas = document.getElementById('minigameCanvas');
     this.mainCanvas = document.getElementById('backgroundCanvas');
     this.ctx = this.canvas.getContext('2d');
 
+    this.goBackTo2d = goBackTo2d;
     this.canvas.width = window.innerWidth;
     this.canvas.height = window.innerHeight;
 
@@ -59,7 +60,7 @@ module.exports = class miniGame {
     this.counterForTransition = 0;
     this.stopSpawning = false;
 
-    this.teacher = new Teacher(this.canvas.width, this.floorHeight - 90, 30, 90, 10, this.ctx);
+    this.teacher = new Teacher(this.canvas.width, this.floorHeight - 128, 30, 90, 10, this.ctx);
     this.endBlurbPos = document.getElementById('TwoDRunnerPositive');
     this.endBlurbNeg = document.getElementById('TwoDRunnerNegative');
 
@@ -160,6 +161,7 @@ module.exports = class miniGame {
             this.endBlurbPos.style.display = 'none';
             this.endBlurbNeg.style.display = 'none';
             clearInterval(this.mainInterval);
+            this.goBackTo2d();
             // console.log('collision');
           } else {
             this.endBlurbDelayCounter++;
