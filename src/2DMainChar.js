@@ -8,6 +8,8 @@
 const Enemy = require('./enemies/enemy');
 const Key = require('./key');
 const SpikeTrap = require('./spikeTrap');
+const MapPowerup = require('./mapPowerup');
+const KeyController = require('./keyController');
 
 module.exports = class MainCharacter {
   constructor(
@@ -53,6 +55,8 @@ module.exports = class MainCharacter {
     this.counter = 10;
     this.playerSpeed = 4;
     this.keysCollected = 0;
+    this.hasMap = false;
+    this.keyController = new KeyController();
     this.gameObjects = gameObjects;
     this.functToSwitch = functToSwitch;
     this.callBlurb = callBlurb;
@@ -130,6 +134,11 @@ module.exports = class MainCharacter {
           this.keySound.play();
           this.gameObjects.splice(j, 1);
           this.keysCollected++;
+          if (this.keysCollected === this.keyController.maxSpawnKeys) {
+            this.mazeArray[this.mazeSize - 2][this.mazeSize - 3] = 0;
+            this.mazeArray[this.mazeSize - 3][this.mazeSize - 3] = 0;
+            console.log(this.mazeArray);
+          }
           this.callBlurb();
         }
       }
@@ -145,6 +154,18 @@ module.exports = class MainCharacter {
           ) {
             this.functToSwitch();
           }
+        }
+      }
+      if (this.gameObjects[j] instanceof MapPowerup) {
+        const map = this.gameObjects[j];
+        if (
+          this.x + this.width / 2 > map.x
+          && this.x + this.width / 2 < map.x + map.width
+          && this.y + this.height / 2 > map.y
+          && this.y + this.height / 2 < map.y + map.height
+        ) {
+          this.gameObjects.splice(j, 1);
+          this.hasMap = true;
         }
       }
     }
