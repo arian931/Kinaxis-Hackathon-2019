@@ -16,7 +16,7 @@ module.exports = class KeyController {
       }
     }
     // const chanceMax = 150;
-    // let chance = chanceMax;s
+    // let chance = chanceMax;
     // gameObjects.push(new Key(128 * 26, 128 * 27));
     // for (let y = 0; y < mapArray.length; y++) {
     //   for (let x = 0; x < mapArray[y].length; x++) {

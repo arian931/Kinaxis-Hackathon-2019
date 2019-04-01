@@ -11,6 +11,8 @@ const SpikeTrap = require('./spikeTrap');
 const MapPowerup = require('./mapPowerup');
 const KeyController = require('./keyController');
 
+let keysCollected = 0;
+
 module.exports = class MainCharacter {
   constructor(
     x,
@@ -55,7 +57,7 @@ module.exports = class MainCharacter {
     this.moveDown = false;
     this.counter = 10;
     this.playerSpeed = 4;
-    this.keysCollected = 0;
+    this.keysCollected = keysCollected;
     this.hasMap = false;
     this.keyController = new KeyController();
     this.gameObjects = gameObjects;

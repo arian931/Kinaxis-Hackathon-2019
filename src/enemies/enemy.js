@@ -19,13 +19,13 @@ module.exports = class Enemy {
     this.xDir = 0;
     this.yDir = 0;
     this.mapArray = mapArray;
-    this.vis = [[]];
-    for (let i = 0; i < this.mapArray.length; i++) {
-      this.vis[i] = [];
-      for (let j = 0; j < this.mapArray[i].length; j++) {
-        this.vis[i][j] = false;
-      }
-    }
+    this.vis = [];
+    // for (let i = 0; i < this.mapArray.length; i++) {
+    //   this.vis[i] = [];
+    //   for (let j = 0; j < this.mapArray[i].length; j++) {
+    //     this.vis[i][j] = false;
+    //   }
+    // }
     this.cntr = 0;
     this.moveX = Math.floor(this.x / 128);
     this.moveY = Math.floor(this.y / 128);
@@ -53,45 +53,43 @@ module.exports = class Enemy {
     if (currentPosX === this.moveX && currentPosY === this.moveY) {
       // console.log(this.cntr);
       if (
-        !this.vis[currentPosX + 1][currentPosY]
+        !this.vis.includes([currentPosX + 1, currentPosY].toString())
         && this.mapArray[currentPosX + 1][currentPosY] === 0
       ) {
         // Right collision
         dirs.push(0);
         // this.vis.push(currentPosX);
-        this.vis[currentPosX + 1][currentPosY] = true;
+        this.vis.push([currentPosX + 1, currentPosY].toString());
       }
       if (
-        !this.vis[currentPosX - 1][currentPosY]
+        !this.vis.includes([currentPosX - 1, currentPosY].toString())
         && this.mapArray[currentPosX - 1][currentPosY] === 0) {
         // Leftcollision
         dirs.push(2);
         // this.vis.push(Math.floor(this.x / 128 - 1));
-        this.vis[currentPosX - 1][currentPosY] = true;
+        this.vis.push([currentPosX - 1, currentPosY].toString());
       }
       if (
-        !this.vis[currentPosX][currentPosY + 1]
+        !this.vis.includes([currentPosX, currentPosY + 1].toString())
         && this.mapArray[currentPosX][currentPosY + 1] === 0) {
         // Down collision
         dirs.push(1);
         // this.vis.push(currentPosX);
-        this.vis[currentPosX][currentPosY + 1] = true;
+        this.vis.push([currentPosX, currentPosY + 1].toString());
       }
       if (
-        !this.vis[currentPosX][currentPosY - 1]
+        !this.vis.includes([currentPosX, currentPosY - 1].toString())
         && this.mapArray[currentPosX][currentPosY - 1] === 0) {
         // Up collision
         dirs.push(3);
         // this.vis.push(currentPosX);
-        this.vis[currentPosX][currentPosY - 1] = true;
+        this.vis.push([currentPosX, currentPosY - 1].toString());
       }
-      if (dirs.length === 0) {
-        for (let k = 0; k < this.mapArray.length; k++) {
-          for (let j = 0; j < this.mapArray[k].length; j++) {
-            this.vis[k][j] = false;
-          }
-        }
+      if (!dirs.length) {
+        this.vis.splice(this.length - 2, 1);
       }
+      // console.log(this.vis);
+      // console.log(this.vis.includes([currentPosX, currentPosY - 1].toString()));
       // this.move(10, 10);
       // this.move(2, 2);
       const randDir = Math.floor(Math.random() * dirs.length);
