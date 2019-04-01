@@ -1,11 +1,12 @@
 const Player = require('./PlayerClass');
 
 module.exports = class Menu {
-  constructor(switchBackTo2D) {
+  constructor(switchBackTo2D, player) {
     this.menuMusic = new Audio('./mp3/rain.mp3');
     this.RADIUS = 50;
     this.circleDrawn = false;
     this.animateOp = 0;
+    this.player = player;
     this.playerOp1 = new Player(
       canvas.width / 9 - 150,
       canvas.height / 3,
@@ -49,7 +50,7 @@ module.exports = class Menu {
             if (
               Math.sqrt(
                 (e.clientX - canvas.width / 2) * (e.clientX - canvas.width / 2)
-                  + (e.clientY - canvas.height / 2) * (e.clientY - canvas.height / 2),
+                + (e.clientY - canvas.height / 2) * (e.clientY - canvas.height / 2),
               ) < this.RADIUS
             ) {
               canvas.removeEventListener('mousemove', this);
@@ -118,6 +119,7 @@ module.exports = class Menu {
               && e.clientY < canvas.height / 3 + 300
             ) {
               console.log('player1 selected');
+              this.player.setImage('../../Art/2D/female1_spritesheet.png');
               switchBackTo2D();
               canvas.removeEventListener('mousemove', this);
               canvas.removeEventListener('click', this);
@@ -134,6 +136,7 @@ module.exports = class Menu {
               && e.clientY < canvas.height / 3 + 300
             ) {
               console.log('player2 selected');
+              this.player.setImage('../../Art/2D/female2_spritesheet.png');
               switchBackTo2D();
               canvas.removeEventListener('mousemove', this);
               canvas.removeEventListener('click', this);
@@ -150,6 +153,7 @@ module.exports = class Menu {
               && e.clientY < canvas.height / 3 + 300
             ) {
               console.log('player3 selected');
+              this.player.setImage('../../Art/2D/male1_spritesheet.png');
               switchBackTo2D();
               canvas.removeEventListener('mousemove', this);
               canvas.removeEventListener('click', this);
@@ -166,6 +170,7 @@ module.exports = class Menu {
               && e.clientY < canvas.height / 3 + 300
             ) {
               console.log('player4 selected');
+              this.player.setImage('../../Art/2D/male2_spritesheet.png');
               switchBackTo2D();
               canvas.removeEventListener('mousemove', this);
               canvas.removeEventListener('click', this);
@@ -183,7 +188,7 @@ module.exports = class Menu {
             if (
               Math.sqrt(
                 (e.clientX - canvas.width / 2) * (e.clientX - canvas.width / 2)
-                  + (e.clientY - canvas.height / 2) * (e.clientY - canvas.height / 2),
+                + (e.clientY - canvas.height / 2) * (e.clientY - canvas.height / 2),
               ) < this.RADIUS
             ) {
               ctx.fillStyle = 'white';

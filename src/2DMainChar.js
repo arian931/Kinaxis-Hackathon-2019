@@ -65,6 +65,11 @@ module.exports = class MainCharacter {
     // this.walkingSound.volume = 1.5;
   }
 
+  setImage(src) {
+    this.image = new Image();
+    this.image.src = src;
+  }
+
   update() {
     // 0.7071 is a magic constant for diagonal movement.
     this.counter++;
@@ -133,6 +138,7 @@ module.exports = class MainCharacter {
         ) {
           this.keySound.play();
           this.gameObjects.splice(j, 1);
+          this.keysCollected += 1;
           if (this.keysCollected === this.keyController.maxSpawnKeys) {
             this.mazeArray[this.mazeSize - 2][this.mazeSize - 3] = 0;
             this.mazeArray[this.mazeSize - 3][this.mazeSize - 3] = 0;
