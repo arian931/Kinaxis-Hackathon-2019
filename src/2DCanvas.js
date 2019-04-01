@@ -113,6 +113,7 @@ gameObjects.push(new MapPowerup(randX * 128, randY * 128));
 Camera.attachTo(Player);
 
 let InThreeD = false;
+let doorPlaying = false;
 
 // eslint-disable-next-line prefer-const
 
@@ -430,7 +431,10 @@ function draw() {
   // draw door.
   if (Player.keysCollected === keyController.maxSpawnKeys) {
     // Opened doors.
-    doorOpenSound.play();
+    if (!doorPlaying) {
+      doorPlaying = true;
+      doorOpenSound.play();
+    }
     ctx.drawImage(
       doorTilemap,
       128,
@@ -544,10 +548,10 @@ function draw() {
     ctx.fillStyle = 'blue';
     ctx.fillRect(
       minimapPosX
-        + (Math.floor((Player.x + Player.width / 2) / Player.width) * minimap.canvas.width) / mapSize,
+      + (Math.floor((Player.x + Player.width / 2) / Player.width) * minimap.canvas.width) / mapSize,
       minimapPosY
-        + (Math.floor((Player.y + Player.height / 2) / Player.height) * minimap.canvas.height)
-          / mapSize,
+      + (Math.floor((Player.y + Player.height / 2) / Player.height) * minimap.canvas.height)
+      / mapSize,
       minimap.canvas.width / mapSize,
       minimap.canvas.height / mapSize,
     );
@@ -557,10 +561,10 @@ function draw() {
       ctx.fillStyle = 'red';
       ctx.fillRect(
         minimapPosX
-          + (Math.floor((enemy.x + enemy.width / 2) / enemy.width) * minimap.canvas.width) / mapSize,
+        + (Math.floor((enemy.x + enemy.width / 2) / enemy.width) * minimap.canvas.width) / mapSize,
         minimapPosY
-          + (Math.floor((enemy.y + enemy.height - 4) / enemy.height) * minimap.canvas.height)
-            / mapSize,
+        + (Math.floor((enemy.y + enemy.height - 4) / enemy.height) * minimap.canvas.height)
+        / mapSize,
         minimap.canvas.width / mapSize,
         minimap.canvas.height / mapSize,
       );

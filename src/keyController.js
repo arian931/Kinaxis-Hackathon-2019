@@ -17,11 +17,11 @@ module.exports = class KeyController {
           if (Math.floor(Math.random() * chance) !== 0) {
             continue;
           }
-          gameObjects.push(new Key(x * 128, y * 128));
-          keysSpawned++;
           if (keysSpawned === this.maxSpawnKeys) {
             return;
           }
+          gameObjects.push(new Key(x * 128, y * 128));
+          keysSpawned++;
           chance = chanceMax;
         }
         chance -= 1;
