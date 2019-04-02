@@ -399,4 +399,14 @@ module.exports = class MainCharacter {
       default: break;
     }
   }
+
+  // Method to reset player's stats (not including position).
+  reset() {
+    // this.x = 130;
+    // this.y = 120;
+    this.keysCollected = 0;
+    this.hasWallBreaks = false;
+    this.playerSpeed = this.playerSpeedNormal;
+    this.speedBoostTimer = this.speedBoostDuration;
+  }
 };
