@@ -300,8 +300,11 @@ document.addEventListener('keydown', (event) => {
     case 'KeyR':
       resetTheWholeMaze();
       break;
-    case 'KeyI':
+    case 'KeyP':
       switchToMiniGame();
+      break;
+    case 'KeyY':
+      switchToThreeD();
       break;
     case 'KeyC':
       keyBlurbOne.style.display = 'none';
@@ -708,6 +711,12 @@ const keyBlurbTen = document.getElementById('keyBlurbTen');
 let counter = Math.floor(Math.random() * 10) + 1;
 
 function callBlurb() {
+  for (let i = 0; i < gameObjects.length; i++) {
+    if (gameObjects[i] instanceof Enemy) {
+      gameObjects[i].xDir = 0;
+      gameObjects[i].yDir = 0;
+    }
+  }
   switch (counter) {
     case 1:
       keyBlurbOne.style.display = 'block';
@@ -774,7 +783,7 @@ const runnerDiv = document.getElementById('TwoDRunnerPositive');
 function funToCheckForSwitchBack() {
   // console.log('checkingFor3d');
   if (divToDrawTo.style.display == 'block') {
-    switchBackTo2D();
+    resetTheWholeMaze();
     clearInterval(checkForSwitchBackInerval);
     // console.log('back 2d');
   }
@@ -805,12 +814,15 @@ toResetPlayerToBeggingOfMaze = () => {
 function otherRest() {
   Player.x = 130;
   Player.y = 120;
-  // console.log('hi other reset is this happening');
-  // worldPosX = Player.x + Player.width / 2 - Camera.vWidth / 2;
-  // worldPosY = Player.y + Player.height / 2 - Camera.vHeight / 2;
-  // Camera.xDir = 0;
-  // Camera.yDir = 0;
-  // Camera.update(dt);
+  console.log('hi other reset is this happening');
+  worldPosX = Player.x + Player.width / 2 - Camera.vWidth / 2;
+  worldPosY = Player.y + Player.height / 2 - Camera.vHeight / 2;
+  const nowTime = Date.now();
+  dt = (nowTime - lastTime) / 1000;
+  lastTime = nowTime;
+  Camera.xDir = 0;
+  Camera.yDir = 0;
+  Camera.update(dt);
   Camera.draw();
   // debugger;
 }
@@ -831,6 +843,6 @@ function resetTheWholeMaze() {
   keyController.spawnKeys(mapArray, gameObjects);
   powerupController.spawnPowerups(mapArray, gameObjects);
   Player.reset(Recursive.array, Recursive.MazeSize);
-  // gameLoop();
+  gameLoop();
 }
 // window.requestAnimationFrame(gameLoop);

@@ -145,7 +145,7 @@ module.exports = class miniGame {
       this.ctx.canvas.height / 2 - 720 / 2,
     );
     this.ctx.drawImage(this.scene.ground, this.ctx.canvas.width / 2 - 1032 / 2, this.floorHeight);
-    if (this.numberOfBlocksPassed >= 20 || this.hitBlock) {
+    if (this.numberOfBlocksPassed >= 15 || this.hitBlock) {
       this.stopSpawning = true;
       if (this.blockArray.length <= 0 || this.hitBlock) {
         // console.log('inTransiton');
@@ -213,14 +213,14 @@ module.exports = class miniGame {
         }
         this.blockArray[x].draw();
         if (
-          this.player.x + this.player.W - 20 >= this.blockArray[x].x
-          && this.player.x + 20 <= this.blockArray[x].x + this.blockArray[x].w
-          && this.player.y + this.player.H >= this.blockArray[x].y
+          this.player.x + this.player.W - 25 >= this.blockArray[x].x
+          && this.player.x + 25 <= this.blockArray[x].x + this.blockArray[x].w
+          && this.player.y + this.player.H - 10 >= this.blockArray[x].y
         ) {
           this.hitBlock = true;
         }
       }
-      if (this.numberOfBlocksPassed % 5 == 0 && !this.increasedDif) {
+      if (this.numberOfBlocksPassed % 4 == 0 && !this.increasedDif) {
         console.log('increased speed');
         this.maxAmountForRandomSpawn -= 2;
         this.blockSpeed += 3;
