@@ -644,10 +644,10 @@ function draw() {
     ctx.fillStyle = 'blue';
     ctx.fillRect(
       minimapPosX
-        + (Math.floor((Player.x + Player.width / 2) / Player.width) * minimap.canvas.width) / mapSize,
+      + (Math.floor((Player.x + Player.width / 2) / Player.width) * minimap.canvas.width) / mapSize,
       minimapPosY
-        + (Math.floor((Player.y + Player.height / 2) / Player.height) * minimap.canvas.height)
-          / mapSize,
+      + (Math.floor((Player.y + Player.height / 2) / Player.height) * minimap.canvas.height)
+      / mapSize,
       minimap.canvas.width / mapSize,
       minimap.canvas.height / mapSize,
     );
@@ -667,10 +667,10 @@ function draw() {
       ctx.fillStyle = 'red';
       ctx.fillRect(
         minimapPosX
-          + (Math.floor((enemy.x + enemy.width / 2) / enemy.width) * minimap.canvas.width) / mapSize,
+        + (Math.floor((enemy.x + enemy.width / 2) / enemy.width) * minimap.canvas.width) / mapSize,
         minimapPosY
-          + (Math.floor((enemy.y + enemy.height - 4) / enemy.height) * minimap.canvas.height)
-            / mapSize,
+        + (Math.floor((enemy.y + enemy.height - 4) / enemy.height) * minimap.canvas.height)
+        / mapSize,
         minimap.canvas.width / mapSize,
         minimap.canvas.height / mapSize,
       );
@@ -705,6 +705,12 @@ const keyBlurbTen = document.getElementById('keyBlurbTen');
 let counter = Math.floor(Math.random() * 10) + 1;
 
 function callBlurb() {
+  for (let i = 0; i < gameObjects.length; i++) {
+    if (gameObjects[i] instanceof Enemy) {
+      gameObjects[i].xDir = 0;
+      gameObjects[i].yDir = 0;
+    }
+  }
   switch (counter) {
     case 1:
       keyBlurbOne.style.display = 'block';
