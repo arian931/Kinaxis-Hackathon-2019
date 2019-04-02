@@ -315,6 +315,9 @@ document.addEventListener('keydown', (event) => {
       keyBlurbNine.style.display = 'none';
       keyBlurbTen.style.display = 'none';
     default:
+    case 'KeyI':
+    switchToMiniGame();
+    break;
       break;
   }
 });
