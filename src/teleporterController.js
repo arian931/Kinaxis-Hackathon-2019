@@ -14,14 +14,14 @@ module.exports = class TeleporterController {
       if (this.teleporters.length === 0) {
         // Teleporter 1.
         if (mazeArray[randX][randY] === 0) {
-          const teleporter = new Teleporter(randX * 128, randY * 128);
+          const teleporter = new Teleporter(randX * 128, randY * 128, 1);
           this.teleporters.push(teleporter);
           gameObjects.push(teleporter);
         }
       } else {
         // Teleporter 2.
         if (mazeArray[randX][randY] === 0) {
-          const teleporter = new Teleporter(randX * 128, randY * 128);
+          const teleporter = new Teleporter(randX * 128, randY * 128, 2);
           this.teleporters.push(teleporter);
           gameObjects.push(teleporter);
         }

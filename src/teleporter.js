@@ -1,6 +1,6 @@
 module.exports = class Teleporter {
-  constructor(x, y) {
-    this.id = Date.now();
+  constructor(x, y, id) {
+    this.id = id;
     this.disabled = false;
     this.performTask = undefined; // Will equal undefined or setTimeout to delay usage;
     this.x = x;
