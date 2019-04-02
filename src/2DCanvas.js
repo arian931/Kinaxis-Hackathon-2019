@@ -48,10 +48,10 @@ const spriteWallBreakerIndicator = new Image();
 spriteWallBreakerIndicator.src = '../../Art/2D/wall_breaker_indicator.png';
 
 // eslint-disable-next-line no-unused-vars
-const gameObjects = [];
+let gameObjects = [];
 
 let mapArray;
-const destroyedWalls = []; // [x, y] cell positions of destroyed walls.
+let destroyedWalls = []; // [x, y] cell positions of destroyed walls.
 const mapSize = 15;
 
 let needsToReset = false;
@@ -171,7 +171,7 @@ Camera.attachBuffer(buffer);
 // worldPosY = Player.y + Player.height / 2 - Camera.vHeight / 2;
 
 // Create the image buffer of the map.
-tilemap.onload = () => {
+createBuffer = () => {
   for (let y = 0; y < mapSize; y++) {
     for (let x = 0; x < mapSize; x++) {
       switch (mapArray[x][y]) {
@@ -248,6 +248,9 @@ tilemap.onload = () => {
       }
     }
   }
+};
+tilemap.onload = () => {
+  createBuffer();
 };
 document.addEventListener('keydown', (event) => {
   switch (event.code) {
@@ -644,10 +647,10 @@ function draw() {
     ctx.fillStyle = 'blue';
     ctx.fillRect(
       minimapPosX
-        + (Math.floor((Player.x + Player.width / 2) / Player.width) * minimap.canvas.width) / mapSize,
+      + (Math.floor((Player.x + Player.width / 2) / Player.width) * minimap.canvas.width) / mapSize,
       minimapPosY
-        + (Math.floor((Player.y + Player.height / 2) / Player.height) * minimap.canvas.height)
-          / mapSize,
+      + (Math.floor((Player.y + Player.height / 2) / Player.height) * minimap.canvas.height)
+      / mapSize,
       minimap.canvas.width / mapSize,
       minimap.canvas.height / mapSize,
     );
@@ -667,10 +670,10 @@ function draw() {
       ctx.fillStyle = 'red';
       ctx.fillRect(
         minimapPosX
-          + (Math.floor((enemy.x + enemy.width / 2) / enemy.width) * minimap.canvas.width) / mapSize,
+        + (Math.floor((enemy.x + enemy.width / 2) / enemy.width) * minimap.canvas.width) / mapSize,
         minimapPosY
-          + (Math.floor((enemy.y + enemy.height - 4) / enemy.height) * minimap.canvas.height)
-            / mapSize,
+        + (Math.floor((enemy.y + enemy.height - 4) / enemy.height) * minimap.canvas.height)
+        / mapSize,
         minimap.canvas.width / mapSize,
         minimap.canvas.height / mapSize,
       );
@@ -803,25 +806,30 @@ function otherRest() {
   Player.x = 130;
   Player.y = 120;
   // console.log('hi other reset is this happening');
-  worldPosX = Player.x + Player.width / 2 - Camera.vWidth / 2;
-  worldPosY = Player.y + Player.height / 2 - Camera.vHeight / 2;
-  const nowTime = Date.now();
-  dt = (nowTime - lastTime) / 1000;
-  lastTime = nowTime;
-  Camera.xDir = 0;
-  Camera.yDir = 0;
-  Camera.update(dt);
+  // worldPosX = Player.x + Player.width / 2 - Camera.vWidth / 2;
+  // worldPosY = Player.y + Player.height / 2 - Camera.vHeight / 2;
+  // Camera.xDir = 0;
+  // Camera.yDir = 0;
+  // Camera.update(dt);
   Camera.draw();
   // debugger;
 }
 function resetTheWholeMaze() {
   console.log('reseting the whole maze');
+  //Recursive.MazeSize += 10;
   Recursive.draw();
-  Recursive.MazeSize += 10;
   mapArray = Recursive.array;
   otherRest();
   InThreeD = false;
-  tilemap.onload();
+  minimap.clearRect(0, 0, minimap.canvas.width, minimap.canvas.height);
+  createBuffer();
+  gameObjects = [];
+  destroyedWalls = [];
+  gameObjects.push(Player);
+  enemyController.spawnEnemies(mapArray, gameObjects);
+  trapController.spawnTraps(mapArray, gameObjects);
+  keyController.spawnKeys(mapArray, gameObjects);
+  powerupController.spawnPowerups(mapArray, gameObjects);
   Player.reset(Recursive.array, Recursive.MazeSize);
   // gameLoop();
 }

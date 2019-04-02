@@ -411,6 +411,7 @@ module.exports = class MainCharacter {
     this.mazeArray = mazeArray;
     this.keysCollected = 0;
     this.hasWallBreaks = false;
+    this.hasMap = false;
     this.playerSpeed = this.playerSpeedNormal;
     this.speedBoostTimer = this.speedBoostDuration;
   }
