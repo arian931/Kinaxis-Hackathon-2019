@@ -5,19 +5,19 @@ global.canvas = document.getElementById('backgroundCanvas');
 global.ctx = canvas.getContext('2d');
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
-const Menu = require('./menu.js');
-const MiniGame = require('./Hindex');
-const Enemy = require('./enemies/enemy');
-const PowerupController = require('./powerupController');
+// const Menu = require('./menu.js');
+// const MiniGame = require('./Hindex');
+// const Enemy = require('./enemies/enemy');
+// const PowerupController = require('./powerupController');
 // const MapPowerup = require('./mapPowerup');
-const Key = require('./key');
-const SpikeTrap = require('./spikeTrap');
-const TrapController = require('./trapController');
-const EnemyController = require('./enemyController');
-const KeyController = require('./keyController');
-const RecursiveMaze = require('./RecursiveMaze');
-const PlayerCamera = require('./camera');
-const MainCharacter = require('./2DMainChar');
+// const Key = require('./key');
+// const SpikeTrap = require('./spikeTrap');
+// const TrapController = require('./trapController');
+// const EnemyController = require('./enemyController');
+// const KeyController = require('./keyController');
+// const RecursiveMaze = require('./RecursiveMaze');
+// const PlayerCamera = require('./camera');
+// const MainCharacter = require('./2DMainChar');
 
 const blurbPage = document.getElementById('blurbPage');
 // const csx = blurbPage.getContext('2d');
@@ -89,12 +89,7 @@ function switchBackFromMiniAndReset() {
 const switchToMiniGame = () => {
   miniGameCanvas.style.display = 'block';
   divToDrawTo.style.display = 'none';
-  const minigame = new MiniGame(
-    switchBackFromMini,
-    otherRest,
-    switchBackFromMiniAndReset,
-    Player.image,
-  );
+  const minigame = new MiniGame(switchBackFromMini, otherRest, switchBackFromMiniAndReset);
   InThreeD = true;
   minigame.start();
 };
@@ -287,9 +282,6 @@ document.addEventListener('keydown', (event) => {
     //   break;
     case 'KeyR':
       resetTheWholeMaze();
-      break;
-    case 'KeyI':
-      switchToMiniGame();
       break;
     default:
       break;
