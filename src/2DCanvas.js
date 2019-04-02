@@ -52,7 +52,7 @@ let gameObjects = [];
 
 let mapArray;
 let destroyedWalls = []; // [x, y] cell positions of destroyed walls.
-const mapSize = 15;
+let mapSize = 15;
 
 let needsToReset = false;
 
@@ -64,13 +64,13 @@ let lastTime = Date.now();
 let worldPosX = 0;
 let worldPosY = 0;
 
-const enemyController = new EnemyController();
-const trapController = new TrapController();
-const keyController = new KeyController();
-const powerupController = new PowerupController();
-const teleporterController = new TeleporterController();
-const Recursive = new RecursiveMaze(mapSize);
-const Camera = new PlayerCamera(ctx);
+let enemyController = new EnemyController();
+let trapController = new TrapController();
+let keyController = new KeyController();
+let powerupController = new PowerupController();
+let teleporterController = new TeleporterController();
+let Recursive = new RecursiveMaze(mapSize);
+let Camera = new PlayerCamera(ctx);
 Recursive.draw();
 const divToDrawTo = document.getElementById('backgroundCanvas');
 const miniGameCanvas = document.getElementById('minigameCanvas');
@@ -108,7 +108,7 @@ function switchBack() {
 
 teleporterController.spawnTeleporters(mapArray, gameObjects);
 
-const Player = new MainCharacter(
+Player = new MainCharacter(
   130,
   120,
   // 128 * (mapSize - 2), // For testing exit.
@@ -815,14 +815,14 @@ function otherRest() {
   Player.x = 130;
   Player.y = 120;
   console.log('hi other reset is this happening');
-  worldPosX = Player.x + Player.width / 2 - Camera.vWidth / 2;
-  worldPosY = Player.y + Player.height / 2 - Camera.vHeight / 2;
-  const nowTime = Date.now();
-  dt = (nowTime - lastTime) / 1000;
-  lastTime = nowTime;
-  Camera.xDir = 0;
-  Camera.yDir = 0;
-  Camera.update(dt);
+  // worldPosX = Player.x + Player.width / 2 - Camera.vWidth / 2;
+  // worldPosY = Player.y + Player.height / 2 - Camera.vHeight / 2;
+  // const nowTime = Date.now();
+  // dt = (nowTime - lastTime) / 1000;
+  // lastTime = nowTime;
+  // Camera.xDir = 0;
+  // Camera.yDir = 0;
+  // Camera.update(dt);
   Camera.draw();
   // debugger;
 }
@@ -837,12 +837,41 @@ function resetTheWholeMaze() {
   createBuffer();
   gameObjects = [];
   destroyedWalls = [];
+  enemyController = new EnemyController();
+  trapController = new TrapController();
+  keyController = new KeyController();
+  powerupController = new PowerupController();
+  teleporterController = new TeleporterController();
+  Recursive = new RecursiveMaze(mapSize);
+  Camera = new PlayerCamera(ctx);
+  // debugger;
+  Player = new MainCharacter(
+    130,
+    120,
+    // 128 * (mapSize - 2), // For testing exit.
+    // 128 * (mapSize - 2), // For testing exit.
+    canvas.width,
+    canvas.height,
+    Recursive.MazeSize,
+    mapArray,
+    destroyedWalls,
+    ctx,
+    gameObjects,
+    teleporterController.teleporters,
+    // eslint-disable-next-line no-use-before-define
+    switchToMiniGame,
+    // enemyController.enemies,
+    callBlurb,
+    otherRest,
+  );
+  Camera.attachTo(Player);
+  Camera.attachBuffer(buffer);
   gameObjects.push(Player);
   enemyController.spawnEnemies(mapArray, gameObjects);
   trapController.spawnTraps(mapArray, gameObjects);
   keyController.spawnKeys(mapArray, gameObjects);
   powerupController.spawnPowerups(mapArray, gameObjects);
   Player.reset(Recursive.array, Recursive.MazeSize);
-  gameLoop();
+  // gameLoop();
 }
 // window.requestAnimationFrame(gameLoop);

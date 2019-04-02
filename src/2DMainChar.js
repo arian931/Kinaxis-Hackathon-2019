@@ -52,7 +52,9 @@ module.exports = class MainCharacter {
     this.CWidth = width;
     this.CHeight = height;
     this.mazeSize = mazeSize;
-    this.mazeArray = mazeArray;
+    // console.log(ma)
+    this.mazeArray = JSON.parse(JSON.stringify(mazeArray));
+    console.log(this.mazeArray)
     this.destroyedWalls = destroyedWalls;
     this.posTopX = parseInt(this.x / ((this.CWidth * 128) / this.CWidth));
     this.posTopY = parseInt(this.y / ((this.CHeight * 128) / this.CHeight));
@@ -91,6 +93,7 @@ module.exports = class MainCharacter {
     this.counter++;
     this.hSpeed = 0;
     this.vSpeed = 0;
+    // console.log(this.mazeArray);
     if (this.moveRight) {
       this.checkMovePosX();
     }
@@ -105,7 +108,7 @@ module.exports = class MainCharacter {
     }
 
     // Update speed boost timer.
-    if (this.speedBoostTimer <= 0) {
+    if (this.speedBoostTimer < 0) {
       this.playerSpeed = this.playerSpeedNormal;
       this.speedBoostTimer = this.speedBoostDuration;
     } else {
@@ -253,6 +256,8 @@ module.exports = class MainCharacter {
     //   this.hSpeed = this.playerSpeed;
     //   this.x += this.hSpeed;
     // }
+    // console.log(this.mazeArray)
+    // debugger;
     if (
       this.mazeArray[Math.floor((this.x + 76 + this.playerSpeed) / this.width)][
       Math.floor((this.y + 20) / this.height)
@@ -408,7 +413,7 @@ module.exports = class MainCharacter {
     // this.x = 130;
     // this.y = 120;
     this.mazeSize = mazeSize;
-    this.mazeArray = mazeArray;
+    // this.mazeArray = mazeArray;
     this.keysCollected = 0;
     this.hasWallBreaks = false;
     this.hasMap = false;
