@@ -5,21 +5,19 @@ global.canvas = document.getElementById('backgroundCanvas');
 global.ctx = canvas.getContext('2d');
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
-const Menu = require('./menu.js');
-const MiniGame = require('./Hindex');
-const Enemy = require('./enemies/enemy');
-const PowerupController = require('./powerupController');
-const Teleporter = require('./teleporter');
-const TeleporterController = require('./teleporterController');
+// const Menu = require('./menu.js');
+// const MiniGame = require('./Hindex');
+// const Enemy = require('./enemies/enemy');
+// const PowerupController = require('./powerupController');
 // const MapPowerup = require('./mapPowerup');
-const Key = require('./key');
-const SpikeTrap = require('./spikeTrap');
-const TrapController = require('./trapController');
-const EnemyController = require('./enemyController');
-const KeyController = require('./keyController');
-const RecursiveMaze = require('./RecursiveMaze');
-const PlayerCamera = require('./camera');
-const MainCharacter = require('./2DMainChar');
+// const Key = require('./key');
+// const SpikeTrap = require('./spikeTrap');
+// const TrapController = require('./trapController');
+// const EnemyController = require('./enemyController');
+// const KeyController = require('./keyController');
+// const RecursiveMaze = require('./RecursiveMaze');
+// const PlayerCamera = require('./camera');
+// const MainCharacter = require('./2DMainChar');
 
 const blurbPage = document.getElementById('blurbPage');
 // const csx = blurbPage.getContext('2d');
@@ -68,7 +66,6 @@ const enemyController = new EnemyController();
 const trapController = new TrapController();
 const keyController = new KeyController();
 const powerupController = new PowerupController();
-const teleporterController = new TeleporterController();
 const Recursive = new RecursiveMaze(mapSize);
 const Camera = new PlayerCamera(ctx);
 Recursive.draw();
@@ -92,12 +89,7 @@ function switchBackFromMiniAndReset() {
 const switchToMiniGame = () => {
   miniGameCanvas.style.display = 'block';
   divToDrawTo.style.display = 'none';
-  const minigame = new MiniGame(
-    switchBackFromMini,
-    otherRest,
-    switchBackFromMiniAndReset,
-    Player.image,
-  );
+  const minigame = new MiniGame(switchBackFromMini, otherRest, switchBackFromMiniAndReset);
   InThreeD = true;
   minigame.start();
 };
@@ -105,8 +97,6 @@ mapArray = Recursive.array;
 function switchBack() {
   InThreeD = false;
 }
-
-teleporterController.spawnTeleporters(mapArray, gameObjects);
 
 const Player = new MainCharacter(
   130,
@@ -120,7 +110,6 @@ const Player = new MainCharacter(
   destroyedWalls,
   ctx,
   gameObjects,
-  teleporterController.teleporters,
   // eslint-disable-next-line no-use-before-define
   switchToMiniGame,
   // enemyController.enemies,
@@ -287,9 +276,6 @@ document.addEventListener('keydown', (event) => {
       // Call player's method to destroy wall.
       Player.destroyWall();
       break;
-    case 'KeyE':
-      Player.teleport();
-      break;
     // case 'Space':
     //   // switchToThreeD();
     //   switchToMiniGame();
@@ -297,20 +283,6 @@ document.addEventListener('keydown', (event) => {
     case 'KeyR':
       resetTheWholeMaze();
       break;
-    case 'KeyI':
-      switchToMiniGame();
-      break;
-    case 'KeyC':
-      keyBlurbOne.style.display = 'none';
-      keyBlurbTwo.style.display = 'none';
-      keyBlurbThree.style.display = 'none';
-      keyBlurbFour.style.display = 'none';
-      keyBlurbFive.style.display = 'none';
-      keyBlurbSix.style.display = 'none';
-      keyBlurbSeven.style.display = 'none';
-      keyBlurbEight.style.display = 'none';
-      keyBlurbNine.style.display = 'none';
-      keyBlurbTen.style.display = 'none';
     default:
       break;
   }
@@ -366,9 +338,6 @@ function update() {
   // from the edges of the buffer(left = 0, top = 0, right = 128*col bottom = 128*row), it'll
   // move the world position as the player moves. We use the world position as the camera's
   // position and subtract the world position from the player's position(this makes the player move with the camera).
-  worldPosX = Player.x + Player.width / 2 - Camera.vWidth / 2;
-  worldPosY = Player.y + Player.height / 2 - Camera.vHeight / 2;
-  /*
   if (
     Player.x + Player.width / 2 > Camera.vWidth / 2
     && Player.x + Player.width / 2 < buffer.canvas.width - Camera.vWidth / 2
@@ -381,7 +350,6 @@ function update() {
   ) {
     worldPosY = Player.y + Player.height / 2 - Camera.vHeight / 2;
   }
-  */
   // Lock the world position
   if (worldPosX <= 0) {
     worldPosX = 0;
@@ -574,10 +542,10 @@ function draw() {
 
   // Sort the game objects based on its y.
   gameObjects.sort((a, b) => {
-    if (a instanceof SpikeTrap || a instanceof Teleporter) {
+    if (a instanceof SpikeTrap) {
       return -1;
     }
-    if (b instanceof SpikeTrap || b instanceof Teleporter) {
+    if (b instanceof SpikeTrap) {
       return 1;
     }
     if (a instanceof Key) {
@@ -691,57 +659,12 @@ arrBlurbs[7] = 'Break up the monotony\nAlthough our routines make us more effici
 arrBlurbs[8] = 'Avoid alcohol and other drugs\nKeep alcohol use to a minimum and avoid other drugs. Sometimes people use alcohol and other drugs to "self-medicate" but in reality, alcohol and other drugs only aggravate problems.';
 arrBlurbs[9] = 'Get help when you need it\nSeeking help is a sign of strength — not a weakness. And it is important to remember that treatment is effective. People who get appropriate care can recover from mental illness and addiction and lead full, rewarding lives.';
 
-const keyBlurbOne = document.getElementById('keyBlurbOne');
-const keyBlurbTwo = document.getElementById('keyBlurbTwo');
-const keyBlurbThree = document.getElementById('keyBlurbThree');
-const keyBlurbFour = document.getElementById('keyBlurbFour');
-const keyBlurbFive = document.getElementById('keyBlurbFive');
-const keyBlurbSix = document.getElementById('keyBlurbSix');
-const keyBlurbSeven = document.getElementById('keyBlurbSeven');
-const keyBlurbEight = document.getElementById('keyBlurbEight');
-const keyBlurbNine = document.getElementById('keyBlurbNine');
-const keyBlurbTen = document.getElementById('keyBlurbTen');
-
-let counter = Math.floor(Math.random() * 10) + 1;
-
 function callBlurb() {
-  switch (counter) {
-    case 1:
-      keyBlurbOne.style.display = 'block';
-      break;
-    case 2:
-      keyBlurbTwo.style.display = 'block';
-      break;
-    case 3:
-      keyBlurbThree.style.display = 'block';
-      break;
-    case 4:
-      keyBlurbFour.style.display = 'block';
-      break;
-    case 5:
-      keyBlurbFive.style.display = 'block';
-      break;
-    case 6:
-      keyBlurbSix.style.display = 'block';
-      break;
-    case 7:
-      keyBlurbSeven.style.display = 'block';
-      break;
-    case 8:
-      keyBlurbEight.style.display = 'block';
-      break;
-    case 9:
-      keyBlurbNine.style.display = 'block';
-      break;
-    case 10:
-      keyBlurbTen.style.display = 'block';
-      counter = 1;
-      break;
-    default:
-      break;
-  }
-  counter += 1;
+  console.log('BLURB');
   this.keysCollected += 1;
+  blurbPage.style.display = 'block';
+  canvas.style.display = 'none';
+  console.log(this.keysCollected);
 }
 
 function gameLoop() {
@@ -822,7 +745,6 @@ function resetTheWholeMaze() {
   otherRest();
   InThreeD = false;
   tilemap.onload();
-  Player.reset(Recursive.array, Recursive.MazeSize);
   // gameLoop();
 }
 // window.requestAnimationFrame(gameLoop);
