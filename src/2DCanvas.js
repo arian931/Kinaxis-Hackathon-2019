@@ -297,8 +297,11 @@ document.addEventListener('keydown', (event) => {
     case 'KeyR':
       resetTheWholeMaze();
       break;
-    case 'KeyI':
+    case 'KeyP':
       switchToMiniGame();
+      break;
+    case 'KeyY':
+      switchToThreeD();
       break;
     case 'KeyC':
       keyBlurbOne.style.display = 'none';
@@ -771,7 +774,7 @@ const runnerDiv = document.getElementById('TwoDRunnerPositive');
 function funToCheckForSwitchBack() {
   // console.log('checkingFor3d');
   if (divToDrawTo.style.display == 'block') {
-    switchBackTo2D();
+    resetTheWholeMaze();
     clearInterval(checkForSwitchBackInerval);
     // console.log('back 2d');
   }
@@ -802,7 +805,7 @@ toResetPlayerToBeggingOfMaze = () => {
 function otherRest() {
   Player.x = 130;
   Player.y = 120;
-  // console.log('hi other reset is this happening');
+  console.log('hi other reset is this happening');
   worldPosX = Player.x + Player.width / 2 - Camera.vWidth / 2;
   worldPosY = Player.y + Player.height / 2 - Camera.vHeight / 2;
   const nowTime = Date.now();
@@ -823,6 +826,6 @@ function resetTheWholeMaze() {
   InThreeD = false;
   tilemap.onload();
   Player.reset(Recursive.array, Recursive.MazeSize);
-  // gameLoop();
+  gameLoop();
 }
 // window.requestAnimationFrame(gameLoop);
