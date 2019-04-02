@@ -702,7 +702,7 @@ const keyBlurbEight = document.getElementById('keyBlurbEight');
 const keyBlurbNine = document.getElementById('keyBlurbNine');
 const keyBlurbTen = document.getElementById('keyBlurbTen');
 
-let counter = 1;
+let counter = Math.floor(Math.random() * 10) + 1;
 
 function callBlurb() {
   switch (counter) {
