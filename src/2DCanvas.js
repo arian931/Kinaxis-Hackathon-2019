@@ -277,6 +277,9 @@ document.addEventListener('keydown', (event) => {
     //   // switchToThreeD();
     //   switchToMiniGame();
     //   break;
+    case 'KeyR':
+      resetTheWholeMaze();
+      break;
     default:
       break;
   }
@@ -475,7 +478,7 @@ function draw() {
       destroyedWalls[i][0] * 128 - worldPosX,
       destroyedWalls[i][1] * 128 - worldPosY,
       128,
-      128
+      128,
     );
   }
 
@@ -599,10 +602,10 @@ function draw() {
     ctx.fillStyle = 'blue';
     ctx.fillRect(
       minimapPosX
-      + (Math.floor((Player.x + Player.width / 2) / Player.width) * minimap.canvas.width) / mapSize,
+        + (Math.floor((Player.x + Player.width / 2) / Player.width) * minimap.canvas.width) / mapSize,
       minimapPosY
-      + (Math.floor((Player.y + Player.height / 2) / Player.height) * minimap.canvas.height)
-      / mapSize,
+        + (Math.floor((Player.y + Player.height / 2) / Player.height) * minimap.canvas.height)
+          / mapSize,
       minimap.canvas.width / mapSize,
       minimap.canvas.height / mapSize,
     );
@@ -622,10 +625,10 @@ function draw() {
       ctx.fillStyle = 'red';
       ctx.fillRect(
         minimapPosX
-        + (Math.floor((enemy.x + enemy.width / 2) / enemy.width) * minimap.canvas.width) / mapSize,
+          + (Math.floor((enemy.x + enemy.width / 2) / enemy.width) * minimap.canvas.width) / mapSize,
         minimapPosY
-        + (Math.floor((enemy.y + enemy.height - 4) / enemy.height) * minimap.canvas.height)
-        / mapSize,
+          + (Math.floor((enemy.y + enemy.height - 4) / enemy.height) * minimap.canvas.height)
+            / mapSize,
         minimap.canvas.width / mapSize,
         minimap.canvas.height / mapSize,
       );
@@ -646,13 +649,11 @@ arrBlurbs[7] = 'Break up the monotony\nAlthough our routines make us more effici
 arrBlurbs[8] = 'Avoid alcohol and other drugs\nKeep alcohol use to a minimum and avoid other drugs. Sometimes people use alcohol and other drugs to "self-medicate" but in reality, alcohol and other drugs only aggravate problems.';
 arrBlurbs[9] = 'Get help when you need it\nSeeking help is a sign of strength — not a weakness. And it is important to remember that treatment is effective. People who get appropriate care can recover from mental illness and addiction and lead full, rewarding lives.';
 
-
 function callBlurb() {
   console.log('BLURB');
   this.keysCollected += 1;
   // blurbPage.style.display = 'block';
   console.log(this.keysCollected);
-
 }
 
 function gameLoop() {
@@ -724,5 +725,15 @@ function otherRest() {
   Camera.update(dt);
   Camera.draw();
   // debugger;
+}
+function resetTheWholeMaze() {
+  console.log('reseting the whole maze');
+  Recursive.draw();
+  Recursive.MazeSize += 10;
+  mapArray = Recursive.array;
+  otherRest();
+  InThreeD = false;
+  tilemap.onload();
+  // gameLoop();
 }
 // window.requestAnimationFrame(gameLoop);
