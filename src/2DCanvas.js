@@ -48,12 +48,13 @@ const spriteWallBreakerIndicator = new Image();
 spriteWallBreakerIndicator.src = '../../Art/2D/wall_breaker_indicator.png';
 
 // eslint-disable-next-line no-unused-vars
-const gameObjects = [];
+let gameObjects = [];
 
 let mapArray;
-const destroyedWalls = []; // [x, y] cell positions of destroyed walls.
-const mapSize = 15;
+let destroyedWalls = []; // [x, y] cell positions of destroyed walls.
+let mapSize = 15;
 
+let blurbPause = false;
 let needsToReset = false;
 
 // FPS
@@ -64,13 +65,13 @@ let lastTime = Date.now();
 let worldPosX = 0;
 let worldPosY = 0;
 
-const enemyController = new EnemyController();
-const trapController = new TrapController();
-const keyController = new KeyController();
-const powerupController = new PowerupController();
-const teleporterController = new TeleporterController();
-const Recursive = new RecursiveMaze(mapSize);
-const Camera = new PlayerCamera(ctx);
+let enemyController = new EnemyController();
+let trapController = new TrapController();
+let keyController = new KeyController();
+let powerupController = new PowerupController();
+let teleporterController = new TeleporterController();
+let Recursive = new RecursiveMaze(mapSize);
+let Camera = new PlayerCamera(ctx);
 Recursive.draw();
 const divToDrawTo = document.getElementById('backgroundCanvas');
 const miniGameCanvas = document.getElementById('minigameCanvas');
@@ -108,7 +109,7 @@ function switchBack() {
 
 teleporterController.spawnTeleporters(mapArray, gameObjects);
 
-const Player = new MainCharacter(
+Player = new MainCharacter(
   130,
   120,
   // 128 * (mapSize - 2), // For testing exit.
@@ -171,7 +172,7 @@ Camera.attachBuffer(buffer);
 // worldPosY = Player.y + Player.height / 2 - Camera.vHeight / 2;
 
 // Create the image buffer of the map.
-tilemap.onload = () => {
+createBuffer = () => {
   for (let y = 0; y < mapSize; y++) {
     for (let x = 0; x < mapSize; x++) {
       switch (mapArray[x][y]) {
@@ -249,6 +250,9 @@ tilemap.onload = () => {
     }
   }
 };
+tilemap.onload = () => {
+  createBuffer();
+};
 document.addEventListener('keydown', (event) => {
   switch (event.code) {
     case 'KeyD':
@@ -314,6 +318,9 @@ document.addEventListener('keydown', (event) => {
       keyBlurbEight.style.display = 'none';
       keyBlurbNine.style.display = 'none';
       keyBlurbTen.style.display = 'none';
+      blurbPause = false;
+      gameLoop();
+      break;
     default:
     case 'KeyI':
     switchToMiniGame();
@@ -354,7 +361,6 @@ function update() {
   dt = (nowTime - lastTime) / 1000;
   lastTime = nowTime;
   if (needsToReset) {
-    console.log('FUCKING FUCKING !!!!!!!!!!!!!!!!!!!!!!');
     needsToReset = false;
     worldPosX = Player.x + Player.width / 2 - Camera.vWidth / 2;
     worldPosY = Player.y + Player.height / 2 - Camera.vHeight / 2;
@@ -709,14 +715,14 @@ const keyBlurbNine = document.getElementById('keyBlurbNine');
 const keyBlurbTen = document.getElementById('keyBlurbTen');
 
 let counter = Math.floor(Math.random() * 10) + 1;
-
+// let hold = 0;
 function callBlurb() {
-  for (let i = 0; i < gameObjects.length; i++) {
-    if (gameObjects[i] instanceof Enemy) {
-      gameObjects[i].xDir = 0;
-      gameObjects[i].yDir = 0;
-    }
-  }
+  // for (let i = 0; i < gameObjects.length; i++) {
+  //   if (gameObjects[i] instanceof Enemy) {
+  //     gameObjects[i].xDir = 0;
+  //     gameObjects[i].yDir = 0;
+  //   }
+  // }
   switch (counter) {
     case 1:
       keyBlurbOne.style.display = 'block';
@@ -754,6 +760,7 @@ function callBlurb() {
   }
   counter += 1;
   this.keysCollected += 1;
+  blurbPause = true;
 }
 
 function gameLoop() {
@@ -764,7 +771,7 @@ function gameLoop() {
   if (music.paused) {
     music.play();
   }
-  if (!InThreeD) {
+  if (!InThreeD && !blurbPause) {
     window.requestAnimationFrame(gameLoop);
     update();
     draw();
@@ -815,26 +822,63 @@ function otherRest() {
   Player.x = 130;
   Player.y = 120;
   console.log('hi other reset is this happening');
-  worldPosX = Player.x + Player.width / 2 - Camera.vWidth / 2;
-  worldPosY = Player.y + Player.height / 2 - Camera.vHeight / 2;
-  const nowTime = Date.now();
-  dt = (nowTime - lastTime) / 1000;
-  lastTime = nowTime;
-  Camera.xDir = 0;
-  Camera.yDir = 0;
-  Camera.update(dt);
+  // worldPosX = Player.x + Player.width / 2 - Camera.vWidth / 2;
+  // worldPosY = Player.y + Player.height / 2 - Camera.vHeight / 2;
+  // const nowTime = Date.now();
+  // dt = (nowTime - lastTime) / 1000;
+  // lastTime = nowTime;
+  // Camera.xDir = 0;
+  // Camera.yDir = 0;
+  // Camera.update(dt);
   Camera.draw();
   // debugger;
 }
 function resetTheWholeMaze() {
   console.log('reseting the whole maze');
+  //Recursive.MazeSize += 10;
   Recursive.draw();
-  Recursive.MazeSize += 10;
   mapArray = Recursive.array;
   otherRest();
   InThreeD = false;
-  tilemap.onload();
+  minimap.clearRect(0, 0, minimap.canvas.width, minimap.canvas.height);
+  createBuffer();
+  gameObjects = [];
+  destroyedWalls = [];
+  enemyController = new EnemyController();
+  trapController = new TrapController();
+  keyController = new KeyController();
+  powerupController = new PowerupController();
+  teleporterController = new TeleporterController();
+  Recursive = new RecursiveMaze(mapSize);
+  Camera = new PlayerCamera(ctx);
+  // debugger;
+  Player = new MainCharacter(
+    130,
+    120,
+    // 128 * (mapSize - 2), // For testing exit.
+    // 128 * (mapSize - 2), // For testing exit.
+    canvas.width,
+    canvas.height,
+    Recursive.MazeSize,
+    mapArray,
+    destroyedWalls,
+    ctx,
+    gameObjects,
+    teleporterController.teleporters,
+    // eslint-disable-next-line no-use-before-define
+    switchToMiniGame,
+    // enemyController.enemies,
+    callBlurb,
+    otherRest,
+  );
+  Camera.attachTo(Player);
+  Camera.attachBuffer(buffer);
+  gameObjects.push(Player);
+  enemyController.spawnEnemies(mapArray, gameObjects);
+  trapController.spawnTraps(mapArray, gameObjects);
+  keyController.spawnKeys(mapArray, gameObjects);
+  powerupController.spawnPowerups(mapArray, gameObjects);
   Player.reset(Recursive.array, Recursive.MazeSize);
-  gameLoop();
+  // gameLoop();
 }
 // window.requestAnimationFrame(gameLoop);

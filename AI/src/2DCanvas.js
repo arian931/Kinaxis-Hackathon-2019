@@ -350,18 +350,6 @@ function update() {
   // ) {
   //   worldPosY = Player.y + Player.height / 2 - Camera.vHeight / 2;
   // }
-  // Lock the world position
-  if (worldPosX <= 0) {
-    worldPosX = 0;
-  } else if (worldPosX >= buffer.canvas.width - Camera.vWidth) {
-    worldPosX = buffer.canvas.width - Camera.vWidth;
-  }
-  if (worldPosY <= 0) {
-    worldPosY = 0;
-  } else if (worldPosY >= buffer.canvas.height - canvas.height) {
-    worldPosY = buffer.canvas.height - canvas.height;
-  }
-
   // Update the objects.
   // Player.update(dt);
   Camera.update(dt);
@@ -370,6 +358,8 @@ function update() {
     gameObjects[i].update(dt);
     if (gameObjects[i] instanceof Enemy) {
       const enemy = gameObjects[i];
+      worldPosX = enemy.x + enemy.width / 2 - Camera.vWidth / 2;
+      worldPosY = enemy.y + enemy.height / 2 - Camera.vHeight / 2;
       // if (
       //   mapArray[
       //   Math.floor((enemy.x + enemy.width / 2 + (enemy.width / 2) * enemy.xDir) / enemy.width)
@@ -457,6 +447,18 @@ function update() {
       // [Math.floor((enemy.y + enemy.height - (enemy.yDir === 1 ? 24 : 0) + (enemy.height / 4 * enemy.yDir)) / enemy.height)] !== 0) {
       //   enemy.yDir *= -1;
       // }
+    }
+
+    // Lock the world position
+    if (worldPosX <= 0) {
+      worldPosX = 0;
+    } else if (worldPosX >= buffer.canvas.width - Camera.vWidth) {
+      worldPosX = buffer.canvas.width - Camera.vWidth;
+    }
+    if (worldPosY <= 0) {
+      worldPosY = 0;
+    } else if (worldPosY >= buffer.canvas.height - canvas.height) {
+      worldPosY = buffer.canvas.height - canvas.height;
     }
   }
 

@@ -24,9 +24,6 @@ module.exports = class Enemy {
 
     for (let i = 0; i < queue.length; i++) {
       vis.push([queue[i][1][queue[i][1].length - 1][0], queue[i][1][queue[i][1].length - 1][1]].toString());
-      if (this.mapArray[queue[i][1][queue[i][1].length - 1][0]][queue[i][1][queue[i][1].length - 1][1]] === 3) {
-        break;
-      }
       // console.log(this.mapArray[queue[i][1][queue[i][1].length - 1][0] + 1][queue[i][1][queue[i][1].length - 1][1]]);
       if (this.mapArray[queue[i][1][queue[i][1].length - 1][0] + 1][queue[i][1][queue[i][1].length - 1][1]] === 0) {
         if (!vis.includes([queue[i][1][queue[i][1].length - 1][0] + 1, queue[i][1][queue[i][1].length - 1][1]].toString())) {
@@ -64,6 +61,7 @@ module.exports = class Enemy {
           queue.push([queue[i][0] + 1, queueArrPath, queueArrDir]);
         }
       }
+      
       // queue.shift();
       queue.sort((a, b) => {
         if (a[0] === b[0]) {
@@ -73,6 +71,9 @@ module.exports = class Enemy {
         return (a[0] < b[0]) ? -1 : 1;
         // }
       });
+      if (this.mapArray[queue[i][1][queue[i][1].length - 1][0] + 1][queue[i][1][queue[i][1].length - 1][1]] === 3) {
+        break;
+      }
       // console.log(queue);
       // break;
     }
