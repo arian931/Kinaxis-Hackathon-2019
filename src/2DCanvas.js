@@ -300,7 +300,6 @@ document.addEventListener('keyup', (event) => {
 });
 
 function update() {
-  console.log('update');
   const nowTime = Date.now();
   dt = (nowTime - lastTime) / 1000;
   lastTime = nowTime;
@@ -575,10 +574,10 @@ function draw() {
     ctx.fillStyle = 'blue';
     ctx.fillRect(
       minimapPosX
-        + (Math.floor((Player.x + Player.width / 2) / Player.width) * minimap.canvas.width) / mapSize,
+      + (Math.floor((Player.x + Player.width / 2) / Player.width) * minimap.canvas.width) / mapSize,
       minimapPosY
-        + (Math.floor((Player.y + Player.height / 2) / Player.height) * minimap.canvas.height)
-          / mapSize,
+      + (Math.floor((Player.y + Player.height / 2) / Player.height) * minimap.canvas.height)
+      / mapSize,
       minimap.canvas.width / mapSize,
       minimap.canvas.height / mapSize,
     );
@@ -588,10 +587,10 @@ function draw() {
       ctx.fillStyle = 'red';
       ctx.fillRect(
         minimapPosX
-          + (Math.floor((enemy.x + enemy.width / 2) / enemy.width) * minimap.canvas.width) / mapSize,
+        + (Math.floor((enemy.x + enemy.width / 2) / enemy.width) * minimap.canvas.width) / mapSize,
         minimapPosY
-          + (Math.floor((enemy.y + enemy.height - 4) / enemy.height) * minimap.canvas.height)
-            / mapSize,
+        + (Math.floor((enemy.y + enemy.height - 4) / enemy.height) * minimap.canvas.height)
+        / mapSize,
         minimap.canvas.width / mapSize,
         minimap.canvas.height / mapSize,
       );
@@ -618,7 +617,7 @@ function callBlurb() {
   this.keysCollected += 1;
   // blurbPage.style.display = 'block';
   console.log(this.keysCollected);
-  
+
 }
 
 function gameLoop() {
@@ -674,8 +673,12 @@ toResetPlayerToBeggingOfMaze = () => {
   Camera.draw();
 };
 
+// const delay = ms => new Promise(res => setTimeout(res, ms));
+
 function otherRest() {
-  console.log('hi other reset is this happening');
+  Player.x = 130;
+  Player.y = 120;
+  // console.log('hi other reset is this happening');
   worldPosX = Player.x + Player.width / 2 - Camera.vWidth / 2;
   worldPosY = Player.y + Player.height / 2 - Camera.vHeight / 2;
   const nowTime = Date.now();
@@ -685,5 +688,6 @@ function otherRest() {
   Camera.yDir = 0;
   Camera.update(dt);
   Camera.draw();
+  // debugger;
 }
 // window.requestAnimationFrame(gameLoop);

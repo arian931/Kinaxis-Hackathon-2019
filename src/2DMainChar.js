@@ -161,8 +161,6 @@ module.exports = class MainCharacter {
             && this.y + this.height / 2 > trap.y
             && this.y + this.height / 2 < trap.y + trap.height
           ) {
-            this.x = 130;
-            this.y = 120;
             this.resetCharacter();
           }
         }
@@ -209,10 +207,10 @@ module.exports = class MainCharacter {
     // }
     if (
       this.mazeArray[Math.floor((this.x + 76 + this.playerSpeed) / this.width)][
-        Math.floor((this.y + 20) / this.height)
+      Math.floor((this.y + 20) / this.height)
       ] === 0
       && this.mazeArray[Math.floor((this.x + 76 + this.playerSpeed) / this.width)][
-        Math.floor((this.y + this.height) / this.height)
+      Math.floor((this.y + this.height) / this.height)
       ] === 0
     ) {
       this.hSpeed = this.playerSpeed;
@@ -230,10 +228,10 @@ module.exports = class MainCharacter {
     // }
     if (
       this.mazeArray[Math.floor((this.x + 50 - this.playerSpeed) / this.width)][
-        Math.floor((this.y + 20) / this.height)
+      Math.floor((this.y + 20) / this.height)
       ] === 0
       && this.mazeArray[Math.floor((this.x + 50 - this.playerSpeed) / this.width)][
-        Math.floor((this.y + this.height) / this.height)
+      Math.floor((this.y + this.height) / this.height)
       ] === 0
     ) {
       this.hSpeed = -this.playerSpeed;
@@ -254,10 +252,10 @@ module.exports = class MainCharacter {
     // this.posTopX = parseInt((this.x + 50) / ((this.CWidth * 128) / this.CWidth));
     if (
       this.mazeArray[Math.floor((this.x + 50) / this.width)][
-        Math.floor((this.y + this.height + this.playerSpeed) / this.height)
+      Math.floor((this.y + this.height + this.playerSpeed) / this.height)
       ] === 0
       && this.mazeArray[Math.floor((this.x + 76) / this.width)][
-        Math.floor((this.y + this.height + this.playerSpeed) / this.height)
+      Math.floor((this.y + this.height + this.playerSpeed) / this.height)
       ] === 0
     ) {
       this.vSpeed = this.playerSpeed;
@@ -278,10 +276,10 @@ module.exports = class MainCharacter {
     this.posTopX = parseInt((this.x + 50) / ((this.CWidth * 128) / this.CWidth));
     if (
       this.mazeArray[Math.floor((this.x + 50) / this.width)][
-        Math.floor((this.y + 20 - this.playerSpeed) / this.height)
+      Math.floor((this.y + 20 - this.playerSpeed) / this.height)
       ] === 0
       && this.mazeArray[Math.floor((this.x + 76) / this.width)][
-        Math.floor((this.y + 20 - this.playerSpeed) / this.height)
+      Math.floor((this.y + 20 - this.playerSpeed) / this.height)
       ] === 0
     ) {
       this.vSpeed = -this.playerSpeed;
