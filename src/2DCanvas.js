@@ -348,7 +348,6 @@ function update() {
   dt = (nowTime - lastTime) / 1000;
   lastTime = nowTime;
   if (needsToReset) {
-    console.log('FUCKING FUCKING !!!!!!!!!!!!!!!!!!!!!!');
     needsToReset = false;
     worldPosX = Player.x + Player.width / 2 - Camera.vWidth / 2;
     worldPosY = Player.y + Player.height / 2 - Camera.vHeight / 2;
