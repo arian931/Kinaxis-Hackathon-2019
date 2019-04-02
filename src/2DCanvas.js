@@ -20,9 +20,9 @@ const PlayerCamera = require('./camera');
 const MainCharacter = require('./2DMainChar');
 
 const blurbPage = document.getElementById('blurbPage');
-const csx = blurbPage.getContext('2d');
+// const csx = blurbPage.getContext('2d');
 
-const blurb = document.getElementById('blurb');
+// const blurb = document.getElementById('blurb');
 
 const music = new Audio('./mp3/Ivarelli - Fast and Sad.mp3');
 music.volume = 0.5;
@@ -652,7 +652,6 @@ function callBlurb() {
   this.keysCollected += 1;
   // blurbPage.style.display = 'block';
   console.log(this.keysCollected);
-
 }
 
 function gameLoop() {
