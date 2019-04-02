@@ -324,6 +324,9 @@ document.addEventListener('keydown', (event) => {
       gameLoop();
       break;
     default:
+    case 'KeyI':
+    switchToMiniGame();
+    break;
       break;
   }
 });
@@ -834,7 +837,7 @@ function otherRest() {
 }
 function resetTheWholeMaze() {
   console.log('reseting the whole maze');
-  //Recursive.MazeSize += 10;
+  Recursive.MazeSize += 10;
   Recursive.draw();
   mapArray = Recursive.array;
   otherRest();
