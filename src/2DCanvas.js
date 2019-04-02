@@ -20,9 +20,9 @@ const PlayerCamera = require('./camera');
 const MainCharacter = require('./2DMainChar');
 
 const blurbPage = document.getElementById('blurbPage');
-const csx = blurbPage.getContext('2d');
+// const csx = blurbPage.getContext('2d');
 
-const blurb = document.getElementById('blurb');
+// const blurb = document.getElementById('blurb');
 
 const music = new Audio('./mp3/Ivarelli - Fast and Sad.mp3');
 music.volume = 0.5;
@@ -41,6 +41,9 @@ doorTilemap.src = '../../Art/2D/door_spritesheet.png';
 
 const spriteKeysCollected = new Image();
 spriteKeysCollected.src = '../../Art/2D/keys_collected.png';
+
+const spriteWallBreakerIndicator = new Image();
+spriteWallBreakerIndicator.src = '../../Art/2D/wall_breaker_indicator.png';
 
 // eslint-disable-next-line no-unused-vars
 const gameObjects = [];
@@ -583,6 +586,33 @@ function draw() {
     }
   }
 
+  // Draw the wall breaker indicator.
+  if (!Player.hasWallBreaks) {
+    ctx.drawImage(
+      spriteWallBreakerIndicator,
+      0,
+      0,
+      96,
+      96,
+      20,
+      20,
+      96,
+      96,
+    );
+  } else {
+    ctx.drawImage(
+      spriteWallBreakerIndicator,
+      96,
+      0,
+      96,
+      96,
+      20,
+      20,
+      96,
+      96,
+    );
+  }
+
   // Draw keys collected.
   ctx.drawImage(
     spriteKeysCollected,
@@ -590,7 +620,7 @@ function draw() {
     (Player.keysCollected * 384) / 4,
     288,
     384 / 4,
-    20,
+    20 + 96,
     20,
     288,
     384 / 4,
@@ -652,7 +682,8 @@ arrBlurbs[9] = 'Get help when you need it\nSeeking help is a sign of strength â€
 function callBlurb() {
   console.log('BLURB');
   this.keysCollected += 1;
-  // blurbPage.style.display = 'block';
+  blurbPage.style.display = 'block';
+  canvas.style.display = 'none';
   console.log(this.keysCollected);
 }
 
