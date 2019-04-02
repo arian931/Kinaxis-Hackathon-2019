@@ -7,11 +7,12 @@ const Block = require('./block');
 const Teacher = require('./teacher');
 
 module.exports = class miniGame {
-  constructor(goBackTo2d, goBackTo2dBad, switchBackFromMiniAndReset) {
+  constructor(goBackTo2d, goBackTo2dBad, switchBackFromMiniAndReset, playerArt) {
     this.canvas = document.getElementById('minigameCanvas');
     this.mainCanvas = document.getElementById('backgroundCanvas');
     this.ctx = this.canvas.getContext('2d');
 
+    this.playerArt = playerArt;
     this.goBackTo2d = goBackTo2d;
     this.goBackTo2dBad = goBackTo2dBad;
     this.switchBackFromMiniAndReset = switchBackFromMiniAndReset;
@@ -27,14 +28,16 @@ module.exports = class miniGame {
     this.scene.background.src = '../../Art/2D/minigame/background.png';
     this.scene.ground.src = '../../Art/2D/minigame/ground.png';
     this.scene.foreground.src = '../../Art/2D/minigame/foreground_detail.png';
-
+    console.log(this.playerArt);
+    console.log(this.playerArt.src);
+    console.log(`${this.playerArt.src}player Art`);
     this.player = new Player(
       300,
       this.canvas.height / 2 + 100,
       128,
       128,
       this.ctx,
-      '../../Art/2D/female2_spritesheet.png',
+      this.playerArt.src,
     );
     this.floorHeight = this.player.y + this.player.H;
     // this.block = new Block(canvas.width, floorHeight - 80, 40, 80, 50, ctx);
