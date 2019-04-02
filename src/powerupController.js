@@ -76,7 +76,7 @@ module.exports = class PowerupController {
           chance -= 1;
         }
       }
-      if (wallBreakerPowerupSpawned >= this.maxWallBreakerPowerup) {
+      if (speedPowerupSpawned >= this.maxSpeedPowerup) {
         chance = maxSpawnChance;
         break;
       }

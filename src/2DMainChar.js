@@ -9,6 +9,8 @@ const Enemy = require('./enemies/enemy');
 const Key = require('./key');
 const SpikeTrap = require('./spikeTrap');
 const MapPowerup = require('./mapPowerup');
+const WallBreakerPowerup = require('./wallBreakerPowerup');
+const SpeedPowerup = require('./speedPowerup');
 const KeyController = require('./keyController');
 
 let keysCollected = 0;
@@ -21,6 +23,7 @@ module.exports = class MainCharacter {
     height,
     mazeSize,
     mazeArray,
+    destroyedWalls,
     context,
     gameObjects,
     functToSwitch,
@@ -48,6 +51,7 @@ module.exports = class MainCharacter {
     this.CHeight = height;
     this.mazeSize = mazeSize;
     this.mazeArray = mazeArray;
+    this.destroyedWalls = destroyedWalls;
     this.posTopX = parseInt(this.x / ((this.CWidth * 128) / this.CWidth));
     this.posTopY = parseInt(this.y / ((this.CHeight * 128) / this.CHeight));
     this.calcForSquareX = (this.CWidth * 128) / this.CWidth;
@@ -56,7 +60,12 @@ module.exports = class MainCharacter {
     this.moveUp = false;
     this.moveDown = false;
     this.counter = 10;
-    this.playerSpeed = 4;
+    this.playerSpeedNormal = 4;
+    this.playerSpeed = this.playerSpeedNormal;
+    this.playerSpeedBoost = 8;
+    this.speedBoostDuration = 6; // Seconds
+    this.speedBoostTimer = this.speedBoostDuration;
+    this.hasWallBreaks = true;
     this.keysCollected = keysCollected;
     this.hasMap = false;
     this.keyController = new KeyController();
@@ -74,7 +83,7 @@ module.exports = class MainCharacter {
     this.image.src = src;
   }
 
-  update() {
+  update(dt) {
     // 0.7071 is a magic constant for diagonal movement.
     this.counter++;
     this.hSpeed = 0;
@@ -91,6 +100,15 @@ module.exports = class MainCharacter {
     if (this.moveUp) {
       this.checkMoveNegY();
     }
+
+    // Update speed boost timer.
+    if (this.speedBoostTimer <= 0) {
+      this.playerSpeed = this.playerSpeedNormal;
+      this.speedBoostTimer = this.speedBoostDuration;
+    } else {
+      this.speedBoostTimer -= dt;
+    }
+
     // Animate the sprite.
     this.spriteIndexX = (this.spriteIndexX + this.animationSpeed) % 8;
 
@@ -179,6 +197,33 @@ module.exports = class MainCharacter {
           this.hasMap = true;
         }
       }
+      if (this.gameObjects[j] instanceof WallBreakerPowerup) {
+        if (!this.hasWallBreaks) {
+          const wb = this.gameObjects[j];
+          if (
+            this.x + this.width / 2 > wb.x
+            && this.x + this.width / 2 < wb.x + wb.width
+            && this.y + this.height / 2 > wb.y
+            && this.y + this.height / 2 < wb.y + wb.height
+          ) {
+            this.gameObjects.splice(j, 1);
+            this.hasWallBreaks = true;
+          }
+        }
+      }
+      if (this.gameObjects[j] instanceof SpeedPowerup) {
+        const speedBoost = this.gameObjects[j];
+        if (
+          this.x + this.width / 2 > speedBoost.x
+          && this.x + this.width / 2 < speedBoost.x + speedBoost.width
+          && this.y + this.height / 2 > speedBoost.y
+          && this.y + this.height / 2 < speedBoost.y + speedBoost.height
+        ) {
+          this.gameObjects.splice(j, 1);
+          this.playerSpeed = this.playerSpeedBoost;
+          this.speedBoostActivated = true;
+        }
+      }
     }
   }
 
@@ -209,10 +254,10 @@ module.exports = class MainCharacter {
     // }
     if (
       this.mazeArray[Math.floor((this.x + 76 + this.playerSpeed) / this.width)][
-        Math.floor((this.y + 20) / this.height)
+      Math.floor((this.y + 20) / this.height)
       ] === 0
       && this.mazeArray[Math.floor((this.x + 76 + this.playerSpeed) / this.width)][
-        Math.floor((this.y + this.height) / this.height)
+      Math.floor((this.y + this.height) / this.height)
       ] === 0
     ) {
       this.hSpeed = this.playerSpeed;
@@ -230,10 +275,10 @@ module.exports = class MainCharacter {
     // }
     if (
       this.mazeArray[Math.floor((this.x + 50 - this.playerSpeed) / this.width)][
-        Math.floor((this.y + 20) / this.height)
+      Math.floor((this.y + 20) / this.height)
       ] === 0
       && this.mazeArray[Math.floor((this.x + 50 - this.playerSpeed) / this.width)][
-        Math.floor((this.y + this.height) / this.height)
+      Math.floor((this.y + this.height) / this.height)
       ] === 0
     ) {
       this.hSpeed = -this.playerSpeed;
@@ -254,10 +299,10 @@ module.exports = class MainCharacter {
     // this.posTopX = parseInt((this.x + 50) / ((this.CWidth * 128) / this.CWidth));
     if (
       this.mazeArray[Math.floor((this.x + 50) / this.width)][
-        Math.floor((this.y + this.height + this.playerSpeed) / this.height)
+      Math.floor((this.y + this.height + this.playerSpeed) / this.height)
       ] === 0
       && this.mazeArray[Math.floor((this.x + 76) / this.width)][
-        Math.floor((this.y + this.height + this.playerSpeed) / this.height)
+      Math.floor((this.y + this.height + this.playerSpeed) / this.height)
       ] === 0
     ) {
       this.vSpeed = this.playerSpeed;
@@ -278,14 +323,58 @@ module.exports = class MainCharacter {
     this.posTopX = parseInt((this.x + 50) / ((this.CWidth * 128) / this.CWidth));
     if (
       this.mazeArray[Math.floor((this.x + 50) / this.width)][
-        Math.floor((this.y + 20 - this.playerSpeed) / this.height)
+      Math.floor((this.y + 20 - this.playerSpeed) / this.height)
       ] === 0
       && this.mazeArray[Math.floor((this.x + 76) / this.width)][
-        Math.floor((this.y + 20 - this.playerSpeed) / this.height)
+      Math.floor((this.y + 20 - this.playerSpeed) / this.height)
       ] === 0
     ) {
       this.vSpeed = -this.playerSpeed;
       this.y += this.vSpeed;
+    }
+  }
+
+  // Method to destroy walls.
+  destroyWall() {
+    if (!this.hasWallBreaks) {
+      return;
+    }
+    let posX = Math.floor((this.x + this.width / 2) / 128);
+    let posY = Math.floor((this.y + this.height / 2) / 128);
+    switch (this.spriteDir) {
+      case 0: // Right
+        if (this.mazeArray[posX + 1][posY] === 1
+          && posX + 1 < this.mazeSize - 2) {
+          this.mazeArray[posX + 1][posY] = 0;
+          this.hasWallBreaks = false;
+          this.destroyedWalls.push([posX + 1, posY]);
+        }
+        break;
+      case 1: // Down
+        if (this.mazeArray[posX][posY + 1] === 1
+          && posY + 1 < this.mazeSize - 2) {
+          this.mazeArray[posX][posY + 1] = 0;
+          this.hasWallBreaks = false;
+          this.destroyedWalls.push([posX, posY + 1]);
+        }
+        break;
+      case 2: // Left
+        if (this.mazeArray[posX - 1][posY] === 1
+          && posX - 1 > 1) {
+          this.mazeArray[posX - 1][posY] = 0;
+          this.hasWallBreaks = false;
+          this.destroyedWalls.push([posX - 1, posY]);
+        }
+        break;
+      case 3: // Up
+        if (this.mazeArray[posX][posY - 1] === 1
+          && posY - 1 > 1) {
+          this.mazeArray[posX][posY - 1] = 0;
+          this.hasWallBreaks = false;
+          this.destroyedWalls.push([posX, posY - 1]);
+        }
+        break;
+      default: break;
     }
   }
 };
