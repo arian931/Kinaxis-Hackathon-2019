@@ -8,7 +8,8 @@ canvas.height = window.innerHeight;
 const Menu = require('./menu.js');
 const MiniGame = require('./Hindex');
 const Enemy = require('./enemies/enemy');
-const MapPowerup = require('./mapPowerup');
+const PowerupController = require('./powerupController');
+// const MapPowerup = require('./mapPowerup');
 const Key = require('./key');
 const SpikeTrap = require('./spikeTrap');
 const TrapController = require('./trapController');
@@ -45,6 +46,7 @@ spriteKeysCollected.src = '../../Art/2D/keys_collected.png';
 const gameObjects = [];
 
 let mapArray;
+const destroyedWalls = []; // [x, y] cell positions of destroyed walls.
 const mapSize = 15;
 
 let needsToReset = false;
@@ -60,6 +62,7 @@ let worldPosY = 0;
 const enemyController = new EnemyController();
 const trapController = new TrapController();
 const keyController = new KeyController();
+const powerupController = new PowerupController();
 const Recursive = new RecursiveMaze(mapSize);
 const Camera = new PlayerCamera(ctx);
 Recursive.draw();
@@ -101,6 +104,7 @@ const Player = new MainCharacter(
   canvas.height,
   Recursive.MazeSize,
   mapArray,
+  destroyedWalls,
   ctx,
   gameObjects,
   // eslint-disable-next-line no-use-before-define
@@ -117,13 +121,15 @@ gameObjects.push(Player);
 enemyController.spawnEnemies(mapArray, gameObjects);
 trapController.spawnTraps(mapArray, gameObjects);
 keyController.spawnKeys(mapArray, gameObjects);
-let randX;
-let randY;
-do {
-  randX = Math.floor(Math.random() * mapSize);
-  randY = Math.floor(Math.random() * mapSize);
-} while (mapArray[randX][randY] !== 0);
-gameObjects.push(new MapPowerup(randX * 128, randY * 128));
+powerupController.spawnPowerups(mapArray, gameObjects);
+
+// let randX;
+// let randY;
+// do {
+//   randX = Math.floor(Math.random() * mapSize);
+//   randY = Math.floor(Math.random() * mapSize);
+// } while (mapArray[randX][randY] !== 0);
+// gameObjects.push(new MapPowerup(randX * 128, randY * 128));
 
 Camera.attachTo(Player);
 
@@ -263,6 +269,10 @@ document.addEventListener('keydown', (event) => {
       Player.moveUp = false;
       Player.moveLeft = false;
       break;
+    case 'KeyB':
+      // Call player's method to destroy wall.
+      Player.destroyWall();
+      break;
     // case 'Space':
     //   // switchToThreeD();
     //   switchToMiniGame();
@@ -300,7 +310,6 @@ document.addEventListener('keyup', (event) => {
 });
 
 function update() {
-  console.log('update');
   const nowTime = Date.now();
   dt = (nowTime - lastTime) / 1000;
   lastTime = nowTime;
@@ -455,6 +464,21 @@ function draw() {
   Camera.draw(worldPosX, worldPosY);
   // Player.draw(ctx, worldPosX, worldPosY);
 
+  // Draw destroyed walls.
+  for (let i = 0; i < destroyedWalls.length; i++) {
+    ctx.drawImage(
+      tilemap,
+      128 * 2,
+      0,
+      128,
+      128,
+      destroyedWalls[i][0] * 128 - worldPosX,
+      destroyedWalls[i][1] * 128 - worldPosY,
+      128,
+      128
+    );
+  }
+
   // draw door.
   if (Player.keysCollected === keyController.maxSpawnKeys) {
     // Opened doors.
@@ -575,23 +599,33 @@ function draw() {
     ctx.fillStyle = 'blue';
     ctx.fillRect(
       minimapPosX
-        + (Math.floor((Player.x + Player.width / 2) / Player.width) * minimap.canvas.width) / mapSize,
+      + (Math.floor((Player.x + Player.width / 2) / Player.width) * minimap.canvas.width) / mapSize,
       minimapPosY
-        + (Math.floor((Player.y + Player.height / 2) / Player.height) * minimap.canvas.height)
-          / mapSize,
+      + (Math.floor((Player.y + Player.height / 2) / Player.height) * minimap.canvas.height)
+      / mapSize,
       minimap.canvas.width / mapSize,
       minimap.canvas.height / mapSize,
     );
+
+    for (let i = 0; i < destroyedWalls.length; i++) {
+      ctx.fillStyle = `rgba(83, 244, 65, ${minimapAlpha})`;
+      ctx.fillRect(
+        minimapPosX + (destroyedWalls[i][0] * minimap.canvas.width) / mapSize,
+        minimapPosY + (destroyedWalls[i][1] * minimap.canvas.height) / mapSize,
+        minimap.canvas.width / mapSize,
+        minimap.canvas.height / mapSize,
+      );
+    }
 
     for (let i = 0; i < mapEnemies.length; i++) {
       const enemy = mapEnemies[i];
       ctx.fillStyle = 'red';
       ctx.fillRect(
         minimapPosX
-          + (Math.floor((enemy.x + enemy.width / 2) / enemy.width) * minimap.canvas.width) / mapSize,
+        + (Math.floor((enemy.x + enemy.width / 2) / enemy.width) * minimap.canvas.width) / mapSize,
         minimapPosY
-          + (Math.floor((enemy.y + enemy.height - 4) / enemy.height) * minimap.canvas.height)
-            / mapSize,
+        + (Math.floor((enemy.y + enemy.height - 4) / enemy.height) * minimap.canvas.height)
+        / mapSize,
         minimap.canvas.width / mapSize,
         minimap.canvas.height / mapSize,
       );
@@ -673,8 +707,12 @@ toResetPlayerToBeggingOfMaze = () => {
   Camera.draw();
 };
 
+// const delay = ms => new Promise(res => setTimeout(res, ms));
+
 function otherRest() {
-  console.log('hi other reset is this happening');
+  Player.x = 130;
+  Player.y = 120;
+  // console.log('hi other reset is this happening');
   worldPosX = Player.x + Player.width / 2 - Camera.vWidth / 2;
   worldPosY = Player.y + Player.height / 2 - Camera.vHeight / 2;
   const nowTime = Date.now();
@@ -684,5 +722,6 @@ function otherRest() {
   Camera.yDir = 0;
   Camera.update(dt);
   Camera.draw();
+  // debugger;
 }
 // window.requestAnimationFrame(gameLoop);
