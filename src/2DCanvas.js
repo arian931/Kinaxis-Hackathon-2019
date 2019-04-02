@@ -300,6 +300,17 @@ document.addEventListener('keydown', (event) => {
     case 'KeyI':
       switchToMiniGame();
       break;
+    case 'KeyC':
+      keyBlurbOne.style.display = 'none';
+      keyBlurbTwo.style.display = 'none';
+      keyBlurbThree.style.display = 'none';
+      keyBlurbFour.style.display = 'none';
+      keyBlurbFive.style.display = 'none';
+      keyBlurbSix.style.display = 'none';
+      keyBlurbSeven.style.display = 'none';
+      keyBlurbEight.style.display = 'none';
+      keyBlurbNine.style.display = 'none';
+      keyBlurbTen.style.display = 'none';
     default:
       break;
   }
@@ -680,8 +691,6 @@ arrBlurbs[7] = 'Break up the monotony\nAlthough our routines make us more effici
 arrBlurbs[8] = 'Avoid alcohol and other drugs\nKeep alcohol use to a minimum and avoid other drugs. Sometimes people use alcohol and other drugs to "self-medicate" but in reality, alcohol and other drugs only aggravate problems.';
 arrBlurbs[9] = 'Get help when you need it\nSeeking help is a sign of strength — not a weakness. And it is important to remember that treatment is effective. People who get appropriate care can recover from mental illness and addiction and lead full, rewarding lives.';
 
-let counter = 1;
-
 const keyBlurbOne = document.getElementById('keyBlurbOne');
 const keyBlurbTwo = document.getElementById('keyBlurbTwo');
 const keyBlurbThree = document.getElementById('keyBlurbThree');
@@ -693,6 +702,7 @@ const keyBlurbEight = document.getElementById('keyBlurbEight');
 const keyBlurbNine = document.getElementById('keyBlurbNine');
 const keyBlurbTen = document.getElementById('keyBlurbTen');
 
+let counter = 1;
 
 function callBlurb() {
   switch (counter) {
