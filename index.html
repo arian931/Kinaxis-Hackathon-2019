@@ -51,12 +51,27 @@
       display: hidden;
     }
 
-    #blurb {
-      position: absolute;
-      display: none;
+    #blurbPage {
+      /* position: absolute;
+      display: block;
       background-color: red;
-      width: 300px;
-      height: 300px;
+      width: 30px;
+      height: 30px; */
+      width: 40%;
+      height: 25%;
+      color: #000000;
+      text-align: center;
+      margin: auto;
+      margin-top: 15%;
+      border-radius: 10px;
+      padding-right: 1%;
+      padding-left: 1%;
+      font-family: "Times New Roman", Times, serif;
+      background-color: rgba(179, 2, 2, 0.8);
+      border-radius: 10px;
+      display: none;
+      padding: 4%;
+      color: white;
     }
 
     .forResult {
@@ -137,6 +152,7 @@
 
 <body>
   <canvas class="hundredPercent" id="backgroundCanvas"></canvas>
+  <canvas id="blurbPage" style = "display: none"></canvas>
   <div id="TwoDRunnerPositive">
       <div class="TwoDRunnerText">
         <h1>

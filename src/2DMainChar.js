@@ -179,8 +179,6 @@ module.exports = class MainCharacter {
             && this.y + this.height / 2 > trap.y
             && this.y + this.height / 2 < trap.y + trap.height
           ) {
-            this.x = 130;
-            this.y = 120;
             this.resetCharacter();
           }
         }

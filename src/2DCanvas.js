@@ -19,6 +19,9 @@ const RecursiveMaze = require('./RecursiveMaze');
 const PlayerCamera = require('./camera');
 const MainCharacter = require('./2DMainChar');
 
+const blurbPage = document.getElementById('blurbPage');
+const csx = blurbPage.getContext('2d');
+
 const blurb = document.getElementById('blurb');
 
 const music = new Audio('./mp3/Ivarelli - Fast and Sad.mp3');
@@ -75,6 +78,7 @@ function switchBackFromMini() {
 
 function switchBackFromMiniAndReset() {
   console.log('switchBackFromMiniAndReset');
+  needsToReset = true;
   InThreeD = false;
   gameLoop();
 }
@@ -310,6 +314,7 @@ function update() {
   dt = (nowTime - lastTime) / 1000;
   lastTime = nowTime;
   if (needsToReset) {
+    console.log('FUCKING FUCKING !!!!!!!!!!!!!!!!!!!!!!');
     needsToReset = false;
     worldPosX = Player.x + Player.width / 2 - Camera.vWidth / 2;
     worldPosY = Player.y + Player.height / 2 - Camera.vHeight / 2;
@@ -644,12 +649,17 @@ arrBlurbs[9] = 'Get help when you need it\nSeeking help is a sign of strength â€
 
 function callBlurb() {
   console.log('BLURB');
-  keysCollected += 1;
-  console.log(keysCollected);
-  // blurb.style.display = 'block';
+  this.keysCollected += 1;
+  // blurbPage.style.display = 'block';
+  console.log(this.keysCollected);
+
 }
 
 function gameLoop() {
+  if (needsToReset) {
+    needsToReset = false;
+    update();
+  }
   if (music.paused) {
     music.play();
   }
@@ -698,8 +708,12 @@ toResetPlayerToBeggingOfMaze = () => {
   Camera.draw();
 };
 
+// const delay = ms => new Promise(res => setTimeout(res, ms));
+
 function otherRest() {
-  console.log('hi other reset');
+  Player.x = 130;
+  Player.y = 120;
+  // console.log('hi other reset is this happening');
   worldPosX = Player.x + Player.width / 2 - Camera.vWidth / 2;
   worldPosY = Player.y + Player.height / 2 - Camera.vHeight / 2;
   const nowTime = Date.now();
@@ -709,5 +723,6 @@ function otherRest() {
   Camera.yDir = 0;
   Camera.update(dt);
   Camera.draw();
+  // debugger;
 }
 // window.requestAnimationFrame(gameLoop);
