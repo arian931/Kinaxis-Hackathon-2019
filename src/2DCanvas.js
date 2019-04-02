@@ -9,6 +9,8 @@ const Menu = require('./menu.js');
 const MiniGame = require('./Hindex');
 const Enemy = require('./enemies/enemy');
 const PowerupController = require('./powerupController');
+const Teleporter = require('./teleporter');
+const TeleporterController = require('./teleporterController');
 // const MapPowerup = require('./mapPowerup');
 const Key = require('./key');
 const SpikeTrap = require('./spikeTrap');
@@ -66,6 +68,7 @@ const enemyController = new EnemyController();
 const trapController = new TrapController();
 const keyController = new KeyController();
 const powerupController = new PowerupController();
+const teleporterController = new TeleporterController();
 const Recursive = new RecursiveMaze(mapSize);
 const Camera = new PlayerCamera(ctx);
 Recursive.draw();
@@ -103,6 +106,8 @@ function switchBack() {
   InThreeD = false;
 }
 
+teleporterController.spawnTeleporters(mapArray, gameObjects);
+
 const Player = new MainCharacter(
   130,
   120,
@@ -115,6 +120,7 @@ const Player = new MainCharacter(
   destroyedWalls,
   ctx,
   gameObjects,
+  teleporterController.teleporters,
   // eslint-disable-next-line no-use-before-define
   switchToMiniGame,
   // enemyController.enemies,
@@ -281,6 +287,9 @@ document.addEventListener('keydown', (event) => {
       // Call player's method to destroy wall.
       Player.destroyWall();
       break;
+    case 'KeyE':
+      Player.teleport();
+      break;
     // case 'Space':
     //   // switchToThreeD();
     //   switchToMiniGame();
@@ -346,6 +355,9 @@ function update() {
   // from the edges of the buffer(left = 0, top = 0, right = 128*col bottom = 128*row), it'll
   // move the world position as the player moves. We use the world position as the camera's
   // position and subtract the world position from the player's position(this makes the player move with the camera).
+  worldPosX = Player.x + Player.width / 2 - Camera.vWidth / 2;
+  worldPosY = Player.y + Player.height / 2 - Camera.vHeight / 2;
+  /*
   if (
     Player.x + Player.width / 2 > Camera.vWidth / 2
     && Player.x + Player.width / 2 < buffer.canvas.width - Camera.vWidth / 2
@@ -358,6 +370,7 @@ function update() {
   ) {
     worldPosY = Player.y + Player.height / 2 - Camera.vHeight / 2;
   }
+  */
   // Lock the world position
   if (worldPosX <= 0) {
     worldPosX = 0;
@@ -550,10 +563,10 @@ function draw() {
 
   // Sort the game objects based on its y.
   gameObjects.sort((a, b) => {
-    if (a instanceof SpikeTrap) {
+    if (a instanceof SpikeTrap || a instanceof Teleporter) {
       return -1;
     }
-    if (b instanceof SpikeTrap) {
+    if (b instanceof SpikeTrap || b instanceof Teleporter) {
       return 1;
     }
     if (a instanceof Key) {

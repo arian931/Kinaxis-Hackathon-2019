@@ -12,6 +12,7 @@ const MapPowerup = require('./mapPowerup');
 const WallBreakerPowerup = require('./wallBreakerPowerup');
 const SpeedPowerup = require('./speedPowerup');
 const KeyController = require('./keyController');
+const Teleporter = require('./teleporter');
 
 let keysCollected = 0;
 
@@ -26,6 +27,7 @@ module.exports = class MainCharacter {
     destroyedWalls,
     context,
     gameObjects,
+    teleporters,
     functToSwitch,
     callBlurb,
     resetCharacter,
@@ -70,6 +72,7 @@ module.exports = class MainCharacter {
     this.hasMap = false;
     this.keyController = new KeyController();
     this.gameObjects = gameObjects;
+    this.teleporters = teleporters;
     this.functToSwitch = functToSwitch;
     this.callBlurb = callBlurb;
     this.resetCharacter = resetCharacter;
@@ -161,7 +164,7 @@ module.exports = class MainCharacter {
           this.keySound.play();
           this.gameObjects.splice(j, 1);
           // this.keysCollected += 1;
-          this.callBlurb();
+          // this.callBlurb();
           if (this.keysCollected === this.keyController.maxSpawnKeys) {
             this.mazeArray[this.mazeSize - 2][this.mazeSize - 3] = 4;
             this.mazeArray[this.mazeSize - 3][this.mazeSize - 3] = 4;
@@ -410,5 +413,34 @@ module.exports = class MainCharacter {
     this.hasWallBreaks = false;
     this.playerSpeed = this.playerSpeedNormal;
     this.speedBoostTimer = this.speedBoostDuration;
+  }
+
+  teleport() {
+    for (let j = 0; j < this.gameObjects.length; j++) {
+      if (this.gameObjects[j] instanceof Teleporter) {
+        // Contect with spike trap.
+        const teleporter = this.gameObjects[j];
+        if (!teleporter.disabled) {
+          if (
+            this.x + this.width / 2 > teleporter.x
+            && this.x + this.width / 2 < teleporter.x + teleporter.width
+            && this.y + this.height / 2 > teleporter.y
+            && this.y + this.height / 2 < teleporter.y + teleporter.height
+          ) {
+            if (teleporter.id === this.teleporters[0].id) {
+              // Teleporter 1 to 2.
+              this.x = this.teleporters[1].x;
+              this.y = this.teleporters[1].y - 4;
+              this.teleporters[1].delay();
+            } else {
+              // Teleporter 2 to 1.
+              this.x = this.teleporters[0].x;
+              this.y = this.teleporters[0].y - 4;
+              this.teleporters[0].delay();
+            }
+          }
+        }
+      }
+    }
   }
 };
