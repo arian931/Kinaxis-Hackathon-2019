@@ -54,6 +54,7 @@ let mapArray;
 let destroyedWalls = []; // [x, y] cell positions of destroyed walls.
 let mapSize = 15;
 
+let blurbPause = false;
 let needsToReset = false;
 
 // FPS
@@ -317,6 +318,9 @@ document.addEventListener('keydown', (event) => {
       keyBlurbEight.style.display = 'none';
       keyBlurbNine.style.display = 'none';
       keyBlurbTen.style.display = 'none';
+      blurbPause = false;
+      gameLoop();
+      break;
     default:
       break;
   }
@@ -711,12 +715,12 @@ const keyBlurbTen = document.getElementById('keyBlurbTen');
 let counter = Math.floor(Math.random() * 10) + 1;
 
 function callBlurb() {
-  for (let i = 0; i < gameObjects.length; i++) {
-    if (gameObjects[i] instanceof Enemy) {
-      gameObjects[i].xDir = 0;
-      gameObjects[i].yDir = 0;
-    }
-  }
+  // for (let i = 0; i < gameObjects.length; i++) {
+  //   if (gameObjects[i] instanceof Enemy) {
+  //     gameObjects[i].xDir = 0;
+  //     gameObjects[i].yDir = 0;
+  //   }
+  // }
   switch (counter) {
     case 1:
       keyBlurbOne.style.display = 'block';
@@ -754,6 +758,7 @@ function callBlurb() {
   }
   counter += 1;
   this.keysCollected += 1;
+  blurbPause = true;
 }
 
 function gameLoop() {
@@ -764,7 +769,7 @@ function gameLoop() {
   if (music.paused) {
     music.play();
   }
-  if (!InThreeD) {
+  if (!InThreeD && !blurbPause) {
     window.requestAnimationFrame(gameLoop);
     update();
     draw();
