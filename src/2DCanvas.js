@@ -22,6 +22,7 @@ const PlayerCamera = require('./camera');
 const MainCharacter = require('./2DMainChar');
 
 const blurbPage = document.getElementById('blurbPage');
+const instr = document.getElementById('instructions')
 // const csx = blurbPage.getContext('2d');
 
 // const blurb = document.getElementById('blurb');
@@ -318,6 +319,7 @@ document.addEventListener('keydown', (event) => {
       keyBlurbEight.style.display = 'none';
       keyBlurbNine.style.display = 'none';
       keyBlurbTen.style.display = 'none';
+      // instr.style.display = 'none';
       blurbPause = false;
       gameLoop();
       break;
