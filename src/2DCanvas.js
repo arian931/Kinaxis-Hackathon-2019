@@ -679,13 +679,11 @@ arrBlurbs[7] = 'Break up the monotony\nAlthough our routines make us more effici
 arrBlurbs[8] = 'Avoid alcohol and other drugs\nKeep alcohol use to a minimum and avoid other drugs. Sometimes people use alcohol and other drugs to "self-medicate" but in reality, alcohol and other drugs only aggravate problems.';
 arrBlurbs[9] = 'Get help when you need it\nSeeking help is a sign of strength — not a weakness. And it is important to remember that treatment is effective. People who get appropriate care can recover from mental illness and addiction and lead full, rewarding lives.';
 
-
 function callBlurb() {
   console.log('BLURB');
   this.keysCollected += 1;
   blurbPage.style.display = 'block';
   canvas.style.display = 'none';
-  divToDrawTo.style.display = 'none';
   console.log(this.keysCollected);
 }
 
