@@ -53,7 +53,7 @@ let gameObjects = [];
 
 let mapArray;
 let destroyedWalls = []; // [x, y] cell positions of destroyed walls.
-let mapSize = 15;
+const mapSize = 15;
 
 let blurbPause = false;
 let needsToReset = false;
@@ -295,10 +295,6 @@ document.addEventListener('keydown', (event) => {
     case 'KeyE':
       Player.teleport();
       break;
-    // case 'Space':
-    //   // switchToThreeD();
-    //   switchToMiniGame();
-    //   break;
     case 'KeyR':
       resetTheWholeMaze();
       break;
@@ -323,10 +319,10 @@ document.addEventListener('keydown', (event) => {
       blurbPause = false;
       gameLoop();
       break;
-    default:
     case 'KeyI':
-    switchToMiniGame();
-    break;
+      switchToMiniGame();
+      break;
+    default:
       break;
   }
 });
@@ -658,10 +654,10 @@ function draw() {
     ctx.fillStyle = 'blue';
     ctx.fillRect(
       minimapPosX
-      + (Math.floor((Player.x + Player.width / 2) / Player.width) * minimap.canvas.width) / mapSize,
+        + (Math.floor((Player.x + Player.width / 2) / Player.width) * minimap.canvas.width) / mapSize,
       minimapPosY
-      + (Math.floor((Player.y + Player.height / 2) / Player.height) * minimap.canvas.height)
-      / mapSize,
+        + (Math.floor((Player.y + Player.height / 2) / Player.height) * minimap.canvas.height)
+          / mapSize,
       minimap.canvas.width / mapSize,
       minimap.canvas.height / mapSize,
     );
@@ -681,10 +677,10 @@ function draw() {
       ctx.fillStyle = 'red';
       ctx.fillRect(
         minimapPosX
-        + (Math.floor((enemy.x + enemy.width / 2) / enemy.width) * minimap.canvas.width) / mapSize,
+          + (Math.floor((enemy.x + enemy.width / 2) / enemy.width) * minimap.canvas.width) / mapSize,
         minimapPosY
-        + (Math.floor((enemy.y + enemy.height - 4) / enemy.height) * minimap.canvas.height)
-        / mapSize,
+          + (Math.floor((enemy.y + enemy.height - 4) / enemy.height) * minimap.canvas.height)
+            / mapSize,
         minimap.canvas.width / mapSize,
         minimap.canvas.height / mapSize,
       );
