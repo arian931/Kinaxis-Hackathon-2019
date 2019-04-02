@@ -42,6 +42,9 @@ doorTilemap.src = '../../Art/2D/door_spritesheet.png';
 const spriteKeysCollected = new Image();
 spriteKeysCollected.src = '../../Art/2D/keys_collected.png';
 
+const spriteWallBreakerIndicator = new Image();
+spriteWallBreakerIndicator.src = '../../Art/2D/wall_breaker_indicator.png';
+
 // eslint-disable-next-line no-unused-vars
 const gameObjects = [];
 
@@ -580,6 +583,33 @@ function draw() {
     }
   }
 
+  // Draw the wall breaker indicator.
+  if (!Player.hasWallBreaks) {
+    ctx.drawImage(
+      spriteWallBreakerIndicator,
+      0,
+      0,
+      96,
+      96,
+      20,
+      20,
+      96,
+      96,
+    );
+  } else {
+    ctx.drawImage(
+      spriteWallBreakerIndicator,
+      96,
+      0,
+      96,
+      96,
+      20,
+      20,
+      96,
+      96,
+    );
+  }
+
   // Draw keys collected.
   ctx.drawImage(
     spriteKeysCollected,
@@ -587,7 +617,7 @@ function draw() {
     (Player.keysCollected * 384) / 4,
     288,
     384 / 4,
-    20,
+    20 + 96,
     20,
     288,
     384 / 4,
