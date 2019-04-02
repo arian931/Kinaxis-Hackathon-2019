@@ -257,13 +257,16 @@ let forTimer = 0;
 let forTimerInverval;
 const ThreeDExplaniton = document.getElementById('blocker');
 const timer = () => {
+  // console.log('timerRunning');
   if (ThreeDExplaniton.style.display == 'none') {
+    scoreTimer.style.display = 'block';
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     forTimer++;
     if (forTimer == 10) {
       forTimer = 0;
       timeLeft -= 1;
       if (timeLeft <= 0) {
+        scoreTimer.style.display = 'none';
         console.log('TIME LEFT IS ZERO GO BACK TO THE 2D Cavnas');
         clearInterval(forTimerInverval);
         showResultOf3D(false);
@@ -275,7 +278,6 @@ const timer = () => {
     ctx.fillStyle = 'white';
     ctx.fillText(levelOne.score, canvas.width - 100, canvas.height - 10);
     image.src = canvas.toDataURL();
-    image.src = canvas.toDataURL();
     document.getElementById('scoreAndTimer3d').appendChild(image);
   }
 };
@@ -283,6 +285,7 @@ const timer = () => {
 const TwoCanvas = document.getElementById('backgroundCanvas');
 function checkFor3dTransation() {
   if (TwoCanvas.style.display == 'none') {
+    console.log('AH!!!!!!!!!!!!!!!!!!!!!!!!!!!!');
     forTimerInverval = setInterval(timer, 100);
     isPlaying = true;
     timeLeft = 100;
