@@ -399,4 +399,16 @@ module.exports = class MainCharacter {
       default: break;
     }
   }
+
+  // Method to reset player's stats (not including position).
+  reset(mazeArray, mazeSize) {
+    // this.x = 130;
+    // this.y = 120;
+    this.mazeSize = mazeSize;
+    this.mazeArray = mazeArray;
+    this.keysCollected = 0;
+    this.hasWallBreaks = false;
+    this.playerSpeed = this.playerSpeedNormal;
+    this.speedBoostTimer = this.speedBoostDuration;
+  }
 };
