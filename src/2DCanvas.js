@@ -702,8 +702,10 @@ const keyBlurbNine = document.getElementById('keyBlurbNine');
 const keyBlurbTen = document.getElementById('keyBlurbTen');
 
 let counter = Math.floor(Math.random() * 10) + 1;
-
+let hold = 0;
 function callBlurb() {
+  hold = this.keysCollected;
+
   for (let i = 0; i < gameObjects.length; i++) {
     if (gameObjects[i] instanceof Enemy) {
       gameObjects[i].xDir = 0;
