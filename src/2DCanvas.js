@@ -300,6 +300,17 @@ document.addEventListener('keydown', (event) => {
     case 'KeyI':
       switchToMiniGame();
       break;
+    case 'KeyC':
+      keyBlurbOne.style.display = 'none';
+      keyBlurbTwo.style.display = 'none';
+      keyBlurbThree.style.display = 'none';
+      keyBlurbFour.style.display = 'none';
+      keyBlurbFive.style.display = 'none';
+      keyBlurbSix.style.display = 'none';
+      keyBlurbSeven.style.display = 'none';
+      keyBlurbEight.style.display = 'none';
+      keyBlurbNine.style.display = 'none';
+      keyBlurbTen.style.display = 'none';
     default:
       break;
   }
@@ -681,14 +692,56 @@ arrBlurbs[8] = 'Avoid alcohol and other drugs\nKeep alcohol use to a minimum and
 arrBlurbs[9] = 'Get help when you need it\nSeeking help is a sign of strength — not a weakness. And it is important to remember that treatment is effective. People who get appropriate care can recover from mental illness and addiction and lead full, rewarding lives.';
 
 const keyBlurbOne = document.getElementById('keyBlurbOne');
+const keyBlurbTwo = document.getElementById('keyBlurbTwo');
+const keyBlurbThree = document.getElementById('keyBlurbThree');
+const keyBlurbFour = document.getElementById('keyBlurbFour');
+const keyBlurbFive = document.getElementById('keyBlurbFive');
+const keyBlurbSix = document.getElementById('keyBlurbSix');
+const keyBlurbSeven = document.getElementById('keyBlurbSeven');
+const keyBlurbEight = document.getElementById('keyBlurbEight');
+const keyBlurbNine = document.getElementById('keyBlurbNine');
+const keyBlurbTen = document.getElementById('keyBlurbTen');
+
+let counter = Math.floor(Math.random() * 10) + 1;
+
 function callBlurb() {
-  keyBlurbOne.style.display = 'block';
-  // console.log('BLURB');
-  // this.keysCollected += 1;
-  // blurbPage.style.display = 'block';
-  // canvas.style.display = 'none';
-  // divToDrawTo.style.display = 'none';
-  // console.log(this.keysCollected);
+  switch (counter) {
+    case 1:
+      keyBlurbOne.style.display = 'block';
+      break;
+    case 2:
+      keyBlurbTwo.style.display = 'block';
+      break;
+    case 3:
+      keyBlurbThree.style.display = 'block';
+      break;
+    case 4:
+      keyBlurbFour.style.display = 'block';
+      break;
+    case 5:
+      keyBlurbFive.style.display = 'block';
+      break;
+    case 6:
+      keyBlurbSix.style.display = 'block';
+      break;
+    case 7:
+      keyBlurbSeven.style.display = 'block';
+      break;
+    case 8:
+      keyBlurbEight.style.display = 'block';
+      break;
+    case 9:
+      keyBlurbNine.style.display = 'block';
+      break;
+    case 10:
+      keyBlurbTen.style.display = 'block';
+      counter = 1;
+      break;
+    default:
+      break;
+  }
+  counter += 1;
+  this.keysCollected += 1;
 }
 
 function gameLoop() {

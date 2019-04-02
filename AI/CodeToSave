@@ -1,0 +1,33 @@
+ let InsideWallsNumberArray;
+        let InsideWalls = [];
+        // console.log("hunt And KIll true");
+        // let mapAlgo = new Map();
+        // mapAlgo.drawMap();
+        // InsideWallsNumberArray = mapAlgo.array;
+// let mapAlgo = new RecursiveMaze();
+    // mapAlgo.drawMap();
+    // InsideWallsNumberArray = mapAlgo.array;
+
+    // for (let x = 0; x < mapAlgo.MazeSize; x++) {
+    //     for (let y = 0; y < mapAlgo.MazeSize; y++) {
+    //         InsideWalls[x] = [];
+    //     }
+    // }
+    // for (let ro = 0; ro < mapAlgo.MazeSize; ro++) {
+    //     for (let co = 0; co < mapAlgo.MazeSize; co++) {
+    //         if (InsideWallsNumberArray[ro][co] == 1) {
+    //             //console.log("1");
+    //             let xValue = (ro * floorClass.w / mapAlgo.MazeSize) - (floorClass.w / 2) + ((floorClass.w / mapAlgo.MazeSize) / 2);
+    //             let zValue = (co * floorClass.h / mapAlgo.MazeSize) - (floorClass.w / 2) + ((floorClass.h / mapAlgo.MazeSize) / 2);
+    //             InsideWalls[ro][co] = new InsideWallsMaze(xValue, zValue, (floorClass.w / mapAlgo.MazeSize), false, this.scene);
+    //             InsideWalls[ro][co].addToScene();
+    //         }
+    //         if (InsideWallsNumberArray[ro][co] == 3) {
+    //             //console.log("3");
+    //             let xValue = (ro * floorClass.w / mapAlgo.MazeSize) - (floorClass.w / 2) + ((floorClass.w / mapAlgo.MazeSize) / 2);
+    //             let zValue = (co * floorClass.h / mapAlgo.MazeSize) - (floorClass.w / 2) + ((floorClass.h / mapAlgo.MazeSize) / 2);
+    //             InsideWalls[ro][co] = new InsideWallsMaze(xValue, zValue, (floorClass.w / mapAlgo.MazeSize), true, this.scene);
+    //             InsideWalls[ro][co].addToScene();
+    //         }
+    //     }
+    // }

@@ -1,0 +1,31 @@
+{
+  "name": "whaac",
+  "version": "1.0.0",
+  "description": "game about mental health",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "http-server",
+    "webpack": "webpack"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/xXAligatorXx/WHAAC.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/xXAligatorXx/WHAAC/issues"
+  },
+  "homepage": "https://github.com/xXAligatorXx/WHAAC#readme",
+  "dependencies": {
+    "browserify": "^16.2.3",
+    "three": "^0.102.1"
+  },
+  "devDependencies": {
+    "babel-loader": "^8.0.5",
+    "eslint": "^5.15.1",
+    "eslint-config-airbnb-base": "^13.1.0",
+    "eslint-plugin-import": "^2.16.0"
+  }
+}
