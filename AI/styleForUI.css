@@ -1,0 +1,15 @@
+/* .UIMiniMap {
+    position: absolute;
+}
+.CanvasOne {
+    position: absolute; 
+    left: 0; 
+    top: 0;
+    z-index: 0;
+}
+.CanvasTwo {
+    position: absolute; 
+    left: 0; 
+    top: 0; 
+    z-index: 1;
+} */
