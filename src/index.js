@@ -48,6 +48,8 @@ const direction = new THREE.Vector3();
 
 const blocker = document.getElementById('blocker');
 const instructions = document.getElementById('instructions');
+const TwoPos = document.getElementById('TwoDRunnerText');
+
 
 instructions.addEventListener(
   'click',
@@ -56,6 +58,13 @@ instructions.addEventListener(
   },
   false,
 );
+// TwoPos.addEventListener(
+//   'click',
+//   () => {
+//     controls.lock();
+//   },
+//   false,
+// );
 controls.addEventListener('lock', () => {
   instructions.style.display = 'none';
   blocker.style.display = 'none';
