@@ -526,7 +526,7 @@ function draw() {
       128,
     );
   }
-
+// test
   // draw door.
   if (Player.keysCollected === keyController.maxSpawnKeys) {
     // Opened doors.
